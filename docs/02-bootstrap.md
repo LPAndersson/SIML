@@ -1,0 +1,458 @@
+# Bootstrap (draft) {#ch-bootstrap}
+
+This chapter's main topic is a method for measuring the accuracy of sample estimates. But first we discuss the distinction between parametric and non-parametric statistics.
+
+Readings for this chapter is:
+
+AOS 8
+
+ISLR 5.2
+
+## Parametric vs non-parametric
+
+What we have seen so far has been parametric models. For example we would have a normal model, $X\sim \mathsf N(\mu,\sigma^2)$, and the goal would be to make some statement regarding the parameters $\mu$ and $\sigma^2$.
+
+For a non-parametric model we only say that our sample is an observation from some distribution, with distribution function $F$ and our goal is to make statements about some property of that distribution. For example we might want to estimate the mean of that distribution.
+
+We call these properties functionals of the distribution since if we knew the distribution, they could be calculated. For example the mean,
+$$
+\mu = T(F) = \int x dF(x).
+$$
+Here, $T(F)$ is just expressing the fact that $\mu$ is calculated from the distribution function $F$. The integral is a convenient way of writing integration with respect to a distribution in a general way. For example, if the distribution is continuous, recall that the density is
+$$
+f(x) = \frac{dF(x)}{dx}.
+$$
+Written in another way:
+$$
+dF(x) = f(x)dx.
+$$
+Then the formula above just becomes
+$$
+\mu = \int xf(x)dx,
+$$
+which we recognize as the mean of a distribution. If $F$ is the distribution function of a discrete distribution, $dF(x)$ can be thought of as the probability function, and the mean is
+$$
+\mu = \int xdF(x) = \sum xp(x).
+$$
+A second example is the variance,
+$$
+T(F) = \int x^2dF(x) - \left( \int xdF(x) \right).
+$$
+Also for example the median can of course be calculated, at least in principle, if one knows the distribution and can therefore be written as a functional. Recall that the median is the number $m$ that satisfies, at least if $F$ is continuous,
+$$
+F(m) \equiv P(X\leq m) = 1/2.
+$$
+So that,
+$$
+F^{-1}(1/2) = F^{-1}(F(m)) = m.
+$$
+More generally, assuming that $F$ is strictly increasing, the $p$th quantile is $T(F) = F^{-1}(p).
+
+## Non-parametric estimation
+
+We start by defining the empirical distribution function
+\BeginKnitrBlock{note}<div class="note">The empirical distribution function $\hat F_n$ is the distribution function that puts mass $1/n$ at each data point $x_i$. That is,
+$$
+  \hat F_n(x) = \frac{\sum_{i=1}^n I(x_i\leq x)}{n},
+$$
+where
+$$
+I(x_i\leq x) =
+  \begin{cases} 
+   1 & \text{if } x_i \leq x \\
+   0       & \text{if } x_i > x.
+  \end{cases}
+$$</div>\EndKnitrBlock{note}
+
+```r
+set.seed(1)
+data.df <- data.frame( y = rnorm(100) )
+
+library(ggplot2)
+ggplot(data.df, aes(y)) +
+  stat_ecdf(geom = "step") +
+  labs( y = "F(y)", x="y") + 
+  theme_minimal()
+```
+
+<div class="figure" style="text-align: center">
+<img src="02-bootstrap_files/figure-html/empiricalDistrFcnExample-1.png" alt="Empirical distribution function" width="80%" />
+<p class="caption">(\#fig:empiricalDistrFcnExample)Empirical distribution function</p>
+</div>
+
+Now we may estimate any parameter that is a functional of $F$ by simply replacing $F$ by $\hat F_n$.
+\BeginKnitrBlock{note}<div class="note">The plug-in estimator of $\theta = T(F)$ is defined by
+$$
+  \hat\theta_n = T(\hat F_n).
+$$</div>\EndKnitrBlock{note}
+Let us consider functionals that can be written as
+$$
+T(F) =  \int r(x) dF(x),
+$$
+for some function $r$. Clearly the mean and the variance are examples of this. Then the plug-in estimator is
+$$
+T(\hat F_n) = \int r(x)d\hat F_n(x).
+$$
+The empirical distribution is a discrete distribution that puts mass $1/n$ at each point $x_i$. The corresponding  empirical probability function is therefore,
+$$
+\hat p_n(x) =
+  \begin{cases} 
+   1/n & \text{if } x = x_i \text{ some } i \\
+   0       & o.w.
+  \end{cases}
+$$
+The function can then be written:
+$$
+T(\hat F_n) = \int r(x) d\hat F_n(x) = \sum_{i=1}^n r(x_i) \hat p_n(x_i) = \frac{1}{n} \sum_{i=1}^n r(x_i).
+$$
+The plug-in estimates of such functionals is therefore simple to calculate. For example,
+\begin{align}
+\hat \mu &= \mu(\hat F_n) =\int x d\hat F_n(x) = \frac{1}{n} \sum_{i=1}^n x_i,\\
+\hat \sigma^2 &= \sigma^2(\hat F_n) = \int x^2 d\hat F_n(x) - \left(\int xd\hat F_n(x)  \right)^2 = \frac{1}{n}\sum_{i=1}^n x_i^2 + \left( \frac{1}{n}\sum_{i=1}^n x_i\right)^2 = \frac{1}{n}\sum_{i=1}^n (x_i -\bar x)^2.
+\end{align}
+
+The plug in estimator of the $p$th quantile becomes the $p$th sample quantile:
+$$
+\hat F_n^{-1}(p) =  \inf \left\{ x \mid \hat F_n(x)\geq p \right\}.
+$$
+
+
+## Bootstrap
+
+In this section we discuss how to calculate standard errors and confidence intervals for a statistic $T(X_1,X_2,\ldots, X_n)$. But first let us take a step back and consider the basics of what we are doing.
+
+We are given a set of data $(x_1,\ldots, x_n)$. We have some function that we apply to the data $T$ which we call a statistic. This may be a simple function like the sample mean, or some more complicated function like a parameter in a regression problem. We apply the function to the data and get a number $t=T(x_1,\ldots,x_n)$. To do inference we also need to know the variability of that number if we were to repeat the same experiment many times. We therefore consider the random variable $T_n := T(X_1,\ldots, X_n)$, where $X_i\sim F$ iid. The distribution of this random variable is called the sampling distribution. In some cases, for a particular $T$ and $F$ we may be able to find the sampling distribution either exactly or approximately. For example, we previously found the sampling distribution of the log-likelihood. Once we have that, we can do hypothesis testing, construct confidence intervals or simply state the standard deviation. The procedure can be summarized as:
+$$
+F\overset{sample}{\to} x \overset{T}{\to} t.
+$$
+
+However, in many cases the calculation of the sampling distribution is not possible and one way to instead approximate the distribution is through simulation. For now, let us assume that we know the distribution $F$. Then in many cases it is possible to draw $n$ iid copies of the random variable $X_1^\star,\ldots X^\star_n \sim F$ using a computer. Then calculate $t^\star = T(X_1^\star,\ldots X^\star_n)$. Repeat this $B$ times to obtain $t_1^\star,\ldots, t_B^\star$. 
+
+If we have $B$ such copies, by the large of large numbers, as $B\to \infty$,
+$$
+\frac{1}{B}\sum_{i=1}^B f(t_i^\star)\overset{p}\to  E\left[ f(T_n) \right].
+$$
+So that in practice, we would approximate the right hand side with the left hand side. The most important example is the variance:
+$$
+Var\left( T_n \right) = E\left[T_n^2\right] - E\left[T_n\right]^2 \approx \frac{1}{B}\sum_{i=1}^B (t_i^\star)^2 - \left( \frac{1}{B}\sum_{i=1}^B t_i^\star \right)^2 = \frac{1}{B}\sum_{i=1}^B \left( t_i^\star - \bar{t^\star} \right)^2
+$$ 
+
+As an example, let us consider $X_1,\ldots, X_{n}\overset{iid}\sim \mathsf{Exp}(1)$. We would like to know the distribution of the sample median and in particular the expected value and variance.
+
+```r
+n <- 100
+B <- 1000
+
+T <- median
+
+tstar <- array(dim = B)
+
+for (i in 1:B) {
+  x <- rexp(n, rate =1)
+  tstar[i] <- T(x)
+}
+
+mean(tstar) #Expected value
+```
+
+```
+## [1] 0.7004088
+```
+
+```r
+var(tstar) #Variance
+```
+
+```
+## [1] 0.01046803
+```
+
+In practice this is not helpful since we rarely know $F$. What we have is $\hat F_n$, so let us approximate $F\approx \hat F_n$ and therefore also $Var_F(T_n) \approx Var_{\hat F_n}(T_n)$. The right hand side here is then the variance of $T(X_1,\ldots , X_n)$, where $X_i$ is iid and distributed as $\hat F_n$. Then we proceed as above: Draw $n$ iid copies of the random variable $X_1^\star,\ldots X^\star_n \sim \hat F_n$ using a computer. Then calculate $t^\star = T(X_1^\star,\ldots X^\star_n)$. Repeat this $B$ times to obtain $t_1^\star,\ldots, t_B^\star$. Here, since $\hat F_n$ is the empirical distribution, drawing from $\hat F_n$ means simply to draw a point at random from the original data set. In contrast to the above, this method can be summarized as:
+$$
+\hat F_n\overset{sample}{\to} x^\star \overset{T}{\to} t^\star.
+$$
+
+This method is called the bootstrap.
+
+\BeginKnitrBlock{note}<div class="note">Bootstrap variance estimation:
+
+1. Draw $X_1^\star,\ldots, X_n^\star \sim \hat F_n$.
+2. Compute $t^\star = T(X_1^\star,\ldots, X_n^\star)$.
+3. Repeat steps 1 and 2, $B$ times, to get $t_{1}^\star,\ldots,t_{B}^\star$
+4. Approximate $Var_F(T_n)$ by
+$$
+  v_{boot} = \frac{1}{B}\sum_{b=1}^B\left( t^\star_{b} - \frac{1}{B}\sum_{r=1}^B t^\star_{r} \right)^2
+$$</div>\EndKnitrBlock{note}
+
+Let us implement this method to calculate the variance of the median:
+
+```r
+T <- median(data.df$y)
+n <- nrow(data.df)
+B <- 1000
+Tboot <- array(dim = B)
+
+for (i in 1:B) {
+  indices <- sample(seq(1:n), size = n, replace = TRUE)
+  tstar[i] <- median(data.df$y[indices])
+}
+
+sd(tstar) #Standard error of median
+```
+
+```
+## [1] 0.1381651
+```
+In practice we would rather use the boot library.
+
+```r
+library(boot)
+boot(data = data.df, statistic = function(data, index) median(data$y[index]), R = 1000)
+```
+
+```
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = data.df, statistic = function(data, index) median(data$y[index]), 
+##     R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+##      original     bias    std. error
+## t1* 0.1139092 0.02018697   0.1392329
+```
+Since here we know $F$ we can simulate the true variance, an alternative not available in practice.
+
+```r
+n <- nrow(data.df)
+B <- 1000
+Tsim <- array(dim = B)
+
+for (i in 1:B) {
+  simData.df <- data.frame( y = rnorm(n) )
+  Tsim[i] <- median(simData.df$y)
+}
+
+sd(Tsim) #Standard error of median
+```
+
+```
+## [1] 0.1251993
+```
+
+It is also possible to construct confidence intervals for $T(F)$ using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals:
+
+Let us call $\theta = T(F)$ and $\hat\theta_n  = T(\hat F_n)$ and define the pivot $R_n = \hat\theta_n - \theta$. Write the distribution function of $R_n$ as:
+$$
+H(r) := P(R_n\leq r).
+$$
+Then,
+\begin{align}
+&P\left(\hat\theta_n - H^{-1}(1-\alpha/2)\leq \theta \leq \hat\theta_n - H^{-1}(\alpha/2)\right) = P\left( H^{-1}(\alpha/2) \leq \hat\theta_n - \theta \leq  H^{-1}(1-\alpha/2) \right)\\
+=& P\left( H^{-1}(\alpha/2) \leq R_n \leq  H^{-1}(1-\alpha/2) \right) = H\left( H^{-1}(1-\alpha/2) \right) - H\left( H^{-1}(\alpha/2) \right)\\
+=& 1-\frac{\alpha}{2}-\frac{\alpha}{2} = 1-\alpha,
+\end{align}
+proving that
+$$
+\left[\hat\theta_n - H^{-1}(1-\alpha/2) , \hat\theta_n - H^{-1}(\alpha/2) \right]
+$$
+is a $1-\alpha$ CI for $\theta$.
+
+Now, since $H$ is unkown this is not practical. We can however construct a bootstrap estimate of $H$ by drawing $R^\star_{n,b} = \hat\theta^\star_{n,b}- \hat\theta_n$ and defining:
+$$
+\hat H(r) = \frac{1}{B}\sum_{b=1}^B I(R^\star_{n,b}\leq r).
+$$
+The quantity $H^{-1}(\alpha)$ is the $\alpha$ quantile of $H$. In the CI we replace $H^{-1}$ by $\hat H^{-1}$, i.e.\ the $\alpha$ quantile of $\R^\star_{n,b}$. Since $\hat \theta_n$ is fixed in the bootstrap sample, the $\alpha$ quantile of $R^\star_{n,b}$ is simply $\theta_\alpha^\star - \hat\theta_n$, where $\theta_\alpha^\star$ denotes the $\alpha$ quantile of $\hat\theta^\star_{n,b}$.
+
+Finally we get that the $1-\alpha$ bootstrap pivotal CI is
+$$
+C_n = \left[ \hat\theta_n - (\theta^\star_{1-\alpha/2} - \hat\theta_n) , \hat\theta_n - (\theta^\star_{\alpha/2} - \hat\theta_n) \right] = \left[ 2\hat\theta_n - \theta^\star_{1-\alpha/2} , 2\hat\theta_n -\theta^\star_{\alpha/2}  \right]
+$$
+Let us implement this on the same dataset as above.
+
+```r
+alpha <- 0.05
+# T <- median(data.df$y)
+# n <- nrow(data.df)
+# B <- 1000
+# Tboot <- array(dim = B)
+# 
+# for (i in 1:B) {
+#   indices <- sample(seq(1:n), size = n, replace = TRUE)
+#   tstar[i] <- median(data.df$y[indices])
+# }
+
+q <- unname( quantile(tstar, probs = c(1-alpha/2, alpha/2)) )
+
+lowerCI <- 2*T - q[1]
+lowerCI
+```
+
+```
+## [1] -0.1422005
+```
+
+```r
+upperCI <- 2*T - q[2]
+upperCI
+```
+
+```
+## [1] 0.2839471
+```
+
+Even simpler is to use the boot library
+
+```r
+library(boot)
+boot.result<- boot(data = data.df, statistic = function(data, index) median(data$y[index]), R = 1000)
+
+boot.ci(boot.result, type = "basic")
+```
+
+```
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = boot.result, type = "basic")
+## 
+## Intervals : 
+## Level      Basic         
+## 95%   (-0.1394,  0.3072 )  
+## Calculations and Intervals on Original Scale
+```
+
+A better alternative which we do not cover in this course is the bias-corrected CI. It is however just as easy to use.
+
+```r
+library(boot)
+boot.result<- boot(data = data.df, statistic = function(data, index) median(data$y[index]), R = 1000)
+
+boot.ci(boot.result, type = "bca")
+```
+
+```
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = boot.result, type = "bca")
+## 
+## Intervals : 
+## Level       BCa          
+## 95%   (-0.1028,  0.3646 )  
+## Calculations and Intervals on Original Scale
+```
+
+## Parametric boostrap
+
+Here we discuss an alternative to the (non-parametric) bootstrap from the previous section.
+
+The main idea of the bootstrap was that the empirical distribution $\hat F$ is (hopefully) close to the actual distribution $F$. Another method of finding an approximation to $F$ is to take some family of distribution, parametrised by a parameter $\theta$, $F_\theta$, and find the $\theta$ that agrees the best with the observed sample. For example by choosing $\theta = \hat\theta_{ML}$.
+
+Then we proceed as before. We may now sample from $\hat F = F_{\hat\theta}$ and estimate variances and construct confidence intervals as before. Implementing this is not complicated.
+
+
+```r
+T <- median(data.df$y)
+n <- nrow(data.df)
+B <- 1000
+Tboot <- array(dim = B)
+
+mu.hat <- mean(data.df$y)
+sigma.hat <- sd(data.df$y)
+
+for (i in 1:B) {
+  tstar[i] <- median(rnorm(n, mean = mu.hat, sd = sigma.hat))
+}
+
+sd(tstar)
+```
+
+```
+## [1] 0.1109601
+```
+
+
+## An application II
+
+Here we present an application of what we have learned in this chapter. The application is based on an example in Computer Age... TODO
+
+The data set consists of measurements on the kidney function of 157 individuals. We fit a local regression to the data and plot.
+
+```r
+kidney.df <- read.table("data/kidney.dat", header = TRUE)
+
+kidney.loess <- loess(tot ~ age, kidney.df)
+kidney.df$loess <- kidney.loess$fitted
+
+library(ggplot2)
+ggplot(kidney.df, aes(x = age, y = tot)) +
+  geom_point() +
+  geom_line(aes(y = loess), color = "blue", size = 1.5) +
+  labs( y = "kidney function", x="age") + 
+  theme_minimal()
+```
+
+<img src="02-bootstrap_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<p>Now we can predict the kidney function of new individual of age 50.</p>
+
+```r
+predict(kidney.loess, newdata = c(50))
+```
+
+```
+## [1] -1.232145
+```
+Let use use bootstrap to find the standard deviation of this prediction and construct a CI.
+
+```r
+library(boot)
+
+f <- function(data,index){
+  predict(loess(tot ~ age, data[index,]),
+          newdata = c(50))
+}
+
+boot.result<- boot(data = kidney.df, statistic = f, R = 1000)
+boot.result
+```
+
+```
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = kidney.df, statistic = f, R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+##      original     bias    std. error
+## t1* -1.232145 0.02884506   0.3640521
+```
+
+```r
+boot.ci(boot.result, type = "bca")
+```
+
+```
+## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = boot.result, type = "bca")
+## 
+## Intervals : 
+## Level       BCa          
+## 95%   (-1.986, -0.552 )  
+## Calculations and Intervals on Original Scale
+```
+
+
+
+

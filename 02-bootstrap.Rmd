@@ -1,4 +1,4 @@
-# Bootstrap {#ch-bootstrap}
+# Bootstrap (draft) {#ch-bootstrap}
 
 This chapter's main topic is a method for measuring the accuracy of sample estimates. But first we discuss the distinction between parametric and non-parametric statistics.
 

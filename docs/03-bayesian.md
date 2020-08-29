@@ -1,0 +1,486 @@
+# Bayesian statistics (draft)
+
+## Some basic decision theory
+
+In this section we introduce statistical decision theory, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.
+
+Consider a statistical model with a parameter $\theta\in\Theta$. Based on data $x$, we are going to make a decision $\delta(x)$. For example, the decision might be a point estimate $\delta(x)=\bar x$ or some interval estimator. To evaluate if our decision was good we have a loss function $l(\theta,\delta(x))$. It is the penalty of making decision $\delta(x)$ when the true parameter is $\theta$. In the continuous case we might take squared loss
+$$
+l(\theta,\delta(x)) = (\theta-\delta(x))^2,
+$$
+and in the discrete case a 0-1 loss
+$$
+l(\theta,\delta(x)) =\begin{cases}
+0\text{ if } \theta=\delta(x)\\
+1\text{ if } \theta\neq \delta(x).
+\end{cases}
+$$
+We would like to choose $\delta$ such that the loss is as small as possible. However, the loss depends on both the data $x$ and the parameter $\theta$ and thus comparison becomes complicated. Instead we calculate the risk associated with a particular decision.
+
+The risk is defined as
+$$
+R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
+$$
+Here the expectation is taken of a random sample $X$, while $\theta$ is held fixed. Still the comparison of different $\delta$ is not trivial. It may be that for $\delta_1$ the risk is lower than the risk of $\delta_2$ for some values of $\theta$, while for some other $\theta$, the risk is higher.
+
+Consider an unknown parameter $\theta$ that takes values in a parameter space $\Theta$. Our task is to decide what is the true value of $\theta$ and we call this decision $\hat\theta$. To help us we have data $x$ and so our decision is a function of the data, $\hat\theta  = \hat\theta(x)$. To find the prefered $\delta$ there are different strategies, for example admissibility, restricting the class of decisions and minimax approaches.
+
+Note that the distinguising feature of the above risk function is that the expectation is taken over a random sample $X$. This is known as frequentist statistics. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e.\ for most data $x$. However in many situations the statistican is given one dataset and the task is to make valid inference for that particular dataset. In that situation, one might argue, it does not make sense to consider any other dataset.
+
+The Bayesian way is to instead consider $\theta$ as random, with a distribution $p(\theta)$. Even if we consider $\theta$ to have a fixed unkown value it could make sense to consider it having a distribution. For example, if we let $\theta$ be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, cleary this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative.
+
+The Bayesian statistican would call $p(\theta)$ the prior distribution on $\theta$. Then, after observing the data $x$, calculate the posterior distribution, using Bayes' formula,
+$$
+p(\theta \mid x) = \frac{p(x\mid \theta)p(\theta)}{p(x)}.
+$$
+Here $p(x\mid \theta)$ is the model of how data is generated. That is, the probability or density of obtaining a particular sample, conditioned on knowing $\theta$. Also, $p(x)$ is the marginal density of the observed data. We can write it formally as
+$$
+p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
+$$
+The posterior risk is the defined as
+$$
+\rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
+$$
+Here the random quantity is $\theta$ while the data $x$ is held constant. The Bayes action $\delta^\star$ is the decision $\delta$ that minimizes the posterior risk. For example, let $l(\theta,\delta) = (\theta - \delta)^2$. Then
+\begin{align}
+\rho(p(\theta),\delta) &= \int (\theta - \delta^2) p(\theta\mid x)d\theta\\
+&= \delta^2 - 2\delta \int \theta p(\theta\mid x)d\theta + \int \theta^2p(\theta\mid x)d\theta,\\
+\implies \partial_\delta \rho(p(\theta),\delta) &= 2\delta -2\int \theta p(\theta\mid x)d\theta = 0\\
+\implies \delta &=\int \theta p(\theta\mid x)d\theta.
+\end{align}
+That is, the optimal decision is to choose the mean of the posterior distribution.
+
+A hybrid between the frequentist and the Bayesian approach is the average risk (with respect to $p(\theta)$):
+$$
+r(p(\theta),\delta) = \int R(\theta,\delta)p(\theta)d\theta.
+$$
+The Bayes risk is the minimum of the average risk, taken over all $\delta$ and the decision $\delta(x)$ that achieves the minimum is called the Bayes rule. Since the risk here is the frequentist risk, this is fundamentally a frequentist quantity. However, we can write
+\begin{align}
+r(p(\theta),\delta) &= \int \int l(\theta,\delta(x))p(x\mid\theta)dxp(\theta)d\theta\\
+& = \int\int l(\theta,\delta(x)) p(\theta\mid x)d\theta p(x)dx\\
+& = \int \rho(p(\theta),\delta(x)) p(x)dx.
+\end{align}
+This means that we can find the Bayes rule by taking the Bayes action for each $x$.
+
+## Bayesian statistics
+
+In the previous section we saw that the difference between the frequentist methods and the Bayesian methods is that the frequentist averages over different samples while the Bayesian averages over different parameter values. The Bayesian method is therefore to assign a prior distribution $p(\theta)$ to the unknown parameter. This distribution reflects our belief about the parameter before we see the data.
+
+We model how data is generated by $p(x\mid \theta)$. That is, the probability or density of obtaining a particular sample, conditioned on knowing $\theta$.
+
+We calculate the posterior distribution of the parameter, given the observations
+$$
+p(\theta \mid x) = \frac{p(x\mid \theta)p(\theta)}{p(x)}.
+$$
+Here $p(x)$ is the marginal density of the observed data. We can write it formally as
+$$
+p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
+$$
+<p>However, note that as $x$ is fixed and we are interested in the distribution of $\theta$, $p(x)$ can be regarded as a constant. Also, $p(x\mid \theta)$ is the likelihood, $L(\theta)$. We therefore may write</p>
+\BeginKnitrBlock{note}<div class="note">$$
+p(\theta\mid x) = c L(\theta)p(\theta) \propto L(\theta)p(\theta).
+$$</div>\EndKnitrBlock{note}
+That is, the posterior is proportional to the likelihood times the prior. Another way to write this is by applying the logarithm.
+$$
+\ln p(\theta\mid x) = l(\theta) + \ln p(\theta) + c
+$$
+We see that the total information regarding $\theta$, expressed as the posterior distribution, is a combination of the likelihood obtained from the observations and the knowledge before the observations, expressed in the prior distribution.
+
+Once we have the posterior, we can keep it as it is. Perhaps $\theta$ is one part of a larger model and by using the full distribution we are able to take full account of the uncertainty. But we might also summarize the posterior in the posterior mean
+$$
+\bar \theta = \int \theta p(\theta\mid x)d\theta,
+$$
+or construct a $1-\alpha$ posterior interval That is $a$ and $b$ such that
+$$
+P\left( a\leq \theta \leq b \right) = \int_a^b p(\theta\mid x)d\theta = 1-\alpha.
+$$
+We might also want to predict a new observation $x^\text{new}$,
+$$
+p(x^\text{new}\mid x) = \int p(x^\text{new}\mid \theta) p(\theta\mid x)d\theta.
+$$
+
+<p>Let us examine a simple example: We flip a coin $n$ times and we want to make Bayesian inference regarding the probability of head, $p$. The first step is to decide on the data generating model. It seems natural to assume that $X_1,\ldots X_n \overset{iid}\sim \mathsf{Bernoulli}(\theta)$. The second step is to decide on a prior distribtion of $\theta$. Since $\theta$ represents a probability, the prior distribution should be confined to $[0,1]$. A popular choice of prior distribtion on probabilities is the beta distribution. It has density,</p>
+$$
+p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 0\leq \theta\leq 1,
+$$
+<p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
+<div class="figure" style="text-align: center">
+<img src="03-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
+<p class="caption">(\#fig:betaDist)Density of the beta distribution</p>
+</div>
+We see from the figure that by changing $\alpha$ and $\beta$ the beta prior can reflect different kinds of prior information. For example, $\alpha = \beta = 1$ is a uniform distribution, that is a prior that gives equal probability to any value of $\theta$. On the other hand, $\alpha =3$, $\beta = 2$ gives small probability to $\theta$ close to 0 and 1 and puts more probability to $\theta>0.5$ than $\theta < 0.5$.
+
+Now let us calculate the posterior distribution of $\theta$ after observing $x^n=(x_1,\ldots, x_n)$. First we need the likelihood of the observation
+$$
+L(\theta) = \prod_{i=1}^n\theta^{x_i}(1-\theta)^{1-x_i} = \theta^{n\bar x}(1-\theta)^{n-n\bar x},
+$$
+where $n \bar x = \sum_i x_i$. Then the posterior is
+$$
+p(\theta\mid x^n) \propto L(\theta)p(\theta) \propto \theta^{n\bar x}(1-\theta)^{n-n\bar x} \theta^{\alpha-1}(1-\theta)^{\beta-1} = \theta^{\alpha + n\bar x -1}(1-\theta)^{\beta + n - n\bar x -1},
+$$
+we recognize this as a $\mathsf{Beta}(\alpha+n\bar x, \beta+n-n\bar x)$ distribution. In this situation, when the prior and posterior happen to be in the same family of distribtions, the prior is said to be conjugate with respect to the model.
+
+From here we easily get that the mean of the posterior is 
+$$
+E\left[ \theta \mid x^n \right] = \frac{\alpha + n\bar x}{\alpha+\beta + n}.
+$$
+It can be interesting to note here that as $n\to \infty$, the above converges to $\bar x$, i.e.\ for a large sample, the influence of the prior becomes small and the mean of the posterior is simply the MLE. If we wish to predict a new sample, we would calculate
+$$
+p(x^\text{new} = 1 \mid x^n) = \int p(x^\text{new} = 1\mid \theta) p(\theta\mid x^n)d\theta = \int \theta p(\theta \mid x^n)d\theta = E\left[ \theta \mid x^n \right].
+$$
+To make things more concrete, let us say that we observe $\bar x = 0.3$. Note how the likelihood, and therefore also the posterior, is a function of data only through $\bar x$. This is because $\bar x$ is a sufficient statistic. As an illustration, let us also choose $\mathsf{Beta}(5.0, 2.0)$ as the prior. Below we plot the prior, likelihood and posterior for $n=10$ and $n=100$. Note how the posterior becomes more like the likelihood as the sample size increase.
+
+<div class="figure" style="text-align: center">
+<img src="03-bayesian_files/figure-html/bernoulliPosterior-1.png" alt="Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)" width="80%" />
+<p class="caption">(\#fig:bernoulliPosterior)Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)</p>
+</div>
+
+## Choosing prior
+
+It is clear that the choice of prior will influence the inference and so the choice of prior distribution becomes important.
+
+If we have a subjective belief about what values the parameter is likely to take we can choose a prior that reflects this belief. For example we might know from experience that coins have a probability close to 0.5 of landing on heads and so we would choose a prior with most of the probability around 0.5.
+
+However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a noninformative prior. One way is to use a flat prior, $p(\theta)\propto \text{constant}$. For example in the Bernoulli example choosing $p(\theta)=1$ seems reasonable.
+
+Consider the model $X\sim \mathsf N(\theta,\sigma^2), $\sigma$ known. Here the flat prior would be $p(\theta)=c>0$. Note however that $p$ can never be a proper density since
+$$
+\int_{-\infty}^\infty p(\theta)d\theta = \infty,
+$$
+for every choice of $c$. Then $p$ is said to be an improper prior. Although a little curious, we can still perform the Bayesian inference program. Now the posterior distribution is
+$$
+p(\theta \mid x) \propto L(\theta)p(\theta) \propto L(\theta).
+$$
+So that with this choice the posterior distribution is just the likelihood. Continuing the example, let us say that we have a sample of size $n$ with sample mean $\bar x$. Then the likelihood is
+$$
+L(\theta) \propto \prod_{i=1}^n e^{-\frac{1}{2\sigma^2}(x_i-\theta)^2} = e^{-\frac{1}{2\sigma^2}\sum_{i=1}^n(x_i-\theta)^2} \propto e^{-\frac{n}{2\sigma^2}(\theta-\bar x)^2},
+$$
+which is the density of $\mathsf N(\bar x, \sigma^2/n)$. Therefore the point estimates and interval estimators will be the same as in likelihood based inference.
+
+A problem with flat priors is however that they are only non-informative in a particular parametrisation. Take again the Bernoulli example. If we say that we do not have any information about $\theta$, then it would be reasonable to say that we also do not have any information about some function of $\theta$. Take for example $\psi = \ln (\theta/(1-\theta))$. If $p(\theta)=1$ then
+\begin{align}
+p(\psi) & = \partial_x P(\psi \leq x) = \partial_x P\left( \ln (\theta/(1-\theta)) \leq x\right)\\
+&= \partial_x P\left( \theta \leq \frac{e^x}{1+e^x} \right) = \partial_x \frac{e^x}{1+e^x} = \frac{e^x}{(1+e^x)^2},
+\end{align}
+which is clearly no longer non-informative. We say that flat priors are not transformation invariant.
+
+One way to construct a prior that does not change under a change of parametrisation is Jeffreys' prior:
+$$
+p(\theta)\propto \sqrt{I(\theta)},
+$$
+where $I$ is the Fisher information. In the Bernoulli example this is a $\mathsf{Beta}(1/2,1/2).
+
+## Multiparameter problems
+
+If there is more than one parameter, the previous discussion applies without any major changes. What might complicate things is if we wish to do inference on just one of the parameters. Then we need to calculate the marginal posterior distribution of the parameter, which may not be practical. One remedy is to simply simulate from the joint posterior distribution and from the simulation pick the parameters that are of interest.
+
+Let us consider the example of comparing two binomials. The data generating model is
+\begin{align}
+X_1 &\sim \mathsf{Bin}(n_1,\theta_1),\\
+X_2 &\sim \mathsf{Bin}(n_2,\theta_2).
+\end{align}
+The parameter that we are interested in is $\tau:=\theta_2-\theta_1$. If we assume a flat prior on $\theta_1$ and $\theta_2$ the posterior becomes,
+$$
+p(\theta_1,\theta_2\mid x) \propto L(\theta_1,\theta_2) \propto \theta_1^{x_1}(1-\theta_1)^{n_1-x_1}\theta_2^{x_2}(1-\theta_2)^{n_2-x_2}.
+$$
+Note that $\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)$ is independent of $\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).$ Therefore we can simulate from $\tau\mid x$ by drawing $\theta_1^\star$ and $\theta_2^\star$ from the respective distribution and setting $\tau^\star = \theta_2^\star - \theta_1^\star$.
+
+
+```r
+library(ggplot2)
+library(latex2exp)
+
+n1 <- 10
+n2 <- 10
+theta1 <- 0.5
+theta2 <- 0.3
+nPost <- 2000
+
+set.seed(42)
+
+#Generate data
+x1 <- rbinom(n = 1, size = n1, prob = theta1)
+x2 <- rbinom(n = 1, size = n2, prob = theta2)
+
+#Posterior for theta
+theta1.post <- rbeta(n = nPost, shape1 = x1+1, shape2 = n1-x1+1)
+theta2.post <- rbeta(n = nPost, shape1 = x2+1, shape2 = n2-x2+1)
+
+tau.post <- theta2.post - theta1.post
+
+ggplot(data.frame(tau.post), aes(x=tau.post)) + 
+ geom_histogram(aes(y=..density..), colour="black", fill="white")+
+ geom_density(alpha=.2, fill="black") +
+  theme_minimal() +
+  xlab(TeX("$\\tau$"))
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-bayesian_files/figure-html/multiParameterExample-1.png" alt="Posterior distribution" width="80%" />
+<p class="caption">(\#fig:multiParameterExample)Posterior distribution</p>
+</div>
+
+## Markov chain monte carlo
+
+So far we have been using that the posterior distribution is proportional to the likelihood times the prior distribution. We were also careful to choose the prior as the conjugate distribution so that we could recognize the posterior distribution. In general we have to calculate the normalizing constant:
+$$
+\int p(\theta\mid x)p(\theta)d\theta.
+$$
+In general, and in particular if $\theta$ is high dimensional, we will not be able to calculate this.
+
+In this section we will see how we can, instead of calculating it, generate samples from the posterior distribution. This is the method that is used in modern Bayesian statistics. Here we are only able to scratch the surface. Both in terms of theory, since explaining why the method works would require first learning about Markov chains, and in terms of complexity of the methods, since the methods that are used in practice are usually more advanced version of what we present here.
+
+We assume that we are able to write down the likelihood of our data generating model and the prior on our parameters. This is possible for most models and so we are able to write the prior distribution up to a multiplying constant.
+
+The method we will discuss is called the Metropolis-Hastings algorithm and it is an example of a Markov chain monte carlo (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte carlo means that is is an algorithm that depends on random sampling.
+
+The Metropolis-Hastings algorithm is as follows: Suppose we want to sample from the posterior $p(\theta\mid x).$ Suppose also that this is not possible, but that we are able to generate samples from some other distribution $q(\theta^\star \mid \theta).$ Then do the following:
+
+Choose $\theta_0$ arbitrarily. For $i\geq 1$ do:
+
+1. Generate a proposal $\theta^\star\sim q(\theta^\star\mid \theta_{i-1})$
+2. Calculate
+$$
+r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1}\mid \theta^\star)}{q(\theta^\star\mid\theta_{i-1})}, 1 \right\}.
+$$
+3. Set
+$$
+\theta_i = \begin{cases}
+\theta^\star\quad \text{with probability } r\\
+\theta_i\quad  \text{with probability } 1-r.
+\end{cases}
+$$
+
+Theory then tells us that as $i$ becomes large, the distribution of $\theta_i$ will be approximately that of $p(\theta\mid x).$
+
+Note that here the normalizing constant in $p(\theta\mid x)$ is cancelled since it appears both in the numerator and denominator.
+
+It remains to choose $q(\theta^\star\mid x). One common choice is called random walk Metropolis Hastings and consists of letting
+$$
+\theta^\star = \theta_{i-1} + \varepsilon_{i-1},
+$$
+where $\varepsilon_{i-1}$ is and independent random variable. For example $\varepsilon_{i-1}\overset{iid}{\sim} \mathsf N(0,b^2)$ for some $b^2$. In this case $q(\theta_{i-1}\mid \theta^\star)=q(\theta^\star\mid \theta_{i-1})$ and so the acceptance probability becomes
+$$
+r=\min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)} ,1\right\}
+$$
+Here it is important to choose $b$ in a such that the correlation between $\theta_i$ and $\theta_{i-1}$ is small. If $b$ is small, almost all proposals will be accepted, but since $\varepsilon_i$ is small, $\theta_i$ will be highly correlated with $\theta_{i+1}. On the other hand, if $b$ is large, the proposal will rarely be accepted, and $\theta_i=\theta_{i-1}$. As a rule of thumb, $b$ should be set such that about $50\%$ of the proposals are accepted.
+
+Another class of proposal distrbutions is $q(\theta^\star\mid \theta_{i-1})\equiv q(\theta^\star)$, that is $\theta^\star$ is independent of $\theta_{i-1}$. The acceptance probabiltiy is then
+$$
+r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1})}{q(\theta^\star)}, 1 \right\}.
+$$
+This is known as independence Metropolis Hastings. Here, since each time the proposal is accepted $\theta_i$ will change, we aim for as high an acceptance probability as possible.
+
+## An application III
+<!-- Taken from http://www2.geog.ucl.ac.uk/~mdisney/teaching/GEOGG121/sivia_skilling/mterop_hastings.pdf -->
+
+Here we consider the Bayesian probit model as an example. The data generating model is
+\begin{align}
+Y_i&\sim \mathsf{Bin}(n_i,\pi_i),\\
+\pi_i &= \Phi(z_i'\beta),
+\end{align}
+where $z_i=\begin{bmatrix} 1&z_{i1} &z_{i2} &z_{i3}  \end{bmatrix}'$ are indicators and $\Phi$ is the $\mathsf N(0,1)$ distribution function. The data is shown in the table.
+
+Table: (\#tab:bayesProbit)
+
+|  y|  n| z1| z2| z3|
+|--:|--:|--:|--:|--:|
+| 11| 98|  1|  1|  1|
+|  1| 18|  0|  1|  1|
+|  0|  2|  0|  0|  1|
+| 23| 26|  1|  1|  0|
+| 28| 58|  0|  1|  0|
+|  0|  9|  1|  0|  0|
+|  8| 40|  0|  0|  0|
+
+The likelihood is
+$$
+L(\beta)\propto \prod_{i=1}^n\Phi(z_i'\beta)^{y_i}(1-\Phi(z_i'\beta))^{n_i-y_i}.
+$$
+We choose a normal distribution as prior on $\beta$,
+$$
+\beta \overset{iid}\sim \mathsf N(0,\lambda),
+$$
+with $\lambda=10$. We will use a random walk Metropolis Hastings algorithm with $\varepsilon\overset{iid}\sim \mathsf N(0,\sigma^2)$. That is, the prior can be written as
+$$
+p(\beta) \propto \exp\left( -\frac{1}{2\lambda}\sum_{j=1}^3 \beta_j^2 \right)
+$$
+
+Now, we implement this in R. First we load the data.
+
+```r
+data.df <- read.csv("data/bayesProbit.dat", header=TRUE)
+data.df$z0 <- rep(1,nrow(data.df))
+
+col_order <- c('y', 'n','z0','z1','z2','z3')
+data.df <- data.df[, col_order]
+
+n <- nrow(data.df)
+```
+Then implement the likelihood function and prior density. We do this on a log-scale.
+
+```r
+logLFcn <- function(data){
+  function(beta){
+    p <- pnorm(as.matrix(data[3:6])%*%beta)
+    sum <- 0
+    for (i in seq_len(nrow(data))) {
+      sum <- sum + data$y[i]*log(p[i]) + (data$n[i]-data$y[i])*log(1-p[i])
+    }
+    sum
+  }
+}
+logL <- logLFcn(data.df)
+
+lambda <- 10
+logPrior <- function(beta){
+    -1/2/lambda*sum(beta^2)
+}
+
+logPosterior <- function(beta){ logL(beta) + logPrior(beta)}
+```
+Next we implement the main MCMC-loop. We make it a function so that we can easily reuse it later.
+
+```r
+mcmc.iter <- function(x, logPosterior, sigma, n.iter){
+#Random walk Metropolis Hastings MCMC
+
+  res <- matrix(NA, n.iter+1, length(x))
+  res[1,] <- x
+  logPost <- logPosterior(x)
+
+  accProb <- 0
+
+  for (i in seq_len(n.iter)){
+    #New proposal
+    xProp <- x + rnorm(length(x), 0, sigma)
+    #Log posterior of proposal
+    logPostProp <- logPosterior(xProp)
+    #Acceptance probability
+    r <- min( c(1, exp(logPostProp - logPost) ) )
+
+    if(r>runif(1)){
+      #Accept
+      x <- xProp
+      logPost <- logPostProp
+      accProb <- accProb + 1
+    }
+    res[i+1,] <- x
+  }
+  list(sample = res, accProb = accProb/n.iter)
+}
+```
+Now run the Markov chain. First a burn-in of 1000 steps, that we then discard. After that a longer run.
+
+```r
+beta <- c(0,0,0,0) #Initial value
+nIter <- 100000 #Number of MC steps
+
+set.seed(42)
+
+beta.mcmc <- mcmc.iter(beta,
+                       logPosterior,
+                       0.08,
+                       1000)
+
+beta.mcmc <- mcmc.iter(beta.mcmc$sample[nrow(beta.mcmc$sample),],
+                       logPosterior,
+                       0.08,
+                       nIter)
+```
+Now we do some diagnostics of the simulation. First check that the acceptance probability is reasonable.
+
+```r
+beta.mcmc$accProb
+```
+
+```
+## [1] 0.57037
+```
+Then we plot the trajectories of the parameters. We want to see that the trajectories appear stationary and that they are not stuck in one state. We only plot the first 1000 steps.
+<div class="figure" style="text-align: center">
+<img src="03-bayesian_files/figure-html/logProbBayesTrajectory-1.png" alt="Trajectories of the Markov chain" width="80%" />
+<p class="caption">(\#fig:logProbBayesTrajectory)Trajectories of the Markov chain</p>
+</div>
+
+Then we calculate the cumulative mean. We want to see that the simulation is long enough so that the law of large numbers have come in to effect.
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following object is masked from 'package:gridExtra':
+## 
+##     combine
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+<div class="figure" style="text-align: center">
+<img src="03-bayesian_files/figure-html/logProbBayesCumMean-1.png" alt="Cumulative mean of the Markov chain" width="80%" />
+<p class="caption">(\#fig:logProbBayesCumMean)Cumulative mean of the Markov chain</p>
+</div>
+
+Then we plot the posterior distribution of the parameters.
+<div class="figure" style="text-align: center">
+<img src="03-bayesian_files/figure-html/logProbBayesPostDist-1.png" alt="Posterior distribution" width="80%" />
+<p class="caption">(\#fig:logProbBayesPostDist)Posterior distribution</p>
+</div>
+
+From this we can get point estimates, the mean of the posterior distribution, and credible intervals.
+
+```r
+#Point estimates
+apply(beta.mcmc$sample, 2, mean)
+```
+
+```
+## [1] -1.0903722  0.6038363  1.1894802 -1.9005936
+```
+
+```r
+#95% CI
+apply(beta.mcmc$sample, 2, quantile, probs = c(0.05,0.95))
+```
+
+```
+##           [,1]      [,2]      [,3]      [,4]
+## 5%  -1.4605295 0.2098086 0.7740177 -2.353467
+## 95% -0.7401921 1.0111992 1.6204207 -1.465202
+```
+As a final check, let us verify that our estimates makes sense by comparing our data to our predictions.
+
+```r
+beta.fit <- apply(beta.mcmc$sample, 2, mean)
+p <- pnorm(as.matrix(data.df[3:6])%*%beta.fit)
+y.pred <- data.df$n*p
+y.pred
+```
+
+```
+##              [,1]
+## [1,] 11.321624659
+## [2,]  0.644637408
+## [3,]  0.002780966
+## [4,] 19.732823764
+## [5,] 31.289477413
+## [6,]  2.819642491
+## [7,]  5.510984419
+```
+This is similar to the data.
+
+
+
+

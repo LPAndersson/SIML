@@ -1,4 +1,4 @@
-# Beyond linearity
+# Beyond linearity (draft)
 
 In this chapter we discuss some non-linear models. The purpose is only to give a short introduction to each model, enough to be able to use it in practice.
 
@@ -11,8 +11,20 @@ $$
 The second term penalizes variability in $h$. Note that there are no parameters in this model and so it is a little surprising that the solutions can be easily characterized. It turns out that the optimal $h$ is a piecewise cubic polynomial with knots at $x_1,\ldots x_n$ and continuous first and second derivatives. The parameter $\lambda$ is usually determined by CV. Instead of $\lambda$ the penalty parameters is sometimes reparametrized as degrees of freedom, which has a similar interpretation as in linear regression.
 
 Let us apply this in an example.
-```{r, warning=FALSE}
+
+```r
 library(caret)
+```
+
+```
+## Loading required package: lattice
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```r
 library(ISLR)
 
 data("Wage", package = "ISLR")
@@ -28,17 +40,14 @@ smooth <- smooth.spline(train.data$age,train.data$wage, cv = TRUE)
 predictions <- predict(smooth, test.data$age)
 mean((predictions$y - test.data$wage)^2)
 ```
-```{r smoothingSpline, cache=FALSE, echo = FALSE, fig.cap='Smoothing spline fit to wage date', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
-ggplot(Wage, aes(x = age, y = wage)) +
-  geom_point() +
-  geom_line(data = data.frame(age = predictions$x,
-                              wage = predictions$y),
-            size = 2, color = cbp1[2]) +
-  theme_minimal()
 ```
+## [1] 1553.058
+```
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/smoothingSpline-1.png" alt="Smoothing spline fit to wage date" width="80%" />
+<p class="caption">(\#fig:smoothingSpline)Smoothing spline fit to wage date</p>
+</div>
 
 ## Generalized additive models
 
@@ -47,11 +56,35 @@ $$
 h(x_i) = \beta_0 + \sum_{j=1}^p h_j(x_{ij}).
 $$
 Here $h_j$ can be in principle any function, for example smoothing splines. We now present a small example using the wage data from ISLR. First load the data, partition into training/test and plot.
-```{r wageDataPlot, cache=FALSE, echo = TRUE, fig.cap='Scatter plot matrix of wage data.', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+
+```r
 library(ISLR)
 library(gam)
-library(GGally)
+```
 
+```
+## Loading required package: splines
+```
+
+```
+## Loading required package: foreach
+```
+
+```
+## Loaded gam 1.20
+```
+
+```r
+library(GGally)
+```
+
+```
+## Registered S3 method overwritten by 'GGally':
+##   method from   
+##   +.gg   ggplot2
+```
+
+```r
 data("Wage", package = "ISLR")
 Wage <- na.omit(Wage)
 
@@ -68,24 +101,66 @@ ggpairs(train.data, columns=c("wage","year","age","education"),
         lower=list(continuous=wrap("smooth_loess",alpha=0.1,color=cbp1[2]))) +
   theme_minimal()
 ```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/wageDataPlot-1.png" alt="Scatter plot matrix of wage data." width="80%" />
+<p class="caption">(\#fig:wageDataPlot)Scatter plot matrix of wage data.</p>
+</div>
 Looking at first row, for the year variable it would probably be fine with a linear fit, while for the age variable, a linear fit seems doubtful. Let us fit two models, one which is linear in year and one with a smoothing spline in year. Both are smoothing splines in age.
-```{r}
+
+```r
 gam.m1 <- gam(wage~ year + s(age , 4) + education , data = Wage)
 gam.m2 <- gam(wage~ s(year , 4) + s(age , 4) + education , data = Wage)
 
 anova(gam.m1, gam.m2)
 ```
+
+```
+## Analysis of Deviance Table
+## 
+## Model 1: wage ~ year + s(age, 4) + education
+## Model 2: wage ~ s(year, 4) + s(age, 4) + education
+##   Resid. Df Resid. Dev Df Deviance Pr(>Chi)
+## 1      2990    3696846                     
+## 2      2987    3692824  3   4021.7   0.3542
+```
 The p-value indicates that the linear fit is satisfactory. Let us calculate the test error, also comparing to a linear model.
-```{r}
+
+```r
 ls <- lm(wage~ year + age + education , data = Wage)
 predictions <- predict(ls, test.data )
 mean((predictions - test.data$wage)^2)
+```
 
+```
+## [1] 1248.707
+```
+
+```r
 predictions <- predict(gam.m1, test.data )
 mean((predictions - test.data$wage)^2)
+```
 
+```
+## [1] 1174.914
+```
+
+```r
 predictions <- predict(gam.m2, test.data )
 mean((predictions - test.data$wage)^2)
+```
+
+```
+## [1] 1170.57
 ```
 The gam models outperform the linear model. The test error is smaller for the gam model with year as smoothed spline, although the difference is small.
 
@@ -132,50 +207,10 @@ The algorithm calculates $f'$ evaluated at the current point $\theta_{old}$. If 
 
 As a toy example, let us implement gradient descent on the function $f(\theta) = \theta^2$, were clearly $\theta^\star = 0$.
 
-```{r gradientDescentExample, cache=FALSE, echo = FALSE, fig.cap='Gradient descent', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-library(ggplot2)
-f  <- function(x) {
-  x ^ 2
-}
-fp <- function(x) {
-  2 * x
-}
-
-#initial guess
-theta.start <- 3
-
-#3 different learning rates
-etas <- c(0.999, 1e-1, 1e-2)
-
-n.iter <- 1000
-thetas <- matrix(nrow = length(etas)*(n.iter + 1), ncol =3)
-row.counter <- 1
-
-for (i in seq_along(etas)) {
-  eta <- etas[i]
-  theta <- theta.start
-  thetas[row.counter,] <- c(eta,0,theta)
-  row.counter <- row.counter + 1
-  for (j in seq_len(n.iter)) {
-    theta <- theta - eta * fp(theta)
-    thetas[row.counter,] <- c(eta,j,abs(theta))
-    row.counter <- row.counter + 1
-  }
-}
-
-theta.df <- data.frame(thetas)
-colnames(theta.df) <- c("eta", "iteration", "theta")
-theta.df$eta <- as.factor(theta.df$eta)
-
-  cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-            "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-  ggplot(theta.df, aes(x = iteration, y = theta, color = eta)) +
-    geom_line(size = 1) +
-    scale_color_manual(values = cbp1) +
-    ylab("abs(theta)") +
-    theme_minimal()
-```
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/gradientDescentExample-1.png" alt="Gradient descent" width="80%" />
+<p class="caption">(\#fig:gradientDescentExample)Gradient descent</p>
+</div>
 We see that the fastest convergence (of these choices) is $\eta = 0.1$. Making $\eta$ smaller gives slower convergence since the step size is smaller, making $\eta$ larger makes the step size to large so that the algorithm overshoots and $\theta$ becomes negative.
 
 In statistics we often want to minimize (or maximize) functions of the form
@@ -195,33 +230,37 @@ The composition of two functions $f_1$ and $f_2$ is the function $f_1(f_2(x))$. 
 ## An application VI
 
 Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library Tensorflow. Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras.
-```{r}
+
+```r
 library(keras)
 install_keras()
+```
 
+```
+## 
+## Installation complete.
+```
+
+```r
 library(keras)
 mnist <- dataset_mnist()
 ```
 The MNIST database is already divided in a training and a test set
-```{r}
+
+```r
 x_train <- mnist$train$x
 y_train <- mnist$train$y
 x_test <- mnist$test$x
 y_test <- mnist$test$y
 ```
 Let us see what the pictures look like.
-```{r mnist1, cache=FALSE, echo = FALSE, fig.cap='Examples from MNIST', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-par(mfcol=c(6,6))
-par(mar=c(0, 0, 3, 0), xaxs='i', yaxs='i')
-for (idx in 1:36) {
-  im <- mnist$train$x[idx,,]
-  im <- t(apply(im, 2, rev))
-  image(1:28, 1:28, im, col=gray((255:0)/255),
-        xaxt='n', main=paste(mnist$train$y[idx]))
-}
-```
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/mnist1-1.png" alt="Examples from MNIST" width="80%" />
+<p class="caption">(\#fig:mnist1)Examples from MNIST</p>
+</div>
 Each image is represented as a 28x28 matrix of pixel values between 0 and 255. We reshape each matrix in to a vector and scale the pixel value so that it is between 0 and 1.
-```{r}
+
+```r
 dim(x_train) <- c(nrow(x_train), 784)
 dim(x_test) <- c(nrow(x_test), 784)
 
@@ -229,19 +268,22 @@ x_train <- x_train / 255
 x_test <- x_test / 255
 ```
 The $y$ variables are given as an integer between 0 and 9. We transform it to a vector of dummy variables.
-```{r}
+
+```r
 y_train <- to_categorical(y_train, 10)
 y_test <- to_categorical(y_test, 10)
 ```
 Now we specify a 2-layer NN with Relu activation in the hidden layer and softmax in the last layer.
-```{r}
+
+```r
 model <- keras_model_sequential()
 model %>%
   layer_dense(units = 50, activation = "relu", input_shape = c(784)) %>%
   layer_dense(units = 10, activation = "softmax")
 ```
 We compile the model by specifying the loss and the optimization method.
-```{r}
+
+```r
 model %>% compile(
   loss = "categorical_crossentropy",
   optimizer = optimizer_rmsprop(),
@@ -249,7 +291,8 @@ model %>% compile(
 )
 ```
 Here, cross entropy loss is just the negative of a multinomial log likelihood. The optimizer, RMSprop, is a way of choosing the learning rate adaptively. Now we train the NN.
-```{r}
+
+```r
 history <- model %>% fit(
   x_train, y_train,
   epochs = 10, batch_size = 128,
@@ -257,27 +300,30 @@ history <- model %>% fit(
 )
 ```
 Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called early stopping.
-```{r mnistHistory, cache=FALSE, echo = FALSE, fig.cap='Training and validation loss/accuracy for each epoch', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-plot(history) +
-  theme_minimal()
+
 ```
+## `geom_smooth()` using formula 'y ~ x'
+```
+
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/mnistHistory-1.png" alt="Training and validation loss/accuracy for each epoch" width="80%" />
+<p class="caption">(\#fig:mnistHistory)Training and validation loss/accuracy for each epoch</p>
+</div>
 We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.
-```{r}
+
+```r
 model %>% evaluate(x_test, y_test,verbose = 0)
 ```
-The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
-```{r mnist2, cache=FALSE, echo = FALSE, fig.cap='Predictions on the test set', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-y_pred <- model %>% predict_classes(x_test)
 
-par(mfcol=c(6,6))
-par(mar=c(0, 0, 3, 0), xaxs='i', yaxs='i')
-for (idx in 1:36) {
-  im <- mnist$test$x[idx,,]
-  im <- t(apply(im, 2, rev))
-  image(1:28, 1:28, im, col=gray((255:0)/255),
-        xaxt='n', main=paste(y_pred[idx]))
-}
 ```
+##      loss  accuracy 
+## 0.1037232 0.9694000
+```
+The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />
+<p class="caption">(\#fig:mnist2)Predictions on the test set</p>
+</div>
 
 
 

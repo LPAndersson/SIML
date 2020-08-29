@@ -1,4 +1,4 @@
-# Bayesian statistics
+# Bayesian statistics (draft)
 
 ## Some basic decision theory
 

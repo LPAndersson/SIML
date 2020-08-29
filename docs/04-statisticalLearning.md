@@ -1,4 +1,4 @@
-# Statistical learning {#ch-statLearn}
+# Statistical learning (draft) {#ch-statLearn}
 
 In this chapter we will discuss statistical learning from a mostly theoretical perspective. That is, we will discuss when and why statistical learning can be expected to work.
 
@@ -109,98 +109,17 @@ $$
 More generally we can consider a function $f(x)$, a classifier $h(x) = \text{sign}(f(x))$ and a loss functions that depends on the margin $yf(x)$.
 
 It turns out that $E_{in}$, as defined above, is difficult to use for training. The reason for this can be understood in different ways. Mathematically, the 0-1 loss is non-convex, and non-convex functions are in general difficult to optimize. In terms of classification, consider the picture below. Two points are missclassified, but we can see that by moving the classification boundary, we can find a classifier that only missclassifies one point. However, the training algorithm will try to move the boundary a very small step, and see if that gives an improvement. If we use the 0-1 loss, the in-sample error will be the same as long as the boundary is not moved far enough. Therefore it is better to use a loss function that also measures how far away each point is from being classified correctly/incorrectly.
-```{r, warning=FALSE, cache = FALSE, echo=FALSE}
-library(mvtnorm)
-set.seed(42)
 
-mu.p <- c(0,1)
-mu.n <- c(0,-1)
 
-n.samples <- 5
-
-data.matrix <- matrix(nrow = 2*n.samples, ncol = 3)
-
-for (i in seq_len(n.samples)) {
-  mu = mu.p
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-
-  data.matrix[2*i-1,] <- c(sample, 1)
-
-  mu = mu.n
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-  data.matrix[2*i,] <- c(sample, -1)
-}
-
-data.df <- data.frame(data.matrix)
-colnames(data.df) <- c("x1","x2","y")
-data.df$y <- as.factor(data.df$y)
-```
-```{r, cache=FALSE, echo = FALSE, warning = FALSE, message = FALSE, results="hide"}
-
-h <- function(x){
-  x1 <- x[1]
-  x2 <- x[2]
-
-  beta0 <- 0
-  beta1 <- 0.5
-  beta2 <- 1
-
-  if (beta0+beta1*x1+beta2*x2<0) {
-    -1
-  }
-  else{
-    1
-  }
-
-}
-
-grid <- expand.grid(x1 = seq(-5,5, length = 500), x2 = seq(-5,5, length = 500))
-grid$predicted <- as.factor(apply(grid, 1, h))
-```
-```{r classicificationExample, cache=TRUE, echo = FALSE, fig.cap='Example of linear classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message = FALSE}
-library(ggplot2)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(mapping = aes(x = x1, y = x2)) +
-  geom_raster(data = grid, aes(fill = predicted), alpha = 0.2) +
-  geom_point(data = data.df, aes(color = y)) +
-  scale_colour_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  scale_fill_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  theme_minimal()
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/classicificationExample-1.png" alt="Example of linear classification" width="80%" />
+<p class="caption">(\#fig:classicificationExample)Example of linear classification</p>
+</div>
 Below we discuss two alternative loss functions that produce two much used methods for classification, the hinge loss and the negative log-likelihood. They are plotted in the picture below.
-```{r lossFunctions, cache=FALSE, echo = FALSE, fig.cap='Loss functions for classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-library(ggplot2)
-
-ind <- function(x){
-  as.numeric(x<0)
-}
-
-pos <- function(x){
-  as.numeric(x>0)*x
-}
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot() +
-  geom_function(aes(color = "0-1"), fun = ind, size = 1, n = 1000) +
-  geom_function(aes(color = "hinge"), fun = function(x){pos(1-x)}, size = 1) +
-  geom_function(aes(color = "logi"), fun = function(x){log2(1+exp(-x))}, size = 1) +
-  xlim(-2, 2) +
-  scale_colour_manual(name = "",
-                      values = c("0-1" = cbp1[2],
-                                 "hinge" = cbp1[3],
-                                 "logi" = cbp1[4]),
-                      labels = c("0-1",
-                                 "Hinge",
-                                 "Neg. log-likelihood")) +
-  labs(x = "yf(x)", y = "loss") +
-  theme_minimal()
-
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/lossFunctions-1.png" alt="Loss functions for classification" width="80%" />
+<p class="caption">(\#fig:lossFunctions)Loss functions for classification</p>
+</div>
 The hinge loss is
 $$
 L(f(x),y)=(1-yf(x))_+,
@@ -274,7 +193,8 @@ $$
 
 
 As an example, we generate some training data from a mixture of normal distributions.
-```{r, warning=FALSE, cache = FALSE}
+
+```r
 library(mvtnorm)
 set.seed(42)
 
@@ -302,7 +222,8 @@ data.df$y <- as.factor(data.df$y)
 ```
 
 Then use R to calculate the hyperplane that minimizes the in-sample error.
-```{r, cache=FALSE, echo = TRUE, warning = FALSE, message = FALSE, results="hide"}
+
+```r
 library(kernlab)
 
 svm.model <- ksvm(y~x1+x2, data = data.df,
@@ -314,26 +235,23 @@ grid <- expand.grid(x1 = seq(-5,5, length = 500), x2 = seq(-5,5, length = 500))
 grid$predicted <- as.factor(predict(svm.model, grid))
 ```
 
-```{r SVMlinear, cache=TRUE, echo = FALSE, fig.cap='Training data and linear classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message = FALSE}
-library(ggplot2)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(mapping = aes(x = x1, y = x2)) +
-  geom_raster(data = grid, aes(fill = predicted), alpha = 0.2) +
-  geom_point(data = data.df, aes(color = y)) +
-  scale_colour_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  scale_fill_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  theme_minimal()
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/SVMlinear-1.png" alt="Training data and linear classification" width="80%" />
+<p class="caption">(\#fig:SVMlinear)Training data and linear classification</p>
+</div>
 We can also calculate the in-sample error
-```{r}
+
+```r
 mean(data.df$y != predict(svm.model, data.df))
 ```
 
+```
+## [1] 0.285
+```
+
 Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m)). We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an elipsoid.
-```{r, results="hide", cache=FALSE}
+
+```r
 library(kernlab)
 
 svm.model <- ksvm(y~poly(x1, x2, degree = 2), data = data.df,
@@ -345,26 +263,23 @@ grid$predicted <- as.factor(predict(svm.model, grid))
 ```
 
 
-```{r SVMpolynomial, cache=TRUE, echo = FALSE, fig.cap='Training data and quadratic classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message=FALSE}
-library(ggplot2)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(mapping = aes(x = x1, y = x2)) +
-  geom_raster(data = grid, aes(fill = predicted), alpha = 0.2) +
-  geom_point(data = data.df, aes(color = y)) +
-  scale_colour_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  scale_fill_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  theme_minimal()
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/SVMpolynomial-1.png" alt="Training data and quadratic classification" width="80%" />
+<p class="caption">(\#fig:SVMpolynomial)Training data and quadratic classification</p>
+</div>
 This time the in-sample error is
-```{r}
+
+```r
 mean(data.df$y != fitted(svm.model))
 ```
 
+```
+## [1] 0.275
+```
+
 Better. Let us continue with increasing order polynomials, and calculate the error.
-```{r message=FALSE, warning=FALSE, cache = FALSE, results = "hide"}
+
+```r
 library(kernlab)
 
 maxDegree <- 20
@@ -380,44 +295,31 @@ for (degree in seq(1,maxDegree)) {
   error.df$inError[degree] <- mean(data.df$y != predict(svm.model.list[[degree]], data.df))
 }
 ```
-```{r errorPlot, cache=TRUE, echo = FALSE, fig.cap='Training data and quadratic classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message=FALSE}
-library(ggplot2)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(data = error.df, aes(x = degree, y = inError)) +
-  geom_line(color = cbp1[2], size = 1) +
-  theme_minimal()
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/errorPlot-1.png" alt="Training data and quadratic classification" width="80%" />
+<p class="caption">(\#fig:errorPlot)Training data and quadratic classification</p>
+</div>
 
 
 In-sample error gets smaller as we increase the order of the polynomial. For degree 20, the in-sample error is
-```{r}
+
+```r
 error.df$inError[20]
 ```
-The classifier looks complex.
-```{r SVMpolynomial20, cache=FALSE, echo = FALSE, fig.cap='Training data and degree 20 polynomial classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message=FALSE, results="hide"}
 
-grid <- expand.grid(x1 = seq(-5,5, length = 500), x2 = seq(-5,5, length = 500))
-grid$predicted <- as.factor(predict(svm.model.list[[20]], grid))
-
-library(ggplot2)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(mapping = aes(x = x1, y = x2)) +
-  geom_raster(data = grid, aes(fill = predicted), alpha = 0.2) +
-  geom_point(data = data.df, aes(color = y)) +
-  scale_colour_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  scale_fill_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  theme_minimal()
 ```
+## [1] 0.03
+```
+The classifier looks complex.
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/SVMpolynomial20-1.png" alt="Training data and degree 20 polynomial classification" width="80%" />
+<p class="caption">(\#fig:SVMpolynomial20)Training data and degree 20 polynomial classification</p>
+</div>
 
 
 Since we know the data generating distribution, we can approximate the out-of-sample error for each classifier, by simulation.
-```{r, warning=FALSE, cache=FALSE}
+
+```r
 library(mvtnorm)
 set.seed(42)
 
@@ -446,33 +348,21 @@ for (degree in seq(1,maxDegree)) {
 }
 ```
 
-```{r inOutSampleError, cache=FALSE, echo = FALSE, fig.cap='Error vs. degree of polynomial.', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message=FALSE}
-library(ggplot2)
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(data = error.df) +
-  geom_line(mapping = aes(y = inError, x = degree, color = "in-sample"), size = 1) +
-  geom_line(mapping = aes(y = outError, x = degree, color = "out-of-sample"), size = 1) +
-  scale_color_manual(values = c(
-    "in-sample" = cbp1[2],
-    "out-of-sample" = cbp1[3])) +
-  labs(y = "error") +
-  theme_minimal()
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/inOutSampleError-1.png" alt="Error vs. degree of polynomial." width="80%" />
+<p class="caption">(\#fig:inOutSampleError)Error vs. degree of polynomial.</p>
+</div>
 The in-sample error is decreasing as the degree of the polynomial increases, and so also the complexity of the model. When the degree is small, the in-sample error is a close approximation of the out-of-sample error, but as the degree increases the difference increases and for large degress the in-sample error provides little information about the out-of-sample error. The out-of-sample error is at first decreasing, but unlike the in-sample-error, starts increasing after degree.
 
 In the following sections we will investigate the connection between the in-sample and out-of-sample error.
 
 
 ## Hoeffding's inequality
-```{block2, type='note'}
-Hoeffding's inequality states that:
+\BeginKnitrBlock{note}<div class="note">Hoeffding's inequality states that:
 Let $Y_1,\ldots, Y_n$ be iid with $E[Y_i]=\mu$ and $a\leq Y_i \leq b$. Then for any $\varepsilon>0$,
 $$
 P\left( \left| \bar Y_n - \mu \right|>\varepsilon \right) \leq 2e^{-2n\varepsilon^2/(b-a)^2}.
-$$
-```
+$$</div>\EndKnitrBlock{note}
 However, we will only prove the special case that if $Y_i\overset{iid}{\sim}\mathsf{Be}(p)$, then
 $$
 P\left( \left| \bar Y_n - p \right|>\varepsilon \right) \leq 2e^{-2n\varepsilon^2}.
@@ -530,13 +420,11 @@ we get
 $$
 P\left( \left| \bar Y_n - p \right|\leq \sqrt{\frac{1}{2n}\ln \frac{2}{\delta}} \right) \geq 1-2\exp\left( -2n\frac{1}{2n}\ln \frac{2}{\delta} \right) =1-\delta.
 $$
-```{block2, type='note'}
-
+\BeginKnitrBlock{note}<div class="note">
 Stated another way, with probability at least $1-\delta$,
 $$
 \left| \bar Y_n - p \right|\leq \sqrt{\frac{1}{2n}\ln \frac{2}{\delta}}.
-$$
-````
+$$</div>\EndKnitrBlock{note}
 
 ## Generalization error
 
@@ -552,50 +440,13 @@ h(x_1,x_2)=\begin{cases}
 \end{cases}
 $$
 Now we generate some data:
-```{r genError, cache=FALSE, echo = FALSE, fig.cap='Training data and classification rule', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-
-set.seed(42)
-
-mu.p <- c(rnorm(1),rnorm(1))
-mu.n <- c(rnorm(1),rnorm(1))
-
-sd.p <- c(abs(rnorm(1))+1,abs(rnorm(1))+1)
-sd.n <- c(abs(rnorm(1))+1,abs(rnorm(1))+1)
-
-library('mvtnorm')
-library('ggplot2')
-
-n.samples <- 50
-
-data.matrix <- matrix(nrow = n.samples, ncol = 3)
-
-for (i in seq_len(n.samples)) {
-  if (runif(1)>0.5) {
-    sample <- rmvnorm(1, mean = mu.p, sigma = diag(sd.p))
-    data.matrix[i,] <- c(sample, 1)
-  }
-  else{
-    sample <- rmvnorm(1, mean = mu.n, sigma = diag(sd.n))
-    data.matrix[i,] <- c(sample, -1)
-  }
-}
-
-data.df <- data.frame(data.matrix)
-colnames(data.df) <- c("x1","x2","y")
-data.df$y <- as.factor(data.df$y)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(data = data.df, aes(x = x1, y = x2, color = y)) +
-  geom_point(size = 2) +
-  theme_minimal() +
-  scale_colour_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  annotate("rect", xmin = 0, xmax = 5, ymin = -5, ymax = 5, fill = cbp1[3], alpha = .2) +
-    annotate("rect", xmin = -5, xmax = 0, ymin = -5, ymax = 5, fill = cbp1[2], alpha = .2)
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/genError-1.png" alt="Training data and classification rule" width="80%" />
+<p class="caption">(\#fig:genError)Training data and classification rule</p>
+</div>
 We can now calculate the in-sample error:
-```{r}
+
+```r
 H <- function(a,b){
   function(x1,x2){
     if(a*x1 + b*x2 > 0) "1"
@@ -619,8 +470,13 @@ error <- function(data, classifier){
 
 error(data.df, h)
 ```
+
+```
+## [1] 0.32
+```
 In this case, $h$ is not a function of the training data so the in-sample error is an unbiased estimate of the out-of-sample error. Since we know the distribution of $X,Y$ we can calculate the out-of-sample error by simulation.
-```{r, cache=FALSE}
+
+```r
 n.samples <- 1e4
 
 data.matrix <- matrix(nrow = n.samples, ncol = 3)
@@ -640,7 +496,10 @@ data.test.df <- data.frame(data.matrix)
 colnames(data.test.df) <- c("x1","x2","y")
 data.test.df$y <- as.factor(data.test.df$y)
 error(data.test.df, h)
+```
 
+```
+## [1] 0.3548
 ```
 
 Using Hoeffding's inequality, we can give a guarantee of the difference between the empirical risk and the generalization error. Let us review: A pair $X,Y$ is drawn from some distribution. We then apply the function $h$ and with some unkown probability we make an error on the classification, this probability is $E_{out}(h)$ and corresponds to the probability $p$ in Hoeffding. What we have is a sample of size $n$ and an estimate $E_{in}(h)$ of the probability of an error. This corresponds to $\bar Y_n$ in Hoeffding. Therefore this situation is exactly like the Bernoulli experiment from the previous section. We can say that with probability at least $1-\delta$,
@@ -648,18 +507,21 @@ $$
 E_{out}(h) \leq  E_{in}(h) + \sqrt{\frac{\ln \frac{2}{\delta}}{2n}}.
 $$
 Let us say we want to have confidence 95%, i.e. $\delta = 0.05$, we then have the generalization bound
-```{r}
+
+```r
 delta = 0.05
 error(data.df,h) + sqrt(log(2/delta)/(2*nrow(data.df)))
 ```
 
+```
+## [1] 0.5120646
+```
+
 <p>Above we picked an $h$ without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where $h$ is chosen from some collection $\mathcal H$. Let us first consider the case where $\mathcal H$ is finite, i.e.\ there is a finite number of functions $h$ in the collection. Let this number be $|\mathcal H|$. The statement of the learning bound then becomes</p>
-```{block2, type='note'}
-Let $\mathcal H$ be finite. Then for any $\delta>0$, with probability at least $1-d$:
+\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ be finite. Then for any $\delta>0$, with probability at least $1-d$:
 $$
   \forall h\in\mathcal H,\quad E_{out}(h)\leq E_{in}(h) + \sqrt{\frac{ \ln\frac{2|\mathcal H|}{\delta}}{2n}}.
-$$
-```
+$$</div>\EndKnitrBlock{note}
 The proof of this is again an application of Hoeffding. Let $h_1,\ldots,h_{|\mathcal H|}$ be the elememnts of $\mathcal H$. Then
 \begin{align}
 &P\left( \exists h\in\mathcal H \mid \left| E_{in}(h) - E_{out}(h)  \right|>\varepsilon \right)\\
@@ -688,12 +550,10 @@ Next consider points on $\mathbb R^2$ and $\mathcal H$ being the set of straight
 We see a pattern here, the VC-dimension is equal to the number of parameters of $\mathcal H$. This is however not always true. As a counterexample, take the functions $\left\{ t\mapsto sin(\omega t)\mid  \omega\in \mathbb R \right\}$. Then label points as 1 if it is above the curve and 0 otherwise. There is only one parameter, but any $S$ can be shattered and so $d_{VC}=\infty$.
 
 The usefullness of the VC-dimension comes from the following result
-```{block2, type='note'}
-Let $\mathcal H$ have VC-dimension $d_{VC}$ Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$:
+\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ have VC-dimension $d_{VC}$ Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$:
 $$
   E_{out}\leq E_{in} +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
-$$
-```
+$$</div>\EndKnitrBlock{note}
 
 The important quantity here is $m/d_{VC}$. If the sample size $m$ is large in relation to the VC-dimension $d_{VC}$, the out-of-sample error is guaranteed to be close to the in-sample error. The bound is loose, so the actual value is not useful in practice. Rather it provides a way of thinking about generalization from in-sample to out-of-sample error. In practice, it is usually the case that models with lower $d_{VC}$ generalizes better than models with higher $d_{VC}$. A popular rule of thumb is that $n$ should be at least $10\times d_{VC}$. However, there are also algorithms with $d_{VC}=\infty$ that work well in practice.
 
@@ -707,24 +567,10 @@ One commonly used way to estimate $E_{out}$ is to split the data into one traini
 
 In the picture we visualize the partition of the out-of-sample error into in-sample error and generalization error.
 
-```{r errorPlotSketch, cache=FALSE, echo = FALSE, fig.cap='Sketch of the different components of the error', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot() +
-  geom_function(aes(color = "in"), fun = function(x){1/sqrt(x/5)}, size = 1) +
-  geom_function(aes(color = "gen"), fun = function(x){sqrt(x/5)}, size = 1) +
-  geom_function(aes(color = "out"), fun = function(x){1/sqrt(x/5)+sqrt(x/5)}, size = 1) +
-  xlim(1, 15) +
-  scale_colour_manual(name = "",
-                      values = c("in" = cbp1[2], "gen" = cbp1[3], "out" = cbp1[4]),
-                      labels = c("generalization", "in-sample", "out-of-sample")) +
-  labs(x = "model complexity", y = "error") +
-  theme_minimal()
-
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/errorPlotSketch-1.png" alt="Sketch of the different components of the error" width="80%" />
+<p class="caption">(\#fig:errorPlotSketch)Sketch of the different components of the error</p>
+</div>
 
 ## Support vector machines II
 
@@ -745,94 +591,15 @@ $$
 where $\lambda\geq 0$ is a tuning parameter. Here a large value of $\lambda$ will penalize complex models heavily and force the model to be simple, thereby preventing overfitting. A small value of $\lambda$ will allow more complex models, thereby making the in-sample error smaller, on the other hand risking overfitting.
 
 As usual, we may take some function of the inputs $\varphi_i(x)$ and consider a linear function of these new features. Let us see what happens when we vary $\lambda$, using polynomial $\varphi$ of maximum degree 5.
-```{r, warning=FALSE, cache = FALSE, echo=FALSE}
-library(mvtnorm)
-set.seed(42)
 
-mu.p <- rmvnorm(10,mean = c(1,0), sigma = diag(2))
-mu.n <- rmvnorm(10,mean = c(0,1), sigma = diag(2))
 
-n.samples <- 100
 
-data.matrix <- matrix(nrow = 2*n.samples, ncol = 3)
 
-for (i in seq_len(n.samples)) {
-  mu = mu.p[sample(x= nrow(mu.p), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
 
-  data.matrix[2*i-1,] <- c(sample, 1)
-
-  mu = mu.n[sample(x= nrow(mu.n), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-  data.matrix[2*i,] <- c(sample, -1)
-}
-
-data.df <- data.frame(data.matrix)
-colnames(data.df) <- c("x1","x2","y")
-data.df$y <- as.factor(data.df$y)
-```
-```{r message=FALSE, warning=FALSE, cache = FALSE, results = "hide", echo = FALSE}
-library(kernlab)
-
-pars <- seq(0.1,40.1,1)
-error.df <- data.frame("parameter" = pars, inError = NA, outError = NA)
-
-svm.model.list <- vector(mode = "list", length = length(pars))
-
-for (i in seq_along(pars)) {
-  svm.model.list[i] <- ksvm(y ~ poly(x1, x2, degree = 5), data = data.df,
-                                 type = "C-svc",
-                                 kernel = "vanilladot",
-                                 C = pars[i])
-  error.df$inError[i] <- mean(data.df$y != predict(svm.model.list[[i]], data.df))
-}
-
-```
-
-```{r, warning=FALSE, cache=FALSE, echo =FALSE}
-library(mvtnorm)
-set.seed(42)
-
-n.samples <- 1e5
-
-data.matrix <- matrix(nrow = 2*n.samples, ncol = 3)
-
-for (i in seq_len(n.samples)) {
-  mu = mu.p[sample(x= nrow(mu.p), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-
-  data.matrix[2*i-1,] <- c(sample, 1)
-
-  mu = mu.n[sample(x= nrow(mu.n), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-  data.matrix[2*i,] <- c(sample, -1)
-}
-
-data.test.df <- data.frame(data.matrix)
-colnames(data.test.df) <- c("x1","x2","y")
-data.test.df$y <- as.factor(data.test.df$y)
-
-for (i in seq_along(pars)) {
-  error.df$outError[i] <- mean(data.test.df$y != predict(svm.model.list[[i]],
-                                                              data.test.df))
-}
-```
-
-```{r inOutSampleErrorSVM, cache=FALSE, echo = FALSE, fig.cap='Error vs. reciprocal of lambda.', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message=FALSE}
-library(ggplot2)
-library(latex2exp)
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(data = error.df) +
-  geom_line(mapping = aes(y = inError, x = parameter, color = "in-sample"), size = 1) +
-  geom_line(mapping = aes(y = outError, x = parameter, color = "out-of-sample"), size = 1) +
-  scale_color_manual(name = "",
-                     values = c("in-sample" = cbp1[2],
-                                "out-of-sample" = cbp1[3])) +
-  labs(x = TeX('$1/\\lambda$'), y = "error") +
-  theme_minimal()
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/inOutSampleErrorSVM-1.png" alt="Error vs. reciprocal of lambda." width="80%" />
+<p class="caption">(\#fig:inOutSampleErrorSVM)Error vs. reciprocal of lambda.</p>
+</div>
 We see from the picture that $\lambda$ controls the complexity of the model. When $\lambda$ is large ($1/\lambda$ small), the in-sample and out-of-sample errors are similar and as $\lambda$ becomes smaller, the in-sample error becomes smaller, but the difference between the errors are larger.
 
 With this development, we do not need to limit the complexity of the class of function $\mathcal H$, since this is done by choosing $\lambda$. In fact, we can in some cases even choose $\mathcal H$ to be an infinite dimensional space of functions.
@@ -872,82 +639,19 @@ $$
 K(x,\tilde x) = \exp\left( -\gamma  \sum_{i=1}^p (x_i-\tilde x_i)^2\right).
 $$
 Let us try the radial basis function kernel on our data set.
-```{r, warning=FALSE, cache = FALSE, echo=FALSE}
-library(mvtnorm)
-set.seed(42)
 
-mu.p <- rmvnorm(10,mean = c(1,0), sigma = diag(2))
-mu.n <- rmvnorm(10,mean = c(0,1), sigma = diag(2))
 
-n.samples <- 100
 
-data.matrix <- matrix(nrow = 2*n.samples, ncol = 3)
-
-for (i in seq_len(n.samples)) {
-  mu = mu.p[sample(x= nrow(mu.p), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-
-  data.matrix[2*i-1,] <- c(sample, 1)
-
-  mu = mu.n[sample(x= nrow(mu.n), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-  data.matrix[2*i,] <- c(sample, -1)
-}
-
-data.df <- data.frame(data.matrix)
-colnames(data.df) <- c("x1","x2","y")
-data.df$y <- as.factor(data.df$y)
 ```
-```{r, warning=FALSE, cache=FALSE, echo =FALSE}
-library(mvtnorm)
-set.seed(42)
-
-n.samples <- 1e5
-
-data.matrix <- matrix(nrow = 2*n.samples, ncol = 3)
-
-for (i in seq_len(n.samples)) {
-  mu = mu.p[sample(x= nrow(mu.p), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-
-  data.matrix[2*i-1,] <- c(sample, 1)
-
-  mu = mu.n[sample(x= nrow(mu.n), size = 1),]
-  sample <- rmvnorm(1, mean = mu, sigma = diag(2)/5)
-  data.matrix[2*i,] <- c(sample, -1)
-}
-
-data.test.df <- data.frame(data.matrix)
-colnames(data.test.df) <- c("x1","x2","y")
-data.test.df$y <- as.factor(data.test.df$y)
-error.in <- mean(data.df$y != predict(svm.model,data.df))
-error.out <- mean(data.test.df$y != predict(svm.model,data.test.df))
-```
-```{r radialBasisSVM, cache=FALSE, echo = FALSE, fig.cap='Training data a radial basis SVM classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-library(caret)
-
-svm.model <- train(
-  y ~., data = data.df, method = "svmRadial",
-  trControl = trainControl("cv", number = 10),
-  tuneLength = 10
-  )
-grid <- expand.grid(x1 = seq(-5,5, length = 500), x2 = seq(-5,5, length = 500))
-grid$predicted <- as.factor(predict(svm.model, grid))
-
-library(ggplot2)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(mapping = aes(x = x1, y = x2)) +
-  geom_raster(data = grid, aes(fill = predicted), alpha = 0.2) +
-  geom_point(data = data.df, aes(color = y)) +
-  scale_colour_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  scale_fill_manual(values = c("-1" = cbp1[2], "1" = cbp1[3])) +
-  theme_minimal()
+## Loading required package: lattice
 ```
 
-This now has an in-sample error of `r # error.in` and out-of-sample error `r # error.out`
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/radialBasisSVM-1.png" alt="Training data a radial basis SVM classification" width="80%" />
+<p class="caption">(\#fig:radialBasisSVM)Training data a radial basis SVM classification</p>
+</div>
+
+This now has an in-sample error of  and out-of-sample error 
 
 
 
@@ -995,22 +699,10 @@ The first term is the variance of $h^\mathcal D$ as the data set $\mathcal D$ is
 
 If we choose a large class of function $\mathcal H$ from which we choose $h^\mathcal D$, it will be possible to closely approximate $f$, on average. In this case the bias will be small. However, many times if $h^\mathcal D$ is large $h^\mathcal D$ will be sensitive to data, i.e.\ we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.
 
-```{r biasVarianceSketch, cache=FALSE, echo = FALSE, fig.cap='Sketch of the bias-variance decomposition', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot() +
-  geom_function(aes(color = "in"), fun = function(x){1/sqrt(x/5)}, size = 1) +
-  geom_function(aes(color = "gen"), fun = function(x){sqrt(x/5)}, size = 1) +
-  geom_function(aes(color = "out"), fun = function(x){1/sqrt(x/5)+sqrt(x/5)}, size = 1) +
-  xlim(1, 15) +
-  scale_colour_manual(name = "",
-                      values = c("in" = cbp1[2], "gen" = cbp1[3], "out" = cbp1[4]),
-                      labels = c("variance", "bias", "total error")) +
-  labs(x = "model complexity", y = "error") +
-  theme_minimal()
-
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/biasVarianceSketch-1.png" alt="Sketch of the bias-variance decomposition" width="80%" />
+<p class="caption">(\#fig:biasVarianceSketch)Sketch of the bias-variance decomposition</p>
+</div>
 
 ## Regression regularization
 
@@ -1029,7 +721,8 @@ $$
 \hat\beta = (x^Tx)^{-1}x^Ty.
 $$
 As we have seen, we may specify some function $\varphi_i$ and use $\varphi_1(x),\ldots,\varphi_M(x)$ to predict $y$ and we are still in the case of linear regression. However we need to be careful not to overfit. Let us see a simple example were $\varphi$ are polynomials. First we construct the functions that will generate our data:
-```{r}
+
+```r
 library(ggplot2)
 library(gridExtra)
 library(resample)
@@ -1045,7 +738,8 @@ truth <- function(x) {
 }
 ```
 For conveniance, we write a function that fits three different polynomial regressions and returns the plot.
-```{r}
+
+```r
 fit_plot <- function(){
   data.train.df <- gen_data(truth)
 
@@ -1092,171 +786,32 @@ fit_plot <- function(){
 }
 ```
 Next we fit the polynomial models to four different training sets, generated from the same distribution.
-```{r 4fits, cache=FALSE, echo = TRUE, fig.cap='Polynomial fits to four different sets of training data, sampled from teh same distribution', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+
+```r
 set.seed(42)
 grid.arrange(fit_plot(), fit_plot(), fit_plot(), fit_plot(),
              nrow = 2)
 ```
+
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/4fits-1.png" alt="Polynomial fits to four different sets of training data, sampled from teh same distribution" width="80%" />
+<p class="caption">(\#fig:4fits)Polynomial fits to four different sets of training data, sampled from teh same distribution</p>
+</div>
 We see from the pictures that then 2nd degree polynomial fit does not change very much on the different training sets, while the 20th degree polynomial looks very different in the four pictures.
 
 Now let ut repeat this experiment many times, and only plot the mean and variance of $h$.
-```{r polynomialFits, cache=FALSE, echo = FALSE, fig.cap='Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-n.sim <- 1e3
-
-x.grid <- seq(-2, 2, 0.01)
-x.grid.df <- data.frame(x = x.grid)
-
-h1 <- matrix(nrow = n.sim, ncol = length(x.grid))
-h2 <- matrix(nrow = n.sim, ncol = length(x.grid))
-h3 <- matrix(nrow = n.sim, ncol = length(x.grid))
-
-for (i in seq_len(n.sim)) {
-  data.df <- gen_data(truth)
-  h1[i, ] <- predict(lm(y ~ poly(x, 2), data.df),
-                     x.grid.df)
-  h2[i, ] <- predict(lm(y ~ poly(x, 6), data.df),
-                     x.grid.df)
-  h3[i, ] <- predict(lm(y ~ poly(x, 20), data.df),
-                     x.grid.df)
-}
-
-h.df <- rbind(data.frame(degree = "2",
-                         hbar = colMeans(h1),
-                         hmin = colMeans(h1) - 2 * colStdevs(h1),
-                         hmax = colMeans(h1) + 2 * colStdevs(h1),
-                         bias = (colMeans(h1) - truth(x.grid))^2,
-                         std = colStdevs(h1),
-                         var = colVars(h1),
-                         meansq = (colMeans(h1) - truth(x.grid))^2 + colVars(h1),
-                         x = x.grid),
-              data.frame(degree = "6",
-                         hbar = colMeans(h2),
-                         hmin = colMeans(h2) - 2 * colStdevs(h2),
-                         hmax = colMeans(h2) + 2 * colStdevs(h2),
-                         bias = (colMeans(h2) - truth(x.grid))^2,
-                         std = colStdevs(h2),
-                         var = colVars(h2),
-                         meansq = (colMeans(h2) - truth(x.grid))^2 + colVars(h2),
-                         x = x.grid),
-              data.frame(degree = "20",
-                         hbar = colMeans(h3),
-                         hmin = colMeans(h3) - 2 * colStdevs(h3),
-                         hmax = colMeans(h3) + 2 * colStdevs(h3),
-                         bias = (colMeans(h3) - truth(x.grid))^2,
-                         std = colStdevs(h3),
-                         var = colVars(h3),
-                         meansq = (colMeans(h3) - truth(x.grid))^2 + colVars(h3),
-                         x = x.grid))
-
-h.df$degree <- as.factor(h.df$degree)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-data.example.df <- gen_data(truth)
-
-p1 <- ggplot(data = subset(h.df, degree == "2")) +
-  geom_line(aes(x = x, y = hbar, color = "h"), size = 1) +
-  geom_ribbon(aes(x = x, ymin = hmin, ymax = hmax, fill = "h"), alpha = 0.4, show.legend = FALSE) +
-  stat_function(aes(color= "truth"), fun = truth, size = 1, n = 200) +
-  scale_colour_manual(name = "",
-                       values = c("truth" = cbp1[1], "h" = cbp1[2]),
-                       labels = c("truth" = "truth", "h" = "h")) +
-  geom_point(aes(x=x, y = y), data.example.df) +
-  ylab("y") +
-  coord_cartesian(ylim = c(-3, 2)) +
-  ggtitle("2nd degree") +
-  theme_minimal()
-
-p2 <- ggplot(data = subset(h.df, degree == "6")) +
-  geom_line(aes(x = x, y = hbar, color = "h"), size = 1) +
-  geom_ribbon(aes(x = x, ymin = hmin, ymax = hmax, fill = "h"), alpha = 0.4, show.legend = FALSE) +
-  stat_function(aes(color= "truth"), fun = truth, size = 1, n = 200) +
-  scale_colour_manual(name = "",
-                      values = c("truth" = cbp1[1], "h" = cbp1[2]),
-                      labels = c("truth" = "truth", "h" = "h")) +
-  geom_point(aes(x=x, y = y), data.example.df) +
-  ylab("y") +
-  coord_cartesian(ylim = c(-3, 2)) +
-  ggtitle("6th degree") +
-  theme_minimal()
-
-p3 <- ggplot(data = subset(h.df, degree == "20")) +
-  geom_line(aes(x = x, y = hbar, color = "h"), size = 1) +
-  geom_ribbon(aes(x = x, ymin = hmin, ymax = hmax, fill = "h"), alpha = 0.4, show.legend = FALSE) +
-  stat_function(aes(color= "truth"), fun = truth, size = 1, n = 200) +
-  scale_colour_manual(name = "",
-                      values = c("truth" = cbp1[1], "h" = cbp1[2]),
-                      labels = c("truth" = "truth", "h" = "h")) +
-  geom_point(aes(x=x, y = y), data.example.df) +
-  ylab("y") +
-  coord_cartesian(ylim = c(-3, 2)) +
-  ggtitle("20th degree") +
-  theme_minimal()
-
-p4 <- ggplot(h.df, aes(x = x, group = degree)) +
-  geom_line(aes(y = bias, color = degree), size = 1, linetype = "dashed") +
-  geom_line(aes(y = var, color = degree), size = 1, linetype = "dotted") +
-  geom_line(aes(y = meansq, color = degree), size = 1) +
-  scale_colour_manual(name = "",
-                      values = c("truth" = cbp1[1], "2" = cbp1[2], "6" = cbp1[3], "20" = cbp1[4]),
-                      labels = c("truth" = "truth", "2" = "2", "6" = "6", "20" = "20")) +
-  ylab("bias, variance") +
-  coord_cartesian(ylim = c(0, 0.25)) +
-  theme_minimal()
-
-
-grid.arrange(p1, p2, p3, p4,
-             nrow = 2)
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/polynomialFits-1.png" alt="Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition" width="80%" />
+<p class="caption">(\#fig:polynomialFits)Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition</p>
+</div>
 From the pictures we see that the 4th degree polynomial has a small bias, but for 6h degree, the bias is close to 0. The error in the 4th degree polynomial is a sum of bias and variance, but for 6th and 8th the error is dominated by the variance term. The variance becomes larger as the degree of the polynomial becomes larger, while the bias is already 0 for 6th degree. Therefore, the total error, the sum of bias and variance, is smallest for a 6th degree polynomial. As before, we see that a very flexibel model will tend to overfit the data and may perform worse than a less flexible model.
 
 Another way to see the same phenomena is to choose on point, here $x=1.5$ and plot the bias and variance as we vary the degree of the polynomial. We do this for sample size $n=100$ and $n=10000$.
 
-```{r errorVsDegree, cache=FALSE, echo = FALSE, fig.cap='Bias/Variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-library(ggplot2)
-library(gridExtra)
-
-biasVariancePlot <- function(n.obs, x0 = 1.5, n.sim = 1e2, seed = 42){
-  degrees <- seq(2,20,2)
-
-  predictions <- matrix(nrow = n.sim, ncol = length(degrees))
-  x.df = data.frame(x = x0)
-
-  for (sim in seq_len(n.sim)) {
-    data.df <- gen_data(truth, n.obs)
-    for (i in seq(length(degrees))) {
-      predictions[sim,i] <- predict(lm(y ~ poly(x, degrees[i]), data.df),
-                                    x.df)
-    }
-  }
-
-  plot.df <- data.frame(hbar = colMeans(predictions),
-                         variance = colVars(predictions),
-                         bias = (colMeans(predictions)-truth(x0))^2,
-                         degree = degrees,
-                         total = colVars(predictions) + (colMeans(predictions)-truth(x0))^2)
-
-  cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-            "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-  ggplot(plot.df, aes(x = degree)) +
-    geom_line(aes(y = bias, color = "bias"), size = 1) +
-    geom_line(aes(y = variance, color = "variance"), size = 1) +
-    geom_line(aes(y = total, color = "total"), size = 1) +
-    scale_colour_manual(name = "",
-                        values = c("bias" = cbp1[2], "variance" = cbp1[3], "total" = cbp1[4]),
-                        labels = c("bias" = "bias", "variance" = "variance", "total" = "total")) +
-    scale_y_continuous(trans='log10') +
-    #coord_cartesian(ylim = c(0, 0.05)) +
-    ylab("error") +
-    theme_minimal()
-
-}
-
-grid.arrange(biasVariancePlot(100), biasVariancePlot(10000),
-             nrow = 1)
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/errorVsDegree-1.png" alt="Bias/Variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000" width="80%" />
+<p class="caption">(\#fig:errorVsDegree)Bias/Variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000</p>
+</div>
 From the pictures we see that the bias is decreasing and the variance is increasing, as the degree increases. In the left picture, $n=100$, the minimum total error is at a degree around 3. When the sample size increases, in the right picture, we can fit a more complex model, and the minimum error is at a degree around 8.
 
 We have seen that we also in the regression setting need to bound the model complexity so that we do not overfit the model. This can be done by choosing a small family of models $\mathcal H$. In the above case this would mean limiting the degree of the polynomial. Another option, that we will explore here, is to include a regularization term in the loss function.
@@ -1276,22 +831,35 @@ $$
 Here $\lambda$ is a tuning parameter that needs to be determined seperately. Ridge regression and lasso uses different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of $\beta_j$ will be smaller in ridge and lasso. I.e.\ the estimates will shrink towards zero. These methods are therefore sometimes called shrinkage methods. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.
 
 Let us look at the same example above, this time with a degree 20 polynomial, but penalized with ridge and lasso.
-```{r, echo = TRUE}
+
+```r
 library(ggplot2)
 library(gridExtra)
 library(glmnet)
+```
 
+```
+## Loading required package: Matrix
+```
+
+```
+## Loaded glmnet 4.0-2
+```
+
+```r
 data.df <- gen_data(truth)
 
 model.ridge <- glmnet(poly(data.df$x,20), data.df$y, alpha = 0 )
 model.lasso <- glmnet(poly(data.df$x,20), data.df$y, alpha = 1 )
 ```
-```{r ridge, cache=FALSE, echo = FALSE, fig.cap='Coefficents as lambda is varied for ridge regression', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-plot(model.ridge, xvar = "lambda")
-```
-```{r lasso, cache=FALSE, echo = FALSE, fig.cap='Coefficients as lambda is varied for the lasso', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-plot(model.lasso, xvar = "lambda")
-```
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/ridge-1.png" alt="Coefficents as lambda is varied for ridge regression" width="80%" />
+<p class="caption">(\#fig:ridge)Coefficents as lambda is varied for ridge regression</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/lasso-1.png" alt="Coefficients as lambda is varied for the lasso" width="80%" />
+<p class="caption">(\#fig:lasso)Coefficients as lambda is varied for the lasso</p>
+</div>
 In the pictures we see that the fitted coefficients decrese towards 0 as $\lambda$ increases. The main difference between the two methods is that in the ridge regression all coefficients are strictly positive for any finite $\lambda$, while for the lasso coefficients become 0 when $\lambda$ is large. This difference may be important when model interpretability is important. That is, the lasso will produce a simple model where many variables can be disregarded. We also mention that the lasso and ridge rigression can, unlike unregularized least squares, handle the case $p>>n$. There is a generalization of ridge and lasso called elastic net, where a parameter $0\leq \alpha \leq 1$ is introduced and the loss function is instead,
 $$
 E_{in} + \lambda\left( \alpha \sum_{i=1}^p | \beta_j | + (1-\alpha) \sum_{i=1}^p \beta_j^2\right).
@@ -1320,7 +888,8 @@ In practice usually $k=5$ or $k=10$ is used.
 ## An application IV
 
 We will use the Hitters data set from the ISLR book and predict the salary of a player.
-```{r}
+
+```r
 library(caret)
 library(glmnet)
 library(ISLR)
@@ -1329,20 +898,27 @@ data("Hitters", package = "ISLR")
 Hitters <- na.omit(Hitters)
 ```
 Then we split the data into a train and a test set.
-```{r}
+
+```r
 set.seed(42)
 training.samples <- createDataPartition(Hitters$Salary, p = 0.8, list = FALSE)
 train.data  <- Hitters[training.samples, ]
 test.data <- Hitters[-training.samples, ]
 ```
 We then do a least squares regression and calculate the out-of-sample error
-```{r}
+
+```r
 ls <- lm(Salary ~., data = train.data)
 predictions <- predict(ls, test.data)
 mean((predictions - test.data$Salary)^2)
 ```
+
+```
+## [1] 155961.4
+```
 Next we fit a lasso using 10-fold CV.
-```{r}
+
+```r
 lambda <- 10^seq(-4, 2, length = 1000)
 
 lasso <- train(
@@ -1352,13 +928,44 @@ lasso <- train(
 )
 coef(lasso$finalModel, lasso$bestTune$lambda)
 ```
+
+```
+## 20 x 1 sparse Matrix of class "dgCMatrix"
+##                        1
+## (Intercept)  270.1052313
+## AtBat         -1.9556641
+## Hits           7.9121904
+## HmRun          3.1085056
+## Runs          -3.7028963
+## RBI           -2.1932107
+## Walks          6.1853848
+## Years         -8.8124043
+## CAtBat        -0.1485875
+## CHits          .        
+## CHmRun         .        
+## CRuns          1.1967357
+## CRBI           1.3494757
+## CWalks        -0.8743694
+## LeagueN       48.1895347
+## DivisionW   -127.0301475
+## PutOuts        0.2755881
+## Assists        0.4591150
+## Errors        -7.5155549
+## NewLeagueN     2.1811148
+```
 We see that some of the parameters have been set to 0. We calculate the out-of-sample error
-```{r}
+
+```r
 predictions <- predict(lasso, test.data)
 mean((predictions - test.data$Salary)^2)
 ```
+
+```
+## [1] 149437.4
+```
 An improvement over least squares. We might also try elastic-net.
-```{r}
+
+```r
 lambda <- 10^seq(-4, 2, length = 100)
 alpha <- seq(0, 1, length = 10)
 lasso <- train(
@@ -1369,12 +976,17 @@ lasso <- train(
 predictions <- predict(lasso, test.data)
 mean((predictions - test.data$Salary)^2)
 ```
+
+```
+## [1] 150373.8
+```
 We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.
 
 ## An application V
 
 Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations
-```{r}
+
+```r
 library(caret)
 
 data("PimaIndiansDiabetes2", package = "mlbench")
@@ -1382,8 +994,18 @@ PimaIndiansDiabetes2 <- na.omit(PimaIndiansDiabetes2)
 
 head(PimaIndiansDiabetes2, 5)
 ```
+
+```
+##    pregnant glucose pressure triceps insulin mass pedigree age diabetes
+## 4         1      89       66      23      94 28.1    0.167  21      neg
+## 5         0     137       40      35     168 43.1    2.288  33      pos
+## 7         3      78       50      32      88 31.0    0.248  26      pos
+## 9         2     197       70      45     543 30.5    0.158  53      pos
+## 14        1     189       60      23     846 30.1    0.398  59      pos
+```
 Divide the data into a train and a test set.
-```{r}
+
+```r
 set.seed(42)
 
 training.samples <- createDataPartition(PimaIndiansDiabetes2$diabetes, p = 0.8, list = FALSE)
@@ -1391,7 +1013,8 @@ train.data  <- PimaIndiansDiabetes2[training.samples, ]
 test.data <- PimaIndiansDiabetes2[-training.samples, ]
 ```
 Then use a SVM, where the parameter is estimated by 10-fold CV.
-```{r}
+
+```r
 model <- train(
   diabetes ~., data = train.data, method = "svmRadial",
   trControl = trainControl("cv", number = 10),
@@ -1401,6 +1024,10 @@ model <- train(
 
 predicted <- predict(model, test.data)
 mean(predicted == test.data$diabetes)
+```
+
+```
+## [1] 0.7948718
 ```
 
 
