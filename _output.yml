@@ -1,0 +1,9 @@
+bookdown::gitbook:
+  css: style.css
+  split_by: section+number
+  config:
+    toc:
+      before: |
+        <li><a href="./">Inference and Machine Learning</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>

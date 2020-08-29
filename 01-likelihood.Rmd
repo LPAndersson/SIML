@@ -1,0 +1,926 @@
+# Likelihood-based methods {#ch-likelihood}
+
+This chapter is about methods for statistical inference based on the likelihood function.
+
+Readings for this chapter is:
+
+AOS 6
+
+AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9
+
+AOS 10.0-3, 10.6
+
+
+## Maximum likelihood estimation
+
+We start by reminding ourselves of the basics of likelihood-based inference.
+
+Consider the following example:
+
+The time until something happens is assumed to be exponentially distributed with parameter $\lambda$. Therefore the probability density of observing $T=t$ is
+$$
+f_T(t) = \lambda e^{-\lambda t}.
+$$
+On the other hand, we can also think of this as the likelihood function of the parameter $\lambda$,
+$$
+L(\lambda) = \lambda e^{-\lambda t}.
+$$
+If we have $n$ independent observations, the joint density of these observations is the product of the marginal densities. Therefore the likelihood is also the product of the marginal likelihoods. That is, if we write $L_n(\lambda)$ for the likelihood of $n$ observations,
+$$
+L_n(\lambda) = \prod_{i=1}^n \lambda e^{-\lambda t_i}.
+$$
+
+Many times it is advantageous to instead consider the logarithm of the likelihood, the log-likelihood,
+$$
+l_n(\lambda):=\ln L_n(\lambda) = \sum_{i=1}^n( \ln \lambda - \lambda t_i  ) = n\ln\lambda - \lambda\sum_{i=1}^n t_i= n(\ln\lambda - \lambda \bar t) ,
+$$
+where we as usual let $\bar t = \frac{1}{n}\sum_{i=1}^n t_i$.
+```{r exp-obs, echo = FALSE, tidy=FALSE, cache=FALSE}
+set.seed(1.0)
+numObs = 100
+actualRate= 0.12
+t = rexp(numObs,actualRate)
+t.df = data.frame(t)
+```
+Let us say we observe a sample of size `r numObs`.
+```{r exp-boxplot, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Histogram of the sample", out.width='80%', fig.asp=.75, fig.align='center'}
+library(ggplot2)
+ggplot(t.df, aes(x = t)) +
+  geom_histogram() +
+  theme_minimal()
+```
+
+We define a function in R that calculates the log-likelihood of a singe observation
+```{r }
+logL <- function(t,lambda){
+  log(lambda) - lambda * t
+}
+```
+Since the sample will not change, let us create the log-likelihood function of this particular sample:
+```{r }
+logLn <- Vectorize(function(lambda){sum(logL(t, lambda))},
+                   "lambda")
+```
+
+Then we may calculate the log-likelihood of, for example, $\lambda = 0.1$,
+```{r }
+logLn(0.1)
+```
+<p>In fact, let us plot the log-likelihood for a range of $\lambda$-values.</p>
+```{r log-likelihood, cache=FALSE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
+library(ggplot2)
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+ggplot(data.frame(x = c(0.01, 0.2)), aes(x = x)) +
+  stat_function(fun = logLn, size = 1) +
+  geom_point(aes(x=1/mean(t), y=logLn(1/mean(t))), colour=cbp1[2], size = 3) +
+  theme_minimal() +
+  xlab("lambda") + 
+  ylab("log likelihood")
+```
+
+<p>We can find the maximum likelihood estimate as the $\lambda$ that maximizes the likelihood (or log likelihood). That is:</p>
+```{block2, type='note'}
+$$
+\hat\lambda = \operatorname*{argmax}_\lambda L_n(\lambda) = \operatorname*{argmax}_\lambda l_n(\lambda).
+$$
+```
+Since the likelihood is simple, we can find $\hat \lambda$ directly:
+$$
+\partial_\lambda l_n(\lambda)\Big|_{\lambda = \hat\lambda} = n\left(\frac{1}{\hat \lambda} - \bar t\right) = 0.
+$$
+With solution $\hat\lambda =1/ \bar t$. For this sample:
+```{r }
+lambdaHat <- 1/mean(t)
+lambdaHat
+```
+We may also find the estimate using numerical optimization.
+```{r cache=FALSE}
+optimResult = optimize(logLn,c(0,10),maximum = TRUE)
+optimResult$maximum
+```
+
+## Hypothesis testing
+In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure \@ref(fig:hypTestIllustration). 
+```{r hypTestIllustration, cache=FALSE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
+
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+library(ggplot2)
+library(latex2exp)
+
+f <- function(theta){
+  100*(log(theta)-theta/0.9)
+}
+ggplot(data.frame(x = c(0.5, 1.5)), aes(x = x)) +
+  stat_function(fun = f, size = 1) +
+ geom_point(aes(x=0.9, y=f(0.9)), colour=cbp1[2], size = 3) +
+  scale_x_continuous(breaks = seq(0.5,1.5,0.1)) +
+  theme_minimal() +
+  xlab(TeX('$\\theta$')) + 
+  ylab("log likelihood")
+```
+There we have an estimate of $\theta$ which is $\hat\theta = 0.9$. We would like to test $H_0: \theta=\theta_0 = 1$ against $\theta \neq \theta_0$.
+
+This should be based on how far away, in some sense, the maximum likelihood estimate is from $\theta_0$. Looking at the figure, we can see three different ways of measuring how close $\hat\theta$ and $\theta_0$ are from each other. One way would be to measure the vertical distance between the log-likelihood function in $\hat\theta$ and $\theta_0$. I.e.\ we would calculate:
+$$
+l(\hat\theta) - l(\theta_0).
+$$
+This is know as the likelihood ratio test.
+
+Another option is to calculate the horizontal distance between $\hat\theta$ and $\theta_0$. I.e. to calculate the distance
+$$
+|\hat\theta - \theta_0|.
+$$
+This is know has the Wald test.
+
+Lastly we know that $\partial_\theta l(\theta)|_{\theta=\hat\theta} = 0$. So we could calculate
+$$
+|\partial_\theta l(\theta)|_{\theta=\theta_0}|,
+$$
+and see how close it is to 0. This is known as the Score test. In the following sections we examine each test in detail.
+
+## Likelihood ratio test
+
+We are interested in testing the following hypotheses
+$$
+H_0:\theta \in \Theta_0\text{ vs. } H_1:\theta \in \Theta_0^\complement.
+$$
+<p>Here $\Theta_0$ is some set of parameter values. It could for example be that $\Theta_0 = (-\infty,\theta_0)$ or simply $\Theta_0 = \theta_0$.</p>
+```{block2, type='note'}
+We define the likelihood ratio as
+$$
+\lambda_{\text{LR}} := 2(l(\hat\theta) - l(\hat\theta_0)),
+$$
+```
+where
+$$
+l(\hat\theta_0) = \sup_{\theta\in\Theta_0}l(\theta)
+$$
+and
+$$
+l(\hat\theta) = \sup_{\theta\in\Theta}l(\theta).
+$$
+Since $l(\hat\theta)\geq l(\hat\theta_0)$, we have that $\lambda_{\text{LR}} \geq 0$ and data agrees well with $H_0$ if $\lambda_{\text{LR}}$ is small. Therefore the rejection region will be of the form $\lambda_{\text{LR}} > k$, where $k$ is determined to get the correct size of the test. We can not say more in general, the continuation depends on the particular problem and tends to become complicated for anything but simple models.
+
+As before let us say that we have an iid sample from an exponential distribution and wish to test $H_0:~\lambda = \lambda_0$ against $H_1:~\lambda \neq \lambda_0$, with $\lambda_0=0.1$.
+	
+We have already seen that
+$$
+l(\lambda) = n(\ln \lambda - \lambda \bar t)
+$$
+<p>and that $\hat\lambda = 1/\bar t$. Therefore</p>
+$$
+l(\lambda) = n \left( \ln\lambda - \frac{\lambda}{\hat\lambda} \right).
+$$
+<p>Now, we can write $l(\hat\lambda) = n\left(\ln\hat\lambda - 1\right)$. The likelihood ratio is then:</p>
+$$
+\lambda_{\text{LR}} = 2(l(\hat\lambda) - l(\lambda_0)) = 2n\left( \ln\hat\lambda - 1 - \ln \lambda_0 + \frac{\lambda_0}{\hat\lambda}  \right) = 2n\left(\ln \frac{\hat\lambda}{\lambda_0} + \frac{\lambda_0-\hat\lambda}{\hat\lambda}\right).
+$$
+<p>Recall that we should reject $H_0$ if $\lambda_{\text{LR}}>k$, and that $k$ is set to get the correct size. But to do this we need to know the distribution of $\lambda_{\text{LR}}$ and looking at the formula above, this seems difficult. Instead we search for something which is equivalent to $\lambda_{\text{LR}}>k$, but with a known distribution. Towards this we plot $\lambda_{LR}(\hat\lambda)$:</p>
+```{r LR-testExp, cache=FALSE, echo = FALSE, fig.cap='Illustration of the likelihood ratio', out.width='80%', fig.asp=.75, fig.align='center'}
+f <- function(l){ 
+  l0 = 0.1
+  200*(log(l/l0) + (l0-l)/l) 
+}
+library(ggplot2)
+library(latex2exp)
+ggplot(data.frame(x = c(0.01, 0.5)), aes(x = x)) +
+  stat_function(fun = f, size = 1) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0,0.5,0.1)) +
+  xlab(TeX("$\\hat{\\lambda}$")) + 
+  ylab(TeX("$\\lambda_{LR}$"))
+```
+We see that $\lambda_{LR}$ is decreasing for $\hat\lambda < \lambda_0$ and increasing for $\hat\lambda > \lambda_0$ with minimum at $\hat\lambda = \lambda_0$. Therefore $\lambda_{LR}>k$ is equivalent to $\hat\lambda < k_L$ or $\hat\lambda > k_U$, for some choices of $k_L$ and $k_U$. These should be determined so that the test gets the correct size.
+
+The size of the test is
+\begin{align}
+&1- P_{\lambda_0} \left(k_L< \hat\lambda < k_U \right) = 1- P_{\lambda_0} \left(k_L< \frac{1}{\bar t} < k_U \right) = 1-  P_{\lambda_0} \left(1/k_U< \bar t < 1/k_L \right)\\
+=& 1-  P_{\lambda_0} \left(\tilde k_L< \sum_{i=1}^n T_i< \tilde k_U \right),
+\end{align}
+with $\tilde k_L := n/k_U$ and similarly for $\tilde k_U$. This probability can be calculated since we know that $\sum_{i=1}^n T_i \sim \Gamma(n,\lambda)$. If we let $\Gamma_{\alpha}(n,\lambda)$ be the $\alpha$-quantile of the gamma distribution, i.e.\ the number such that
+$$
+\alpha = P\left( \Gamma(n,\lambda )> \Gamma_\alpha(n,\lambda) \right),
+$$
+we see that the rejection region for a size $\alpha$ test is
+$$
+\left\{ T_i\mid \sum_{i=1}^n T_i > \Gamma_{\alpha/2}(n,\lambda_0) \text{ or } \sum_{i=1}^n T_i < \Gamma_{1-\alpha/2}(n,\lambda_0)  \right\}.
+$$
+or equivalently
+$$
+\left\{ \hat \lambda \mid \hat\lambda < \frac{n}{\Gamma_{\alpha/2}(n,\lambda_0)} \text{ or } \hat\lambda > \frac{n}{\Gamma_{1-\alpha/2}(n,\lambda_0)}  \right\}.
+$$
+
+Let us implement this:
+```{r cache=FALSE}
+alpha <- 0.05
+lambda0 <- 0.1
+n <- 100
+
+upperCriticalValue <- n / qgamma(alpha/2, shape = n, rate = lambda0)
+lowerCriticalValue <- n / qgamma(1-alpha/2, shape = n, rate = lambda0)
+upperCriticalValue
+lowerCriticalValue
+```
+In this case we had $\hat\lambda =$ `r round(1/mean(t),4)` and so we would not reject $\lambda \neq 0.1$.
+
+Another option is to calculate the p-value. Recall that the p-value is the smallest level for which $H_0$ is rejected. That is, it is the $\alpha$ that solves $\Gamma_{1-\alpha/2}(n,\lambda_0) = n/\hat\lambda$. But, by definition
+$$
+\alpha = 2 P \left( \Gamma(n,\lambda_0) < \Gamma_{1-\alpha/2}) \right)
+$$
+and therefore the p-value is
+$$
+2P\left( \Gamma(n,\lambda_0) < \frac{n}{\hat\lambda} \right).
+$$
+```{r cache=FALSE}
+2* pgamma(n/lambdaHat, shape = n, rate = lambda0)  
+```
+Again we see that we would not reject $H_0$ on the 5\%-level.
+
+## Mathematical aside: Taylor expansion
+
+We would like to approximate a function $f(x)$ by a polynomial $p(x)$ of degree $n$, around a point $x_0$. That is, if $x\approx x_0$ we would like $f(x)\approx p(x)$. How should we choose $p(x)$?
+
+Let us write
+$$
+p(x) = c_0 + c_1(x-x_0) + c_2(x-x_0)^2 + \cdots + c_n(x-x_0)^n.
+$$
+To ensure that $f(x)\approx p(x)$ close to $x_0$, we first require that 
+$$
+f(x_0)=p(x_0)=c_0,
+$$
+so that we have found the first parameter. To make the approximation better, we further require that the first derivatives are the same at $x_0$,
+$$
+f'(x_0) = p'(x_0) = c_1 + 2c_2(x-x_0) + 3c_3(x-x_0)^2+\cdots + nc_n(x-x_0)^{n-1}|_{x=x_0} = c_1.
+$$
+Continuing, we want
+$$
+f''(x_0) = p''(x_0) = 2c_2 + 2\cdot 3c_3(x-x_0) + 3\cdot 4c_4(x-x_0)^2 + \cdot (n-1)nc_n(x-x_0)^{n-2}|_{x=x_0} = 2c_2,
+$$
+so that $c_2 = f''(x_0)/2$. For the $k$th derivative,
+$$
+f^{(k)}(x_0) = p^{(k)}(x_0) = 2\cdot 3\cdots kc_k = k!c_k,
+$$
+so that $c_k = f^{(k)}(x_0)/k!$.
+
+To summarize, the order $n$ polynomial approximation of $f(x)$ close to $x_0$ is
+$$
+f(x) \approx f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2!}(x-x_0)^2 + \cdots \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n.
+$$
+This is known as a Taylor series.
+
+In fact, we can do even better by giving a formula for the error. Taylor's theorem says that
+```{block2, type='note'}
+$$
+f(x) = f(x_0) + f'(x_0)(x-x_0)  + \cdots \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n + \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1},
+$$
+where $\xi$ is some number between $x$ and $x_0$.
+```
+As an example, let us consider the approximation of $\ln x$ around 1. We begin by calculating the derivatives,
+
+\begin{align}
+\ln 1 &= 0 ,\\
+\partial_x\ln x|_{x=1} &= \frac{1}{x}|_{x=1} = 1 \\
+\partial_x^2 \ln x|_{x=1} &= -\frac{1}{x^2}|_{x=1} = -1,\\
+\partial_x^3 \ln x|_{x=1} &= \frac{2}{x^3}|_{x=1} = 2.
+\end{align}
+
+Therefore the 3rd order polynomial approximation of $\ln x$ is
+$$
+\ln x \approx (x-1) - \frac{1}{2}(x-1)^2 + \frac{1}{3}(x-1)^3.
+$$
+
+```{r taylor-series, cache=FALSE, message=FALSE, fig.cap='Taylor series approximation of ln x', out.width='80%', fig.asp=.75, fig.align='center', echo = FALSE}
+f <- log
+
+p <- function(n,x){
+  out <-0
+  if (n>0){
+      for (i in 1:n){
+    out  = out + (-1)^(i+1) *(x-1)^i/i
+    }
+  }
+  out
+}
+
+library(ggplot2)
+
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+ggplot(data.frame(x = c(0.2, 1.8)), aes(x = x)) +
+  stat_function(aes(color = "log"), fun = f, size = 1.5) +
+  stat_function(aes(color = "0th order"), fun = function(x){p(0,x)}, size = 1.5) +
+  stat_function(aes(color = "1st order"), fun = function(x){p(1,x)}, size = 1.5) +
+  stat_function(aes(color = "3rd order"), fun = function(x){p(3,x)}, size = 1.5) +
+  stat_function(aes(color = "5th order"), fun = function(x){p(5,x)}, size = 1.5) +
+  theme_minimal() +
+  xlab("x") + 
+  scale_colour_manual(values=cbp1)
+```
+
+## Asymptotic distribution of the MLE
+Here we examine the asymptotic properties of maximum likelihood estimators. To start, we imagine that we observe a random variable $X$, from a parameterized distribution with density $p_\theta$. Our discussion will also be valid if we have a discrete random variable with a probability function $p_\theta$. Then we have a log-likelihood $l_x(\theta):=\ln p_\theta(x)$. Here we will calculate the expected value and variance of the random variable $l_X'(\theta):=\partial_\theta \ln p_\theta(X)$.
+
+First note that since
+$$
+\int p_\theta(x)\mathrm{d} x = 1,
+$$
+therefore
+$$
+0 = \partial_\theta \int p_\theta(x)\mathrm{d} x = \int \partial_\theta p_\theta(x)\mathrm{d} x = \int \partial_\theta (\ln p_\theta(x))p_\theta(x)\mathrm{d} x =  \int l'_x(\theta) p_\theta(x)\mathrm{d} x = E[l_X'(\theta)].
+$$
+This means,
+```{block2 type="note"}
+$$
+ E[l_X'(\theta)] =0.
+$$
+```
+
+To find the variance, we instead consider,
+\begin{align*}
+0 &= \partial^2_\theta \int p_\theta(x)\mathrm{d} x =  \int \partial_\theta(l'_x(\theta) p_\theta(x))\mathrm{d} x =\int (l''_x(\theta) p_\theta(x) + (l'_x(\theta) )^2p_\theta(x))\mathrm{d} x \\
+&=  E[l''_X(\theta)] + E[(l'_X(\theta))^2].
+\end{align*}
+
+Therefore,
+```{block2 type="note"}
+$$
+\operatorname{Var}(l'_X(\theta)) = E[(l'_X(\theta))^2] = -E[l''_X(\theta)] := I(\theta).
+$$
+```
+Here, $I(\theta)$ is called the Fisher information. This calculation was for a sample $X$ of size 1. If we have an independent sample of size $n$, we define the log-likelihood as
+$$
+l_n(\theta) = \sum_{i=1}^n l_{X_i}(\theta).
+$$
+Then we can also calculate
+\begin{align*}
+E[l'_n(\theta)] &= E[\partial_\theta \sum_{i=1}^n l_{X_i}(\theta)] =\sum_{i=1}^n  E[\partial_\theta l_{X_i}(\theta)] = 0,\\
+Var(l'_n(\theta)) &= Var(\partial_\theta \sum_{i=1}^n l_{X_i}(\theta)) =  \sum_{i=1}^n Var(l_{X_i}'(\theta)) = n I(\theta) =:I_n(\theta).
+\end{align*}
+
+<p>Since $l'_n(\theta)$ is a sum of random variables $l_{X_i}'(\theta)$, and we now know the expected value and variance, we can apply the law of large numbers and central limit theorem to get the following asymptotics:</p>
+```{block2 type="note"}
+\begin{align*}
+\frac{1}{n}l'_n(\theta) &\overset{p}{\rightarrow} 0,\quad \text{as }n\to\infty, \\
+\frac{1}{\sqrt{n}}l'_n(\theta) &\overset{d}{\rightarrow} \mathsf{N}(0,I(\theta)),\quad \text{as }n\to\infty,\\
+-\frac{1}{n}l''_n(\theta) &\overset{p}{\rightarrow} I(\theta)\text{ as } n\to\infty.
+\end{align*}
+```
+<p>Now we are ready to find the asymptotic distribution of $\hat\theta_n$. We make a first-order Taylor expansion of $l_n'(\hat\theta_n)$ around $\theta$,</p>
+$$
+l'_n(\hat\theta_n) \approx l'_n(\theta) + (\hat\theta_n-\theta)l''_n(\theta).
+$$
+<p>Then use that $l'_n(\hat\theta_n)=0$ and rewrite as</p>
+$$
+\sqrt{n} (\hat\theta_n-\theta) \approx -\frac{l'_n(\theta)/\sqrt{n}}{l''_n(\theta)/n}.
+$$
+Now, using the above asymptotics we arrive at:
+```{block2 type="note"}
+$$
+\sqrt{n} (\hat\theta_n-\theta) \overset{d}{\rightarrow} \frac{\mathsf N(0,I(\theta))}{I(\theta)} \overset{d}{=} \mathsf N(0,I^{-1}(\theta)).
+$$
+```
+<p>In particular, this implies that $\hat\theta_n - \theta \overset{p}{\rightarrow} 0$, or in other words that $\hat\theta_n$ is a consistent estimator of $\theta$.
+One problem with the above is however that $I(\theta)$ is often difficult to calculate. However $-l''_n(\theta)/n=:\hat I(\theta)$ is a consistent estimator of $I(\theta)$. Then we may also write:</p>
+$$
+\sqrt{n \hat I(\theta)}(\hat\theta_n - \theta) \overset{d}{\rightarrow} \mathsf N(0,1).
+$$
+<p>A further problem is that $\theta$ is in general unknown. But since $\hat\theta_n$ is consistent, we may simply replace $\theta$ by $\hat\theta_n$,</p>
+```{block2 type="note"}
+$$
+\sqrt{n \hat I(\hat\theta_n)}(\hat\theta_n - \theta) \overset{d}{\rightarrow} \mathsf N(0,1).
+$$
+```
+This is an amazing result. Without knowing in detail how $\hat\theta$ is determined from the sample; perhaps from some numerical optimization, we can say what the large-sample distribution is. We can rewrite this as an approximation:
+$$
+\hat \theta_n \approx \mathsf N\left(\theta, \frac{1}{n \hat I(\hat\theta_n)}\right).
+$$
+Now let us apply this to the example of the exponential distribution. We had that $\hat\lambda_n = 1/\bar t$. Further
+$$
+l''(\lambda) = -\frac{1}{\lambda^2}.
+$$
+Thus, the Fisher information is simply
+$$
+I(\lambda) = -E[l''_T(\lambda)] = \frac{1}{\lambda^2}.
+$$
+The asymptotic distribution of $\hat \lambda_n$ is therefore:
+$$
+\hat\lambda_n \approx \mathsf N\left(\lambda, \frac{\hat\lambda_n^2}{n} \right).
+$$
+
+## The delta method
+
+In this section we discuss how to find the asymptotic distribution of a function of the estimate. Let us assume that we already know that
+$$
+\sqrt{n} (\hat\theta_n - \theta) \overset{d}{\rightarrow} N(0,\sigma^2).
+$$
+<p>This might be because $\hat\theta_n$ is the MLE and we have used the results from the previous section or we have applied some central limit theorem. We have a function $f$ and we would like to know the asymptotic distribution of $f(\hat\theta_n)$. Let us again write a Taylor expansion</p>
+$$
+f(\hat\theta_n) \approx f(\theta) + f'(\theta)(\hat\theta_n - \theta).
+$$
+<p>Rearranging and multiplying by $\sqrt n$ gives,</p>
+```{block2 type="note"}
+$$
+\sqrt{n}(f(\hat\theta_n) - f(\theta)) \approx f'(\theta)\sqrt{n}(\hat\theta_n - \theta) \overset{d}{\rightarrow} N(0,\sigma^2f'(\theta)^2) .
+$$
+```
+<p>This result is called the first order Delta method. For this to make sense we need that $f'(\theta)\neq 0$. If this is not the case we can instead do a second order Taylor expansion</p>
+$$
+f(\hat\theta_n) \approx f(\theta) + f'(\theta)(\hat\theta_n - \theta) + \frac{f''(\theta)}{2}(\hat\theta_n - \theta)^2 = f(\theta) + \frac{f''(\theta)}{2}(\hat\theta_n - \theta)^2.
+$$
+Rearranging gives,
+$$
+n(f(\hat\theta_n)  - f(\theta)) \approx \frac{f''(\theta)}{2}(\sqrt{n}(\hat\theta_n-\theta))^2.
+$$
+<p>We assumed that $\sqrt{n} (\hat\theta_n - \theta) \overset{d}{\rightarrow} N(0,\sigma^2)$. The continuous mapping theorem (not covered here) states that if $f$ is a continuous function and if $X_n \overset{d}{\rightarrow} X$, then $f(X_N) \overset{d}{\rightarrow} f(X)$. Therefore, if we let $Z\sim N(0,1),$ we can write our assumption as $\sqrt{n} (\hat\theta_n - \theta) \overset{d}{\rightarrow} \sigma Z$ and thus, recalling that the square of a standard normal random variable has a $\chi^2_1$-distribution,</p>
+$$
+(\sqrt{n}(\hat\theta_n-\theta))^2 \overset{d}{\rightarrow} \sigma^2Z^2 \overset{d}{=} \sigma^2 \chi^2_1.
+$$
+With that we get the second order Delta method:
+```{block2 type="note"}
+$$
+n(f(\hat\theta_n)  - f(\theta)) \approx \frac{f''(\theta)}{2}\sigma^2\chi_1^2.
+$$
+```
+Now let us apply the delta method to the exponential distribution. We would like to estimate the probability that the time until the next event is larger than 10. That is the probability
+$$
+p = P(T>10) = e^{-10\lambda}.
+$$
+The MLE follows from the invariance principle of maximum likelihood, i.e.\ $\hat p = e^{-10\hat\lambda}$. The distribution of $\hat p$ can be found by the delta method if we let $p=f(\lambda) = e^{-10\lambda}$. Then $f'(\lambda) = -10e^{-10\lambda} = -10p$. In this case $f'(\lambda)\neq 0$, so we may apply the first order delta method. Recall from the previous section that
+$$
+\sqrt n\left( \hat\lambda_n - \lambda \right) \approx \mathsf N(0, \lambda^2),
+$$
+that is, the $\sigma^2$ appearing in the delta method is $\lambda^2$. Now, applying the delta method gives
+$$
+\sqrt n(\hat p_n- p) \approx \mathsf N(0,100p^2\lambda^2).
+$$
+As usual, we may replace unknown parameters with a consistent estimate, i.e.\ $p$ with $\hat p$ and $\lambda$ with $\hat\lambda$. Therefore,
+$$
+\sqrt n(\hat p_n- p) \approx \mathsf N(0,100\hat p^2\hat\lambda^2) = \mathsf N(0,0.132),
+$$
+or
+$$
+\hat p_n \approx \mathsf N(p,0.132/n).
+$$
+
+
+## Wilks' test
+
+In the previous sections we found the asymptotic distribution of $\hat\theta_n$. Here we seek the asymptotic distribution of the likelihood ratio $-2(l_n(\theta_0) - l_n(\hat\theta_n)))$. The reason is that, as we have seen, finding the exact distribution is difficult. If we have the approximate, asymptotic, distribution, we can use that to do for example hypothesis testing. For ease of notation we suppress the $n$ and write $l$ and $\hat\theta$.
+
+We will use the following asymptotically valid approximations, that we have seen before:
+\begin{align*}
+l'(\hat\theta) &= 0,\\
+-\frac{1}{n}l''(\hat\theta) &\approx -\frac{1}{n}l''(\theta) \approx I(\theta),\\
+\sqrt{n}(\hat\theta - \theta) &\approx I^{-1/2}(\theta )Z,
+\end{align*}
+with $Z\sim \mathsf N(0,1)$. 
+
+<p>Just as in the delta method, we now do a Taylor expansion of $l(\theta)$ around $\hat\theta$:</p>
+\begin{align}
+l(\theta) \approx& l(\hat \theta) + l'(\hat\theta)(\theta-\hat\theta) + \frac{l''(\hat\theta)}{2}(\theta-\hat\theta) ^2\\
+=& l(\hat\theta) + \frac{l''(\hat\theta)}{2}(\theta-\hat\theta) ^2 = l(\hat \theta) +\frac{1}{2} \frac{1}{n}l''(\hat\theta)n(\theta-\hat\theta) ^2\\
+\approx & l(\hat\theta) -\frac{1}{2} I(\theta)I^{-1}(\theta)Z^2 = l(\hat\theta) - \frac{1}{2}\chi_1^2.
+\end{align}
+In other words, for a large sample,
+```{block2 type="note"}
+$$
+\lambda_{LR} = 2( l(\hat\theta)-l(\theta_0))\approx \chi_1^2.
+$$
+```
+Which is Wilks' theorem.
+
+Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:
+```{r}
+lrStatistic <- 2*(logLn(optimResult$maximum) - logLn(0.1))
+lrStatistic
+```
+Recall that we reject $H_0$ if $\lambda_{LR}$ is large. Therefore the p-value is
+```{r}
+1 - pchisq(lrStatistic, 1)
+```
+
+## Wald's test
+
+<p>Another way to measure if $\hat\theta$ agrees with the null hypothesis is to calculate $\hat\theta - \theta_0$. If this is large, in absolute value, the test should reject the null hypothesis. We have already seen that, under the assumption of $H_0$</p>
+```{block2 type="note"}
+$$
+\frac{\hat\theta- \theta_0}{\textrm{Sd}(\hat\theta)} \overset{d}{\approx} \mathsf{N}(0,1),
+$$
+```
+where the standard deviation can be calculated as
+$$
+Sd(\hat\theta) = (n\hat I(\hat\theta))^{-1/2}.
+$$
+Therefore the test can be done by comparing the left hand-side with the appropriate quantile of the Normal distribution. Note that this implies also that
+$$
+\frac{(\hat \theta - \theta_0)^2}{Var(\hat\theta)} \approx \chi^2_1,
+$$
+which is similar to Wilks' test.
+
+Let us apply this again to the exponential distribution. We have already seen that $I(\lambda) = 1/\lambda^2$ and so the standard deviation is:
+$$
+Sd(\hat \lambda) = \frac{\hat\lambda}{\sqrt n}.
+$$
+Since we have a two-sided test, the test statistic is:
+$$
+\frac{\left| \hat\lambda - \lambda_0  \right|}{\hat\lambda / \sqrt n }.
+$$
+```{r}
+waldStatistics <- abs(lambdaHat - lambda0)/(lambdaHat/sqrt(n))
+waldStatistics
+```
+This is now compared to $z_{\alpha/2}=$ `r round(qnorm(1-0.05/2) ,3)` if $\alpha = 0.05$ and so we do not reject $H_0$. The p-value is:
+```{r}
+2*(1-pnorm(waldStatistics))
+```
+
+Here we found the standard deviation of $\hat \lambda$ by knowing the asymptotic distribution of the MLE. It is also possible to calculate this directly from the delta method. That is, we know that
+\begin{align}
+E\left[ T\right] &= \frac{1}{\lambda},\\
+Var\left( T \right) &= \frac{1}{\lambda^2}.
+\end{align}
+So by the central limit theorem ($\bar t$ is a sum of random variables):
+$$
+\sqrt n (\bar t - 1/\lambda) \overset{d}{\rightarrow} N(0,1/\lambda^2).
+$$
+If $f(x)=1/x$, then $\hat\lambda = f(\bar t) = 1/\bar t$ and applying the delta method gives,
+$$
+\sqrt n (\hat\lambda - \lambda) \overset{d}{\rightarrow} N(0,f'(\bar t)^2/\lambda^2) = N(0,f'(1/\lambda)^2/\lambda^2) = N(0,\lambda^2).
+$$
+This agrees with what we obtained previously.
+
+
+## Score test
+
+In this section we discuss the score test, sometimes called the Rao test or the Lagrange multiplier (LM) test.
+
+If $\hat\theta$ is close to $\theta_0$ then we should have that $l'(\theta_0)\approx 0$. The score test is therefore that we reject $H_0$ if $\left| l'(\theta_0)\right|>k$, for some $k$ chosen depending on the size of the test.
+
+We can use the asymptotics we already calculated, that is
+```{block2 type="note"}
+$$
+\frac{l_n'(\theta_0)}{\sqrt{I_n(\theta_0)}} \approx \mathsf N(0,1). 
+$$
+```
+
+So the score test of size $\alpha$ is to reject $H_0$ if
+$$
+\frac{\left|l_n'(\theta_0)\right|}{\sqrt{I_n(\theta_0)}}>z_{\alpha/2}.
+$$
+
+Note that this test statistic does not require us to calculate the MLE $\hat\theta$. By squaring the test statistic we get, as in the previous section, a test statistic that is $\chi^2_1$-distributed, similar to Wilks' test.
+
+We apply this to the exponential distribution. We have already calculated everything we need so it is just a matter of putting it together:
+```{r}
+lp <- n*( 1/lambda0 - mean(t) )
+fisherInfo <- n/lambda0^2
+scoreStatistic <- lp / sqrt(fisherInfo)
+scoreStatistic
+```
+With p-value:
+```{r}
+2*(1-pnorm(scoreStatistic))
+```
+In this particular case the score test and the Wald test are exactly the same. This is not true in general.
+
+## Confidence intervals
+
+We have derived a number of different tests. In principle all of them can be turned into confidence intervals since there is a correspondence between hypothesis tests and confidence intervals. Let us first examine how we can use the Wald test to construct confidence intervals.
+
+The Wald test is based on that for large $n$:
+$$
+\frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)} \overset{d}{\approx} \mathsf{N}(0,1),
+$$
+Therefore we can write
+$$
+1-\alpha = P\left( -z_{\alpha/2} < \frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)} 
+\leq z_{\alpha/2}  \right) = P\left( \hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}\leq \theta \leq \hat\theta +  \textrm{Sd}(\hat\theta) z_{\alpha/2}\right).
+$$
+Which means that $\left[\hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}, \hat\theta +\textrm{Sd}(\hat\theta) z_{\alpha/2}\right]$ is a $1-\alpha$ confidence interval for $\theta$.
+
+Let us derive the same CI in a slightly different way. In the Wald test we would accept $H_0: \theta=\theta_0$ if $\left| \hat\theta - \theta_0 \right|/Sd(\hat\theta)<z_{\alpha/2}$. Solving this for $\theta_0$ gives
+$$
+ \hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}\leq \theta_0 \leq \hat\theta +  \textrm{Sd}(\hat\theta) z_{\alpha/2}.
+$$
+If we replace $\theta_0$ with $\theta$ we obtain the CI above. Therefore we may think of the CI as being the set of $\theta_0$ that we would accept in a hypothesis test.
+
+<p>The same principle can be applied to convert any hypothesis test to a corresponding CI. For example the score test accepts $H_0$ if</p>
+$$
+ \frac{\left| l'_n(\theta)\right |}{\sqrt{I_n(\theta)}}< z_{\alpha/2},
+$$
+<p>and so solving this for $\theta$ gives a CI. However, in most cases it is not possible to obtain a closed form solution and we have solve it numerically. Let us as an example do it for the exponential distribution:</p>
+\begin{align}
+l'_n(\lambda) &= n\left( \frac{1}{\lambda} - \frac{1}{\hat\lambda} \right),\\
+I_n(\lambda) &= - l''_n(\lambda) = \frac{n}{\lambda^2}.
+\end{align} 
+<p>We plot the score statistic as a function of $\lambda$:</p>
+```{r CI-plot, cache=FALSE, echo = FALSE, fig.cap='Score statistic and confidence intervall', out.width='80%', fig.asp=.75, fig.align='center'}
+
+library(ggplot2)
+library(latex2exp)
+
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+alpha = 0.05
+scoreStatistic <- function(lambda){ 
+  abs( n*(1/lambda - 1/lambdaHat) ) / sqrt( n/lambda^2 )
+}
+
+f <- function(lambda){
+  scoreStatistic(lambda) - qnorm(1-alpha/2)
+}
+
+rootResults <- uniroot(f, interval = c(lambdaHat-0.05,lambdaHat))
+leftCILimit <- rootResults$root
+
+rootResults <- uniroot(f, interval = c(lambdaHat+0.05,lambdaHat))
+rightCILimit <- rootResults$root
+
+ggplot(data.frame(x = c(0.05, 0.2)), aes(x = x)) +
+  stat_function(fun = scoreStatistic, size = 1) +
+  geom_rect(aes(xmin=leftCILimit, xmax=rightCILimit, ymin=0, ymax=Inf), fill = cbp1[2], alpha = 0.2) +
+  theme_minimal() +
+  ylab('Score statistic') + 
+  xlab(TeX("$\\lambda$"))
+```
+To find the CI we need to solve
+$$
+\frac{\left| l'_n(\lambda)\right |}{\sqrt{I_n(\lambda)}} = z_{\alpha/2},
+$$
+in terms of $\lambda$. Looking at the figure, this has two solutions, one for $\lambda > \hat\lambda$ and one for $\lambda < \hat\lambda$. These will be the left and right endpoints of the CI.
+```{r}
+alpha = 0.05
+scoreStatistic <- function(lambda){ 
+  abs( n*(1/lambda - 1/lambdaHat) ) / sqrt( n/lambda^2 )
+}
+
+f <- function(lambda){
+  scoreStatistic(lambda) - qnorm(1-alpha/2)
+}
+
+rootResults <- uniroot(f, interval = c(lambdaHat-0.05,lambdaHat))
+leftCILimit <- rootResults$root
+
+rootResults <- uniroot(f, interval = c(lambdaHat+0.05,lambdaHat))
+rightCILimit <- rootResults$root
+
+leftCILimit
+rightCILimit
+```
+
+We can compare this to the Wald based CI:
+```{r}
+alpha = 0.05
+z = qnorm(1-alpha/2)
+
+leftCILimit <- lambdaHat - qnorm(1-alpha/2)*lambdaHat/sqrt(n)
+rightCILimit <- lambdaHat + qnorm(1-alpha/2)*lambdaHat/sqrt(n)
+
+leftCILimit
+rightCILimit
+
+```
+
+Again, in this particular example, the two intervals are the same.
+
+## An application I
+Here we present an application of what we have learned in this chapter.
+```{r binRegLoadData, cache=FALSE, echo = FALSE}
+getData <- function(n = 1000, seed = 1){
+
+  set.seed(1.0)
+
+  beta <- 1.9
+  x <- rnorm(n)
+  probs <- exp(x*beta)/(1+exp(x*beta))
+
+  y <- (runif(n) < probs ) * 1
+
+  data.frame(y = y, x = x)
+}
+
+data.df <- getData()
+```
+
+Consider the binary regression model, where we observe random variables $Y_i$ that take on the values 0 or 1. The distribution of $Y_i$ depends on the value of a covariate $X_i$,
+$$
+P(Y_i=1\mid X_i=x_i) = s(\beta x_i),
+$$
+where $\beta$ is a parameter and
+$$
+s(x) = \frac{e^{x}}{1+e^{x}}
+$$
+is the logistic function. We have a sample of size $n=$ `r nrow(data.df)` and we would like to do inference on $\beta$.
+
+First we plot our data.
+```{r binRegrDataPlot, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Observed sample", out.width='80%', fig.asp=.75, fig.align='center'}
+library(ggplot2)
+ggplot(data.df, aes(x = x, y = y)) +
+  geom_point() +
+  theme_minimal()
+```
+We will estimate $\beta$ by maximum likelihood, so we begin by writing the likelihood of observation $i$,
+$$
+L_i(\beta) = s(\beta x_i)^{y_i}\left( 1-s(\beta x_i)\right)^{(1-y_i)} .
+$$
+So that the log-likelihood of the $i$th observation is
+$$
+l_i(\beta) = y_i\ln s(\beta x_i) + (1-y_i)\ln ( 1-s(\beta x_i)).
+$$
+Since we assume that our observations are iid, the total log-likelihood is then
+$$
+l(\beta) = \sum_{i=1}^n l_i(\beta).
+$$
+Let us implement what we have so far.
+```{r }
+s <- function(x) {
+  exp(x) / (exp(x) + 1)
+}
+
+logL <- function(beta, x, y) {
+  s <- s(x * beta)
+  sum(y * log(s) + (1 - y) * log(1 - s))
+}
+
+logLOurSample <- Vectorize(
+  function(beta) { logL(beta, data.df$x, data.df$y) },
+  "beta")
+```
+To maximize the likelihood there are now two options. Either we ask the computer to solve
+$$
+\underset{\beta}{\text{argma}x}~ l(\beta),
+$$
+or we calculate and solve $l'(\beta)=0$. For practice we do both ways here.
+```{r }
+optimResult = optimize(logLOurSample, c(0,3), maximum = TRUE)
+betahat <- optimResult$maximum
+betahat
+```
+For the second way we need
+\begin{align}
+s'(x) &= \frac{e^x}{\left(1+e^x\right)^2},\\
+l'(\beta) &= \frac{x y s'(x \beta )}{s(x \beta )}-\frac{x (1-y) s'(x \beta )}{1-s(x \beta )}.
+\end{align}
+In R:
+```{r }
+sp <- function(x){ exp(x)/(1+exp(x))^2 }
+
+logLp <- function(beta,x,y){
+  s <- s(x*beta)
+  sp <- sp(x*beta)
+  sum( -x*(1-y)*sp/(1-s)+x*y*sp/s )
+}
+
+logLpOurSample <- Vectorize(function(beta){ logLp(beta, data.df$x, data.df$y) },
+                            "beta")
+
+rootResults <- uniroot(logLpOurSample, interval = c(0,3))
+rootResults$root
+```
+Both methods giving the same result.
+
+To confirm that we indeed found the MLE we plot the log-likelihood.
+```{r BinReglog-likelihood, cache=FALSE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
+library(ggplot2)
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+ggplot(data.frame(x = c(0, 4)), aes(x = x)) +
+  stat_function(fun = logLOurSample, size = 1) +
+  geom_point(aes(x=betahat, y=logLOurSample(betahat)), colour = cbp1[2], size = 3) +
+  theme_minimal() +
+  xlab("beta") + 
+  ylab("log likelihood")
+```
+
+```{r binRegrDataPlotWithFit, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Observed sample and fitted model", out.width='80%', fig.asp=.75, fig.align='center'}
+library(ggplot2)
+f <- function(x){ s(betahat*x) }
+ggplot(data.df, aes(x = x, y = y)) +
+  geom_point() +
+  stat_function(fun = f, colour = cbp1[2], size = 1) +
+  theme_minimal()
+```
+
+Now we turn to hypothesis testing. Let us say we want to test $H_0: \beta = 2$ against $H_1:\beta \neq 2$. First we do the asymptotic likelihood ratio test. So we need to calculate $\lambda_{\text{LR}}$:
+```{r }
+lr <- function(beta0){
+  2*(logLOurSample(betahat) - logLOurSample(beta0))
+}
+lr(2.0)
+```
+If $H_0$ is true, this is an observation of a $\chi_1^2$-distributed random variable. Therefore the p-value is
+```{r }
+1 - pchisq(lr(2.0), 1)
+```
+
+Next we do a Wald's test. For this we need an estimate of the standard deviation of the MLE. Perhaps the easiest way is to calculate the Fisher information, that is $-l''(\beta)$. Here there are again two options, we can do it numerically or exactly. First we calculate it numerically:
+```{r }
+observedFisherInfo <- function(beta){
+  drop(-pracma::hessian(logLOurSample,beta))
+}
+observedFisherInfo(betahat)
+```
+Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
+$$
+l''(\beta)=(1-y) \left(-\frac{x^2 \sigma '(x \beta )^2}{(1-\sigma (x \beta )^2}-\frac{x^2 \sigma ''(x \beta )}{1-\sigma (x \beta )}\right)+y \left(-\frac{x^2 \sigma '(x \beta )^2}{\sigma (x \beta )^2}+\frac{x^2 \sigma ''(x \beta )}{\sigma (x \beta )}\right)
+$$
+Implemented in R:
+```{r }
+spp <- function(x){ -exp(x)*(exp(x)-1)/(exp(x)+1)^3 }
+logLpp <- function(beta,x,y){
+  s <- s(x*beta)
+  sp <- sp(x*beta)
+  spp <- spp(x*beta)
+
+  sum( (1-y)*(-x^2*sp^2/(1-s)^2 - x^2*spp/(1-s))+y*(-x^2*sp^2/s^2 + x^2*spp/s) )
+}
+logLppOurSample <- Vectorize( function(beta){ logLpp(beta, data.df$x, data.df$y) },
+                            "beta")
+
+observedFisherInfo <- function(beta){
+  -logLppOurSample(beta)
+}
+observedFisherInfo(betahat)
+```
+Recall that Wald's test statistic is standard normal under $H_0$. So we may calculate the p-value:
+```{r }
+zWald <- function(beta0){
+  abs(betahat- beta0)*sqrt(observedFisherInfo(betahat))
+  }
+2 * ( 1 - pnorm( zWald(2.0) ) )
+```
+
+We might also do a Score test. Here, all we need is $l'$ and $l''$, which we have already calculated. The score statistic is again standard normal under $H_0$.
+```{r }
+zScore <- function(beta0){
+  abs(pracma::grad(logLOurSample,beta0)/sqrt(observedFisherInfo(beta0)))
+}
+2 * ( 1 - pnorm(zScore(2.0) ) )
+```
+
+Lastly, we might calculate a CI on $\beta$. Using the Wald's statistic, this would be:
+```{r }
+alpha <- 0.05
+leftCILimit <- betahat - qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat))
+rightCILimit <- betahat + qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat))
+
+leftCILimit
+rightCILimit
+```
+
+For a score based CI we first plot the score statistic.
+```{r applicationScoreCI, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Observed sample and fitted model", out.width='80%', fig.asp=.75, fig.align='center'}
+library(ggplot2)
+library(latex2exp)
+
+alpha = 0.05
+
+f <- function(beta){
+  zScore(beta) - qnorm(1-alpha/2)
+}
+
+rootResults <- uniroot(f, interval = c(betahat-1,betahat))
+leftCILimit <- rootResults$root
+
+rootResults <- uniroot(f, interval = c(betahat+1,betahat))
+rightCILimit <- rootResults$root
+
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+ggplot(data.frame(x = c(1, 3)), aes(x = x)) +
+  stat_function(fun = Vectorize(zScore, "beta0"), size = 1) +
+  geom_rect(aes(xmin=leftCILimit, xmax=rightCILimit, ymin=0, ymax=Inf), fill = cbp1[2], alpha = 0.2) +
+  theme_minimal() +
+  ylab('Score statistic') + 
+  xlab(TeX("$\\beta$"))
+```
+We need to find the points where the score statistic is $z_{\alpha/2}$, which are the limits of the CI.
+```{r}
+alpha = 0.05
+
+f <- function(beta){
+  zScore(beta) - qnorm(1-alpha/2)
+}
+
+rootResults <- uniroot(f, interval = c(betahat-1,betahat))
+leftCILimit <- rootResults$root
+
+rootResults <- uniroot(f, interval = c(betahat+1,betahat))
+rightCILimit <- rootResults$root
+
+leftCILimit
+rightCILimit
+```
+
+
+
+
+
+
