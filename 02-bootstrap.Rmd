@@ -4,7 +4,7 @@ This chapter's main topic is a method for measuring the accuracy of sample estim
 
 Readings for this chapter is:
 
-AOS 8
+AOS 7, 8
 
 ISLR 5.2
 
