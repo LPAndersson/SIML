@@ -7,8 +7,9 @@ output:
   bookdown::gitbook:
     split_by: section+number
 documentclass: book
-biblio-style: apalike
-link-citations: yes
+bibliography: "biblio.bib"
+biblio-style: "apalike"
+link-citations: true
 description: "These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University."
 ---
 

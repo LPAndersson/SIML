@@ -1,4 +1,4 @@
-# Bootstrap (draft) {#ch-bootstrap}
+# Bootstrap {#ch-bootstrap}
 
 This chapter's main topic is a method for measuring the accuracy of sample estimates. But first we discuss the distinction between parametric and non-parametric statistics.
 
@@ -10,11 +10,11 @@ ISLR 5.2
 
 ## Parametric vs non-parametric
 
-What we have seen so far has been parametric models. For example we would have a normal model, $X\sim \mathsf N(\mu,\sigma^2)$, and the goal would be to make some statement regarding the parameters $\mu$ and $\sigma^2$.
+What we have seen so far has been parametric models. For example we could have a normal model, $X\sim \mathsf N(\mu,\sigma^2)$, and the goal would be to make some statement regarding the parameters $\mu$ and $\sigma^2$.
 
 For a non-parametric model we only say that our sample is an observation from some distribution, with distribution function $F$ and our goal is to make statements about some property of that distribution. For example we might want to estimate the mean of that distribution.
 
-We call these properties functionals of the distribution since if we knew the distribution, they could be calculated. For example the mean,
+We call these properties functionals of the distribution. Since if we knew the distribution, they could be calculated. For example the mean,
 $$
 \mu = T(F) = \int x dF(x).
 $$
@@ -34,7 +34,7 @@ which we recognize as the mean of a distribution. If $F$ is the distribution fun
 $$
 \mu = \int xdF(x) = \sum xp(x).
 $$
-A second example is the variance,
+Another example is the variance,
 $$
 T(F) = \int x^2dF(x) - \left( \int xdF(x) \right).
 $$
@@ -46,7 +46,7 @@ So that,
 $$
 F^{-1}(1/2) = F^{-1}(F(m)) = m.
 $$
-More generally, assuming that $F$ is strictly increasing, the $p$th quantile is $T(F) = F^{-1}(p).
+More generally, assuming that $F$ is strictly increasing, the $p$th quantile is $T(F) = F^{-1}(p).$ Again, this is a functional of $F$.
 
 ## Non-parametric estimation
 
@@ -63,24 +63,29 @@ I(x_i\leq x) =
    0       & \text{if } x_i > x.
   \end{cases}
 $$</div>\EndKnitrBlock{note}
+In the example below, we drag a sample of size 100 from the $\mathsf{N}(0,1)$ distribution and plot the empirical distribution function of the sample. This can be done easily using gg-plot.
 
 ```r
-set.seed(1)
-data.df <- data.frame( y = rnorm(100) )
+set.seed(42)
+data.df <- data.frame( x = rnorm(100) )
 
 library(ggplot2)
-ggplot(data.df, aes(y)) +
-  stat_ecdf(geom = "step") +
-  labs( y = "F(y)", x="y") + 
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+ggplot(data.df, aes(x)) +
+  stat_function(fun = pnorm, color = cbp1[2], size = 1) +
+  stat_ecdf(geom = "step", size = 1) +
+  labs( x = "F(x)", y= "x") + 
   theme_minimal()
 ```
 
 <div class="figure" style="text-align: center">
-<img src="02-bootstrap_files/figure-html/empiricalDistrFcnExample-1.png" alt="Empirical distribution function" width="80%" />
-<p class="caption">(\#fig:empiricalDistrFcnExample)Empirical distribution function</p>
+<img src="02-bootstrap_files/figure-html/empiricalDistrFcnExample-1.png" alt="Empirical and true distribution function" width="80%" />
+<p class="caption">(\#fig:empiricalDistrFcnExample)Empirical and true distribution function</p>
 </div>
 
-Now we may estimate any parameter that is a functional of $F$ by simply replacing $F$ by $\hat F_n$.
+<p>Now we may estimate any parameter that is a functional of $F$ by simply replacing $F$ by $\hat F_n$.</p>
 \BeginKnitrBlock{note}<div class="note">The plug-in estimator of $\theta = T(F)$ is defined by
 $$
   \hat\theta_n = T(\hat F_n).
@@ -115,18 +120,28 @@ The plug in estimator of the $p$th quantile becomes the $p$th sample quantile:
 $$
 \hat F_n^{-1}(p) =  \inf \left\{ x \mid \hat F_n(x)\geq p \right\}.
 $$
+That is, it is the smallest $x$ such that $\hat F_n(x)\geq p$. Looking at the picture it seems as in our sample, for example, $\hat F_n^{-1}(0.75)\approx 0.7$. Calculating precisely
+
+```r
+quantile(data.df$x, probs = c(0.75))
+```
+
+```
+##       75% 
+## 0.6615581
+```
 
 
 ## Bootstrap
 
 In this section we discuss how to calculate standard errors and confidence intervals for a statistic $T(X_1,X_2,\ldots, X_n)$. But first let us take a step back and consider the basics of what we are doing.
 
-We are given a set of data $(x_1,\ldots, x_n)$. We have some function that we apply to the data $T$ which we call a statistic. This may be a simple function like the sample mean, or some more complicated function like a parameter in a regression problem. We apply the function to the data and get a number $t=T(x_1,\ldots,x_n)$. To do inference we also need to know the variability of that number if we were to repeat the same experiment many times. We therefore consider the random variable $T_n := T(X_1,\ldots, X_n)$, where $X_i\sim F$ iid. The distribution of this random variable is called the sampling distribution. In some cases, for a particular $T$ and $F$ we may be able to find the sampling distribution either exactly or approximately. For example, we previously found the sampling distribution of the log-likelihood. Once we have that, we can do hypothesis testing, construct confidence intervals or simply state the standard deviation. The procedure can be summarized as:
+We are given a sample $(x_1,\ldots, x_n)$. We have some function that we apply to the sample $T$ which we call a statistic. This may be a simple function like the sample mean, or some more complicated function like a parameter in a regression problem. We apply the function to the data and get a number $t=T(x_1,\ldots,x_n)$. To do inference we also need to know the variability of that number if we were to repeat the same experiment many times. We therefore consider the random variable $T_n := T(X_1,\ldots, X_n)$, where $X_i\sim F$ iid. The distribution of this random variable is called the sampling distribution. In some cases, for a particular $T$ and $F$ we may be able to find the sampling distribution either exactly or approximately. For example, we previously found the asymptotic sampling distribution of the log-likelihood. Once we have that, we can do hypothesis testing, construct confidence intervals or simply state the standard deviation. The procedure can be summarized as:
 $$
 F\overset{sample}{\to} x \overset{T}{\to} t.
 $$
 
-However, in many cases the calculation of the sampling distribution is not possible and one way to instead approximate the distribution is through simulation. For now, let us assume that we know the distribution $F$. Then in many cases it is possible to draw $n$ iid copies of the random variable $X_1^\star,\ldots X^\star_n \sim F$ using a computer. Then calculate $t^\star = T(X_1^\star,\ldots X^\star_n)$. Repeat this $B$ times to obtain $t_1^\star,\ldots, t_B^\star$. 
+However, in many cases the calculation of the sampling distribution is not possible and one way to instead approximate the distribution is through simulation. For now, let us assume that we know the distribution $F$. Then it may be possible to draw $n$ iid copies of the random variable $X_1^\star,\ldots X^\star_n \sim F$ using a computer. Then calculate $t^\star = T(X_1^\star,\ldots X^\star_n)$. Repeat this $B$ times to obtain $t_1^\star,\ldots, t_B^\star$. 
 
 If we have $B$ such copies, by the large of large numbers, as $B\to \infty$,
 $$
@@ -148,26 +163,26 @@ T <- median
 tstar <- array(dim = B)
 
 for (i in 1:B) {
-  x <- rexp(n, rate =1)
+  x <- rexp(n, rate = 1)
   tstar[i] <- T(x)
 }
 
-mean(tstar) #Expected value
+mean(tstar)
 ```
 
 ```
-## [1] 0.7004088
+## [1] 0.6964009
 ```
 
 ```r
-var(tstar) #Variance
+var(tstar)
 ```
 
 ```
-## [1] 0.01046803
+## [1] 0.01063886
 ```
 
-In practice this is not helpful since we rarely know $F$. What we have is $\hat F_n$, so let us approximate $F\approx \hat F_n$ and therefore also $Var_F(T_n) \approx Var_{\hat F_n}(T_n)$. The right hand side here is then the variance of $T(X_1,\ldots , X_n)$, where $X_i$ is iid and distributed as $\hat F_n$. Then we proceed as above: Draw $n$ iid copies of the random variable $X_1^\star,\ldots X^\star_n \sim \hat F_n$ using a computer. Then calculate $t^\star = T(X_1^\star,\ldots X^\star_n)$. Repeat this $B$ times to obtain $t_1^\star,\ldots, t_B^\star$. Here, since $\hat F_n$ is the empirical distribution, drawing from $\hat F_n$ means simply to draw a point at random from the original data set. In contrast to the above, this method can be summarized as:
+In practice this is not helpful since we rarely know $F$. What we have is $\hat F_n$, so let us approximate $F\approx \hat F_n$ and therefore also $Var_F(T_n) \approx Var_{\hat F_n}(T_n)$. The right hand side here is then the variance of $T(X_1,\ldots , X_n)$, where $X_i$ is iid and distributed as $\hat F_n$. Then we proceed as above: Draw $n$ iid copies of the random variable $X^\star_1,\ldots X^\star_n \sim \hat F_n$ using a computer. Then calculate $t^\star = T(X_1^\star,\ldots X^\star_n)$. Repeat this $B$ times to obtain $t_1^\star,\ldots, t_B^\star$. Here, since $\hat F_n$ is the empirical distribution, drawing from $\hat F_n$ means simply to draw an observation at random from the original data set. In contrast to the above, this method can be summarized as:
 $$
 \hat F_n\overset{sample}{\to} x^\star \overset{T}{\to} t^\star.
 $$
@@ -187,27 +202,29 @@ $$</div>\EndKnitrBlock{note}
 Let us implement this method to calculate the variance of the median:
 
 ```r
-T <- median(data.df$y)
+T <- median(data.df$x)
 n <- nrow(data.df)
 B <- 1000
 Tboot <- array(dim = B)
 
 for (i in 1:B) {
   indices <- sample(seq(1:n), size = n, replace = TRUE)
-  tstar[i] <- median(data.df$y[indices])
+  tstar[i] <- median(data.df$x[indices])
 }
 
 sd(tstar) #Standard error of median
 ```
 
 ```
-## [1] 0.1381651
+## [1] 0.1564483
 ```
 In practice we would rather use the boot library.
 
 ```r
 library(boot)
-boot(data = data.df, statistic = function(data, index) median(data$y[index]), R = 1000)
+boot(data = data.df, 
+     statistic = function(data, index){ median(data$x[index]) }, 
+     R = 1000)
 ```
 
 ```
@@ -216,13 +233,14 @@ boot(data = data.df, statistic = function(data, index) median(data$y[index]), R 
 ## 
 ## 
 ## Call:
-## boot(data = data.df, statistic = function(data, index) median(data$y[index]), 
-##     R = 1000)
+## boot(data = data.df, statistic = function(data, index) {
+##     median(data$x[index])
+## }, R = 1000)
 ## 
 ## 
 ## Bootstrap Statistics :
-##      original     bias    std. error
-## t1* 0.1139092 0.02018697   0.1392329
+##       original     bias    std. error
+## t1* 0.08979677 0.03632407   0.1475442
 ```
 Since here we know $F$ we can simulate the true variance, an alternative not available in practice.
 
@@ -232,18 +250,18 @@ B <- 1000
 Tsim <- array(dim = B)
 
 for (i in 1:B) {
-  simData.df <- data.frame( y = rnorm(n) )
-  Tsim[i] <- median(simData.df$y)
+  simData.df <- data.frame( x = rnorm(n) )
+  Tsim[i] <- median(simData.df$x)
 }
 
 sd(Tsim) #Standard error of median
 ```
 
 ```
-## [1] 0.1251993
+## [1] 0.1253581
 ```
 
-It is also possible to construct confidence intervals for $T(F)$ using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals:
+It is also possible to construct confidence intervals for $T(F)$ using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals.
 
 Let us call $\theta = T(F)$ and $\hat\theta_n  = T(\hat F_n)$ and define the pivot $R_n = \hat\theta_n - \theta$. Write the distribution function of $R_n$ as:
 $$
@@ -251,8 +269,10 @@ H(r) := P(R_n\leq r).
 $$
 Then,
 \begin{align}
-&P\left(\hat\theta_n - H^{-1}(1-\alpha/2)\leq \theta \leq \hat\theta_n - H^{-1}(\alpha/2)\right) = P\left( H^{-1}(\alpha/2) \leq \hat\theta_n - \theta \leq  H^{-1}(1-\alpha/2) \right)\\
-=& P\left( H^{-1}(\alpha/2) \leq R_n \leq  H^{-1}(1-\alpha/2) \right) = H\left( H^{-1}(1-\alpha/2) \right) - H\left( H^{-1}(\alpha/2) \right)\\
+&P\left(\hat\theta_n - H^{-1}(1-\alpha/2)\leq \theta \leq \hat\theta_n - H^{-1}(\alpha/2)\right) \\
+=& P\left( H^{-1}(\alpha/2) \leq \hat\theta_n - \theta \leq  H^{-1}(1-\alpha/2) \right)\\
+=& P\left( H^{-1}(\alpha/2) \leq R_n \leq  H^{-1}(1-\alpha/2) \right)\\
+=& H\left( H^{-1}(1-\alpha/2) \right) - H\left( H^{-1}(\alpha/2) \right)\\
 =& 1-\frac{\alpha}{2}-\frac{\alpha}{2} = 1-\alpha,
 \end{align}
 proving that
@@ -261,29 +281,29 @@ $$
 $$
 is a $1-\alpha$ CI for $\theta$.
 
-Now, since $H$ is unkown this is not practical. We can however construct a bootstrap estimate of $H$ by drawing $R^\star_{n,b} = \hat\theta^\star_{n,b}- \hat\theta_n$ and defining:
+Now, since $H$ is unknown this is not practical. We can however construct a bootstrap estimate of $H$ by drawing $R^\star_{n,b} = \hat\theta^\star_{n,b}- \hat\theta_n$ and defining:
 $$
 \hat H(r) = \frac{1}{B}\sum_{b=1}^B I(R^\star_{n,b}\leq r).
 $$
-The quantity $H^{-1}(\alpha)$ is the $\alpha$ quantile of $H$. In the CI we replace $H^{-1}$ by $\hat H^{-1}$, i.e.\ the $\alpha$ quantile of $\R^\star_{n,b}$. Since $\hat \theta_n$ is fixed in the bootstrap sample, the $\alpha$ quantile of $R^\star_{n,b}$ is simply $\theta_\alpha^\star - \hat\theta_n$, where $\theta_\alpha^\star$ denotes the $\alpha$ quantile of $\hat\theta^\star_{n,b}$.
+The quantity $H^{-1}(\alpha)$ is the $\alpha$ quantile of $H$. In the CI we replace $H^{-1}$ by $\hat H^{-1}$, i.e.\ the $\alpha$ quantile of $R^\star_{n,b}$. Since $\hat \theta_n$ is fixed in the bootstrap sample, the $\alpha$ quantile of $R^\star_{n,b}$ is simply $\theta_\alpha^\star - \hat\theta_n$, where $\theta_\alpha^\star$ denotes the $\alpha$ quantile of $\hat\theta^\star_{n,b}$.
 
 Finally we get that the $1-\alpha$ bootstrap pivotal CI is
 $$
 C_n = \left[ \hat\theta_n - (\theta^\star_{1-\alpha/2} - \hat\theta_n) , \hat\theta_n - (\theta^\star_{\alpha/2} - \hat\theta_n) \right] = \left[ 2\hat\theta_n - \theta^\star_{1-\alpha/2} , 2\hat\theta_n -\theta^\star_{\alpha/2}  \right]
 $$
-Let us implement this on the same dataset as above.
+Let us implement this on the same data set as above.
 
 ```r
 alpha <- 0.05
-# T <- median(data.df$y)
-# n <- nrow(data.df)
-# B <- 1000
-# Tboot <- array(dim = B)
-# 
-# for (i in 1:B) {
-#   indices <- sample(seq(1:n), size = n, replace = TRUE)
-#   tstar[i] <- median(data.df$y[indices])
-# }
+T <- median(data.df$x)
+n <- nrow(data.df)
+B <- 1000
+Tboot <- array(dim = B)
+
+for (i in 1:B) {
+  indices <- sample(seq(1:n), size = n, replace = TRUE)
+  tstar[i] <- median(data.df$x[indices])
+}
 
 q <- unname( quantile(tstar, probs = c(1-alpha/2, alpha/2)) )
 
@@ -292,7 +312,7 @@ lowerCI
 ```
 
 ```
-## [1] -0.1422005
+## [1] -0.2250317
 ```
 
 ```r
@@ -301,14 +321,16 @@ upperCI
 ```
 
 ```
-## [1] 0.2839471
+## [1] 0.3515109
 ```
 
-Even simpler is to use the boot library
+Even simpler is to use the boot library.
 
 ```r
 library(boot)
-boot.result<- boot(data = data.df, statistic = function(data, index) median(data$y[index]), R = 1000)
+boot.result<- boot(data = data.df, 
+                   statistic = function(data, index) median(data$x[index]), 
+                   R = 1000)
 
 boot.ci(boot.result, type = "basic")
 ```
@@ -322,7 +344,7 @@ boot.ci(boot.result, type = "basic")
 ## 
 ## Intervals : 
 ## Level      Basic         
-## 95%   (-0.1394,  0.3072 )  
+## 95%   (-0.2389,  0.3129 )  
 ## Calculations and Intervals on Original Scale
 ```
 
@@ -330,7 +352,9 @@ A better alternative which we do not cover in this course is the bias-corrected 
 
 ```r
 library(boot)
-boot.result<- boot(data = data.df, statistic = function(data, index) median(data$y[index]), R = 1000)
+boot.result<- boot(data = data.df, 
+                   statistic = function(data, index) median(data$x[index]), 
+                   R = 1000)
 
 boot.ci(boot.result, type = "bca")
 ```
@@ -344,11 +368,11 @@ boot.ci(boot.result, type = "bca")
 ## 
 ## Intervals : 
 ## Level       BCa          
-## 95%   (-0.1028,  0.3646 )  
+## 95%   (-0.1333,  0.3701 )  
 ## Calculations and Intervals on Original Scale
 ```
 
-## Parametric boostrap
+## Parametric bootstrap
 
 Here we discuss an alternative to the (non-parametric) bootstrap from the previous section.
 
@@ -358,13 +382,13 @@ Then we proceed as before. We may now sample from $\hat F = F_{\hat\theta}$ and 
 
 
 ```r
-T <- median(data.df$y)
+T <- median(data.df$x)
 n <- nrow(data.df)
 B <- 1000
 Tboot <- array(dim = B)
 
-mu.hat <- mean(data.df$y)
-sigma.hat <- sd(data.df$y)
+mu.hat <- mean(data.df$x)
+sigma.hat <- sd(data.df$x)
 
 for (i in 1:B) {
   tstar[i] <- median(rnorm(n, mean = mu.hat, sd = sigma.hat))
@@ -374,39 +398,45 @@ sd(tstar)
 ```
 
 ```
-## [1] 0.1109601
+## [1] 0.1272958
 ```
 
 
 ## An application II
 
-Here we present an application of what we have learned in this chapter. The application is based on an example in Computer Age... TODO
+Here we present an application of what we have learned in this chapter. The application is based on an example in @efron2016computer.
 
-The data set consists of measurements on the kidney function of 157 individuals. We fit a local regression to the data and plot.
+The data set consists of measurements on the kidney function of 157 individuals. We fit a smoothing spline to the data and plot.
 
 ```r
 kidney.df <- read.table("data/kidney.dat", header = TRUE)
 
-kidney.loess <- loess(tot ~ age, kidney.df)
-kidney.df$loess <- kidney.loess$fitted
+kidney.spline <- smooth.spline(kidney.df$age, kidney.df$tot, df = 10)
+
+kidney.df$spline <- predict(kidney.spline, x = kidney.df$age)$y
 
 library(ggplot2)
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 ggplot(kidney.df, aes(x = age, y = tot)) +
   geom_point() +
-  geom_line(aes(y = loess), color = "blue", size = 1.5) +
+  geom_line(aes(y = spline), color = cbp1[2], size = 1) +
   labs( y = "kidney function", x="age") + 
   theme_minimal()
 ```
 
-<img src="02-bootstrap_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="02-bootstrap_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+
+
 <p>Now we can predict the kidney function of new individual of age 50.</p>
 
 ```r
-predict(kidney.loess, newdata = c(50))
+predict(kidney.spline, x = 50)$y
 ```
 
 ```
-## [1] -1.232145
+## [1] -0.7232874
 ```
 Let use use bootstrap to find the standard deviation of this prediction and construct a CI.
 
@@ -414,8 +444,8 @@ Let use use bootstrap to find the standard deviation of this prediction and cons
 library(boot)
 
 f <- function(data,index){
-  predict(loess(tot ~ age, data[index,]),
-          newdata = c(50))
+  s <- smooth.spline(data$age[index], data$tot[index], df = 10)
+  predict(s, x = 50)$y
 }
 
 boot.result<- boot(data = kidney.df, statistic = f, R = 1000)
@@ -432,8 +462,8 @@ boot.result
 ## 
 ## 
 ## Bootstrap Statistics :
-##      original     bias    std. error
-## t1* -1.232145 0.02884506   0.3640521
+##       original    bias    std. error
+## t1* -0.7232874 0.0455268   0.6037417
 ```
 
 ```r
@@ -449,7 +479,7 @@ boot.ci(boot.result, type = "bca")
 ## 
 ## Intervals : 
 ## Level       BCa          
-## 95%   (-1.986, -0.552 )  
+## 95%   (-2.0496,  0.3520 )  
 ## Calculations and Intervals on Original Scale
 ```
 
