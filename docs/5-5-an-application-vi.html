@@ -145,7 +145,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
 <li class="chapter" data-level="1.11" data-path="1-11-an-application-i.html"><a href="1-11-an-application-i.html"><i class="fa fa-check"></i><b>1.11</b> An application I</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="2-ch-bootstrap.html"><a href="2-ch-bootstrap.html"><i class="fa fa-check"></i><b>2</b> Bootstrap (draft)</a><ul>
+<li class="chapter" data-level="2" data-path="2-ch-bootstrap.html"><a href="2-ch-bootstrap.html"><i class="fa fa-check"></i><b>2</b> Bootstrap</a><ul>
 <li class="chapter" data-level="2.1" data-path="2-1-parametric-vs-non-parametric.html"><a href="2-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>2.1</b> Parametric vs non-parametric</a></li>
 <li class="chapter" data-level="2.2" data-path="2-2-non-parametric-estimation.html"><a href="2-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>2.2</b> Non-parametric estimation</a></li>
 <li class="chapter" data-level="2.3" data-path="2-3-bootstrap.html"><a href="2-3-bootstrap.html"><i class="fa fa-check"></i><b>2.3</b> Bootstrap</a></li>
@@ -257,7 +257,7 @@ Figure 5.5: Training and validation loss/accuracy for each epoch
 <p>We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.</p>
 <div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test,<span class="dt">verbose =</span> <span class="dv">0</span>)</a></code></pre></div>
 <pre><code>##      loss  accuracy 
-## 0.1148644 0.9663000</code></pre>
+## 0.1028542 0.9690000</code></pre>
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center"><span id="fig:mnist2"></span>
 <img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />

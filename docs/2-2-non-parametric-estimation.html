@@ -219,18 +219,18 @@ I(x_i\leq x) =
 </div>
 
 <p>In the example below, we drag a sample of size 100 from the <span class="math inline">\(\mathsf{N}(0,1)\)</span> distribution and plot the empirical distribution function of the sample. This can be done easily using gg-plot.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>( <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>) )</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">ggplot</span>(data.df, <span class="kw">aes</span>(x)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> pnorm, <span class="dt">color =</span> cbp1[<span class="dv">2</span>], <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="st">  </span><span class="kw">stat_ecdf</span>(<span class="dt">geom =</span> <span class="st">&quot;step&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="st">  </span><span class="kw">labs</span>( <span class="dt">x =</span> <span class="st">&quot;F(x)&quot;</span>, <span class="dt">y=</span> <span class="st">&quot;x&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb60-2" data-line-number="2">data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>( <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>) )</a>
+<a class="sourceLine" id="cb60-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb60-4" data-line-number="4"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb60-5" data-line-number="5">cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
+<a class="sourceLine" id="cb60-6" data-line-number="6">          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
+<a class="sourceLine" id="cb60-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb60-8" data-line-number="8"><span class="kw">ggplot</span>(data.df, <span class="kw">aes</span>(x)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb60-9" data-line-number="9"><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> pnorm, <span class="dt">color =</span> cbp1[<span class="dv">2</span>], <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb60-10" data-line-number="10"><span class="st">  </span><span class="kw">stat_ecdf</span>(<span class="dt">geom =</span> <span class="st">&quot;step&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb60-11" data-line-number="11"><span class="st">  </span><span class="kw">labs</span>( <span class="dt">x =</span> <span class="st">&quot;F(x)&quot;</span>, <span class="dt">y=</span> <span class="st">&quot;x&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb60-12" data-line-number="12"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:empiricalDistrFcnExample"></span>
 <img src="02-bootstrap_files/figure-html/empiricalDistrFcnExample-1.png" alt="Empirical and true distribution function" width="80%" />
 <p class="caption">
@@ -278,7 +278,7 @@ The plug-in estimates of such functionals is therefore simple to calculate. For 
 \hat F_n^{-1}(p) =  \inf \left\{ x \mid \hat F_n(x)\geq p \right\}.
 \]</span>
 That is, it is the smallest <span class="math inline">\(x\)</span> such that <span class="math inline">\(\hat F_n(x)\geq p\)</span>. Looking at the picture it seems as in our sample, for example, <span class="math inline">\(\hat F_n^{-1}(0.75)\approx 0.7\)</span>. Calculating precisely</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">quantile</span>(data.df<span class="op">$</span>x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.75</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">quantile</span>(data.df<span class="op">$</span>x, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.75</span>))</a></code></pre></div>
 <pre><code>##       75% 
 ## 0.6615581</code></pre>
 </div>
