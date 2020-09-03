@@ -32,11 +32,11 @@ $$
 $$
 which we recognize as the mean of a distribution. If $F$ is the distribution function of a discrete distribution, $dF(x)$ can be thought of as the probability function, and the mean is
 $$
-\mu = \int xdF(x) = \sum xp(x).
+\mu = \int xdF(x) = \sum_x xp(x).
 $$
 Another example is the variance,
 $$
-T(F) = \int x^2dF(x) - \left( \int xdF(x) \right).
+T(F) = \int x^2dF(x) - \left( \int xdF(x) \right)^2.
 $$
 Also for example the median can of course be calculated, at least in principle, if one knows the distribution and can therefore be written as a functional. Recall that the median is the number $m$ that satisfies, at least if $F$ is continuous,
 $$
@@ -60,7 +60,7 @@ $$
 I(x_i\leq x) =
   \begin{cases} 
    1 & \text{if } x_i \leq x \\
-   0       & \text{if } x_i > x.
+   0       & \text{o.w. }
   \end{cases}
 $$</div>\EndKnitrBlock{note}
 In the example below, we drag a sample of size 100 from the $\mathsf{N}(0,1)$ distribution and plot the empirical distribution function of the sample. This can be done easily using gg-plot.
@@ -76,7 +76,7 @@ cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
 ggplot(data.df, aes(x)) +
   stat_function(fun = pnorm, color = cbp1[2], size = 1) +
   stat_ecdf(geom = "step", size = 1) +
-  labs( x = "F(x)", y= "x") + 
+  labs( y = "F(x)", x = "x") + 
   theme_minimal()
 ```
 
@@ -123,12 +123,12 @@ $$
 That is, it is the smallest $x$ such that $\hat F_n(x)\geq p$. Looking at the picture it seems as in our sample, for example, $\hat F_n^{-1}(0.75)\approx 0.7$. Calculating precisely
 
 ```r
-quantile(data.df$x, probs = c(0.75))
+quantile(data.df$x, probs = c(0.75), type = 1)
 ```
 
 ```
 ##       75% 
-## 0.6615581
+## 0.6556479
 ```
 
 
@@ -162,7 +162,7 @@ T <- median
 
 tstar <- array(dim = B)
 
-for (i in 1:B) {
+for (i in seq_len(B)) {
   x <- rexp(n, rate = 1)
   tstar[i] <- T(x)
 }
@@ -199,20 +199,19 @@ $$
   v_{boot} = \frac{1}{B}\sum_{b=1}^B\left( t^\star_{b} - \frac{1}{B}\sum_{r=1}^B t^\star_{r} \right)^2
 $$</div>\EndKnitrBlock{note}
 
-Let us implement this method to calculate the variance of the median:
+Let us implement this method to calculate the standard error of the median:
 
 ```r
-T <- median(data.df$x)
+T <- median
 n <- nrow(data.df)
 B <- 1000
-Tboot <- array(dim = B)
 
 for (i in 1:B) {
-  indices <- sample(seq(1:n), size = n, replace = TRUE)
-  tstar[i] <- median(data.df$x[indices])
+  indices <- sample(seq_len(n), size = n, replace = TRUE)
+  tstar[i] <- T(data.df$x[indices])
 }
 
-sd(tstar) #Standard error of median
+sd(tstar)
 ```
 
 ```
@@ -223,7 +222,7 @@ In practice we would rather use the boot library.
 ```r
 library(boot)
 boot(data = data.df, 
-     statistic = function(data, index){ median(data$x[index]) }, 
+     statistic = function(data, index){ T(data$x[index]) }, 
      R = 1000)
 ```
 
@@ -234,7 +233,7 @@ boot(data = data.df,
 ## 
 ## Call:
 ## boot(data = data.df, statistic = function(data, index) {
-##     median(data$x[index])
+##     T(data$x[index])
 ## }, R = 1000)
 ## 
 ## 
@@ -242,7 +241,7 @@ boot(data = data.df,
 ##       original     bias    std. error
 ## t1* 0.08979677 0.03632407   0.1475442
 ```
-Since here we know $F$ we can simulate the true variance, an alternative not available in practice.
+Since here we know $F$ we can simulate the true standard deviation, an alternative not available in practice.
 
 ```r
 n <- nrow(data.df)
@@ -251,7 +250,7 @@ Tsim <- array(dim = B)
 
 for (i in 1:B) {
   simData.df <- data.frame( x = rnorm(n) )
-  Tsim[i] <- median(simData.df$x)
+  Tsim[i] <- T(simData.df$x)
 }
 
 sd(Tsim) #Standard error of median
@@ -261,7 +260,7 @@ sd(Tsim) #Standard error of median
 ## [1] 0.1253581
 ```
 
-It is also possible to construct confidence intervals for $T(F)$ using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals.
+It is also possible to construct confidence intervals using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals.
 
 Let us call $\theta = T(F)$ and $\hat\theta_n  = T(\hat F_n)$ and define the pivot $R_n = \hat\theta_n - \theta$. Write the distribution function of $R_n$ as:
 $$
@@ -295,19 +294,19 @@ Let us implement this on the same data set as above.
 
 ```r
 alpha <- 0.05
-T <- median(data.df$x)
+T <- median
 n <- nrow(data.df)
 B <- 1000
-Tboot <- array(dim = B)
+tstar <- array(dim = B)
 
-for (i in 1:B) {
+for (i in seq_len(B)) {
   indices <- sample(seq(1:n), size = n, replace = TRUE)
-  tstar[i] <- median(data.df$x[indices])
+  tstar[i] <- T(data.df$x[indices])
 }
 
 q <- unname( quantile(tstar, probs = c(1-alpha/2, alpha/2)) )
 
-lowerCI <- 2*T - q[1]
+lowerCI <- 2*T(data.df$x) - q[1]
 lowerCI
 ```
 
@@ -316,7 +315,7 @@ lowerCI
 ```
 
 ```r
-upperCI <- 2*T - q[2]
+upperCI <- 2*T(data.df$x) - q[2]
 upperCI
 ```
 
@@ -329,7 +328,7 @@ Even simpler is to use the boot library.
 ```r
 library(boot)
 boot.result<- boot(data = data.df, 
-                   statistic = function(data, index) median(data$x[index]), 
+                   statistic = function(data, index) T(data$x[index]), 
                    R = 1000)
 
 boot.ci(boot.result, type = "basic")
@@ -353,7 +352,7 @@ A better alternative which we do not cover in this course is the bias-corrected 
 ```r
 library(boot)
 boot.result<- boot(data = data.df, 
-                   statistic = function(data, index) median(data$x[index]), 
+                   statistic = function(data, index) T(data$x[index]), 
                    R = 1000)
 
 boot.ci(boot.result, type = "bca")
@@ -382,16 +381,16 @@ Then we proceed as before. We may now sample from $\hat F = F_{\hat\theta}$ and 
 
 
 ```r
-T <- median(data.df$x)
+T <- median
 n <- nrow(data.df)
 B <- 1000
-Tboot <- array(dim = B)
 
 mu.hat <- mean(data.df$x)
 sigma.hat <- sd(data.df$x)
 
 for (i in 1:B) {
-  tstar[i] <- median(rnorm(n, mean = mu.hat, sd = sigma.hat))
+  bootstrap.sample <- rnorm(n, mean = mu.hat, sd = sigma.hat)
+  tstar[i] <- T(bootstrap.sample)
 }
 
 sd(tstar)
@@ -426,7 +425,10 @@ ggplot(kidney.df, aes(x = age, y = tot)) +
   theme_minimal()
 ```
 
-<img src="02-bootstrap_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+<div class="figure" style="text-align: center">
+<img src="02-bootstrap_files/figure-html/kidneyData-1.png" alt="Kidney function vs age" width="80%" />
+<p class="caption">(\#fig:kidneyData)Kidney function vs age</p>
+</div>
 
 
 <p>Now we can predict the kidney function of new individual of age 50.</p>
@@ -443,12 +445,12 @@ Let use use bootstrap to find the standard deviation of this prediction and cons
 ```r
 library(boot)
 
-f <- function(data,index){
+T <- function(data,index){
   s <- smooth.spline(data$age[index], data$tot[index], df = 10)
   predict(s, x = 50)$y
 }
 
-boot.result<- boot(data = kidney.df, statistic = f, R = 1000)
+boot.result<- boot(data = kidney.df, statistic = T, R = 1000)
 boot.result
 ```
 
@@ -458,7 +460,7 @@ boot.result
 ## 
 ## 
 ## Call:
-## boot(data = kidney.df, statistic = f, R = 1000)
+## boot(data = kidney.df, statistic = T, R = 1000)
 ## 
 ## 
 ## Bootstrap Statistics :

@@ -204,19 +204,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Here we discuss an alternative to the (non-parametric) bootstrap from the previous section.</p>
 <p>The main idea of the bootstrap was that the empirical distribution <span class="math inline">\(\hat F\)</span> is (hopefully) close to the actual distribution <span class="math inline">\(F\)</span>. Another method of finding an approximation to <span class="math inline">\(F\)</span> is to take some family of distribution, parametrised by a parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(F_\theta\)</span>, and find the <span class="math inline">\(\theta\)</span> that agrees the best with the observed sample. For example by choosing <span class="math inline">\(\theta = \hat\theta_{ML}\)</span>.</p>
 <p>Then we proceed as before. We may now sample from <span class="math inline">\(\hat F = F_{\hat\theta}\)</span> and estimate variances and construct confidence intervals as before. Implementing this is not complicated.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1">T &lt;-<span class="st"> </span><span class="kw">median</span>(data.df<span class="op">$</span>x)</a>
-<a class="sourceLine" id="cb81-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(data.df)</a>
-<a class="sourceLine" id="cb81-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb81-4" data-line-number="4">Tboot &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> B)</a>
-<a class="sourceLine" id="cb81-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb81-6" data-line-number="6">mu.hat &lt;-<span class="st"> </span><span class="kw">mean</span>(data.df<span class="op">$</span>x)</a>
-<a class="sourceLine" id="cb81-7" data-line-number="7">sigma.hat &lt;-<span class="st"> </span><span class="kw">sd</span>(data.df<span class="op">$</span>x)</a>
-<a class="sourceLine" id="cb81-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb81-9" data-line-number="9"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>B) {</a>
-<a class="sourceLine" id="cb81-10" data-line-number="10">  tstar[i] &lt;-<span class="st"> </span><span class="kw">median</span>(<span class="kw">rnorm</span>(n, <span class="dt">mean =</span> mu.hat, <span class="dt">sd =</span> sigma.hat))</a>
-<a class="sourceLine" id="cb81-11" data-line-number="11">}</a>
-<a class="sourceLine" id="cb81-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb81-13" data-line-number="13"><span class="kw">sd</span>(tstar)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">T &lt;-<span class="st"> </span>median</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(data.df)</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">B &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">mu.hat &lt;-<span class="st"> </span><span class="kw">mean</span>(data.df<span class="op">$</span>x)</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">sigma.hat &lt;-<span class="st"> </span><span class="kw">sd</span>(data.df<span class="op">$</span>x)</a>
+<a class="sourceLine" id="cb22-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb22-8" data-line-number="8"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>B) {</a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">  bootstrap.sample &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean =</span> mu.hat, <span class="dt">sd =</span> sigma.hat)</a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">  tstar[i] &lt;-<span class="st"> </span><span class="kw">T</span>(bootstrap.sample)</a>
+<a class="sourceLine" id="cb22-11" data-line-number="11">}</a>
+<a class="sourceLine" id="cb22-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb22-13" data-line-number="13"><span class="kw">sd</span>(tstar)</a></code></pre></div>
 <pre><code>## [1] 0.1272958</code></pre>
 </div>
             </section>

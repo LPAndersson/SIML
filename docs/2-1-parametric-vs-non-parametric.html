@@ -221,11 +221,11 @@ Then the formula above just becomes
 \]</span>
 which we recognize as the mean of a distribution. If <span class="math inline">\(F\)</span> is the distribution function of a discrete distribution, <span class="math inline">\(dF(x)\)</span> can be thought of as the probability function, and the mean is
 <span class="math display">\[
-\mu = \int xdF(x) = \sum xp(x).
+\mu = \int xdF(x) = \sum_x xp(x).
 \]</span>
 Another example is the variance,
 <span class="math display">\[
-T(F) = \int x^2dF(x) - \left( \int xdF(x) \right).
+T(F) = \int x^2dF(x) - \left( \int xdF(x) \right)^2.
 \]</span>
 Also for example the median can of course be calculated, at least in principle, if one knows the distribution and can therefore be written as a functional. Recall that the median is the number <span class="math inline">\(m\)</span> that satisfies, at least if <span class="math inline">\(F\)</span> is continuous,
 <span class="math display">\[
