@@ -488,7 +488,7 @@ l(\theta) \approx& l(\hat \theta) + l'(\hat\theta)(\theta-\hat\theta) + \frac{l'
 In other words, for a large sample,
 ```{block2 type="note"}
 $$
-\lambda_{LR} = 2( l(\hat\theta)-l(\theta_0))\approx \chi_1^2.
+\lambda_{LR} = 2( l_n(\hat\theta)-l_n(\theta_0))\approx \chi_1^2.
 $$
 ```
 Which is Wilks' theorem.
@@ -919,8 +919,113 @@ leftCILimit
 rightCILimit
 ```
 
+## Summary
 
+Since there is a lot of new material in this chapter, in this section we summarize what we have learned.
 
+First, recall that the following is equivalent
+\begin{align}
+X & \sim \mathsf N(\mu,\sigma^2),\\
+\frac{X-\mu}{\sigma} & \sim \mathsf N(0,1).
+\end{align}
+Also recall from the B-course that for a large sample
+$$
+\bar X \sim \mathsf N(\mu,\sigma^2/n).
+$$
+The variance is like this because of
+$$
+Var(\bar X) = Var\left( \frac{1}{n}\sum_{i=1}^n X_i \right) = \frac{1}{n^2}\sum_{i=1}^n Var(X_i) = \frac{\sigma^2}{n}.
+$$
+If we use the above, we get that
+$$
+\frac{\bar X-\mu}{\sigma/\sqrt{n}} \sim \mathsf N(0,1).
+$$
+This we used to construct what we called the large sample test. That is, we should accept $\mu=\mu_0$ as opposed to $\mu\neq \mu_0$ if
+$$
+\frac{|\bar X-\mu|}{\sigma/\sqrt{n}}<z_{\alpha/2}.
+$$
 
+In this chapter we have seen that this is true in more generallity, whenever we have an MLE. That is
+$$
+\hat\theta \sim \mathsf N(\theta,\sigma^2_{\hat\theta}),
+$$
+the same as
+$$
+\frac{\hat\theta - \theta}{\sigma_{\hat\theta}} \sim \mathsf N(0,1).
+$$
 
+So we can again use this for hypothesis testing or CI, the only remaining challenge is finding $\sigma_{\hat\theta}$. We have a couple of different tools to do this.
 
+Let us consider an example. We have a sample of size $n$ from $\mathsf{Be}(p)$. We could also say that we have a sample of size 1 from $\mathsf{Bin}(n,p)$, the analysis will be the same. But let us stick with $\mathsf{Be}(p)$. We want to do inference on $p$.
+
+The MLE of $p$ is $\hat p = \bar x$ and we know that
+$$
+\hat p \sim \mathsf N(p,\sigma^2_{\hat p}).
+$$
+
+Here we can find $\sigma^2_{\hat p}$ by direct calculation.
+$$
+\sigma^2_{\hat p} = Var(\hat p) = Var(\bar X) = \frac{1}{n}Var(X_i) = \frac{p(1-p)}{n}.
+$$
+Therefore,
+$$
+\hat p \sim \mathsf N\left(p,\frac{p(1-p)}{n}\right).
+$$
+If we write this on the form of a test statistic,
+$$
+\frac{\hat p - p}{\sqrt{\frac{p(1-p)}{n}}}\sim \mathsf N\left(0,1\right).
+$$
+The problem is that the denominator contains the unkown $p$. Since $\hat p$ is the MLE, it is consistent, and we may therefore also say that,
+$$
+\hat p \sim \mathsf N\left(p,\frac{\hat p(1-\hat p)}{n}\right).
+$$
+Or,
+$$
+\frac{\hat p - p}{\sqrt{\frac{\hat p(1-\hat p)}{n}}}\sim \mathsf N\left(0,1\right),
+$$
+which can be used for constructing the Wald test.
+
+In this case we were lucky that we could calculate $Var(\hat p)$ directly. Another path is to use the Fisher information. We found that
+$$
+\hat \theta \sim \mathsf N\left(\theta, \frac{1}{nI(\theta)}\right).
+$$
+The Fisher information is
+$$
+I(\theta)  = -E[l''(\theta)].
+$$
+Note that here $I(\theta)$ is the Fisher information of a sample of size 1, and so also $l(\theta)$ is the log-likelihood of a sample of size 1.
+
+Here,
+\begin{align}
+L(p) &= p^{x}(1-p)^{1-x},~0\leq p \leq 1,\\
+l(p) &= x\ln p + (1-x)\ln (1-p),\\
+l'(p) &= \frac{x}{p} - \frac{1-x}{1-p},\\
+l''(p) &= -\frac{x}{p^2} -\frac{1-x}{(1-p)^2},\\
+I(p) &= -E[l''(p)] = E\left[ \frac{X}{p^2} + \frac{1-X}{(1-p)^2} \right]\\
+&= \frac{p}{p^2} + \frac{1-p}{(1-p)^2} = \frac{1}{p(1-p)}.
+\end{align}
+So that we recover the same variance as above.
+
+Another option is to use a Score test. The score statistic is
+$$
+\frac{l_n'(\theta_0)}{\sqrt{I_n(\theta_0)}}.
+$$
+Here $l_n(\theta_0)$ is the log-likelihood of the sample of size $n$. In our case
+$$
+l_n'(p) = \sum_{i=1}^n l_i'(p) = \sum_{i=1}^n \left( \frac{x_i}{p} - \frac{1-x_i}{1-p} \right) = \frac{n\bar x}{p} - \frac{n-\bar x}{1-p} = \frac{n(\bar x -p)}{p(1-p)} = \frac{n(\hat p -p)}{p(1-p)}.
+$$
+Also, $I_n(\theta) = nI(\theta)$ is the Fisher information of the sample of size $n$. For us
+$$
+I_n(p) = \frac{n}{p(1-p)}.
+$$
+The score statistic is then
+$$
+\frac{l_n'(p_0)}{\sqrt{I_n(p_0)}} = \frac{n(\hat p -p_0)}{p_0(1-p_0)}\sqrt{\frac{p_0(1-p_0)}{n}} = \frac{\hat p -p_0}{\sqrt{\frac{p_0(1-p_0)}{n}}},
+$$
+which is distributed as $\mathsf N(0,1)$ if $p=p_0$. This is similar to the Wald statistic. The difference is that $\hat p$ in the denominator is replaced by $p_0$.
+
+The final test is the asymptotic likelihood ratio test. It states that, if $p=p_0$,
+$$
+2(l_n(\hat p)-l_n(p_0)) \sim \chi^2_1.
+$$
+This is perhaps the easiest test to perform, since it is only a matter of evaluating the log-likelihood and comparing the the appropriate quantile of $\chi^2_1$.

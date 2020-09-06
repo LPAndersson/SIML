@@ -144,6 +144,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
 <li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
 <li class="chapter" data-level="1.11" data-path="1-11-an-application-i.html"><a href="1-11-an-application-i.html"><i class="fa fa-check"></i><b>1.11</b> An application I</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-ch-bootstrap.html"><a href="2-ch-bootstrap.html"><i class="fa fa-check"></i><b>2</b> Bootstrap</a><ul>
 <li class="chapter" data-level="2.1" data-path="2-1-parametric-vs-non-parametric.html"><a href="2-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>2.1</b> Parametric vs non-parametric</a></li>
@@ -201,8 +202,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="some-basic-decision-theory" class="section level2">
 <h2><span class="header-section-number">3.1</span> Some basic decision theory</h2>
-<p>In this section we introduce statistical decision theory, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.</p>
-<p>Consider a statistical model with a parameter <span class="math inline">\(\theta\in\Theta\)</span>. Based on data <span class="math inline">\(x\)</span>, we are going to make a decision <span class="math inline">\(\delta(x)\)</span>. For example, the decision might be a point estimate <span class="math inline">\(\delta(x)=\bar x\)</span> or some interval estimator. To evaluate if our decision was good we have a loss function <span class="math inline">\(l(\theta,\delta(x))\)</span>. It is the penalty of making decision <span class="math inline">\(\delta(x)\)</span> when the true parameter is <span class="math inline">\(\theta\)</span>. In the continuous case we might take squared loss
+<p>In this section we introduce <em>statistical decision theory</em>, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.</p>
+<p>
+Consider a statistical model with a parameter <span class="math inline">\(\theta\in\Theta\)</span>. Based on data <span class="math inline">\(x\)</span>, we are going to make a <em>decision</em> <span class="math inline">\(\delta(x)\)</span>. For example, the decision might be a point estimate <span class="math inline">\(\delta(x)=\bar x\)</span> or some interval estimator. To evaluate if our decision is good we have a loss function <span class="math inline">\(l(\theta,\delta(x))\)</span>. It is the penalty of making decision <span class="math inline">\(\delta(x)\)</span> when the true parameter is <span class="math inline">\(\theta\)</span>. In the continuous case we might take squared loss
+</p>
 <span class="math display">\[
 l(\theta,\delta(x)) = (\theta-\delta(x))^2,
 \]</span>
@@ -213,46 +216,63 @@ l(\theta,\delta(x)) =\begin{cases}
 1\text{ if } \theta\neq \delta(x).
 \end{cases}
 \]</span>
-We would like to choose <span class="math inline">\(\delta\)</span> such that the loss is as small as possible. However, the loss depends on both the data <span class="math inline">\(x\)</span> and the parameter <span class="math inline">\(\theta\)</span> and thus comparison becomes complicated. Instead we calculate the risk associated with a particular decision.</p>
-<p>The risk is defined as
+<p>
+We would like to choose <span class="math inline">\(\delta\)</span> such that the loss is as small as possible. However, the loss depends on both the data <span class="math inline">\(x\)</span> and the parameter <span class="math inline">\(\theta\)</span> and thus comparison between different decisions becomes complicated. Instead we calculate the <em>risk</em> associated with a particular decision.
+</p>
+
+<div class="note">
+The risk is defined as
 <span class="math display">\[
 R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
 \]</span>
-Here the expectation is taken of a random sample <span class="math inline">\(X\)</span>, while <span class="math inline">\(\theta\)</span> is held fixed. Still the comparison of different <span class="math inline">\(\delta\)</span> is not trivial. It may be that for <span class="math inline">\(\delta_1\)</span> the risk is lower than the risk of <span class="math inline">\(\delta_2\)</span> for some values of <span class="math inline">\(\theta\)</span>, while for some other <span class="math inline">\(\theta\)</span>, the risk is higher.</p>
-<p>Consider an unknown parameter <span class="math inline">\(\theta\)</span> that takes values in a parameter space <span class="math inline">\(\Theta\)</span>. Our task is to decide what is the true value of <span class="math inline">\(\theta\)</span> and we call this decision <span class="math inline">\(\hat\theta\)</span>. To help us we have data <span class="math inline">\(x\)</span> and so our decision is a function of the data, <span class="math inline">\(\hat\theta = \hat\theta(x)\)</span>. To find the prefered <span class="math inline">\(\delta\)</span> there are different strategies, for example admissibility, restricting the class of decisions and minimax approaches.</p>
-<p>Note that the distinguising feature of the above risk function is that the expectation is taken over a random sample <span class="math inline">\(X\)</span>. This is known as frequentist statistics. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e. for most data <span class="math inline">\(x\)</span>. However in many situations the statistican is given one dataset and the task is to make valid inference for that particular dataset. In that situation, one might argue, it does not make sense to consider any other dataset.</p>
+</div>
+
+<p>Here the expectation is taken of a random sample <span class="math inline">\(X\)</span>, while <span class="math inline">\(\theta\)</span> is held fixed. Still the comparison of different <span class="math inline">\(\delta\)</span> is not trivial. It may be that for <span class="math inline">\(\delta_1\)</span> the risk is lower than the risk of <span class="math inline">\(\delta_2\)</span> for some values of <span class="math inline">\(\theta\)</span>, while for some other <span class="math inline">\(\theta\)</span>, the risk is higher. As a trivial example, say that we have the squared loss and <span class="math inline">\(\delta(x) \equiv 0\)</span>. Then, if the the true <span class="math inline">\(\theta\)</span> is 0, clearly this is a good decision. But if the true <span class="math inline">\(\theta\)</span> is something else, it is a bad decision.</p>
+<p>Note that the distinguising feature of the above risk function is that the expectation is taken over a random sample <span class="math inline">\(X\)</span>. This is known as <em>frequentist statistics</em>. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e. for most data <span class="math inline">\(x\)</span>. However in many situations the statistican is given one dataset and the task is to make valid inference for that particular dataset. In that situation, one might argue, it does not make sense to consider any other dataset.</p>
 <p>The Bayesian way is to instead consider <span class="math inline">\(\theta\)</span> as random, with a distribution <span class="math inline">\(p(\theta)\)</span>. Even if we consider <span class="math inline">\(\theta\)</span> to have a fixed unkown value it could make sense to consider it having a distribution. For example, if we let <span class="math inline">\(\theta\)</span> be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, cleary this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative.</p>
-<p>The Bayesian statistican would call <span class="math inline">\(p(\theta)\)</span> the prior distribution on <span class="math inline">\(\theta\)</span>. Then, after observing the data <span class="math inline">\(x\)</span>, calculate the posterior distribution, using Bayes’ formula,
+<p>
+The Bayesian statistican would call <span class="math inline">\(p(\theta)\)</span> the <em>prior distribution</em> on <span class="math inline">\(\theta\)</span>. Then, after observing the data <span class="math inline">\(x\)</span>, calculate the <em>posterior distribution</em>, using Bayes’ formula,
+</p>
 <span class="math display">\[
 p(\theta \mid x) = \frac{p(x\mid \theta)p(\theta)}{p(x)}.
 \]</span>
+<p>
 Here <span class="math inline">\(p(x\mid \theta)\)</span> is the model of how data is generated. That is, the probability or density of obtaining a particular sample, conditioned on knowing <span class="math inline">\(\theta\)</span>. Also, <span class="math inline">\(p(x)\)</span> is the marginal density of the observed data. We can write it formally as
+</p>
 <span class="math display">\[
 p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
 \]</span>
-The posterior risk is the defined as
+
+<div class="note">
+The <em>posterior risk</em> is then defined as
 <span class="math display">\[
 \rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
 \]</span>
-Here the random quantity is <span class="math inline">\(\theta\)</span> while the data <span class="math inline">\(x\)</span> is held constant. The Bayes action <span class="math inline">\(\delta^\star\)</span> is the decision <span class="math inline">\(\delta\)</span> that minimizes the posterior risk. For example, let <span class="math inline">\(l(\theta,\delta) = (\theta - \delta)^2\)</span>. Then
+</div>
+
+<p>Here the random quantity is <span class="math inline">\(\theta\)</span> while the data <span class="math inline">\(x\)</span> is held constant. The <em>Bayes action</em> <span class="math inline">\(\delta^\star\)</span> is the decision <span class="math inline">\(\delta\)</span> that minimizes the posterior risk. For example, if the decision is a point estimate of <span class="math inline">\(\theta\)</span> and <span class="math inline">\(l(\theta,\delta) = (\theta - \delta)^2\)</span>. Then
 <span class="math display">\[\begin{align}
 \rho(p(\theta),\delta) &amp;= \int (\theta - \delta^2) p(\theta\mid x)d\theta\\
 &amp;= \delta^2 - 2\delta \int \theta p(\theta\mid x)d\theta + \int \theta^2p(\theta\mid x)d\theta,\\
 \implies \partial_\delta \rho(p(\theta),\delta) &amp;= 2\delta -2\int \theta p(\theta\mid x)d\theta = 0\\
-\implies \delta &amp;=\int \theta p(\theta\mid x)d\theta.
+\implies \delta^\star &amp;=\int \theta p(\theta\mid x)d\theta.
 \end{align}\]</span>
-That is, the optimal decision is to choose the mean of the posterior distribution.</p>
-<p>A hybrid between the frequentist and the Bayesian approach is the average risk (with respect to <span class="math inline">\(p(\theta)\)</span>):
+That is, the Bayes action is to choose the mean of the posterior distribution.</p>
+A hybrid between the frequentist and the Bayesian approach is the <em>average risk</em> (with respect to <span class="math inline">\(p(\theta)\)</span>):
+
+<div class="note">
 <span class="math display">\[
 r(p(\theta),\delta) = \int R(\theta,\delta)p(\theta)d\theta.
 \]</span>
-The Bayes risk is the minimum of the average risk, taken over all <span class="math inline">\(\delta\)</span> and the decision <span class="math inline">\(\delta(x)\)</span> that achieves the minimum is called the Bayes rule. Since the risk here is the frequentist risk, this is fundamentally a frequentist quantity. However, we can write
+</div>
+
+<p>The <em>Bayes risk</em> is the minimum of the average risk, taken over all <span class="math inline">\(\delta\)</span> and the decision <span class="math inline">\(\delta(x)\)</span> that achieves the minimum is called the <em>Bayes rule</em>. Since the risk here is the frequentist risk, this is fundamentally a frequentist quantity. However, we can write
 <span class="math display">\[\begin{align}
 r(p(\theta),\delta) &amp;= \int \int l(\theta,\delta(x))p(x\mid\theta)dxp(\theta)d\theta\\
 &amp; = \int\int l(\theta,\delta(x)) p(\theta\mid x)d\theta p(x)dx\\
 &amp; = \int \rho(p(\theta),\delta(x)) p(x)dx.
 \end{align}\]</span>
-This means that we can find the Bayes rule by taking the Bayes action for each <span class="math inline">\(x\)</span>.</p>
+This is minimized by minimizing <span class="math inline">\(\rho(p(\theta),\delta(x))\)</span> for each <span class="math inline">\(x\)</span>. That is, we can find the Bayes rule by taking the Bayes action for each <span class="math inline">\(x\)</span>.</p>
 </div>
             </section>
 
