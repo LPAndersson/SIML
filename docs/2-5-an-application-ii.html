@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-02" />
+<meta name="date" content="2020-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="2-4-parametric-bootstrap.html"/>
-<link rel="next" href="3-bayesian-statistics-draft.html"/>
+<link rel="next" href="3-bayesian-statistics.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -144,6 +144,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
 <li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
 <li class="chapter" data-level="1.11" data-path="1-11-an-application-i.html"><a href="1-11-an-application-i.html"><i class="fa fa-check"></i><b>1.11</b> An application I</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-ch-bootstrap.html"><a href="2-ch-bootstrap.html"><i class="fa fa-check"></i><b>2</b> Bootstrap</a><ul>
 <li class="chapter" data-level="2.1" data-path="2-1-parametric-vs-non-parametric.html"><a href="2-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>2.1</b> Parametric vs non-parametric</a></li>
@@ -152,9 +153,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="2-4-parametric-bootstrap.html"><a href="2-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>2.4</b> Parametric bootstrap</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-an-application-ii.html"><a href="2-5-an-application-ii.html"><i class="fa fa-check"></i><b>2.5</b> An application II</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-bayesian-statistics-draft.html"><a href="3-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-bayesian-statistics.html"><a href="3-bayesian-statistics.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-some-basic-decision-theory.html"><a href="3-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>3.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics.html"><a href="3-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
 <li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
@@ -203,21 +204,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.5</span> An application II</h2>
 <p>Here we present an application of what we have learned in this chapter. The application is based on an example in <span class="citation">Efron and Hastie (<a href="#ref-efron2016computer">2016</a>)</span>.</p>
 <p>The data set consists of measurements on the kidney function of 157 individuals. We fit a smoothing spline to the data and plot.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">kidney.df &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data/kidney.dat&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">kidney.spline &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(kidney.df<span class="op">$</span>age, kidney.df<span class="op">$</span>tot, <span class="dt">df =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb24-5" data-line-number="5">kidney.df<span class="op">$</span>spline &lt;-<span class="st"> </span><span class="kw">predict</span>(kidney.spline, <span class="dt">x =</span> kidney.df<span class="op">$</span>age)<span class="op">$</span>y</a>
-<a class="sourceLine" id="cb24-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb24-8" data-line-number="8">cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
-<a class="sourceLine" id="cb24-9" data-line-number="9">          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
-<a class="sourceLine" id="cb24-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb24-11" data-line-number="11"><span class="kw">ggplot</span>(kidney.df, <span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> tot)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> spline), <span class="dt">color =</span> cbp1[<span class="dv">2</span>], <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-14" data-line-number="14"><span class="st">  </span><span class="kw">labs</span>( <span class="dt">y =</span> <span class="st">&quot;kidney function&quot;</span>, <span class="dt">x=</span><span class="st">&quot;age&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb24-15" data-line-number="15"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">kidney.df &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data/kidney.dat&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb83-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb83-3" data-line-number="3">kidney.spline &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(kidney.df<span class="op">$</span>age, kidney.df<span class="op">$</span>tot, <span class="dt">df =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb83-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb83-5" data-line-number="5">kidney.df<span class="op">$</span>spline &lt;-<span class="st"> </span><span class="kw">predict</span>(kidney.spline, <span class="dt">x =</span> kidney.df<span class="op">$</span>age)<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb83-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb83-7" data-line-number="7"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb83-8" data-line-number="8">cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
+<a class="sourceLine" id="cb83-9" data-line-number="9">          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
+<a class="sourceLine" id="cb83-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb83-11" data-line-number="11"><span class="kw">ggplot</span>(kidney.df, <span class="kw">aes</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> tot)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> spline), <span class="dt">color =</span> cbp1[<span class="dv">2</span>], <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb83-14" data-line-number="14"><span class="st">  </span><span class="kw">labs</span>( <span class="dt">y =</span> <span class="st">&quot;kidney function&quot;</span>, <span class="dt">x=</span><span class="st">&quot;age&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb83-15" data-line-number="15"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:kidneyData"></span>
 <img src="02-bootstrap_files/figure-html/kidneyData-1.png" alt="Kidney function vs age" width="80%" />
 <p class="caption">
@@ -227,18 +228,18 @@ Figure 2.2: Kidney function vs age
 <p>
 Now we can predict the kidney function of new individual of age 50.
 </p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">predict</span>(kidney.spline, <span class="dt">x =</span> <span class="dv">50</span>)<span class="op">$</span>y</a></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1"><span class="kw">predict</span>(kidney.spline, <span class="dt">x =</span> <span class="dv">50</span>)<span class="op">$</span>y</a></code></pre></div>
 <pre><code>## [1] -0.7232874</code></pre>
 <p>Let use use bootstrap to find the standard deviation of this prediction and construct a CI.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">library</span>(boot)</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3">T &lt;-<span class="st"> </span><span class="cf">function</span>(data,index){</a>
-<a class="sourceLine" id="cb27-4" data-line-number="4">  s &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(data<span class="op">$</span>age[index], data<span class="op">$</span>tot[index], <span class="dt">df =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb27-5" data-line-number="5">  <span class="kw">predict</span>(s, <span class="dt">x =</span> <span class="dv">50</span>)<span class="op">$</span>y</a>
-<a class="sourceLine" id="cb27-6" data-line-number="6">}</a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8">boot.result&lt;-<span class="st"> </span><span class="kw">boot</span>(<span class="dt">data =</span> kidney.df, <span class="dt">statistic =</span> T, <span class="dt">R =</span> <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb27-9" data-line-number="9">boot.result</a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1"><span class="kw">library</span>(boot)</a>
+<a class="sourceLine" id="cb86-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb86-3" data-line-number="3">T &lt;-<span class="st"> </span><span class="cf">function</span>(data,index){</a>
+<a class="sourceLine" id="cb86-4" data-line-number="4">  s &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(data<span class="op">$</span>age[index], data<span class="op">$</span>tot[index], <span class="dt">df =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb86-5" data-line-number="5">  <span class="kw">predict</span>(s, <span class="dt">x =</span> <span class="dv">50</span>)<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb86-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb86-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb86-8" data-line-number="8">boot.result&lt;-<span class="st"> </span><span class="kw">boot</span>(<span class="dt">data =</span> kidney.df, <span class="dt">statistic =</span> T, <span class="dt">R =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb86-9" data-line-number="9">boot.result</a></code></pre></div>
 <pre><code>## 
 ## ORDINARY NONPARAMETRIC BOOTSTRAP
 ## 
@@ -250,7 +251,7 @@ Now we can predict the kidney function of new individual of age 50.
 ## Bootstrap Statistics :
 ##       original    bias    std. error
 ## t1* -0.7232874 0.0455268   0.6037417</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">boot.ci</span>(boot.result, <span class="dt">type =</span> <span class="st">&quot;bca&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1"><span class="kw">boot.ci</span>(boot.result, <span class="dt">type =</span> <span class="st">&quot;bca&quot;</span>)</a></code></pre></div>
 <pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 ## Based on 1000 bootstrap replicates
 ## 
@@ -276,7 +277,7 @@ Now we can predict the kidney function of new individual of age 50.
         </div>
       </div>
 <a href="2-4-parametric-bootstrap.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="3-bayesian-statistics-draft.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3-bayesian-statistics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

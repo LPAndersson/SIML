@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.5 Markov chain monte carlo | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>3.5 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.5 Markov chain monte carlo | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="3.5 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.5 Markov chain monte carlo | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="3.5 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-02" />
+<meta name="date" content="2020-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -153,12 +153,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="2-4-parametric-bootstrap.html"><a href="2-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>2.4</b> Parametric bootstrap</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-an-application-ii.html"><a href="2-5-an-application-ii.html"><i class="fa fa-check"></i><b>2.5</b> An application II</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-bayesian-statistics-draft.html"><a href="3-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-bayesian-statistics.html"><a href="3-bayesian-statistics.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-some-basic-decision-theory.html"><a href="3-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>3.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics.html"><a href="3-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
@@ -201,16 +201,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="markov-chain-monte-carlo" class="section level2">
-<h2><span class="header-section-number">3.5</span> Markov chain monte carlo</h2>
+<h2><span class="header-section-number">3.5</span> Markov chain Monte Carlo</h2>
 <p>So far we have been using that the posterior distribution is proportional to the likelihood times the prior distribution. We were also careful to choose the prior as the conjugate distribution so that we could recognize the posterior distribution. In general we have to calculate the normalizing constant:
 <span class="math display">\[
 \int p(\theta\mid x)p(\theta)d\theta.
 \]</span>
-In general, and in particular if <span class="math inline">\(\theta\)</span> is high dimensional, we will not be able to calculate this.</p>
+Many times, and in particular if <span class="math inline">\(\theta\)</span> is high dimensional, we will not be able to calculate this.</p>
 <p>In this section we will see how we can, instead of calculating it, generate samples from the posterior distribution. This is the method that is used in modern Bayesian statistics. Here we are only able to scratch the surface. Both in terms of theory, since explaining why the method works would require first learning about Markov chains, and in terms of complexity of the methods, since the methods that are used in practice are usually more advanced version of what we present here.</p>
 <p>We assume that we are able to write down the likelihood of our data generating model and the prior on our parameters. This is possible for most models and so we are able to write the prior distribution up to a multiplying constant.</p>
-<p>The method we will discuss is called the Metropolis-Hastings algorithm and it is an example of a Markov chain monte carlo (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte carlo means that is is an algorithm that depends on random sampling.</p>
-<p>The Metropolis-Hastings algorithm is as follows: Suppose we want to sample from the posterior <span class="math inline">\(p(\theta\mid x).\)</span> Suppose also that this is not possible, but that we are able to generate samples from some other distribution <span class="math inline">\(q(\theta^\star \mid \theta).\)</span> Then do the following:</p>
+<p>The method we will discuss is called the <em>Metropolis-Hastings algorithm</em> and it is an example of a <em>Markov chain Monte Carlo</em> (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte Carlo means that is is an algorithm that depends on random sampling.</p>
+<p>The Metropolis-Hastings algorithm is as follows: Suppose we want to sample from the posterior <span class="math inline">\(p(\theta\mid x).\)</span> Suppose also that this is not possible directly, but that we are able to generate samples from some other distribution <span class="math inline">\(q(\theta^\star \mid \theta).\)</span> Then do the following:</p>
 <p>Choose <span class="math inline">\(\theta_0\)</span> arbitrarily. For <span class="math inline">\(i\geq 1\)</span> do:</p>
 <ol style="list-style-type: decimal">
 <li>Generate a proposal <span class="math inline">\(\theta^\star\sim q(\theta^\star\mid \theta_{i-1})\)</span></li>
@@ -222,13 +222,13 @@ r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\thet
 <span class="math display">\[
 \theta_i = \begin{cases}
 \theta^\star\quad \text{with probability } r\\
-\theta_i\quad  \text{with probability } 1-r.
+\theta_{i-1}\quad  \text{with probability } 1-r.
 \end{cases}
 \]</span></li>
 </ol>
 <p>Theory then tells us that as <span class="math inline">\(i\)</span> becomes large, the distribution of <span class="math inline">\(\theta_i\)</span> will be approximately that of <span class="math inline">\(p(\theta\mid x).\)</span></p>
 <p>Note that here the normalizing constant in <span class="math inline">\(p(\theta\mid x)\)</span> is cancelled since it appears both in the numerator and denominator.</p>
-<p>It remains to choose $q(^x). One common choice is called random walk Metropolis Hastings and consists of letting
+<p>It remains to choose <span class="math inline">\(q(\theta^\star\mid x)\)</span>. One common choice is called <em>random walk Metropolis Hastings</em> and consists of letting
 <span class="math display">\[
 \theta^\star = \theta_{i-1} + \varepsilon_{i-1},
 \]</span>
@@ -236,12 +236,12 @@ where <span class="math inline">\(\varepsilon_{i-1}\)</span> is and independent 
 <span class="math display">\[
 r=\min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)} ,1\right\}
 \]</span>
-Here it is important to choose <span class="math inline">\(b\)</span> in a such that the correlation between <span class="math inline">\(\theta_i\)</span> and <span class="math inline">\(\theta_{i-1}\)</span> is small. If <span class="math inline">\(b\)</span> is small, almost all proposals will be accepted, but since <span class="math inline">\(\varepsilon_i\)</span> is small, <span class="math inline">\(\theta_i\)</span> will be highly correlated with $_{i+1}. On the other hand, if <span class="math inline">\(b\)</span> is large, the proposal will rarely be accepted, and <span class="math inline">\(\theta_i=\theta_{i-1}\)</span>. As a rule of thumb, <span class="math inline">\(b\)</span> should be set such that about <span class="math inline">\(50\%\)</span> of the proposals are accepted.</p>
-<p>Another class of proposal distrbutions is <span class="math inline">\(q(\theta^\star\mid \theta_{i-1})\equiv q(\theta^\star)\)</span>, that is <span class="math inline">\(\theta^\star\)</span> is independent of <span class="math inline">\(\theta_{i-1}\)</span>. The acceptance probabiltiy is then
+Here it is important to choose <span class="math inline">\(b\)</span> such that the correlation between <span class="math inline">\(\theta_i\)</span> and <span class="math inline">\(\theta_{i-1}\)</span> is small. If <span class="math inline">\(b\)</span> is small, almost all proposals will be accepted, but since <span class="math inline">\(\varepsilon_i\)</span> is small, <span class="math inline">\(\theta_{i+1}\)</span> will be highly correlated with <span class="math inline">\(\theta_{i}\)</span>. On the other hand, if <span class="math inline">\(b\)</span> is large, the proposal will rarely be accepted, and <span class="math inline">\(\theta_i=\theta_{i-1}\)</span>. As a rule of thumb, <span class="math inline">\(b\)</span> should be set such that about <span class="math inline">\(50\%\)</span> of the proposals are accepted.</p>
+<p>Another class of proposal distributions is <span class="math inline">\(q(\theta^\star\mid \theta_{i-1})\equiv q(\theta^\star)\)</span>, that is <span class="math inline">\(\theta^\star\)</span> is independent of <span class="math inline">\(\theta_{i-1}\)</span>. The acceptance probability is then
 <span class="math display">\[
 r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1})}{q(\theta^\star)}, 1 \right\}.
 \]</span>
-This is known as independence Metropolis Hastings. Here, since each time the proposal is accepted <span class="math inline">\(\theta_i\)</span> will change, we aim for as high an acceptance probability as possible.</p>
+This is known as <em>independence Metropolis Hastings</em>. Here, since each time the proposal is accepted <span class="math inline">\(\theta_i\)</span> will change, we aim for as high an acceptance probability as possible.</p>
 </div>
             </section>
 

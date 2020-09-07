@@ -24,14 +24,14 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-02" />
+<meta name="date" content="2020-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="3-2-bayesian-statistics.html"/>
+<link rel="prev" href="3-2-bayesian-statistics-1.html"/>
 <link rel="next" href="3-4-multiparameter-problems.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -153,12 +153,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="2-4-parametric-bootstrap.html"><a href="2-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>2.4</b> Parametric bootstrap</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-an-application-ii.html"><a href="2-5-an-application-ii.html"><i class="fa fa-check"></i><b>2.5</b> An application II</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-bayesian-statistics-draft.html"><a href="3-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-bayesian-statistics.html"><a href="3-bayesian-statistics.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-some-basic-decision-theory.html"><a href="3-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>3.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics.html"><a href="3-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
@@ -204,8 +204,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.3</span> Choosing prior</h2>
 <p>It is clear that the choice of prior will influence the inference and so the choice of prior distribution becomes important.</p>
 <p>If we have a subjective belief about what values the parameter is likely to take we can choose a prior that reflects this belief. For example we might know from experience that coins have a probability close to 0.5 of landing on heads and so we would choose a prior with most of the probability around 0.5.</p>
-<p>However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a noninformative prior. One way is to use a flat prior, <span class="math inline">\(p(\theta)\propto \text{constant}\)</span>. For example in the Bernoulli example choosing <span class="math inline">\(p(\theta)=1\)</span> seems reasonable.</p>
-<p>Consider the model $XN(,^2), <span class="math inline">\(\sigma\)</span> known. Here the flat prior would be <span class="math inline">\(p(\theta)=c&gt;0\)</span>. Note however that <span class="math inline">\(p\)</span> can never be a proper density since
+<p>However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a <em>non-informative prior</em>. One way is to use a <em>flat prior</em>, <span class="math inline">\(p(\theta)\propto \text{constant}\)</span>. For example in the Bernoulli example choosing <span class="math inline">\(p(\theta)=1\)</span> seems reasonable.</p>
+<p>Consider the model <span class="math inline">\(X\sim \mathsf N(\theta,\sigma^2)\)</span>, <span class="math inline">\(\sigma^2\)</span> known. Here the flat prior would be <span class="math inline">\(p(\theta)=c&gt;0\)</span>. Note however that <span class="math inline">\(p\)</span> can never be a proper density since
 <span class="math display">\[
 \int_{-\infty}^\infty p(\theta)d\theta = \infty,
 \]</span>
@@ -218,24 +218,24 @@ So that with this choice the posterior distribution is just the likelihood. Cont
 L(\theta) \propto \prod_{i=1}^n e^{-\frac{1}{2\sigma^2}(x_i-\theta)^2} = e^{-\frac{1}{2\sigma^2}\sum_{i=1}^n(x_i-\theta)^2} \propto e^{-\frac{n}{2\sigma^2}(\theta-\bar x)^2},
 \]</span>
 which is the density of <span class="math inline">\(\mathsf N(\bar x, \sigma^2/n)\)</span>. Therefore the point estimates and interval estimators will be the same as in likelihood based inference.</p>
-<p>A problem with flat priors is however that they are only non-informative in a particular parametrisation. Take again the Bernoulli example. If we say that we do not have any information about <span class="math inline">\(\theta\)</span>, then it would be reasonable to say that we also do not have any information about some function of <span class="math inline">\(\theta\)</span>. Take for example <span class="math inline">\(\psi = \ln (\theta/(1-\theta))\)</span>. If <span class="math inline">\(p(\theta)=1\)</span> then
+<p>A problem with flat priors is however that they are only non-informative in a particular parameterisation. Take again the Bernoulli example. If we say that we do not have any information about <span class="math inline">\(\theta\)</span>, then it would be reasonable to say that we also do not have any information about some function of <span class="math inline">\(\theta\)</span>. Take for example <span class="math inline">\(\psi = \ln (\theta/(1-\theta))\)</span>. If <span class="math inline">\(p(\theta)=1\)</span> for <span class="math inline">\(0\leq\theta\leq 1\)</span>, then
 <span class="math display">\[\begin{align}
 p(\psi) &amp; = \partial_x P(\psi \leq x) = \partial_x P\left( \ln (\theta/(1-\theta)) \leq x\right)\\
 &amp;= \partial_x P\left( \theta \leq \frac{e^x}{1+e^x} \right) = \partial_x \frac{e^x}{1+e^x} = \frac{e^x}{(1+e^x)^2},
 \end{align}\]</span>
 which is clearly no longer non-informative. We say that flat priors are not transformation invariant.</p>
-<p>One way to construct a prior that does not change under a change of parametrisation is Jeffreys’ prior:
+<p>One way to construct a prior that does not change under a change of parameterisation is Jeffreys’ prior:
 <span class="math display">\[
 p(\theta)\propto \sqrt{I(\theta)},
 \]</span>
-where <span class="math inline">\(I\)</span> is the Fisher information. In the Bernoulli example this is a $(1/2,1/2).</p>
+where <span class="math inline">\(I\)</span> is the Fisher information. In the Bernoulli example this is a <span class="math inline">\(\mathsf{Beta}(1/2,1/2)\)</span>.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="3-2-bayesian-statistics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3-2-bayesian-statistics-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="3-4-multiparameter-problems.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

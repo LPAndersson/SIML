@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-02" />
+<meta name="date" content="2020-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -144,6 +144,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
 <li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
 <li class="chapter" data-level="1.11" data-path="1-11-an-application-i.html"><a href="1-11-an-application-i.html"><i class="fa fa-check"></i><b>1.11</b> An application I</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-ch-bootstrap.html"><a href="2-ch-bootstrap.html"><i class="fa fa-check"></i><b>2</b> Bootstrap</a><ul>
 <li class="chapter" data-level="2.1" data-path="2-1-parametric-vs-non-parametric.html"><a href="2-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>2.1</b> Parametric vs non-parametric</a></li>
@@ -152,9 +153,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="2-4-parametric-bootstrap.html"><a href="2-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>2.4</b> Parametric bootstrap</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-an-application-ii.html"><a href="2-5-an-application-ii.html"><i class="fa fa-check"></i><b>2.5</b> An application II</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-bayesian-statistics-draft.html"><a href="3-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-bayesian-statistics.html"><a href="3-bayesian-statistics.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-some-basic-decision-theory.html"><a href="3-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>3.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics.html"><a href="3-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
 <li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
@@ -202,31 +203,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="an-application-iv" class="section level2">
 <h2><span class="header-section-number">4.10</span> An application IV</h2>
 <p>We will use the Hitters data set from the ISLR book and predict the salary of a player.</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1"><span class="kw">library</span>(caret)</a>
-<a class="sourceLine" id="cb132-2" data-line-number="2"><span class="kw">library</span>(glmnet)</a>
-<a class="sourceLine" id="cb132-3" data-line-number="3"><span class="kw">library</span>(ISLR)</a>
-<a class="sourceLine" id="cb132-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb132-5" data-line-number="5"><span class="kw">data</span>(<span class="st">&quot;Hitters&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</a>
-<a class="sourceLine" id="cb132-6" data-line-number="6">Hitters &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Hitters)</a></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1"><span class="kw">library</span>(caret)</a>
+<a class="sourceLine" id="cb128-2" data-line-number="2"><span class="kw">library</span>(glmnet)</a>
+<a class="sourceLine" id="cb128-3" data-line-number="3"><span class="kw">library</span>(ISLR)</a>
+<a class="sourceLine" id="cb128-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb128-5" data-line-number="5"><span class="kw">data</span>(<span class="st">&quot;Hitters&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</a>
+<a class="sourceLine" id="cb128-6" data-line-number="6">Hitters &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Hitters)</a></code></pre></div>
 <p>Then we split the data into a train and a test set.</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb133-2" data-line-number="2">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(Hitters<span class="op">$</span>Salary, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb133-3" data-line-number="3">train.data  &lt;-<span class="st"> </span>Hitters[training.samples, ]</a>
-<a class="sourceLine" id="cb133-4" data-line-number="4">test.data &lt;-<span class="st"> </span>Hitters[<span class="op">-</span>training.samples, ]</a></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb129-2" data-line-number="2">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(Hitters<span class="op">$</span>Salary, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb129-3" data-line-number="3">train.data  &lt;-<span class="st"> </span>Hitters[training.samples, ]</a>
+<a class="sourceLine" id="cb129-4" data-line-number="4">test.data &lt;-<span class="st"> </span>Hitters[<span class="op">-</span>training.samples, ]</a></code></pre></div>
 <p>We then do a least squares regression and calculate the out-of-sample error</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1">ls &lt;-<span class="st"> </span><span class="kw">lm</span>(Salary <span class="op">~</span>., <span class="dt">data =</span> train.data)</a>
-<a class="sourceLine" id="cb134-2" data-line-number="2">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data)</a>
-<a class="sourceLine" id="cb134-3" data-line-number="3"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">ls &lt;-<span class="st"> </span><span class="kw">lm</span>(Salary <span class="op">~</span>., <span class="dt">data =</span> train.data)</a>
+<a class="sourceLine" id="cb130-2" data-line-number="2">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data)</a>
+<a class="sourceLine" id="cb130-3" data-line-number="3"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
 <pre><code>## [1] 155961.4</code></pre>
 <p>Next we fit a lasso using 10-fold CV.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1">lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb136-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb136-3" data-line-number="3">lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
-<a class="sourceLine" id="cb136-4" data-line-number="4">  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</a>
-<a class="sourceLine" id="cb136-5" data-line-number="5">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
-<a class="sourceLine" id="cb136-6" data-line-number="6">  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> lambda)</a>
-<a class="sourceLine" id="cb136-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb136-8" data-line-number="8"><span class="kw">coef</span>(lasso<span class="op">$</span>finalModel, lasso<span class="op">$</span>bestTune<span class="op">$</span>lambda)</a></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1">lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb132-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb132-3" data-line-number="3">lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
+<a class="sourceLine" id="cb132-4" data-line-number="4">  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</a>
+<a class="sourceLine" id="cb132-5" data-line-number="5">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb132-6" data-line-number="6">  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> lambda)</a>
+<a class="sourceLine" id="cb132-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb132-8" data-line-number="8"><span class="kw">coef</span>(lasso<span class="op">$</span>finalModel, lasso<span class="op">$</span>bestTune<span class="op">$</span>lambda)</a></code></pre></div>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                        1
 ## (Intercept)  270.1052313
@@ -250,19 +251,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Errors        -7.5155549
 ## NewLeagueN     2.1811148</code></pre>
 <p>We see that some of the parameters have been set to 0. We calculate the out-of-sample error</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</a>
-<a class="sourceLine" id="cb138-2" data-line-number="2"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</a>
+<a class="sourceLine" id="cb134-2" data-line-number="2"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
 <pre><code>## [1] 149437.4</code></pre>
 <p>An improvement over least squares. We might also try elastic-net.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb140-2" data-line-number="2">alpha &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb140-3" data-line-number="3">lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
-<a class="sourceLine" id="cb140-4" data-line-number="4">  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</a>
-<a class="sourceLine" id="cb140-5" data-line-number="5">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
-<a class="sourceLine" id="cb140-6" data-line-number="6">  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> alpha, <span class="dt">lambda =</span> lambda)</a>
-<a class="sourceLine" id="cb140-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb140-8" data-line-number="8">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</a>
-<a class="sourceLine" id="cb140-9" data-line-number="9"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1">lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb136-2" data-line-number="2">alpha &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb136-3" data-line-number="3">lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
+<a class="sourceLine" id="cb136-4" data-line-number="4">  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</a>
+<a class="sourceLine" id="cb136-5" data-line-number="5">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb136-6" data-line-number="6">  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> alpha, <span class="dt">lambda =</span> lambda)</a>
+<a class="sourceLine" id="cb136-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb136-8" data-line-number="8">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</a>
+<a class="sourceLine" id="cb136-9" data-line-number="9"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
 <pre><code>## [1] 150373.8</code></pre>
 <p>We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.</p>
 </div>

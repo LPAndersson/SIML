@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-02" />
+<meta name="date" content="2020-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -144,6 +144,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
 <li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
 <li class="chapter" data-level="1.11" data-path="1-11-an-application-i.html"><a href="1-11-an-application-i.html"><i class="fa fa-check"></i><b>1.11</b> An application I</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-ch-bootstrap.html"><a href="2-ch-bootstrap.html"><i class="fa fa-check"></i><b>2</b> Bootstrap</a><ul>
 <li class="chapter" data-level="2.1" data-path="2-1-parametric-vs-non-parametric.html"><a href="2-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>2.1</b> Parametric vs non-parametric</a></li>
@@ -152,9 +153,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="2-4-parametric-bootstrap.html"><a href="2-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>2.4</b> Parametric bootstrap</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-an-application-ii.html"><a href="2-5-an-application-ii.html"><i class="fa fa-check"></i><b>2.5</b> An application II</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-bayesian-statistics-draft.html"><a href="3-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-bayesian-statistics.html"><a href="3-bayesian-statistics.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-some-basic-decision-theory.html"><a href="3-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>3.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics.html"><a href="3-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
 <li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
@@ -202,12 +203,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="an-application-v" class="section level2">
 <h2><span class="header-section-number">4.11</span> An application V</h2>
 <p>Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1"><span class="kw">library</span>(caret)</a>
-<a class="sourceLine" id="cb142-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb142-3" data-line-number="3"><span class="kw">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlbench&quot;</span>)</a>
-<a class="sourceLine" id="cb142-4" data-line-number="4">PimaIndiansDiabetes2 &lt;-<span class="st"> </span><span class="kw">na.omit</span>(PimaIndiansDiabetes2)</a>
-<a class="sourceLine" id="cb142-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb142-6" data-line-number="6"><span class="kw">head</span>(PimaIndiansDiabetes2, <span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1"><span class="kw">library</span>(caret)</a>
+<a class="sourceLine" id="cb138-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb138-3" data-line-number="3"><span class="kw">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlbench&quot;</span>)</a>
+<a class="sourceLine" id="cb138-4" data-line-number="4">PimaIndiansDiabetes2 &lt;-<span class="st"> </span><span class="kw">na.omit</span>(PimaIndiansDiabetes2)</a>
+<a class="sourceLine" id="cb138-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb138-6" data-line-number="6"><span class="kw">head</span>(PimaIndiansDiabetes2, <span class="dv">5</span>)</a></code></pre></div>
 <pre><code>##    pregnant glucose pressure triceps insulin mass pedigree age diabetes
 ## 4         1      89       66      23      94 28.1    0.167  21      neg
 ## 5         0     137       40      35     168 43.1    2.288  33      pos
@@ -215,21 +216,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 9         2     197       70      45     543 30.5    0.158  53      pos
 ## 14        1     189       60      23     846 30.1    0.398  59      pos</code></pre>
 <p>Divide the data into a train and a test set.</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb144-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb144-3" data-line-number="3">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(PimaIndiansDiabetes2<span class="op">$</span>diabetes, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb144-4" data-line-number="4">train.data  &lt;-<span class="st"> </span>PimaIndiansDiabetes2[training.samples, ]</a>
-<a class="sourceLine" id="cb144-5" data-line-number="5">test.data &lt;-<span class="st"> </span>PimaIndiansDiabetes2[<span class="op">-</span>training.samples, ]</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb140-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb140-3" data-line-number="3">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(PimaIndiansDiabetes2<span class="op">$</span>diabetes, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb140-4" data-line-number="4">train.data  &lt;-<span class="st"> </span>PimaIndiansDiabetes2[training.samples, ]</a>
+<a class="sourceLine" id="cb140-5" data-line-number="5">test.data &lt;-<span class="st"> </span>PimaIndiansDiabetes2[<span class="op">-</span>training.samples, ]</a></code></pre></div>
 <p>Then use a SVM, where the parameter is estimated by 10-fold CV.</p>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1">model &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
-<a class="sourceLine" id="cb145-2" data-line-number="2">  diabetes <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</a>
-<a class="sourceLine" id="cb145-3" data-line-number="3">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
-<a class="sourceLine" id="cb145-4" data-line-number="4">  <span class="dt">tuneLength =</span> <span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb145-5" data-line-number="5">  <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</a>
-<a class="sourceLine" id="cb145-6" data-line-number="6">)</a>
-<a class="sourceLine" id="cb145-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb145-8" data-line-number="8">predicted &lt;-<span class="st"> </span><span class="kw">predict</span>(model, test.data)</a>
-<a class="sourceLine" id="cb145-9" data-line-number="9"><span class="kw">mean</span>(predicted <span class="op">==</span><span class="st"> </span>test.data<span class="op">$</span>diabetes)</a></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1">model &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
+<a class="sourceLine" id="cb141-2" data-line-number="2">  diabetes <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</a>
+<a class="sourceLine" id="cb141-3" data-line-number="3">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb141-4" data-line-number="4">  <span class="dt">tuneLength =</span> <span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb141-5" data-line-number="5">  <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</a>
+<a class="sourceLine" id="cb141-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb141-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb141-8" data-line-number="8">predicted &lt;-<span class="st"> </span><span class="kw">predict</span>(model, test.data)</a>
+<a class="sourceLine" id="cb141-9" data-line-number="9"><span class="kw">mean</span>(predicted <span class="op">==</span><span class="st"> </span>test.data<span class="op">$</span>diabetes)</a></code></pre></div>
 <pre><code>## [1] 0.7948718</code></pre>
 
 </div>

@@ -24,15 +24,15 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-02" />
+<meta name="date" content="2020-09-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="3-bayesian-statistics-draft.html"/>
-<link rel="next" href="3-2-bayesian-statistics.html"/>
+<link rel="prev" href="3-bayesian-statistics.html"/>
+<link rel="next" href="3-2-bayesian-statistics-1.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -153,12 +153,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="2-4-parametric-bootstrap.html"><a href="2-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>2.4</b> Parametric bootstrap</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-an-application-ii.html"><a href="2-5-an-application-ii.html"><i class="fa fa-check"></i><b>2.5</b> An application II</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-bayesian-statistics-draft.html"><a href="3-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-bayesian-statistics.html"><a href="3-bayesian-statistics.html"><i class="fa fa-check"></i><b>3</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-some-basic-decision-theory.html"><a href="3-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>3.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics.html"><a href="3-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
@@ -204,12 +204,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.1</span> Some basic decision theory</h2>
 <p>In this section we introduce <em>statistical decision theory</em>, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.</p>
 <p>
-Consider a statistical model with a parameter <span class="math inline">\(\theta\in\Theta\)</span>. Based on data <span class="math inline">\(x\)</span>, we are going to make a <em>decision</em> <span class="math inline">\(\delta(x)\)</span>. For example, the decision might be a point estimate <span class="math inline">\(\delta(x)=\bar x\)</span> or some interval estimator. To evaluate if our decision is good we have a loss function <span class="math inline">\(l(\theta,\delta(x))\)</span>. It is the penalty of making decision <span class="math inline">\(\delta(x)\)</span> when the true parameter is <span class="math inline">\(\theta\)</span>. In the continuous case we might take squared loss
+Consider a statistical model with a parameter <span class="math inline">\(\theta\in\Theta\)</span>. Based on data <span class="math inline">\(x\)</span>, we are going to make a <em>decision</em> <span class="math inline">\(\delta(x)\)</span>. For example, the decision might be a point estimate <span class="math inline">\(\delta(x)=\bar x\)</span> or some interval estimator. To evaluate if our decision is good we have a loss function <span class="math inline">\(l(\theta,\delta(x))\)</span>. It is the penalty of making decision <span class="math inline">\(\delta(x)\)</span> when the true parameter is <span class="math inline">\(\theta\)</span>. If the task is regression we might take squared loss
 </p>
 <span class="math display">\[
 l(\theta,\delta(x)) = (\theta-\delta(x))^2,
 \]</span>
-and in the discrete case a 0-1 loss
+and if the task is classification, a 0-1 loss
 <span class="math display">\[
 l(\theta,\delta(x)) =\begin{cases}
 0\text{ if } \theta=\delta(x)\\
@@ -228,10 +228,10 @@ R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
 </div>
 
 <p>Here the expectation is taken of a random sample <span class="math inline">\(X\)</span>, while <span class="math inline">\(\theta\)</span> is held fixed. Still the comparison of different <span class="math inline">\(\delta\)</span> is not trivial. It may be that for <span class="math inline">\(\delta_1\)</span> the risk is lower than the risk of <span class="math inline">\(\delta_2\)</span> for some values of <span class="math inline">\(\theta\)</span>, while for some other <span class="math inline">\(\theta\)</span>, the risk is higher. As a trivial example, say that we have the squared loss and <span class="math inline">\(\delta(x) \equiv 0\)</span>. Then, if the the true <span class="math inline">\(\theta\)</span> is 0, clearly this is a good decision. But if the true <span class="math inline">\(\theta\)</span> is something else, it is a bad decision.</p>
-<p>Note that the distinguising feature of the above risk function is that the expectation is taken over a random sample <span class="math inline">\(X\)</span>. This is known as <em>frequentist statistics</em>. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e. for most data <span class="math inline">\(x\)</span>. However in many situations the statistican is given one dataset and the task is to make valid inference for that particular dataset. In that situation, one might argue, it does not make sense to consider any other dataset.</p>
-<p>The Bayesian way is to instead consider <span class="math inline">\(\theta\)</span> as random, with a distribution <span class="math inline">\(p(\theta)\)</span>. Even if we consider <span class="math inline">\(\theta\)</span> to have a fixed unkown value it could make sense to consider it having a distribution. For example, if we let <span class="math inline">\(\theta\)</span> be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, cleary this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative.</p>
+<p>Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample <span class="math inline">\(X\)</span>. This is known as <em>frequentist statistics</em>. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e. for most data <span class="math inline">\(x\)</span>. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue, it does not make sense to consider any other data set.</p>
+<p>The Bayesian way is to instead consider <span class="math inline">\(\theta\)</span> as random, with a distribution <span class="math inline">\(p(\theta)\)</span>. Even if we consider <span class="math inline">\(\theta\)</span> to have a fixed unknown value it could make sense to consider it having a distribution. For example, if we let <span class="math inline">\(\theta\)</span> be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, clearly this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative.</p>
 <p>
-The Bayesian statistican would call <span class="math inline">\(p(\theta)\)</span> the <em>prior distribution</em> on <span class="math inline">\(\theta\)</span>. Then, after observing the data <span class="math inline">\(x\)</span>, calculate the <em>posterior distribution</em>, using Bayes’ formula,
+The Bayesian statistician would call <span class="math inline">\(p(\theta)\)</span> the <em>prior distribution</em> on <span class="math inline">\(\theta\)</span>. Then, after observing the data <span class="math inline">\(x\)</span>, calculate the <em>posterior distribution</em>, using Bayes’ formula,
 </p>
 <span class="math display">\[
 p(\theta \mid x) = \frac{p(x\mid \theta)p(\theta)}{p(x)}.
@@ -252,7 +252,7 @@ The <em>posterior risk</em> is then defined as
 
 <p>Here the random quantity is <span class="math inline">\(\theta\)</span> while the data <span class="math inline">\(x\)</span> is held constant. The <em>Bayes action</em> <span class="math inline">\(\delta^\star\)</span> is the decision <span class="math inline">\(\delta\)</span> that minimizes the posterior risk. For example, if the decision is a point estimate of <span class="math inline">\(\theta\)</span> and <span class="math inline">\(l(\theta,\delta) = (\theta - \delta)^2\)</span>. Then
 <span class="math display">\[\begin{align}
-\rho(p(\theta),\delta) &amp;= \int (\theta - \delta^2) p(\theta\mid x)d\theta\\
+\rho(p(\theta),\delta) &amp;= \int (\theta - \delta)^2 p(\theta\mid x)d\theta\\
 &amp;= \delta^2 - 2\delta \int \theta p(\theta\mid x)d\theta + \int \theta^2p(\theta\mid x)d\theta,\\
 \implies \partial_\delta \rho(p(\theta),\delta) &amp;= 2\delta -2\int \theta p(\theta\mid x)d\theta = 0\\
 \implies \delta^\star &amp;=\int \theta p(\theta\mid x)d\theta.
@@ -279,8 +279,8 @@ This is minimized by minimizing <span class="math inline">\(\rho(p(\theta),\delt
           </div>
         </div>
       </div>
-<a href="3-bayesian-statistics-draft.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="3-2-bayesian-statistics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3-bayesian-statistics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3-2-bayesian-statistics-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
