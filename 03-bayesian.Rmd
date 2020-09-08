@@ -133,6 +133,7 @@ ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
   stat_function(aes(color = "4"), fun = function(x){dbeta(x,3,2)}, size = 1.5) +
   theme_minimal() +
   xlab("x") + 
+  ylab("density")
   scale_colour_manual(values=cbp1, labels = unname(TeX(c("$\\alpha = 0.5,$ $\\beta = 0.5$",
                                                          "$\\alpha = 1.0,$ $\\beta = 1.0$",
                                                          "$\\alpha = 2.0,$ $\\beta = 2.0$",
@@ -207,7 +208,7 @@ It is clear that the choice of prior will influence the inference and so the cho
 
 If we have a subjective belief about what values the parameter is likely to take we can choose a prior that reflects this belief. For example we might know from experience that coins have a probability close to 0.5 of landing on heads and so we would choose a prior with most of the probability around 0.5.
 
-However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a *non-informative prior*. One way is to use a *flat prior*, $p(\theta)\propto \text{constant}$. For example in the Bernoulli example choosing $p(\theta)=1$ seems reasonable.
+However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a *non-informative prior*. One way is to use a *flat prior*, $p(\theta)\propto \text{constant}$. For example in the Bernoulli example choosing $p(\theta)=1$ for $0\leq \theta \leq 1$ seems reasonable.
 
 Consider the model $X\sim \mathsf N(\theta,\sigma^2)$, $\sigma^2$ known. Here the flat prior would be $p(\theta)=c>0$. Note however that $p$ can never be a proper density since
 $$

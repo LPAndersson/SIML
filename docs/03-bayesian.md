@@ -115,6 +115,53 @@ $$
 <img src="03-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
 <p class="caption">(\#fig:betaDist)Density of the beta distribution</p>
 </div>
+
+```
+## <ggproto object: Class ScaleDiscrete, Scale, gg>
+##     aesthetics: colour
+##     axis_order: function
+##     break_info: function
+##     break_positions: function
+##     breaks: waiver
+##     call: call
+##     clone: function
+##     dimension: function
+##     drop: TRUE
+##     expand: waiver
+##     get_breaks: function
+##     get_breaks_minor: function
+##     get_labels: function
+##     get_limits: function
+##     guide: legend
+##     is_discrete: function
+##     is_empty: function
+##     labels: expression
+##     limits: NULL
+##     make_sec_title: function
+##     make_title: function
+##     map: function
+##     map_df: function
+##     n.breaks.cache: NULL
+##     na.translate: TRUE
+##     na.value: NA
+##     name: waiver
+##     palette: function
+##     palette.cache: NULL
+##     position: left
+##     range: <ggproto object: Class RangeDiscrete, Range, gg>
+##         range: NULL
+##         reset: function
+##         train: function
+##         super:  <ggproto object: Class RangeDiscrete, Range, gg>
+##     rescale: function
+##     reset: function
+##     scale_name: manual
+##     train: function
+##     train_df: function
+##     transform: function
+##     transform_df: function
+##     super:  <ggproto object: Class ScaleDiscrete, Scale, gg>
+```
 We see from the figure that by changing $\alpha$ and $\beta$ the beta prior can reflect different kinds of prior information. For example, $\alpha = \beta = 1$ is a uniform distribution, that is a prior that gives equal probability to any value of $\theta$. On the other hand, $\alpha =3$, $\beta = 2$ gives small probability to $\theta$ close to 0 and 1 and puts more probability to $\theta>0.5$ than $\theta < 0.5$.
 
 Now let us calculate the posterior distribution of $\theta$ after observing $x=(x_1,\ldots, x_n)$. First we need the likelihood of the observation
@@ -148,7 +195,7 @@ It is clear that the choice of prior will influence the inference and so the cho
 
 If we have a subjective belief about what values the parameter is likely to take we can choose a prior that reflects this belief. For example we might know from experience that coins have a probability close to 0.5 of landing on heads and so we would choose a prior with most of the probability around 0.5.
 
-However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a *non-informative prior*. One way is to use a *flat prior*, $p(\theta)\propto \text{constant}$. For example in the Bernoulli example choosing $p(\theta)=1$ seems reasonable.
+However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a *non-informative prior*. One way is to use a *flat prior*, $p(\theta)\propto \text{constant}$. For example in the Bernoulli example choosing $p(\theta)=1$ for $0\leq \theta \leq 1$ seems reasonable.
 
 Consider the model $X\sim \mathsf N(\theta,\sigma^2)$, $\sigma^2$ known. Here the flat prior would be $p(\theta)=c>0$. Note however that $p$ can never be a proper density since
 $$
