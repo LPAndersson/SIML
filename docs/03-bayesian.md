@@ -222,7 +222,11 @@ One way to construct a prior that does not change under a change of parameterisa
 $$
 p(\theta)\propto \sqrt{I(\theta)},
 $$
-where $I$ is the Fisher information. In the Bernoulli example this is a $\mathsf{Beta}(1/2,1/2)$.
+where $I$ is the Fisher information. Recall that in the $\mathsf{Bernoulli}(\theta)$ case $I(\theta)=(\theta(1-\theta))^{-1}$ and so the Jeffreys prior is
+$$
+p(\theta) \propto \theta^{-1/2}(1-\theta)^{-1/2},
+$$
+which is a $\mathsf{Beta}(1/2,1/2)$.
 
 ## Multiparameter problems
 

@@ -228,7 +228,11 @@ which is clearly no longer non-informative. We say that flat priors are not tran
 <span class="math display">\[
 p(\theta)\propto \sqrt{I(\theta)},
 \]</span>
-where <span class="math inline">\(I\)</span> is the Fisher information. In the Bernoulli example this is a <span class="math inline">\(\mathsf{Beta}(1/2,1/2)\)</span>.</p>
+where <span class="math inline">\(I\)</span> is the Fisher information. Recall that in the <span class="math inline">\(\mathsf{Bernoulli}(\theta)\)</span> case <span class="math inline">\(I(\theta)=(\theta(1-\theta))^{-1}\)</span> and so the Jeffreys prior is
+<span class="math display">\[
+p(\theta) \propto \theta^{-1/2}(1-\theta)^{-1/2},
+\]</span>
+which is a <span class="math inline">\(\mathsf{Beta}(1/2,1/2)\)</span>.</p>
 </div>
             </section>
 
