@@ -282,7 +282,7 @@ ggplot(data.frame(tau.post), aes(x=tau.post)) +
 
 So far we have been using that the posterior distribution is proportional to the likelihood times the prior distribution. We were also careful to choose the prior as the conjugate distribution so that we could recognize the posterior distribution. In general we have to calculate the normalizing constant:
 $$
-\int p(\theta\mid x)p(\theta)d\theta.
+\int p(x\mid \theta)p(\theta)d\theta.
 $$
 Many times, and in particular if $\theta$ is high dimensional, we will not be able to calculate this.
 

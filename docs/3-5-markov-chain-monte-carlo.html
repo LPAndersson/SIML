@@ -204,7 +204,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.5</span> Markov chain Monte Carlo</h2>
 <p>So far we have been using that the posterior distribution is proportional to the likelihood times the prior distribution. We were also careful to choose the prior as the conjugate distribution so that we could recognize the posterior distribution. In general we have to calculate the normalizing constant:
 <span class="math display">\[
-\int p(\theta\mid x)p(\theta)d\theta.
+\int p(x\mid \theta)p(\theta)d\theta.
 \]</span>
 Many times, and in particular if <span class="math inline">\(\theta\)</span> is high dimensional, we will not be able to calculate this.</p>
 <p>In this section we will see how we can, instead of calculating it, generate samples from the posterior distribution. This is the method that is used in modern Bayesian statistics. Here we are only able to scratch the surface. Both in terms of theory, since explaining why the method works would require first learning about Markov chains, and in terms of complexity of the methods, since the methods that are used in practice are usually more advanced version of what we present here.</p>
