@@ -242,6 +242,71 @@ Here it is important to choose <span class="math inline">\(b\)</span> such that 
 r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1})}{q(\theta^\star)}, 1 \right\}.
 \]</span>
 This is known as <em>independence Metropolis Hastings</em>. Here, since each time the proposal is accepted <span class="math inline">\(\theta_i\)</span> will change, we aim for as high an acceptance probability as possible.</p>
+<p>As an example let us see how one can generate samples from the exponential distribution using Metropolis Hastings. To be clear, this is not the best way to generate exponentially distributed random numbers, it is just an example.</p>
+<p>The density is
+<span class="math display">\[
+p(x) = \lambda e^{-\lambda x}\propto e^{-\lambda x}.
+\]</span>
+Here we know that the normalizing constant is <span class="math inline">\(\lambda\)</span>, but the idea of MCMC is that we do not need to know it, so let us proceed as if we did not know it. Also note that here we see <span class="math inline">\(x\)</span> as random, in the typical Bayesian setting we would think of <span class="math inline">\(\lambda\)</span> as random, but is is just a matter of notation.</p>
+<p>First we implement the density. We do it on a log-scale. This is because we need to divide two densities in the algorithm. On a log-scale this becomes subtraction, which is numerically more stable.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">logDensity &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  lambda &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  </a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="cf">if</span> (x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">    <span class="op">-</span>lambda <span class="op">*</span><span class="st"> </span>x</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">  }</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">  <span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">    <span class="op">-</span><span class="ot">Inf</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">  }</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">}</a></code></pre></div>
+<p>Next implement the random-walk Metropolis-Hastings algorithm with normally distributed steps.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">mcmc.iter &lt;-<span class="st"> </span><span class="cf">function</span>(x, logDensity, sigma, n.iter){</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="co">#Random walk Metropolis Hastings MCMC</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  </a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">  res &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, n.iter<span class="op">+</span><span class="dv">1</span>, <span class="kw">length</span>(x)) <span class="co">#Create empty matrix</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">  res[<span class="dv">1</span>,] &lt;-<span class="st"> </span>x</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">  logD &lt;-<span class="st"> </span><span class="kw">logDensity</span>(x)</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">  </a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">  accProb &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co">#keep track of the proportion of proposals that are accepted</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">  </a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.iter)){</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">    <span class="co">#New proposal</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">    xProp &lt;-<span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x), <span class="dv">0</span>, sigma)</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">    <span class="co">#Log density of proposal</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">    logDProp &lt;-<span class="st"> </span><span class="kw">logDensity</span>(xProp)</a>
+<a class="sourceLine" id="cb4-15" data-line-number="15">    <span class="co">#Acceptance probability</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">    r &lt;-<span class="st"> </span><span class="kw">min</span>( <span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">exp</span>(logDProp <span class="op">-</span><span class="st"> </span>logD) ) )</a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">    </a>
+<a class="sourceLine" id="cb4-18" data-line-number="18">    <span class="cf">if</span>(r<span class="op">&gt;</span><span class="kw">runif</span>(<span class="dv">1</span>)){ <span class="co">#Accept with probability r, else keep old x</span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19">      x &lt;-<span class="st"> </span>xProp</a>
+<a class="sourceLine" id="cb4-20" data-line-number="20">      logD &lt;-<span class="st"> </span>logDProp</a>
+<a class="sourceLine" id="cb4-21" data-line-number="21">      accProb &lt;-<span class="st"> </span>accProb <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22">    }</a>
+<a class="sourceLine" id="cb4-23" data-line-number="23">    res[i<span class="op">+</span><span class="dv">1</span>,] &lt;-<span class="st"> </span>x</a>
+<a class="sourceLine" id="cb4-24" data-line-number="24">  }</a>
+<a class="sourceLine" id="cb4-25" data-line-number="25">  <span class="kw">list</span>(<span class="dt">sample =</span> res, <span class="dt">accProb =</span> accProb<span class="op">/</span>n.iter)</a>
+<a class="sourceLine" id="cb4-26" data-line-number="26">}</a></code></pre></div>
+<p>Now we can run the algorithm. First for 1000 step that we throw away. This is since the distribution of the samples are correct only when the number of steps are large. Then we run it for as many steps as we need samples.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">x.init &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co">#Initial value</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">nIter &lt;-<span class="st"> </span><span class="dv">100000</span> <span class="co">#Number of MC steps</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">exp.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(x.init,</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">                       logDensity,</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">                       <span class="fl">0.2</span>,</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">                       <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">exp.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(exp.mcmc<span class="op">$</span>sample[<span class="kw">nrow</span>(exp.mcmc<span class="op">$</span>sample),],</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">                       logDensity,</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">                       <span class="fl">0.2</span>,</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">                       nIter)</a></code></pre></div>
+<p>We can check for example that the mean and standard deviation of the samples are as expected, i.e. in our case 1.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">mean</span>(exp.mcmc<span class="op">$</span>sample)</a></code></pre></div>
+<pre><code>## [1] 1.072045</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">sd</span>(exp.mcmc<span class="op">$</span>sample)</a></code></pre></div>
+<pre><code>## [1] 1.114397</code></pre>
+<p>We can plot the histogram of the samples against the density.</p>
+<p><img src="03-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
             </section>
 

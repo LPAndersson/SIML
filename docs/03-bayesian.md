@@ -329,6 +329,97 @@ r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\thet
 $$
 This is known as *independence Metropolis Hastings*. Here, since each time the proposal is accepted $\theta_i$ will change, we aim for as high an acceptance probability as possible.
 
+As an example let us see how one can generate samples from the exponential distribution using Metropolis Hastings. To be clear, this is not the best way to generate exponentially distributed random numbers, it is just an example.
+
+The density is
+$$
+p(x) = \lambda e^{-\lambda x}\propto e^{-\lambda x}.
+$$
+Here we know that the normalizing constant is $\lambda$, but the idea of MCMC is that we do not need to know it, so let us proceed as if we did not know it. Also note that here we see $x$ as random, in the typical Bayesian setting we would think of $\lambda$ as random, but is is just a matter of notation.
+
+First we implement the density. We do it on a log-scale. This is because we need to divide two densities in the algorithm. On a log-scale this becomes subtraction, which is numerically more stable.
+
+```r
+logDensity <- function(x) {
+  lambda <- 1
+  
+  if (x >= 0) {
+    -lambda * x
+  }
+  else{
+    -Inf
+  }
+}
+```
+Next implement the random-walk Metropolis-Hastings algorithm with normally distributed steps.
+
+```r
+mcmc.iter <- function(x, logDensity, sigma, n.iter){
+  #Random walk Metropolis Hastings MCMC
+  
+  res <- matrix(NA, n.iter+1, length(x)) #Create empty matrix
+  res[1,] <- x
+  logD <- logDensity(x)
+  
+  accProb <- 0 #keep track of the proportion of proposals that are accepted
+  
+  for (i in seq_len(n.iter)){
+    #New proposal
+    xProp <- x + rnorm(length(x), 0, sigma)
+    #Log density of proposal
+    logDProp <- logDensity(xProp)
+    #Acceptance probability
+    r <- min( c(1, exp(logDProp - logD) ) )
+    
+    if(r>runif(1)){ #Accept with probability r, else keep old x
+      x <- xProp
+      logD <- logDProp
+      accProb <- accProb + 1
+    }
+    res[i+1,] <- x
+  }
+  list(sample = res, accProb = accProb/n.iter)
+}
+```
+Now we can run the algorithm. First for 1000 step that we throw away. This is since the distribution of the samples are correct only when the number of steps are large. Then we run it for as many steps as we need samples.
+
+```r
+x.init <- 1 #Initial value
+nIter <- 100000 #Number of MC steps
+set.seed(42)
+
+exp.mcmc <- mcmc.iter(x.init,
+                       logDensity,
+                       0.2,
+                       1000)
+
+exp.mcmc <- mcmc.iter(exp.mcmc$sample[nrow(exp.mcmc$sample),],
+                       logDensity,
+                       0.2,
+                       nIter)
+```
+We can check for example that the mean and standard deviation of the samples are as expected, i.e. in our case 1.
+
+```r
+mean(exp.mcmc$sample)
+```
+
+```
+## [1] 1.072045
+```
+
+```r
+sd(exp.mcmc$sample)
+```
+
+```
+## [1] 1.114397
+```
+We can plot the histogram of the samples against the density.
+
+<img src="03-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" />
+
+
 ## An application III
 <!-- Taken from http://www2.geog.ucl.ac.uk/~mdisney/teaching/GEOGG121/sivia_skilling/mterop_hastings.pdf -->
 
@@ -339,7 +430,7 @@ Y_i&\sim \mathsf{Bin}(n_i,\pi_i),\\
 \end{align}
 where $z_i=\begin{bmatrix} 1&z_{i1} &z_{i2} &z_{i3}  \end{bmatrix}'$ are indicators and $\Phi$ is the $\mathsf N(0,1)$ distribution function. The data is shown in the table.
 
-Table: (\#tab:bayesProbit)
+Table: (\#tab:bayesProbit)Data for the Bayesian probit model
 
 |  y|  n| z1| z2| z3|
 |--:|--:|--:|--:|--:|
@@ -397,36 +488,35 @@ logPrior <- function(beta){
 
 logPosterior <- function(beta){ logL(beta) + logPrior(beta)}
 ```
-Next we implement the main MCMC-loop. We make it a function so that we can easily reuse it later.
+<!-- Next we implement the main MCMC-loop. We make it a function so that we can easily reuse it later. -->
+<!-- ```{r, cache=TRUE, echo = TRUE, warning = FALSE} -->
+<!-- mcmc.iter <- function(x, logPosterior, sigma, n.iter){ -->
+<!-- #Random walk Metropolis Hastings MCMC -->
 
-```r
-mcmc.iter <- function(x, logPosterior, sigma, n.iter){
-#Random walk Metropolis Hastings MCMC
+<!--   res <- matrix(NA, n.iter+1, length(x)) #Create empty matrix -->
+<!--   res[1,] <- x -->
+<!--   logPost <- logPosterior(x) -->
 
-  res <- matrix(NA, n.iter+1, length(x)) #Create empty matrix
-  res[1,] <- x
-  logPost <- logPosterior(x)
+<!--   accProb <- 0 #keep track of the proportion of proposals that are accepted -->
 
-  accProb <- 0 #keep track of the propprtion of proposals that are accepted
+<!--   for (i in seq_len(n.iter)){ -->
+<!--     #New proposal -->
+<!--     xProp <- x + rnorm(length(x), 0, sigma) -->
+<!--     #Log posterior of proposal -->
+<!--     logPostProp <- logPosterior(xProp) -->
+<!--     #Acceptance probability -->
+<!--     r <- min( c(1, exp(logPostProp - logPost) ) ) -->
 
-  for (i in seq_len(n.iter)){
-    #New proposal
-    xProp <- x + rnorm(length(x), 0, sigma)
-    #Log posterior of proposal
-    logPostProp <- logPosterior(xProp)
-    #Acceptance probability
-    r <- min( c(1, exp(logPostProp - logPost) ) )
-
-    if(r>runif(1)){ #Accept with probability 1
-      x <- xProp
-      logPost <- logPostProp
-      accProb <- accProb + 1
-    }
-    res[i+1,] <- x
-  }
-  list(sample = res, accProb = accProb/n.iter)
-}
-```
+<!--     if(r>runif(1)){ #Accept with probability 1 -->
+<!--       x <- xProp -->
+<!--       logPost <- logPostProp -->
+<!--       accProb <- accProb + 1 -->
+<!--     } -->
+<!--     res[i+1,] <- x -->
+<!--   } -->
+<!--   list(sample = res, accProb = accProb/n.iter) -->
+<!-- } -->
+<!-- ``` -->
 Now run the Markov chain. First a burn-in of 1000 steps, that we then discard. After that a longer run.
 
 ```r
