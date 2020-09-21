@@ -204,12 +204,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.1</span> Some basic decision theory</h2>
 <p>In this section we introduce <em>statistical decision theory</em>, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.</p>
 <p>
-Consider a statistical model with a parameter <span class="math inline">\(\theta\in\Theta\)</span>. Based on data <span class="math inline">\(x\)</span>, we are going to make a <em>decision</em> <span class="math inline">\(\delta(x)\)</span>. For example, the decision might be a point estimate <span class="math inline">\(\delta(x)=\bar x\)</span> or some interval estimator. To evaluate if our decision is good we have a loss function <span class="math inline">\(l(\theta,\delta(x))\)</span>. It is the penalty of making decision <span class="math inline">\(\delta(x)\)</span> when the true parameter is <span class="math inline">\(\theta\)</span>. If the task is regression we might take squared loss
+Consider a statistical model with a parameter <span class="math inline">\(\theta\in\Theta\)</span>. Based on data <span class="math inline">\(x\)</span>, we are going to make a <em>decision</em> <span class="math inline">\(\delta(x)\)</span>. For example, the decision might be a point estimate <span class="math inline">\(\delta(x)=\bar x\)</span> or some interval estimator. To evaluate if our decision is good we have a loss function <span class="math inline">\(l(\theta,\delta(x))\)</span>. It is the penalty of making decision <span class="math inline">\(\delta(x)\)</span> when the true parameter is <span class="math inline">\(\theta\)</span>. In the continuous we might take squared loss
 </p>
 <span class="math display">\[
 l(\theta,\delta(x)) = (\theta-\delta(x))^2,
 \]</span>
-and if the task is classification, a 0-1 loss
+and in the discrete case, a 0-1 loss
 <span class="math display">\[
 l(\theta,\delta(x)) =\begin{cases}
 0\text{ if } \theta=\delta(x)\\

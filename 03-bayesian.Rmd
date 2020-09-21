@@ -14,11 +14,11 @@ AOS 24.1, 2, 4, 5 (not Gibbs)
 
 In this section we introduce *statistical decision theory*, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.
 
-<p>Consider a statistical model with a parameter $\theta\in\Theta$. Based on data $x$, we are going to make a *decision* $\delta(x)$. For example, the decision might be a point estimate $\delta(x)=\bar x$ or some interval estimator. To evaluate if our decision is good we have a loss function $l(\theta,\delta(x))$. It is the penalty of making decision $\delta(x)$ when the true parameter is $\theta$. If the task is regression we might take squared loss</p>
+<p>Consider a statistical model with a parameter $\theta\in\Theta$. Based on data $x$, we are going to make a *decision* $\delta(x)$. For example, the decision might be a point estimate $\delta(x)=\bar x$ or some interval estimator. To evaluate if our decision is good we have a loss function $l(\theta,\delta(x))$. It is the penalty of making decision $\delta(x)$ when the true parameter is $\theta$. In the continuous we might take squared loss</p>
 $$
 l(\theta,\delta(x)) = (\theta-\delta(x))^2,
 $$
-and if the task is classification, a 0-1 loss
+and in the discrete case, a 0-1 loss
 $$
 l(\theta,\delta(x)) =\begin{cases}
 0\text{ if } \theta=\delta(x)\\
@@ -635,7 +635,4 @@ y.pred <- data.df$n*p
 y.pred
 ```
 This is similar to the data.
-
-
-
 
