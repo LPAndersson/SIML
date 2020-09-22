@@ -17,11 +17,12 @@ $$
 There is also a loss function $l:\mathcal Y \times \mathcal Y \mapsto \mathbb R$ that tells how close two points in $\mathcal Y$ are to each other.
 
 The problem in statistical learning is to find a function $h:\mathcal X \mapsto \mathcal Y$ that takes an input $x\in \mathcal X$ and gives and ouput $y\in\mathcal Y$. The function should be such that its out-of-sample error is small:
-$$E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
-$$
+\BeginKnitrBlock{note}<div class="note">$$
+E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
+$$</div>\EndKnitrBlock{note}
 This tells us how the function $h$ performs on average. We would like to choose the function $h$ so that this error is as small as possible. The fundamental problem of learning is that the distribution of $X,Y$ is unknown and so direct minimization of $E_{out}$ is not possible.
 
-Methods statistical learning can be partitioned in various ways. The two main ways is in supervised and unsupervised learning. In supervised learning we are given a set of $n$ examples $(x_1,y_1),\ldots,(x_n,y_n)$ and the task is to predict $y$ for a previously unseen point $x$. In unsupervised learning we are only given $x_1,\ldots, x_n$ and the goal is to describe the associations and patterns among a set of input measures. A third scenario is reinforcement learning, that we will not cover in this course.
+Methods in statistical learning can be partitioned in various ways. The two main ways is in supervised and unsupervised learning. In supervised learning we are given a set of $n$ examples $(x_1,y_1),\ldots,(x_n,y_n)$ and the task is to predict $y$ for a previously unseen point $x$. In unsupervised learning we are only given $x_1,\ldots, x_n$ and the goal is to describe the associations and patterns among a set of input measures. A third scenario is [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning), that we will not cover in this course.
 
 In supervised learning the two main tasks are classification and regression. In classification the task is to assign a class to each item. In the terms we defined above, $\mathcal X = \mathbb R^d$ and if it is binary classification $\mathcal Y = \{-1,1\}$. Many times the loss is taken to be the 0-1 loss, $l(y_1,y_2)=1(y_1\neq y_2)$.
 
@@ -34,7 +35,7 @@ In this section we discuss some theory of classification, without going in to de
 
 We are given training data $(x_i,y_i)\quad i=1,\ldots, n$ what we assume are a random sample from an unknown distribution $P_{X,Y}$. The goal is to find a classifier, that is a function $h:\mathcal X \mapsto \mathcal Y= \left\{-1,1\right\}$, based on the training data. There is a loss function $l:\mathcal Y\times \mathcal Y \mapsto \mathbb R$. Most commonly this is the 0-1 loss,
 $$
-l(h(x),y) :=1(f(x)\neq y).
+l(h(x),y) :=1(h(x)\neq y).
 $$
 Then the out-of-sample error is
 $$
@@ -45,16 +46,16 @@ To simplify notation we also define the conditional class probability,
 $$
 \eta(x):=P\left( Y=1\mid X=x \right).
 $$
-
-In the imaginary case where we know the distribution of $X,Y$, the $h$ that minimizes this out-of-sample error is called the Bayes classifier. We claim that it is
+\BeginKnitrBlock{note}<div class="note">In the imaginary case where we know the distribution of $X,Y$, the $h$ that minimizes this out-of-sample error is called the Bayes classifier. We claim that it is
 \begin{align*}
 h^\star(x) &= \begin{cases}
 1 & \text{if } \eta(x)\geq 1/2\\
 -1 & \text{if } \eta(x)< 1/2
 \end{cases}\\
 &= \text{sign} (\eta(x) - 1/2).
-\end{align*}
-That is, we should classify to the class that has the highest probabability, conditioned on $X$. The minimal out-of-sample error is called the Bayes' risk.
+\end{align*}</div>\EndKnitrBlock{note}
+
+That is, we should classify to the class that has the highest probabability, conditioned on $X$. The minimal out-of-sample error is called the Bayes risk.
 
 Let us prove this. The claim is that for any other classifier $h(x)$, the out-of-sample error is at least as large, i.e.\
 $$
@@ -106,7 +107,7 @@ Note that if $y_i(x_i^T\beta + \beta_0)>0$, then $y_i$ is classified correctly a
 $$
 l(h(x),y) = I(y(x^T\beta + \beta_0)\leq 0).
 $$
-More generally we can consider a function $f(x)$, a classifier $h(x) = \text{sign}(f(x))$ and a loss functions that depends on the margin $yf(x)$.
+More generally we can consider a function $f(x)$, a classifier $h(x) = \text{sign}(f(x))$ and a loss function that depends on the margin $yf(x)$.
 
 It turns out that $E_{in}$, as defined above, is difficult to use for training. The reason for this can be understood in different ways. Mathematically, the 0-1 loss is non-convex, and non-convex functions are in general difficult to optimize. In terms of classification, consider the picture below. Two points are missclassified, but we can see that by moving the classification boundary, we can find a classifier that only missclassifies one point. However, the training algorithm will try to move the boundary a very small step, and see if that gives an improvement. If we use the 0-1 loss, the in-sample error will be the same as long as the boundary is not moved far enough. Therefore it is better to use a loss function that also measures how far away each point is from being classified correctly/incorrectly.
 
@@ -122,11 +123,11 @@ Below we discuss two alternative loss functions that produce two much used metho
 </div>
 The hinge loss is
 $$
-L(f(x),y)=(1-yf(x))_+,
+l(f(x),y)=(1-yf(x))_+,
 $$
-where $f_+:=\max (0,f)$. This function takes care of our complaints about the 0-1 loss function. If a point $x_i$ is correctly classified, and it is far away from being missclassified, so that $y_if(x_i)i$ is large and positive, the loss is 0. However if it is close to being missclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
+where $f_+:=\max (0,f)$. This function takes care of our complaints about the 0-1 loss function. If a point $x_i$ is correctly classified, and it is far away from being missclassified, so that $y_if(x_i)$ is large and positive, the loss is 0. However if it is close to being missclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
 $$
-h^\star_{hinge} := \underset{h}{\text{argmin}} E\left[(1-Yh(X))_+ \right].
+h^\star_{hinge} := \underset{h}{\text{argmin}}~ E\left[(1-Yh(X))_+ \right].
 $$
 Let us fix an arbitrary $x$ and then we should find $h(x)$ that minimizes
 $$
@@ -158,37 +159,33 @@ L(x,y) = \begin{cases}
 $$
 Then the negative log-likelihood (which should be minimized) is,
 $$
--l(x,y) = \begin{cases}
-\log_2(1+e^{-f(x)}&\text{if } y=1\\
-\log_2(1+e^{f(x)}&\text{if } y=-1
+-\log_2(L(x,y)) = \begin{cases}
+\log_2\left(1+e^{-f(x)}\right)&\text{if } y=1\\
+\log_2\left(1+e^{f(x)}\right)&\text{if } y=-1
 \end{cases}
-= \log_2(1+e^{yf(x)})=:L(f(x),y).
-
-
+= \log_2(1+e^{yf(x)})=:l(f(x),y)
 $$
-Here we took base 2 logarithm since $\log_2(1+e^0)=1$ and then the loss function is on the same scale as the hinge and 0-1. Also for logistic regression you can show that if you classify according to the class with highest probability, the population minimizer is the Bayes classifier.
-
-
+Here we took base 2 logarithm since $\log_2(1+e^0)=1$ and then the loss function is on the same scale as the hinge and 0-1. Also for logistic regression you can show that if you classify according to the class with highest probability, the population minimizer is again the Bayes classifier.
 
 
 ## Support vector machines I
 
-In this section will discuss binary classification and in particular support vector machines (SVM). The approach taken here is different from the one in ISL. Our approach is easier to explain, generalizes to other method and perhaps also more modern. The approach in ESL however provides a different intuition and is also relevant when implementing the algorithms.
+In this section will discuss binary classification and in particular support vector machines (SVM). The approach taken here is different from the one in ISL. Our approach is easier to explain, generalizes to other method and perhaps also more modern. The approach in ISL however provides a different intuition and is also relevant when implementing the algorithms.
 
 <p>We are given training examples $(x_i,y_i)$, where $x_i\in \mathbb R^p$ and $y_i\in \left\{-1,1\right\}$. The equation $$
 f(x):=x^T\beta + \beta_0 = 0,
 $$
-defines hyperplane (a line in $\mathbb R^2$, a plane in $\mathbb R^3$). We are going to classify as +1 if the point is on one side of the hyperplane, $x^T\beta + \beta_0>0$, and -1 if it is on the other side, $x^T\beta + \beta_0<0$. In other words, the classification rule is
+defines hyperplane (e.g. a line in $\mathbb R^2$, a plane in $\mathbb R^3$). We are going to classify as +1 if the point is on one side of the hyperplane, $x^T\beta + \beta_0>0$, and -1 if it is on the other side, $x^T\beta + \beta_0<0$. In other words, the classification rule is
 $$
 h(x) = \text{sign}(x^T\beta + \beta_0).
 $$
-The value of $f(x_i)$ tells us how far away from the hyperplane the point is and if $y_if(x_i)>0$ the point is classified correctly. That is, if $y_if(x_i)$ is large and positive, the point $x_i$ is classified correctly and with a safe margin. If $y_if(x_i)$ is large and negative, the point is classified correctly and is far away from beeing correctly classified. We will consider the hinge loss
+The value of $f(x_i)$ tells us how far away from the hyperplane the point is and if $y_if(x_i)>0$ the point is classified correctly. That is, if $y_if(x_i)$ is large and positive, the point $x_i$ is classified correctly and with a safe margin. If $y_if(x_i)$ is large and negative, the point is classified incorrectly and is far away from beeing correctly classified. We will consider the hinge loss
 $$
 l(y,f) = (1-yf)_+ ,
 $$
-here $()_+$ indicates the positive part. We will minimize the in-sample error
+here $(\cdot)_+$ indicates the positive part. We will minimize the in-sample error
 $$
-\underset{w,b}{\text{minimize}}\quad \frac{1}{n}\sum_{i=1}^n \max(0,1-y_i(x^T\beta + \beta_0)).
+\underset{\beta_0,\beta}{\text{minimize}}\quad \frac{1}{n}\sum_{i=1}^n (1-y_if(x_i))_+.
 $$
 
 
@@ -236,8 +233,8 @@ grid$predicted <- as.factor(predict(svm.model, grid))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="04-statisticalLearning_files/figure-html/SVMlinear-1.png" alt="Training data and linear classification" width="80%" />
-<p class="caption">(\#fig:SVMlinear)Training data and linear classification</p>
+<img src="04-statisticalLearning_files/figure-html/SVMlinear-1.png" alt="Training data and linear classification with hinge loss" width="80%" />
+<p class="caption">(\#fig:SVMlinear)Training data and linear classification with hinge loss</p>
 </div>
 We can also calculate the in-sample error
 
@@ -249,7 +246,7 @@ mean(data.df$y != predict(svm.model, data.df))
 ## [1] 0.285
 ```
 
-Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m)). We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an elipsoid.
+Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m))$. We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an elipsoid.
 
 ```r
 library(kernlab)
@@ -264,8 +261,8 @@ grid$predicted <- as.factor(predict(svm.model, grid))
 
 
 <div class="figure" style="text-align: center">
-<img src="04-statisticalLearning_files/figure-html/SVMpolynomial-1.png" alt="Training data and quadratic classification" width="80%" />
-<p class="caption">(\#fig:SVMpolynomial)Training data and quadratic classification</p>
+<img src="04-statisticalLearning_files/figure-html/SVMpolynomial-1.png" alt="Training data and quadratic classification with hinge loss" width="80%" />
+<p class="caption">(\#fig:SVMpolynomial)Training data and quadratic classification with hinge loss</p>
 </div>
 This time the in-sample error is
 
@@ -296,10 +293,404 @@ for (degree in seq(1,maxDegree)) {
 }
 ```
 <div class="figure" style="text-align: center">
-<img src="04-statisticalLearning_files/figure-html/errorPlot-1.png" alt="Training data and quadratic classification" width="80%" />
-<p class="caption">(\#fig:errorPlot)Training data and quadratic classification</p>
+<img src="04-statisticalLearning_files/figure-html/errorPlot-1.png" alt="In sample error vs. degree of polynomial, using hinge loss" width="80%" />
+<p class="caption">(\#fig:errorPlot)In sample error vs. degree of polynomial, using hinge loss</p>
 </div>
 
+```
+## $y
+## [1] "In sample error"
+## 
+## attr(,"class")
+## [1] "labels"
+```
+
+```
+## List of 93
+##  $ line                      :List of 6
+##   ..$ colour       : chr "black"
+##   ..$ size         : num 0.5
+##   ..$ linetype     : num 1
+##   ..$ lineend      : chr "butt"
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+##  $ rect                      :List of 5
+##   ..$ fill         : chr "white"
+##   ..$ colour       : chr "black"
+##   ..$ size         : num 0.5
+##   ..$ linetype     : num 1
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+##  $ text                      :List of 11
+##   ..$ family       : chr ""
+##   ..$ face         : chr "plain"
+##   ..$ colour       : chr "black"
+##   ..$ size         : num 11
+##   ..$ hjust        : num 0.5
+##   ..$ vjust        : num 0.5
+##   ..$ angle        : num 0
+##   ..$ lineheight   : num 0.9
+##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ title                     : NULL
+##  $ aspect.ratio              : NULL
+##  $ axis.title                : NULL
+##  $ axis.title.x              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 2.75points 0points 0points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.title.x.top          :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 0points 2.75points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.title.x.bottom       : NULL
+##  $ axis.title.y              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : num 90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 2.75points 0points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.title.y.left         : NULL
+##  $ axis.title.y.right        :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : num -90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.75points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text                 :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : chr "grey30"
+##   ..$ size         : 'rel' num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.x               :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 2.2points 0points 0points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.x.top           :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 0points 2.2points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.x.bottom        : NULL
+##  $ axis.text.y               :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 1
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.text.y.left          : NULL
+##  $ axis.text.y.right         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.2points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ axis.ticks                : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ axis.ticks.x              : NULL
+##  $ axis.ticks.x.top          : NULL
+##  $ axis.ticks.x.bottom       : NULL
+##  $ axis.ticks.y              : NULL
+##  $ axis.ticks.y.left         : NULL
+##  $ axis.ticks.y.right        : NULL
+##  $ axis.ticks.length         : 'simpleUnit' num 2.75points
+##   ..- attr(*, "unit")= int 8
+##  $ axis.ticks.length.x       : NULL
+##  $ axis.ticks.length.x.top   : NULL
+##  $ axis.ticks.length.x.bottom: NULL
+##  $ axis.ticks.length.y       : NULL
+##  $ axis.ticks.length.y.left  : NULL
+##  $ axis.ticks.length.y.right : NULL
+##  $ axis.line                 : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ axis.line.x               : NULL
+##  $ axis.line.x.top           : NULL
+##  $ axis.line.x.bottom        : NULL
+##  $ axis.line.y               : NULL
+##  $ axis.line.y.left          : NULL
+##  $ axis.line.y.right         : NULL
+##  $ legend.background         : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ legend.margin             : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
+##   ..- attr(*, "unit")= int 8
+##  $ legend.spacing            : 'simpleUnit' num 11points
+##   ..- attr(*, "unit")= int 8
+##  $ legend.spacing.x          : NULL
+##  $ legend.spacing.y          : NULL
+##  $ legend.key                : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ legend.key.size           : 'simpleUnit' num 1.2lines
+##   ..- attr(*, "unit")= int 3
+##  $ legend.key.height         : NULL
+##  $ legend.key.width          : NULL
+##  $ legend.text               :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : 'rel' num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ legend.text.align         : NULL
+##  $ legend.title              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ legend.title.align        : NULL
+##  $ legend.position           : chr "right"
+##  $ legend.direction          : NULL
+##  $ legend.justification      : chr "center"
+##  $ legend.box                : NULL
+##  $ legend.box.just           : NULL
+##  $ legend.box.margin         : 'margin' num [1:4] 0cm 0cm 0cm 0cm
+##   ..- attr(*, "unit")= int 1
+##  $ legend.box.background     : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ legend.box.spacing        : 'simpleUnit' num 11points
+##   ..- attr(*, "unit")= int 8
+##  $ panel.background          : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ panel.border              : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ panel.spacing             : 'simpleUnit' num 5.5points
+##   ..- attr(*, "unit")= int 8
+##  $ panel.spacing.x           : NULL
+##  $ panel.spacing.y           : NULL
+##  $ panel.grid                :List of 6
+##   ..$ colour       : chr "grey92"
+##   ..$ size         : NULL
+##   ..$ linetype     : NULL
+##   ..$ lineend      : NULL
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+##  $ panel.grid.major          : NULL
+##  $ panel.grid.minor          :List of 6
+##   ..$ colour       : NULL
+##   ..$ size         : 'rel' num 0.5
+##   ..$ linetype     : NULL
+##   ..$ lineend      : NULL
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+##  $ panel.grid.major.x        : NULL
+##  $ panel.grid.major.y        : NULL
+##  $ panel.grid.minor.x        : NULL
+##  $ panel.grid.minor.y        : NULL
+##  $ panel.ontop               : logi FALSE
+##  $ plot.background           : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ plot.title                :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : 'rel' num 1.2
+##   ..$ hjust        : num 0
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 0points 5.5points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.title.position       : chr "panel"
+##  $ plot.subtitle             :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 0points 0points 5.5points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.caption              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : 'rel' num 0.8
+##   ..$ hjust        : num 1
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 5.5points 0points 0points 0points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.caption.position     : chr "panel"
+##  $ plot.tag                  :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : 'rel' num 1.2
+##   ..$ hjust        : num 0.5
+##   ..$ vjust        : num 0.5
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ plot.tag.position         : chr "topleft"
+##  $ plot.margin               : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
+##   ..- attr(*, "unit")= int 8
+##  $ strip.background          : list()
+##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+##  $ strip.background.x        : NULL
+##  $ strip.background.y        : NULL
+##  $ strip.placement           : chr "inside"
+##  $ strip.text                :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : chr "grey10"
+##   ..$ size         : 'rel' num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : 'margin' num [1:4] 4.4points 4.4points 4.4points 4.4points
+##   .. ..- attr(*, "unit")= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ strip.text.x              : NULL
+##  $ strip.text.y              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : num -90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  $ strip.switch.pad.grid     : 'simpleUnit' num 2.75points
+##   ..- attr(*, "unit")= int 8
+##  $ strip.switch.pad.wrap     : 'simpleUnit' num 2.75points
+##   ..- attr(*, "unit")= int 8
+##  $ strip.text.y.left         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : num 90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+##  - attr(*, "class")= chr [1:2] "theme" "gg"
+##  - attr(*, "complete")= logi TRUE
+##  - attr(*, "validate")= logi TRUE
+```
 
 In-sample error gets smaller as we increase the order of the polynomial. For degree 20, the in-sample error is
 
@@ -349,15 +740,18 @@ for (degree in seq(1,maxDegree)) {
 ```
 
 <div class="figure" style="text-align: center">
-<img src="04-statisticalLearning_files/figure-html/inOutSampleError-1.png" alt="Error vs. degree of polynomial." width="80%" />
-<p class="caption">(\#fig:inOutSampleError)Error vs. degree of polynomial.</p>
+<img src="04-statisticalLearning_files/figure-html/inOutSampleError-1.png" alt="Out-of-sample error vs. degree of polynomial." width="80%" />
+<p class="caption">(\#fig:inOutSampleError)Out-of-sample error vs. degree of polynomial.</p>
 </div>
-The in-sample error is decreasing as the degree of the polynomial increases, and so also the complexity of the model. When the degree is small, the in-sample error is a close approximation of the out-of-sample error, but as the degree increases the difference increases and for large degress the in-sample error provides little information about the out-of-sample error. The out-of-sample error is at first decreasing, but unlike the in-sample-error, starts increasing after degree.
+The in-sample error is decreasing as the degree of the polynomial increases, and so also the complexity of the model. When the degree is small, the in-sample error is a close approximation of the out-of-sample error, but as the degree increases the difference increases and for large degrees the in-sample error provides little information about the out-of-sample error. The out-of-sample error is at first decreasing, but unlike the in-sample-error, starts increasing after degree.
 
 In the following sections we will investigate the connection between the in-sample and out-of-sample error.
 
 
 ## Hoeffding's inequality
+
+One tool to understand the connection between the in-sample and out-of-sample error is Hoeffding's inequality. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.
+
 \BeginKnitrBlock{note}<div class="note">Hoeffding's inequality states that:
 Let $Y_1,\ldots, Y_n$ be iid with $E[Y_i]=\mu$ and $a\leq Y_i \leq b$. Then for any $\varepsilon>0$,
 $$
@@ -380,7 +774,7 @@ P\left( \left| \bar Y_n - p \right|\geq \varepsilon \right) = P\left( \bar Y_n \
 $$
 Then we use that $\exp$ is an increasing function, together with Markov's inequality, for any $t>0$,
 \begin{align}
-P\left( \bar Y_n \geq p +  \varepsilon  \right) &= P\left( \sum_{i=1}^n Y_i \geq np + n\varepsilon  \right) = P\left( e^{\sum_{i=1}^n Y_i }\geq  e^{np + n\varepsilon } \right) =  P\left( e^{t\sum_{i=1}^n Y_i }\geq  e^{tnp +t n\varepsilon } \right)\\
+P\left( \bar Y_n \geq p +  \varepsilon  \right) &= P\left( t\sum_{i=1}^n Y_i \geq tn(p + \varepsilon)  \right) = P\left( e^{t\sum_{i=1}^n Y_i }\geq  e^{tn(p +\varepsilon) } \right) \\
 &\overset{\text{Markov}}{\leq} e^{-tn(p+\varepsilon)}E\left[ e^{t\sum_{i=1}^n Y_i } \right] \overset{indep.}{=} e^{-tn(p+\varepsilon)}\prod_{n=1}^nE\left[ e^{t Y_i } \right] =  e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n.
 \end{align}
 
@@ -390,9 +784,9 @@ E\left[ e^{t Y_i } \right] = e^{t\cdot 1}P(Y_i=1) + e^{t\cdot 0}P(Y_i=0) = pe^t 
 $$
 Now we would like to show that $pe^t+1-p\leq e^{tp+t^2/8}$. Since then,
 $$
-P\left( \bar Y_n \geq p +  \varepsilon  \right) \leq e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n \leq e^{-tn(p+\varepsilon)} e^{ntp+nt^2/8} = e^{-nt\varepsilon + nt^2/8} \leq e^{2n\varepsilon^2},
+P\left( \bar Y_n \geq p +  \varepsilon  \right) \leq e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n \leq e^{-tn(p+\varepsilon)} e^{ntp+nt^2/8} = e^{-nt\varepsilon + nt^2/8} \leq e^{-2n\varepsilon^2},
 $$
-which is what we want. In the last step we used that $-nt\varepsilon + nt^2/8$ has a maximum at $t=4\varepsilon$, which is easy to check.
+which is what we want. In the last step we used that $-nt\varepsilon + nt^2/8$ has a maximum at $t=4\varepsilon$, which is easy to check. A similar argument will give that $P\left( \bar Y_n \leq p -  \varepsilon  \right)$ can be bounded in the same way and then we arrive at Hoeffding's inequality.
 
 So, we need to study $pe^t+1-p$ and $e^{tp+t^2/8}$. First note that the inequality is true if and only if
 $$
@@ -406,7 +800,7 @@ for some $0\leq \zeta \leq t.$ However $f(0)=0$ and $f'(0) = \frac{pe^0}{pe^0+1-
 $$
 f''(t) = \frac{pe^t}{pe^t+1-p} - \frac{(pe^t)^2}{(pe^t+1-p)^2} = \frac{pe^t}{pe^t+1-p}\left( 1-\frac{pe^t}{pe^t+1-p} \right) = \rho(1-\rho),
 $$
-with $\rho:= \frac{pe^t}{pe^t+1-p}.$ Now, it is easy to check that $\rho(1-\rho)\leq 1/4$ and therefore $f''(t)\leq 1/4.$ All together,
+with $\rho:= \frac{pe^t}{pe^t+1-p}.$ Now, it is easy to see that $0\leq\rho\leq 1$ therefore that  $\rho(1-\rho)\leq 1/4$ so that $f''(t)\leq 1/4.$ All together,
 $$
 f(t) = tp + f''(\zeta)\frac{t^2}{2} \leq tp + \frac{t^2}{8},
 $$
@@ -435,8 +829,8 @@ We will only consider binary classification and we will assume that there is a f
 Before looking at the data, let us choose a classification algorithm completely willy-nilly. Let us choose:
 $$
 h(x_1,x_2)=\begin{cases}
-1 \text{ if } x_1 >0,\\
-0 \text{ otherwise }.
+1 \text{ if } x_1 >0\\
+-1 \text{ o.w}.
 \end{cases}
 $$
 Now we generate some data:
@@ -502,7 +896,7 @@ error(data.test.df, h)
 ## [1] 0.3548
 ```
 
-Using Hoeffding's inequality, we can give a guarantee of the difference between the empirical risk and the generalization error. Let us review: A pair $X,Y$ is drawn from some distribution. We then apply the function $h$ and with some unkown probability we make an error on the classification, this probability is $E_{out}(h)$ and corresponds to the probability $p$ in Hoeffding. What we have is a sample of size $n$ and an estimate $E_{in}(h)$ of the probability of an error. This corresponds to $\bar Y_n$ in Hoeffding. Therefore this situation is exactly like the Bernoulli experiment from the previous section. We can say that with probability at least $1-\delta$,
+Using Hoeffding's inequality, we can give a guarantee of the difference between the in-sample and the out-of-sample error. Let us review: A pair $X,Y$ is drawn from some distribution. We then apply the function $h$ and with some probability we make an error on the classification, this probability is $E_{out}(h)$ and corresponds to the probability $p$ in Hoeffding. What we have is a sample of size $n$ and an estimate $E_{in}(h)$ of the probability of an error. This corresponds to $\bar Y_n$ in Hoeffding. Therefore this situation is exactly like the Bernoulli experiment from the previous section. We can say that with probability at least $1-\delta$,
 $$
 E_{out}(h) \leq  E_{in}(h) + \sqrt{\frac{\ln \frac{2}{\delta}}{2n}}.
 $$
@@ -517,8 +911,8 @@ error(data.df,h) + sqrt(log(2/delta)/(2*nrow(data.df)))
 ## [1] 0.5120646
 ```
 
-<p>Above we picked an $h$ without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where $h$ is chosen from some collection $\mathcal H$. Let us first consider the case where $\mathcal H$ is finite, i.e.\ there is a finite number of functions $h$ in the collection. Let this number be $|\mathcal H|$. The statement of the learning bound then becomes</p>
-\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ be finite. Then for any $\delta>0$, with probability at least $1-d$:
+<p>Above we picked an $h$ without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where $h$ is chosen from some collection $\mathcal H$. Let us first consider the case where $\mathcal H$ is finite, i.e.\ there is a finite number of functions $h$ in the collection. Call this number be $|\mathcal H|$. The statement of the learning bound then becomes</p>
+\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ be finite. Then for any $\delta>0$, with probability at least $1-\delta$:
 $$
   \forall h\in\mathcal H,\quad E_{out}(h)\leq E_{in}(h) + \sqrt{\frac{ \ln\frac{2|\mathcal H|}{\delta}}{2n}}.
 $$</div>\EndKnitrBlock{note}
@@ -531,11 +925,11 @@ The proof of this is again an application of Hoeffding. Let $h_1,\ldots,h_{|\mat
 \end{align}
 Setting this equal to $\delta$ and solving for $\varepsilon$ gives the result.
 
-Now we can handle also the case with a finite number of $h$. But there is still room for improvement. Most classifications methods will have an infinite $\mathcal H$. For example, in the example above, we would consider all different straight lines and no only $x_1 = 0$. The above argument will however not work for infinite $\mathcal H$. There is however some hope. We used that, for two events $A$ and $B$,
+Now we can handle also the case with a finite number of $h$. But there is still room for improvement. Most classifications methods will have an infinite $\mathcal H$. For example, in the example above, we would consider all different straight lines and no only $x_1 = 0$. The above argument will not work for infinite $\mathcal H$. There is however some hope. We used that, for two events $A$ and $B$,
 $$
 P(A\cup B) = P(A) + P(B) - P(A\cap B) \leq P(A) + P(B).
 $$
-But this inequality is not very tight. When $A$ and $B$ tend to happen at the same time $P(A \cup B)\approx P(A)$ and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many $h$ in $\mathcal H$ are similar, so if $\left| E_{in}(h_i) - E_{out}(h_i)  \right|>\varepsilon$ it is likely that also $\left|  E_{in}h_j) - E_{out}(h_j)  \right|>\varepsilon$.
+But this inequality is not very tight. When $A$ and $B$ tend to happen at the same time $P(A \cup B)\approx P(A)$ and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many $h$ in $\mathcal H$ are similar, so if $\left| E_{in}(h_i) - E_{out}(h_i)  \right|>\varepsilon$ it is likely that also $\left|  E_{in}(h_j) - E_{out}(h_j)  \right|>\varepsilon$.
 
 ## VC-dimension
 

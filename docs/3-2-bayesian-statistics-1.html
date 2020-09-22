@@ -256,50 +256,6 @@ where <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inl
 Figure 3.1: Density of the beta distribution
 </p>
 </div>
-<pre><code>## &lt;ggproto object: Class ScaleDiscrete, Scale, gg&gt;
-##     aesthetics: colour
-##     axis_order: function
-##     break_info: function
-##     break_positions: function
-##     breaks: waiver
-##     call: call
-##     clone: function
-##     dimension: function
-##     drop: TRUE
-##     expand: waiver
-##     get_breaks: function
-##     get_breaks_minor: function
-##     get_labels: function
-##     get_limits: function
-##     guide: legend
-##     is_discrete: function
-##     is_empty: function
-##     labels: expression
-##     limits: NULL
-##     make_sec_title: function
-##     make_title: function
-##     map: function
-##     map_df: function
-##     n.breaks.cache: NULL
-##     na.translate: TRUE
-##     na.value: NA
-##     name: waiver
-##     palette: function
-##     palette.cache: NULL
-##     position: left
-##     range: &lt;ggproto object: Class RangeDiscrete, Range, gg&gt;
-##         range: NULL
-##         reset: function
-##         train: function
-##         super:  &lt;ggproto object: Class RangeDiscrete, Range, gg&gt;
-##     rescale: function
-##     reset: function
-##     scale_name: manual
-##     train: function
-##     train_df: function
-##     transform: function
-##     transform_df: function
-##     super:  &lt;ggproto object: Class ScaleDiscrete, Scale, gg&gt;</code></pre>
 <p>We see from the figure that by changing <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> the beta prior can reflect different kinds of prior information. For example, <span class="math inline">\(\alpha = \beta = 1\)</span> is a uniform distribution, that is a prior that gives equal probability to any value of <span class="math inline">\(\theta\)</span>. On the other hand, <span class="math inline">\(\alpha =3\)</span>, <span class="math inline">\(\beta = 2\)</span> gives small probability to <span class="math inline">\(\theta\)</span> close to 0 and 1 and puts more probability to <span class="math inline">\(\theta&gt;0.5\)</span> than <span class="math inline">\(\theta &lt; 0.5\)</span>.</p>
 <p>Now let us calculate the posterior distribution of <span class="math inline">\(\theta\)</span> after observing <span class="math inline">\(x=(x_1,\ldots, x_n)\)</span>. First we need the likelihood of the observation
 <span class="math display">\[

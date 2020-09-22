@@ -46,7 +46,7 @@ p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
 $$
 \BeginKnitrBlock{note}<div class="note">The *posterior risk* is then defined as
 $$
-\rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
+\rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x)) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
 $$</div>\EndKnitrBlock{note}
 Here the random quantity is $\theta$ while the data $x$ is held constant. The *Bayes action* $\delta^\star$ is the decision $\delta$ that minimizes the posterior risk. For example, if the decision is a point estimate of $\theta$ and $l(\theta,\delta) = (\theta - \delta)^2$. Then
 \begin{align}
@@ -115,53 +115,6 @@ $$
 <img src="03-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
 <p class="caption">(\#fig:betaDist)Density of the beta distribution</p>
 </div>
-
-```
-## <ggproto object: Class ScaleDiscrete, Scale, gg>
-##     aesthetics: colour
-##     axis_order: function
-##     break_info: function
-##     break_positions: function
-##     breaks: waiver
-##     call: call
-##     clone: function
-##     dimension: function
-##     drop: TRUE
-##     expand: waiver
-##     get_breaks: function
-##     get_breaks_minor: function
-##     get_labels: function
-##     get_limits: function
-##     guide: legend
-##     is_discrete: function
-##     is_empty: function
-##     labels: expression
-##     limits: NULL
-##     make_sec_title: function
-##     make_title: function
-##     map: function
-##     map_df: function
-##     n.breaks.cache: NULL
-##     na.translate: TRUE
-##     na.value: NA
-##     name: waiver
-##     palette: function
-##     palette.cache: NULL
-##     position: left
-##     range: <ggproto object: Class RangeDiscrete, Range, gg>
-##         range: NULL
-##         reset: function
-##         train: function
-##         super:  <ggproto object: Class RangeDiscrete, Range, gg>
-##     rescale: function
-##     reset: function
-##     scale_name: manual
-##     train: function
-##     train_df: function
-##     transform: function
-##     transform_df: function
-##     super:  <ggproto object: Class ScaleDiscrete, Scale, gg>
-```
 We see from the figure that by changing $\alpha$ and $\beta$ the beta prior can reflect different kinds of prior information. For example, $\alpha = \beta = 1$ is a uniform distribution, that is a prior that gives equal probability to any value of $\theta$. On the other hand, $\alpha =3$, $\beta = 2$ gives small probability to $\theta$ close to 0 and 1 and puts more probability to $\theta>0.5$ than $\theta < 0.5$.
 
 Now let us calculate the posterior distribution of $\theta$ after observing $x=(x_1,\ldots, x_n)$. First we need the likelihood of the observation

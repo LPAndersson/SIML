@@ -213,32 +213,32 @@ The parameter that we are interested in is <span class="math inline">\(\tau:=\th
 p(\theta_1,\theta_2\mid x) \propto L(\theta_1,\theta_2) \propto \theta_1^{x_1}(1-\theta_1)^{n_1-x_1}\theta_2^{x_2}(1-\theta_2)^{n_2-x_2}.
 \]</span>
 Note that <span class="math inline">\(\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)\)</span> is independent of <span class="math inline">\(\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).\)</span> Therefore we can simulate from <span class="math inline">\(\tau\mid x\)</span> by drawing <span class="math inline">\(\theta_1^\star\)</span> and <span class="math inline">\(\theta_2^\star\)</span> from the respective distribution and setting <span class="math inline">\(\tau^\star = \theta_2^\star - \theta_1^\star\)</span>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(latex2exp)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">n1 &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">n2 &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">theta1 &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">theta2 &lt;-<span class="st"> </span><span class="fl">0.3</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">nPost &lt;-<span class="st"> </span><span class="dv">2000</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#Generate data</span></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">x1 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n1, <span class="dt">prob =</span> theta1)</a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">x2 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n2, <span class="dt">prob =</span> theta2)</a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#Posterior for theta</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17">theta1.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x1<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n1<span class="op">-</span>x1<span class="op">+</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb2-18" data-line-number="18">theta2.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x2<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n2<span class="op">-</span>x2<span class="op">+</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20">tau.post &lt;-<span class="st"> </span>theta2.post <span class="op">-</span><span class="st"> </span>theta1.post</a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(tau.post), <span class="kw">aes</span>(<span class="dt">x=</span>tau.post)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y=</span>..density..), <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="st"> </span><span class="kw">geom_density</span>(<span class="dt">alpha=</span>.<span class="dv">2</span>, <span class="dt">fill=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="st">  </span><span class="kw">xlab</span>(<span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">tau$&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(latex2exp)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">n1 &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">n2 &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">theta1 &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">theta2 &lt;-<span class="st"> </span><span class="fl">0.3</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">nPost &lt;-<span class="st"> </span><span class="dv">2000</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#Generate data</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">x1 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n1, <span class="dt">prob =</span> theta1)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">x2 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n2, <span class="dt">prob =</span> theta2)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#Posterior for theta</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">theta1.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x1<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n1<span class="op">-</span>x1<span class="op">+</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">theta2.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x2<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n2<span class="op">-</span>x2<span class="op">+</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20">tau.post &lt;-<span class="st"> </span>theta2.post <span class="op">-</span><span class="st"> </span>theta1.post</a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(tau.post), <span class="kw">aes</span>(<span class="dt">x=</span>tau.post)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y=</span>..density..), <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="st"> </span><span class="kw">geom_density</span>(<span class="dt">alpha=</span>.<span class="dv">2</span>, <span class="dt">fill=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="st">  </span><span class="kw">xlab</span>(<span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">tau$&quot;</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:multiParameterExample"></span>
 <img src="03-bayesian_files/figure-html/multiParameterExample-1.png" alt="Posterior distribution" width="80%" />
 <p class="caption">

@@ -158,7 +158,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
@@ -216,68 +216,68 @@ and we are thus to choose the parameters <span class="math inline">\(\beta_1,\ld
 \hat\beta = (x^Tx)^{-1}x^Ty.
 \]</span>
 As we have seen, we may specify some function <span class="math inline">\(\varphi_i\)</span> and use <span class="math inline">\(\varphi_1(x),\ldots,\varphi_M(x)\)</span> to predict <span class="math inline">\(y\)</span> and we are still in the case of linear regression. However we need to be careful not to overfit. Let us see a simple example were <span class="math inline">\(\varphi\)</span> are polynomials. First we construct the functions that will generate our data:</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb121-2" data-line-number="2"><span class="kw">library</span>(gridExtra)</a>
-<a class="sourceLine" id="cb121-3" data-line-number="3"><span class="kw">library</span>(resample)</a>
-<a class="sourceLine" id="cb121-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb121-5" data-line-number="5">gen_data &lt;-<span class="st"> </span><span class="cf">function</span>(truth, <span class="dt">n.obs =</span> <span class="dv">100</span>) {</a>
-<a class="sourceLine" id="cb121-6" data-line-number="6">  x &lt;-<span class="st"> </span><span class="kw">runif</span>(n.obs, <span class="dt">min =</span> <span class="dv">-2</span>, <span class="dt">max =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb121-7" data-line-number="7">  y &lt;-<span class="st"> </span><span class="kw">truth</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n.obs) <span class="op">*</span><span class="st"> </span><span class="fl">0.4</span></a>
-<a class="sourceLine" id="cb121-8" data-line-number="8">  data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y =</span> y, <span class="dt">x =</span> x)</a>
-<a class="sourceLine" id="cb121-9" data-line-number="9">}</a>
-<a class="sourceLine" id="cb121-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb121-11" data-line-number="11">truth &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb121-12" data-line-number="12">  <span class="kw">sin</span>(x <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>x</a>
-<a class="sourceLine" id="cb121-13" data-line-number="13">}</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">library</span>(gridExtra)</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="kw">library</span>(resample)</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">gen_data &lt;-<span class="st"> </span><span class="cf">function</span>(truth, <span class="dt">n.obs =</span> <span class="dv">100</span>) {</a>
+<a class="sourceLine" id="cb21-6" data-line-number="6">  x &lt;-<span class="st"> </span><span class="kw">runif</span>(n.obs, <span class="dt">min =</span> <span class="dv">-2</span>, <span class="dt">max =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb21-7" data-line-number="7">  y &lt;-<span class="st"> </span><span class="kw">truth</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n.obs) <span class="op">*</span><span class="st"> </span><span class="fl">0.4</span></a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">  data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y =</span> y, <span class="dt">x =</span> x)</a>
+<a class="sourceLine" id="cb21-9" data-line-number="9">}</a>
+<a class="sourceLine" id="cb21-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb21-11" data-line-number="11">truth &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb21-12" data-line-number="12">  <span class="kw">sin</span>(x <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>x</a>
+<a class="sourceLine" id="cb21-13" data-line-number="13">}</a></code></pre></div>
 <p>For conveniance, we write a function that fits three different polynomial regressions and returns the plot.</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1">fit_plot &lt;-<span class="st"> </span><span class="cf">function</span>(){</a>
-<a class="sourceLine" id="cb122-2" data-line-number="2">  data.train.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</a>
-<a class="sourceLine" id="cb122-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb122-4" data-line-number="4">  x.grid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">0.01</span>)</a>
-<a class="sourceLine" id="cb122-5" data-line-number="5">  x.grid.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x.grid)</a>
-<a class="sourceLine" id="cb122-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb122-7" data-line-number="7">  fit1 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">2</span>), data.train.df),</a>
-<a class="sourceLine" id="cb122-8" data-line-number="8">                  x.grid.df)</a>
-<a class="sourceLine" id="cb122-9" data-line-number="9">  fit2 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">6</span>), data.train.df),</a>
-<a class="sourceLine" id="cb122-10" data-line-number="10">                  x.grid.df)</a>
-<a class="sourceLine" id="cb122-11" data-line-number="11">  fit3 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">20</span>), data.train.df),</a>
-<a class="sourceLine" id="cb122-12" data-line-number="12">                  x.grid.df)</a>
-<a class="sourceLine" id="cb122-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb122-14" data-line-number="14">  cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
-<a class="sourceLine" id="cb122-15" data-line-number="15">            <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
-<a class="sourceLine" id="cb122-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb122-17" data-line-number="17">  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(</a>
-<a class="sourceLine" id="cb122-18" data-line-number="18">    <span class="dt">x =</span> x.grid,</a>
-<a class="sourceLine" id="cb122-19" data-line-number="19">    <span class="dt">fit1 =</span> fit1,</a>
-<a class="sourceLine" id="cb122-20" data-line-number="20">    <span class="dt">fit2 =</span> fit2,</a>
-<a class="sourceLine" id="cb122-21" data-line-number="21">    <span class="dt">fit3 =</span> fit3</a>
-<a class="sourceLine" id="cb122-22" data-line-number="22">  )) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-23" data-line-number="23"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit1, <span class="dt">color =</span> <span class="st">&quot;1&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-24" data-line-number="24"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit2, <span class="dt">color =</span> <span class="st">&quot;2&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-25" data-line-number="25"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit3, <span class="dt">color =</span> <span class="st">&quot;3&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-26" data-line-number="26"><span class="st">    </span><span class="kw">scale_colour_manual</span>(</a>
-<a class="sourceLine" id="cb122-27" data-line-number="27">      <span class="dt">name =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb122-28" data-line-number="28">      <span class="dt">values =</span> <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb122-29" data-line-number="29">        <span class="st">&quot;train&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">1</span>],</a>
-<a class="sourceLine" id="cb122-30" data-line-number="30">        <span class="st">&quot;1&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">2</span>],</a>
-<a class="sourceLine" id="cb122-31" data-line-number="31">        <span class="st">&quot;2&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">3</span>],</a>
-<a class="sourceLine" id="cb122-32" data-line-number="32">        <span class="st">&quot;3&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">4</span>]</a>
-<a class="sourceLine" id="cb122-33" data-line-number="33">      ),</a>
-<a class="sourceLine" id="cb122-34" data-line-number="34">      <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;1&quot;</span> =<span class="st"> &quot;1st degree&quot;</span>, <span class="st">&quot;2&quot;</span> =<span class="st"> &quot;6th degree&quot;</span>, <span class="st">&quot;3&quot;</span> =<span class="st"> &quot;20th degree&quot;</span>)</a>
-<a class="sourceLine" id="cb122-35" data-line-number="35">    ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-36" data-line-number="36"><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">color =</span> <span class="st">&quot;train&quot;</span>),</a>
-<a class="sourceLine" id="cb122-37" data-line-number="37">               <span class="dt">data =</span> data.train.df,</a>
-<a class="sourceLine" id="cb122-38" data-line-number="38">               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-39" data-line-number="39"><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-40" data-line-number="40"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">2</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb122-41" data-line-number="41"><span class="st">    </span><span class="kw">theme_minimal</span>()</a>
-<a class="sourceLine" id="cb122-42" data-line-number="42"></a>
-<a class="sourceLine" id="cb122-43" data-line-number="43">  p</a>
-<a class="sourceLine" id="cb122-44" data-line-number="44">}</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">fit_plot &lt;-<span class="st"> </span><span class="cf">function</span>(){</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">  data.train.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">  x.grid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">0.01</span>)</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">  x.grid.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x.grid)</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb22-7" data-line-number="7">  fit1 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">2</span>), data.train.df),</a>
+<a class="sourceLine" id="cb22-8" data-line-number="8">                  x.grid.df)</a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">  fit2 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">6</span>), data.train.df),</a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">                  x.grid.df)</a>
+<a class="sourceLine" id="cb22-11" data-line-number="11">  fit3 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">20</span>), data.train.df),</a>
+<a class="sourceLine" id="cb22-12" data-line-number="12">                  x.grid.df)</a>
+<a class="sourceLine" id="cb22-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb22-14" data-line-number="14">  cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
+<a class="sourceLine" id="cb22-15" data-line-number="15">            <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
+<a class="sourceLine" id="cb22-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb22-17" data-line-number="17">  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb22-18" data-line-number="18">    <span class="dt">x =</span> x.grid,</a>
+<a class="sourceLine" id="cb22-19" data-line-number="19">    <span class="dt">fit1 =</span> fit1,</a>
+<a class="sourceLine" id="cb22-20" data-line-number="20">    <span class="dt">fit2 =</span> fit2,</a>
+<a class="sourceLine" id="cb22-21" data-line-number="21">    <span class="dt">fit3 =</span> fit3</a>
+<a class="sourceLine" id="cb22-22" data-line-number="22">  )) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-23" data-line-number="23"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit1, <span class="dt">color =</span> <span class="st">&quot;1&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-24" data-line-number="24"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit2, <span class="dt">color =</span> <span class="st">&quot;2&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-25" data-line-number="25"><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit3, <span class="dt">color =</span> <span class="st">&quot;3&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-26" data-line-number="26"><span class="st">    </span><span class="kw">scale_colour_manual</span>(</a>
+<a class="sourceLine" id="cb22-27" data-line-number="27">      <span class="dt">name =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb22-28" data-line-number="28">      <span class="dt">values =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb22-29" data-line-number="29">        <span class="st">&quot;train&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">1</span>],</a>
+<a class="sourceLine" id="cb22-30" data-line-number="30">        <span class="st">&quot;1&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">2</span>],</a>
+<a class="sourceLine" id="cb22-31" data-line-number="31">        <span class="st">&quot;2&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">3</span>],</a>
+<a class="sourceLine" id="cb22-32" data-line-number="32">        <span class="st">&quot;3&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb22-33" data-line-number="33">      ),</a>
+<a class="sourceLine" id="cb22-34" data-line-number="34">      <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;1&quot;</span> =<span class="st"> &quot;1st degree&quot;</span>, <span class="st">&quot;2&quot;</span> =<span class="st"> &quot;6th degree&quot;</span>, <span class="st">&quot;3&quot;</span> =<span class="st"> &quot;20th degree&quot;</span>)</a>
+<a class="sourceLine" id="cb22-35" data-line-number="35">    ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-36" data-line-number="36"><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">color =</span> <span class="st">&quot;train&quot;</span>),</a>
+<a class="sourceLine" id="cb22-37" data-line-number="37">               <span class="dt">data =</span> data.train.df,</a>
+<a class="sourceLine" id="cb22-38" data-line-number="38">               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-39" data-line-number="39"><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-40" data-line-number="40"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">2</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-41" data-line-number="41"><span class="st">    </span><span class="kw">theme_minimal</span>()</a>
+<a class="sourceLine" id="cb22-42" data-line-number="42"></a>
+<a class="sourceLine" id="cb22-43" data-line-number="43">  p</a>
+<a class="sourceLine" id="cb22-44" data-line-number="44">}</a></code></pre></div>
 <p>Next we fit the polynomial models to four different training sets, generated from the same distribution.</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb123-2" data-line-number="2"><span class="kw">grid.arrange</span>(<span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(),</a>
-<a class="sourceLine" id="cb123-3" data-line-number="3">             <span class="dt">nrow =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">grid.arrange</span>(<span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(),</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">             <span class="dt">nrow =</span> <span class="dv">2</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:4fits"></span>
 <img src="04-statisticalLearning_files/figure-html/4fits-1.png" alt="Polynomial fits to four different sets of training data, sampled from teh same distribution" width="80%" />
 <p class="caption">
@@ -316,15 +316,15 @@ E_{in} + \lambda\sum_{i=1}^p | \beta_j |.
 \]</span>
 Here <span class="math inline">\(\lambda\)</span> is a tuning parameter that needs to be determined seperately. Ridge regression and lasso uses different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of <span class="math inline">\(\beta_j\)</span> will be smaller in ridge and lasso. I.e. the estimates will shrink towards zero. These methods are therefore sometimes called shrinkage methods. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.</p>
 <p>Let us look at the same example above, this time with a degree 20 polynomial, but penalized with ridge and lasso.</p>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb124-2" data-line-number="2"><span class="kw">library</span>(gridExtra)</a>
-<a class="sourceLine" id="cb124-3" data-line-number="3"><span class="kw">library</span>(glmnet)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw">library</span>(gridExtra)</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="kw">library</span>(glmnet)</a></code></pre></div>
 <pre><code>## Loading required package: Matrix</code></pre>
 <pre><code>## Loaded glmnet 4.0-2</code></pre>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1">data.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</a>
-<a class="sourceLine" id="cb127-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb127-3" data-line-number="3">model.ridge &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">0</span> )</a>
-<a class="sourceLine" id="cb127-4" data-line-number="4">model.lasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">1</span> )</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">data.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">model.ridge &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">0</span> )</a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">model.lasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">1</span> )</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ridge"></span>
 <img src="04-statisticalLearning_files/figure-html/ridge-1.png" alt="Coefficents as lambda is varied for ridge regression" width="80%" />
 <p class="caption">

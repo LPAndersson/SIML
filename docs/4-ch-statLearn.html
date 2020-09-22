@@ -158,7 +158,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
@@ -214,11 +214,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 E\left[ f(X,Y)\right] = \int f(x,y)p_{X,Y}(x,y)dxdy.
 \]</span>
 There is also a loss function <span class="math inline">\(l:\mathcal Y \times \mathcal Y \mapsto \mathbb R\)</span> that tells how close two points in <span class="math inline">\(\mathcal Y\)</span> are to each other.</p>
-<p>The problem in statistical learning is to find a function <span class="math inline">\(h:\mathcal X \mapsto \mathcal Y\)</span> that takes an input <span class="math inline">\(x\in \mathcal X\)</span> and gives and ouput <span class="math inline">\(y\in\mathcal Y\)</span>. The function should be such that its out-of-sample error is small:
-<span class="math display">\[E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
+The problem in statistical learning is to find a function <span class="math inline">\(h:\mathcal X \mapsto \mathcal Y\)</span> that takes an input <span class="math inline">\(x\in \mathcal X\)</span> and gives and ouput <span class="math inline">\(y\in\mathcal Y\)</span>. The function should be such that its out-of-sample error is small:
+
+<div class="note">
+<span class="math display">\[
+E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
 \]</span>
-This tells us how the function <span class="math inline">\(h\)</span> performs on average. We would like to choose the function <span class="math inline">\(h\)</span> so that this error is as small as possible. The fundamental problem of learning is that the distribution of <span class="math inline">\(X,Y\)</span> is unknown and so direct minimization of <span class="math inline">\(E_{out}\)</span> is not possible.</p>
-<p>Methods statistical learning can be partitioned in various ways. The two main ways is in supervised and unsupervised learning. In supervised learning we are given a set of <span class="math inline">\(n\)</span> examples <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span> and the task is to predict <span class="math inline">\(y\)</span> for a previously unseen point <span class="math inline">\(x\)</span>. In unsupervised learning we are only given <span class="math inline">\(x_1,\ldots, x_n\)</span> and the goal is to describe the associations and patterns among a set of input measures. A third scenario is reinforcement learning, that we will not cover in this course.</p>
+</div>
+
+<p>This tells us how the function <span class="math inline">\(h\)</span> performs on average. We would like to choose the function <span class="math inline">\(h\)</span> so that this error is as small as possible. The fundamental problem of learning is that the distribution of <span class="math inline">\(X,Y\)</span> is unknown and so direct minimization of <span class="math inline">\(E_{out}\)</span> is not possible.</p>
+<p>Methods in statistical learning can be partitioned in various ways. The two main ways is in supervised and unsupervised learning. In supervised learning we are given a set of <span class="math inline">\(n\)</span> examples <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span> and the task is to predict <span class="math inline">\(y\)</span> for a previously unseen point <span class="math inline">\(x\)</span>. In unsupervised learning we are only given <span class="math inline">\(x_1,\ldots, x_n\)</span> and the goal is to describe the associations and patterns among a set of input measures. A third scenario is <a href="https://en.wikipedia.org/wiki/Reinforcement_learning">reinforcement learning</a>, that we will not cover in this course.</p>
 <p>In supervised learning the two main tasks are classification and regression. In classification the task is to assign a class to each item. In the terms we defined above, <span class="math inline">\(\mathcal X = \mathbb R^d\)</span> and if it is binary classification <span class="math inline">\(\mathcal Y = \{-1,1\}\)</span>. Many times the loss is taken to be the 0-1 loss, <span class="math inline">\(l(y_1,y_2)=1(y_1\neq y_2)\)</span>.</p>
 <p>In regression the task is to predict a real value for each item, that is <span class="math inline">\(\mathcal X = \mathbb R^d\)</span>, <span class="math inline">\(\mathcal Y = \mathbb R\)</span>. Many times in regression the squared error is used, <span class="math inline">\(l(y_1,y_2)=(y_1-y_2)^2\)</span>.</p>
 </div>

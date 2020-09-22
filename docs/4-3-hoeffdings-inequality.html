@@ -158,7 +158,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
@@ -202,6 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="hoeffdings-inequality" class="section level2">
 <h2><span class="header-section-number">4.3</span> Hoeffding’s inequality</h2>
+<p>One tool to understand the connection between the in-sample and out-of-sample error is Hoeffding’s inequality. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.</p>
 
 <div class="note">
 Hoeffding’s inequality states that:
@@ -227,7 +228,7 @@ P\left( \left| \bar Y_n - p \right|\geq \varepsilon \right) = P\left( \bar Y_n \
 \]</span>
 Then we use that <span class="math inline">\(\exp\)</span> is an increasing function, together with Markov’s inequality, for any <span class="math inline">\(t&gt;0\)</span>,
 <span class="math display">\[\begin{align}
-P\left( \bar Y_n \geq p +  \varepsilon  \right) &amp;= P\left( \sum_{i=1}^n Y_i \geq np + n\varepsilon  \right) = P\left( e^{\sum_{i=1}^n Y_i }\geq  e^{np + n\varepsilon } \right) =  P\left( e^{t\sum_{i=1}^n Y_i }\geq  e^{tnp +t n\varepsilon } \right)\\
+P\left( \bar Y_n \geq p +  \varepsilon  \right) &amp;= P\left( t\sum_{i=1}^n Y_i \geq tn(p + \varepsilon)  \right) = P\left( e^{t\sum_{i=1}^n Y_i }\geq  e^{tn(p +\varepsilon) } \right) \\
 &amp;\overset{\text{Markov}}{\leq} e^{-tn(p+\varepsilon)}E\left[ e^{t\sum_{i=1}^n Y_i } \right] \overset{indep.}{=} e^{-tn(p+\varepsilon)}\prod_{n=1}^nE\left[ e^{t Y_i } \right] =  e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n.
 \end{align}\]</span></p>
 <p>Now we need to bound the last expression. Since <span class="math inline">\(Y_i\)</span> is Bernoulli,
@@ -236,9 +237,9 @@ E\left[ e^{t Y_i } \right] = e^{t\cdot 1}P(Y_i=1) + e^{t\cdot 0}P(Y_i=0) = pe^t 
 \]</span>
 Now we would like to show that <span class="math inline">\(pe^t+1-p\leq e^{tp+t^2/8}\)</span>. Since then,
 <span class="math display">\[
-P\left( \bar Y_n \geq p +  \varepsilon  \right) \leq e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n \leq e^{-tn(p+\varepsilon)} e^{ntp+nt^2/8} = e^{-nt\varepsilon + nt^2/8} \leq e^{2n\varepsilon^2},
+P\left( \bar Y_n \geq p +  \varepsilon  \right) \leq e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n \leq e^{-tn(p+\varepsilon)} e^{ntp+nt^2/8} = e^{-nt\varepsilon + nt^2/8} \leq e^{-2n\varepsilon^2},
 \]</span>
-which is what we want. In the last step we used that <span class="math inline">\(-nt\varepsilon + nt^2/8\)</span> has a maximum at <span class="math inline">\(t=4\varepsilon\)</span>, which is easy to check.</p>
+which is what we want. In the last step we used that <span class="math inline">\(-nt\varepsilon + nt^2/8\)</span> has a maximum at <span class="math inline">\(t=4\varepsilon\)</span>, which is easy to check. A similar argument will give that <span class="math inline">\(P\left( \bar Y_n \leq p - \varepsilon \right)\)</span> can be bounded in the same way and then we arrive at Hoeffding’s inequality.</p>
 <p>So, we need to study <span class="math inline">\(pe^t+1-p\)</span> and <span class="math inline">\(e^{tp+t^2/8}\)</span>. First note that the inequality is true if and only if
 <span class="math display">\[
 f(t):=\ln (pe^t+1-p) \leq tp+t^2/8,
@@ -251,7 +252,7 @@ for some <span class="math inline">\(0\leq \zeta \leq t.\)</span> However <span 
 <span class="math display">\[
 f&#39;&#39;(t) = \frac{pe^t}{pe^t+1-p} - \frac{(pe^t)^2}{(pe^t+1-p)^2} = \frac{pe^t}{pe^t+1-p}\left( 1-\frac{pe^t}{pe^t+1-p} \right) = \rho(1-\rho),
 \]</span>
-with <span class="math inline">\(\rho:= \frac{pe^t}{pe^t+1-p}.\)</span> Now, it is easy to check that <span class="math inline">\(\rho(1-\rho)\leq 1/4\)</span> and therefore <span class="math inline">\(f&#39;&#39;(t)\leq 1/4.\)</span> All together,
+with <span class="math inline">\(\rho:= \frac{pe^t}{pe^t+1-p}.\)</span> Now, it is easy to see that <span class="math inline">\(0\leq\rho\leq 1\)</span> therefore that <span class="math inline">\(\rho(1-\rho)\leq 1/4\)</span> so that <span class="math inline">\(f&#39;&#39;(t)\leq 1/4.\)</span> All together,
 <span class="math display">\[
 f(t) = tp + f&#39;&#39;(\zeta)\frac{t^2}{2} \leq tp + \frac{t^2}{8},
 \]</span>

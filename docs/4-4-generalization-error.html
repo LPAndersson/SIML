@@ -158,7 +158,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
@@ -207,8 +207,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Before looking at the data, let us choose a classification algorithm completely willy-nilly. Let us choose:
 <span class="math display">\[
 h(x_1,x_2)=\begin{cases}
-1 \text{ if } x_1 &gt;0,\\
-0 \text{ otherwise }.
+1 \text{ if } x_1 &gt;0\\
+-1 \text{ o.w}.
 \end{cases}
 \]</span>
 Now we generate some data:
@@ -219,64 +219,64 @@ Figure 4.8: Training data and classification rule
 </p>
 </div>
 <p>We can now calculate the in-sample error:</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1">H &lt;-<span class="st"> </span><span class="cf">function</span>(a,b){</a>
-<a class="sourceLine" id="cb114-2" data-line-number="2">  <span class="cf">function</span>(x1,x2){</a>
-<a class="sourceLine" id="cb114-3" data-line-number="3">    <span class="cf">if</span>(a<span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span>b<span class="op">*</span>x2 <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="st">&quot;1&quot;</span></a>
-<a class="sourceLine" id="cb114-4" data-line-number="4">    <span class="cf">else</span> <span class="st">&quot;-1&quot;</span></a>
-<a class="sourceLine" id="cb114-5" data-line-number="5">  }</a>
-<a class="sourceLine" id="cb114-6" data-line-number="6">}</a>
-<a class="sourceLine" id="cb114-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb114-8" data-line-number="8">h &lt;-<span class="st"> </span><span class="kw">H</span>(<span class="dv">1</span>,<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb114-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb114-10" data-line-number="10">error &lt;-<span class="st"> </span><span class="cf">function</span>(data, classifier){</a>
-<a class="sourceLine" id="cb114-11" data-line-number="11">  missClass &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb114-12" data-line-number="12">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</a>
-<a class="sourceLine" id="cb114-13" data-line-number="13">    x1 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x1</a>
-<a class="sourceLine" id="cb114-14" data-line-number="14">    x2 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x2</a>
-<a class="sourceLine" id="cb114-15" data-line-number="15">    y &lt;-data[i,]<span class="op">$</span>y</a>
-<a class="sourceLine" id="cb114-16" data-line-number="16">    <span class="cf">if</span>(<span class="kw">classifier</span>(x1,x2) <span class="op">!=</span><span class="st"> </span>y )</a>
-<a class="sourceLine" id="cb114-17" data-line-number="17">      missClass &lt;-<span class="st"> </span>missClass <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb114-18" data-line-number="18">  }</a>
-<a class="sourceLine" id="cb114-19" data-line-number="19">  missClass<span class="op">/</span><span class="kw">nrow</span>(data)</a>
-<a class="sourceLine" id="cb114-20" data-line-number="20">}</a>
-<a class="sourceLine" id="cb114-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb114-22" data-line-number="22"><span class="kw">error</span>(data.df, h)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">H &lt;-<span class="st"> </span><span class="cf">function</span>(a,b){</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">  <span class="cf">function</span>(x1,x2){</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">    <span class="cf">if</span>(a<span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span>b<span class="op">*</span>x2 <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="st">&quot;1&quot;</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">    <span class="cf">else</span> <span class="st">&quot;-1&quot;</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">  }</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">h &lt;-<span class="st"> </span><span class="kw">H</span>(<span class="dv">1</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">error &lt;-<span class="st"> </span><span class="cf">function</span>(data, classifier){</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11">  missClass &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">    x1 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x1</a>
+<a class="sourceLine" id="cb14-14" data-line-number="14">    x2 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x2</a>
+<a class="sourceLine" id="cb14-15" data-line-number="15">    y &lt;-data[i,]<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb14-16" data-line-number="16">    <span class="cf">if</span>(<span class="kw">classifier</span>(x1,x2) <span class="op">!=</span><span class="st"> </span>y )</a>
+<a class="sourceLine" id="cb14-17" data-line-number="17">      missClass &lt;-<span class="st"> </span>missClass <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb14-18" data-line-number="18">  }</a>
+<a class="sourceLine" id="cb14-19" data-line-number="19">  missClass<span class="op">/</span><span class="kw">nrow</span>(data)</a>
+<a class="sourceLine" id="cb14-20" data-line-number="20">}</a>
+<a class="sourceLine" id="cb14-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb14-22" data-line-number="22"><span class="kw">error</span>(data.df, h)</a></code></pre></div>
 <pre><code>## [1] 0.32</code></pre>
 <p>In this case, <span class="math inline">\(h\)</span> is not a function of the training data so the in-sample error is an unbiased estimate of the out-of-sample error. Since we know the distribution of <span class="math inline">\(X,Y\)</span> we can calculate the out-of-sample error by simulation.</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1">n.samples &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
-<a class="sourceLine" id="cb116-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb116-3" data-line-number="3">data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb116-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb116-5" data-line-number="5"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</a>
-<a class="sourceLine" id="cb116-6" data-line-number="6">  <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>)<span class="op">&gt;</span><span class="fl">0.5</span>) {</a>
-<a class="sourceLine" id="cb116-7" data-line-number="7">    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.p, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.p))</a>
-<a class="sourceLine" id="cb116-8" data-line-number="8">    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb116-9" data-line-number="9">  }</a>
-<a class="sourceLine" id="cb116-10" data-line-number="10">  <span class="cf">else</span>{</a>
-<a class="sourceLine" id="cb116-11" data-line-number="11">    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.n, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.n))</a>
-<a class="sourceLine" id="cb116-12" data-line-number="12">    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</a>
-<a class="sourceLine" id="cb116-13" data-line-number="13">  }</a>
-<a class="sourceLine" id="cb116-14" data-line-number="14">}</a>
-<a class="sourceLine" id="cb116-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb116-16" data-line-number="16">data.test.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</a>
-<a class="sourceLine" id="cb116-17" data-line-number="17"><span class="kw">colnames</span>(data.test.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</a>
-<a class="sourceLine" id="cb116-18" data-line-number="18">data.test.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.test.df<span class="op">$</span>y)</a>
-<a class="sourceLine" id="cb116-19" data-line-number="19"><span class="kw">error</span>(data.test.df, h)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">n.samples &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</a>
+<a class="sourceLine" id="cb16-6" data-line-number="6">  <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>)<span class="op">&gt;</span><span class="fl">0.5</span>) {</a>
+<a class="sourceLine" id="cb16-7" data-line-number="7">    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.p, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.p))</a>
+<a class="sourceLine" id="cb16-8" data-line-number="8">    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb16-9" data-line-number="9">  }</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10">  <span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb16-11" data-line-number="11">    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.n, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.n))</a>
+<a class="sourceLine" id="cb16-12" data-line-number="12">    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb16-13" data-line-number="13">  }</a>
+<a class="sourceLine" id="cb16-14" data-line-number="14">}</a>
+<a class="sourceLine" id="cb16-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb16-16" data-line-number="16">data.test.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</a>
+<a class="sourceLine" id="cb16-17" data-line-number="17"><span class="kw">colnames</span>(data.test.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</a>
+<a class="sourceLine" id="cb16-18" data-line-number="18">data.test.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.test.df<span class="op">$</span>y)</a>
+<a class="sourceLine" id="cb16-19" data-line-number="19"><span class="kw">error</span>(data.test.df, h)</a></code></pre></div>
 <pre><code>## [1] 0.3548</code></pre>
-<p>Using Hoeffding’s inequality, we can give a guarantee of the difference between the empirical risk and the generalization error. Let us review: A pair <span class="math inline">\(X,Y\)</span> is drawn from some distribution. We then apply the function <span class="math inline">\(h\)</span> and with some unkown probability we make an error on the classification, this probability is <span class="math inline">\(E_{out}(h)\)</span> and corresponds to the probability <span class="math inline">\(p\)</span> in Hoeffding. What we have is a sample of size <span class="math inline">\(n\)</span> and an estimate <span class="math inline">\(E_{in}(h)\)</span> of the probability of an error. This corresponds to <span class="math inline">\(\bar Y_n\)</span> in Hoeffding. Therefore this situation is exactly like the Bernoulli experiment from the previous section. We can say that with probability at least <span class="math inline">\(1-\delta\)</span>,
+<p>Using Hoeffding’s inequality, we can give a guarantee of the difference between the in-sample and the out-of-sample error. Let us review: A pair <span class="math inline">\(X,Y\)</span> is drawn from some distribution. We then apply the function <span class="math inline">\(h\)</span> and with some probability we make an error on the classification, this probability is <span class="math inline">\(E_{out}(h)\)</span> and corresponds to the probability <span class="math inline">\(p\)</span> in Hoeffding. What we have is a sample of size <span class="math inline">\(n\)</span> and an estimate <span class="math inline">\(E_{in}(h)\)</span> of the probability of an error. This corresponds to <span class="math inline">\(\bar Y_n\)</span> in Hoeffding. Therefore this situation is exactly like the Bernoulli experiment from the previous section. We can say that with probability at least <span class="math inline">\(1-\delta\)</span>,
 <span class="math display">\[
 E_{out}(h) \leq  E_{in}(h) + \sqrt{\frac{\ln \frac{2}{\delta}}{2n}}.
 \]</span>
 Let us say we want to have confidence 95%, i.e. <span class="math inline">\(\delta = 0.05\)</span>, we then have the generalization bound</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1">delta =<span class="st"> </span><span class="fl">0.05</span></a>
-<a class="sourceLine" id="cb118-2" data-line-number="2"><span class="kw">error</span>(data.df,h) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">log</span>(<span class="dv">2</span><span class="op">/</span>delta)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span><span class="kw">nrow</span>(data.df)))</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">delta =<span class="st"> </span><span class="fl">0.05</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw">error</span>(data.df,h) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">log</span>(<span class="dv">2</span><span class="op">/</span>delta)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span><span class="kw">nrow</span>(data.df)))</a></code></pre></div>
 <pre><code>## [1] 0.5120646</code></pre>
 <p>
-Above we picked an <span class="math inline">\(h\)</span> without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where <span class="math inline">\(h\)</span> is chosen from some collection <span class="math inline">\(\mathcal H\)</span>. Let us first consider the case where <span class="math inline">\(\mathcal H\)</span> is finite, i.e. there is a finite number of functions <span class="math inline">\(h\)</span> in the collection. Let this number be <span class="math inline">\(|\mathcal H|\)</span>. The statement of the learning bound then becomes
+Above we picked an <span class="math inline">\(h\)</span> without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where <span class="math inline">\(h\)</span> is chosen from some collection <span class="math inline">\(\mathcal H\)</span>. Let us first consider the case where <span class="math inline">\(\mathcal H\)</span> is finite, i.e. there is a finite number of functions <span class="math inline">\(h\)</span> in the collection. Call this number be <span class="math inline">\(|\mathcal H|\)</span>. The statement of the learning bound then becomes
 </p>
 
 <div class="note">
-Let <span class="math inline">\(\mathcal H\)</span> be finite. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-d\)</span>:
+Let <span class="math inline">\(\mathcal H\)</span> be finite. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>:
 <span class="math display">\[
   \forall h\in\mathcal H,\quad E_{out}(h)\leq E_{in}(h) + \sqrt{\frac{ \ln\frac{2|\mathcal H|}{\delta}}{2n}}.
 \]</span>
@@ -290,11 +290,11 @@ Let <span class="math inline">\(\mathcal H\)</span> be finite. Then for any <spa
 \leq &amp; 2 |\mathcal H  | e^{-2n\varepsilon^2}.
 \end{align}\]</span>
 Setting this equal to <span class="math inline">\(\delta\)</span> and solving for <span class="math inline">\(\varepsilon\)</span> gives the result.</p>
-<p>Now we can handle also the case with a finite number of <span class="math inline">\(h\)</span>. But there is still room for improvement. Most classifications methods will have an infinite <span class="math inline">\(\mathcal H\)</span>. For example, in the example above, we would consider all different straight lines and no only <span class="math inline">\(x_1 = 0\)</span>. The above argument will however not work for infinite <span class="math inline">\(\mathcal H\)</span>. There is however some hope. We used that, for two events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>,
+<p>Now we can handle also the case with a finite number of <span class="math inline">\(h\)</span>. But there is still room for improvement. Most classifications methods will have an infinite <span class="math inline">\(\mathcal H\)</span>. For example, in the example above, we would consider all different straight lines and no only <span class="math inline">\(x_1 = 0\)</span>. The above argument will not work for infinite <span class="math inline">\(\mathcal H\)</span>. There is however some hope. We used that, for two events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>,
 <span class="math display">\[
 P(A\cup B) = P(A) + P(B) - P(A\cap B) \leq P(A) + P(B).
 \]</span>
-But this inequality is not very tight. When <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> tend to happen at the same time <span class="math inline">\(P(A \cup B)\approx P(A)\)</span> and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many <span class="math inline">\(h\)</span> in <span class="math inline">\(\mathcal H\)</span> are similar, so if <span class="math inline">\(\left| E_{in}(h_i) - E_{out}(h_i) \right|&gt;\varepsilon\)</span> it is likely that also <span class="math inline">\(\left| E_{in}h_j) - E_{out}(h_j) \right|&gt;\varepsilon\)</span>.</p>
+But this inequality is not very tight. When <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> tend to happen at the same time <span class="math inline">\(P(A \cup B)\approx P(A)\)</span> and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many <span class="math inline">\(h\)</span> in <span class="math inline">\(\mathcal H\)</span> are similar, so if <span class="math inline">\(\left| E_{in}(h_i) - E_{out}(h_i) \right|&gt;\varepsilon\)</span> it is likely that also <span class="math inline">\(\left| E_{in}(h_j) - E_{out}(h_j) \right|&gt;\varepsilon\)</span>.</p>
 </div>
             </section>
 

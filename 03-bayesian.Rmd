@@ -49,7 +49,7 @@ $$
 ```{block2, type='note'}
 The *posterior risk* is then defined as
 $$
-\rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
+\rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x)) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
 $$
 ```
 Here the random quantity is $\theta$ while the data $x$ is held constant. The *Bayes action* $\delta^\star$ is the decision $\delta$ that minimizes the posterior risk. For example, if the decision is a point estimate of $\theta$ and $l(\theta,\delta) = (\theta - \delta)^2$. Then
@@ -120,7 +120,6 @@ p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 
 $$
 <p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
 ```{r betaDist, cache=FALSE, echo = FALSE, fig.cap='Density of the beta distribution', out.width='80%', fig.asp=.75, fig.align='center'}
-
 library(ggplot2)
 library(latex2exp)
 
@@ -133,7 +132,7 @@ ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
   stat_function(aes(color = "4"), fun = function(x){dbeta(x,3,2)}, size = 1.5) +
   theme_minimal() +
   xlab("x") + 
-  ylab("density")
+  ylab("density") +
   scale_colour_manual(values=cbp1, labels = unname(TeX(c("$\\alpha = 0.5,$ $\\beta = 0.5$",
                                                          "$\\alpha = 1.0,$ $\\beta = 1.0$",
                                                          "$\\alpha = 2.0,$ $\\beta = 2.0$",
