@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -220,28 +220,28 @@ where <span class="math inline">\(E\left[ \varepsilon \right] = 0\)</span>. This
 <span class="math display">\[
 E\left[\varepsilon\right] = E\left[ Y-f(X) \right] = E\left[ Y -  E\left[ Y\mid X \right] \right] = E\left[ Y\right]- E\left[ Y\right] = 0.
 \]</span>
-First let us see what the population minimizer of the error is. That is, assuming that we know <span class="math inline">\(X,Y\)</span>, we would like to find the optimal choice of <span class="math inline">\(h\)</span>. We do this by conditioning on <span class="math inline">\(X\)</span> and decomposing the error into two parts:
+First let us see what the population minimizer of the error is. That is, assuming that we know the distribution of <span class="math inline">\(X,Y\)</span>, we would like to find the optimal choice of <span class="math inline">\(h\)</span>. We do this by conditioning on <span class="math inline">\(X\)</span> and decomposing the error into two parts:
 <span class="math display">\[\begin{align*}
 &amp;E\left[ (Y-h(X))^2 \mid X \right] = E\left[ (Y - E[Y\mid X] + E[Y\mid X] -h(X))^2 \mid X \right] \\
 =&amp;E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right] \\
 &amp;+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X) \mid X \right]}_{=0}\\
 =&amp;E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right]
 \end{align*}\]</span>
-The first part does not depend on <span class="math inline">\(h\)</span> and the second part is minimized by choosing <span class="math inline">\(h(x) = E[Y\mid X=x]\)</span> for every <span class="math inline">\(x\)</span>.</p>
-<p>Coming back slightly to reality, we do not know the distribution, but we have a training set <span class="math inline">\(\mathcal D\)</span>. So we now take the frequentist point of view and consider the data as random. Therefore we take the expectation with respect to <span class="math inline">\(\mathcal D\)</span>:
+The first part does not depend on <span class="math inline">\(h\)</span> and the second part is minimized by choosing <span class="math inline">\(h(x) = E[Y\mid X=x]\)</span> for every <span class="math inline">\(x\)</span>, which therefore is the population minimizer of the error.</p>
+<p>Coming back slightly to reality, we do not know the distribution of <span class="math inline">\((X,Y)\)</span> but we have a training set <span class="math inline">\(\mathcal D\)</span>. So we now take the frequentist point of view and consider the squared difference between the function learnt from data, <span class="math inline">\(h^\mathcal D\)</span> and the true regression function <span class="math inline">\(f(x)\)</span>, averaged with respect to <span class="math inline">\(\mathcal D\)</span>.
 <span class="math display">\[\begin{align}
-&amp;E_\mathcal D\left[ (h^{\mathcal D}(x) - f(x))^2\right]  = E_\mathcal D\left[ (h^{\mathcal D}(x) - \bar h(x) + \bar h(x) - f(x) )^2\right] \\
-=&amp;  E_\mathcal D\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
- E_\mathcal D\left[ (\bar h(x) - f(x) )^2\right] +2(\bar h(x) - f(x)) E_\mathcal D\left[ (h^{\mathcal D}(x) - \bar h(x) )\right]\\
-=&amp; E_\mathcal D\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
+&amp;E\left[ (h^{\mathcal D}(x) - f(x))^2\right]  = E\left[ (h^{\mathcal D}(x) - \bar h(x) + \bar h(x) - f(x) )^2\right] \\
+=&amp;  E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
+ E\left[ (\bar h(x) - f(x) )^2\right] +2(\bar h(x) - f(x)) E\left[ (h^{\mathcal D}(x) - \bar h(x) )\right]\\
+=&amp; E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
  (\bar h(x) - f(x) )^2
 \end{align}\]</span>
 The first term is the variance of <span class="math inline">\(h^\mathcal D\)</span> as the data set <span class="math inline">\(\mathcal D\)</span> is varied. The other term is the difference between the average function <span class="math inline">\(\bar h\)</span> and the true regression function <span class="math inline">\(f(x)\)</span> and is called the bias. This is the Bias-variance decomposition.</p>
-<p>If we choose a large class of function <span class="math inline">\(\mathcal H\)</span> from which we choose <span class="math inline">\(h^\mathcal D\)</span>, it will be possible to closely approximate <span class="math inline">\(f\)</span>, on average. In this case the bias will be small. However, many times if <span class="math inline">\(h^\mathcal D\)</span> is large <span class="math inline">\(h^\mathcal D\)</span> will be sensitive to data, i.e. we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.</p>
+<p>If we choose a large class of function <span class="math inline">\(\mathcal H\)</span> from which we choose <span class="math inline">\(h^\mathcal D\)</span>, it will be possible to closely approximate <span class="math inline">\(f\)</span>, on average. In this case the bias will be small. However, many times if <span class="math inline">\(\mathcal H\)</span> is large, <span class="math inline">\(h^\mathcal D\)</span> will be sensitive to data, i.e. we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.</p>
 <div class="figure" style="text-align: center"><span id="fig:biasVarianceSketch"></span>
 <img src="04-statisticalLearning_files/figure-html/biasVarianceSketch-1.png" alt="Sketch of the bias-variance decomposition" width="80%" />
 <p class="caption">
-Figure 4.12: Sketch of the bias-variance decomposition
+Figure 4.16: Sketch of the bias-variance decomposition
 </p>
 </div>
 </div>

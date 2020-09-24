@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -158,10 +158,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -208,23 +208,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \]</span>
 The second term penalizes variability in <span class="math inline">\(h\)</span>. Note that there are no parameters in this model and so it is a little surprising that the solutions can be easily characterized. It turns out that the optimal <span class="math inline">\(h\)</span> is a piecewise cubic polynomial with knots at <span class="math inline">\(x_1,\ldots x_n\)</span> and continuous first and second derivatives. The parameter <span class="math inline">\(\lambda\)</span> is usually determined by CV. Instead of <span class="math inline">\(\lambda\)</span> the penalty parameters is sometimes reparametrized as degrees of freedom, which has a similar interpretation as in linear regression.</p>
 <p>Let us apply this in an example.</p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1"><span class="kw">library</span>(caret)</a></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1"><span class="kw">library</span>(caret)</a></code></pre></div>
 <pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## Loading required package: ggplot2</code></pre>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1"><span class="kw">library</span>(ISLR)</a>
-<a class="sourceLine" id="cb146-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb146-3" data-line-number="3"><span class="kw">data</span>(<span class="st">&quot;Wage&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</a>
-<a class="sourceLine" id="cb146-4" data-line-number="4">Wage &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Wage)</a>
-<a class="sourceLine" id="cb146-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb146-6" data-line-number="6"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb146-7" data-line-number="7">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(Wage<span class="op">$</span>wage, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb146-8" data-line-number="8">train.data  &lt;-<span class="st"> </span>Wage[training.samples, ]</a>
-<a class="sourceLine" id="cb146-9" data-line-number="9">test.data &lt;-<span class="st"> </span>Wage[<span class="op">-</span>training.samples, ]</a>
-<a class="sourceLine" id="cb146-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb146-11" data-line-number="11">smooth &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(train.data<span class="op">$</span>age,train.data<span class="op">$</span>wage, <span class="dt">cv =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb146-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb146-13" data-line-number="13">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(smooth, test.data<span class="op">$</span>age)</a>
-<a class="sourceLine" id="cb146-14" data-line-number="14"><span class="kw">mean</span>((predictions<span class="op">$</span>y <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" data-line-number="1"><span class="kw">library</span>(ISLR)</a>
+<a class="sourceLine" id="cb153-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb153-3" data-line-number="3"><span class="kw">data</span>(<span class="st">&quot;Wage&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</a>
+<a class="sourceLine" id="cb153-4" data-line-number="4">Wage &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Wage)</a>
+<a class="sourceLine" id="cb153-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb153-6" data-line-number="6"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb153-7" data-line-number="7">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(Wage<span class="op">$</span>wage, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb153-8" data-line-number="8">train.data  &lt;-<span class="st"> </span>Wage[training.samples, ]</a>
+<a class="sourceLine" id="cb153-9" data-line-number="9">test.data &lt;-<span class="st"> </span>Wage[<span class="op">-</span>training.samples, ]</a>
+<a class="sourceLine" id="cb153-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb153-11" data-line-number="11">smooth &lt;-<span class="st"> </span><span class="kw">smooth.spline</span>(train.data<span class="op">$</span>age,train.data<span class="op">$</span>wage, <span class="dt">cv =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb153-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb153-13" data-line-number="13">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(smooth, test.data<span class="op">$</span>age)</a>
+<a class="sourceLine" id="cb153-14" data-line-number="14"><span class="kw">mean</span>((predictions<span class="op">$</span>y <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
 <pre><code>## [1] 1553.058</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:smoothingSpline"></span>
 <img src="05-beyondLinearity_files/figure-html/smoothingSpline-1.png" alt="Smoothing spline fit to wage date" width="80%" />

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -203,34 +203,121 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="an-application-v" class="section level2">
 <h2><span class="header-section-number">4.11</span> An application V</h2>
 <p>Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">library</span>(caret)</a>
-<a class="sourceLine" id="cb38-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb38-3" data-line-number="3"><span class="kw">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlbench&quot;</span>)</a>
-<a class="sourceLine" id="cb38-4" data-line-number="4">PimaIndiansDiabetes2 &lt;-<span class="st"> </span><span class="kw">na.omit</span>(PimaIndiansDiabetes2)</a>
-<a class="sourceLine" id="cb38-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb38-6" data-line-number="6"><span class="kw">head</span>(PimaIndiansDiabetes2, <span class="dv">5</span>)</a></code></pre></div>
-<pre><code>##    pregnant glucose pressure triceps insulin mass pedigree age diabetes
-## 4         1      89       66      23      94 28.1    0.167  21      neg
-## 5         0     137       40      35     168 43.1    2.288  33      pos
-## 7         3      78       50      32      88 31.0    0.248  26      pos
-## 9         2     197       70      45     543 30.5    0.158  53      pos
-## 14        1     189       60      23     846 30.1    0.398  59      pos</code></pre>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1"><span class="kw">library</span>(caret)</a>
+<a class="sourceLine" id="cb146-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb146-3" data-line-number="3"><span class="kw">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlbench&quot;</span>)</a>
+<a class="sourceLine" id="cb146-4" data-line-number="4">PimaIndiansDiabetes2 &lt;-<span class="st"> </span><span class="kw">na.omit</span>(PimaIndiansDiabetes2)</a>
+<a class="sourceLine" id="cb146-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb146-6" data-line-number="6">knitr<span class="op">::</span><span class="kw">kable</span>(</a>
+<a class="sourceLine" id="cb146-7" data-line-number="7">  <span class="kw">head</span>(PimaIndiansDiabetes2), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb146-8" data-line-number="8">  <span class="dt">caption =</span> <span class="st">&#39;Diabetes data&#39;</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:unnamed-chunk-34">Table 4.1: </span>Diabetes data</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">pregnant</th>
+<th align="right">glucose</th>
+<th align="right">pressure</th>
+<th align="right">triceps</th>
+<th align="right">insulin</th>
+<th align="right">mass</th>
+<th align="right">pedigree</th>
+<th align="right">age</th>
+<th align="left">diabetes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">4</td>
+<td align="right">1</td>
+<td align="right">89</td>
+<td align="right">66</td>
+<td align="right">23</td>
+<td align="right">94</td>
+<td align="right">28.1</td>
+<td align="right">0.167</td>
+<td align="right">21</td>
+<td align="left">neg</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="right">0</td>
+<td align="right">137</td>
+<td align="right">40</td>
+<td align="right">35</td>
+<td align="right">168</td>
+<td align="right">43.1</td>
+<td align="right">2.288</td>
+<td align="right">33</td>
+<td align="left">pos</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="right">3</td>
+<td align="right">78</td>
+<td align="right">50</td>
+<td align="right">32</td>
+<td align="right">88</td>
+<td align="right">31.0</td>
+<td align="right">0.248</td>
+<td align="right">26</td>
+<td align="left">pos</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="right">2</td>
+<td align="right">197</td>
+<td align="right">70</td>
+<td align="right">45</td>
+<td align="right">543</td>
+<td align="right">30.5</td>
+<td align="right">0.158</td>
+<td align="right">53</td>
+<td align="left">pos</td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="right">1</td>
+<td align="right">189</td>
+<td align="right">60</td>
+<td align="right">23</td>
+<td align="right">846</td>
+<td align="right">30.1</td>
+<td align="right">0.398</td>
+<td align="right">59</td>
+<td align="left">pos</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
+<td align="right">5</td>
+<td align="right">166</td>
+<td align="right">72</td>
+<td align="right">19</td>
+<td align="right">175</td>
+<td align="right">25.8</td>
+<td align="right">0.587</td>
+<td align="right">51</td>
+<td align="left">pos</td>
+</tr>
+</tbody>
+</table>
 <p>Divide the data into a train and a test set.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb40-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb40-3" data-line-number="3">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(PimaIndiansDiabetes2<span class="op">$</span>diabetes, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb40-4" data-line-number="4">train.data  &lt;-<span class="st"> </span>PimaIndiansDiabetes2[training.samples, ]</a>
-<a class="sourceLine" id="cb40-5" data-line-number="5">test.data &lt;-<span class="st"> </span>PimaIndiansDiabetes2[<span class="op">-</span>training.samples, ]</a></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb147-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb147-3" data-line-number="3">training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(PimaIndiansDiabetes2<span class="op">$</span>diabetes, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb147-4" data-line-number="4">train.data  &lt;-<span class="st"> </span>PimaIndiansDiabetes2[training.samples, ]</a>
+<a class="sourceLine" id="cb147-5" data-line-number="5">test.data &lt;-<span class="st"> </span>PimaIndiansDiabetes2[<span class="op">-</span>training.samples, ]</a></code></pre></div>
 <p>Then use a SVM, where the parameter is estimated by 10-fold CV.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">model &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
-<a class="sourceLine" id="cb41-2" data-line-number="2">  diabetes <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</a>
-<a class="sourceLine" id="cb41-3" data-line-number="3">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
-<a class="sourceLine" id="cb41-4" data-line-number="4">  <span class="dt">tuneLength =</span> <span class="dv">10</span>,</a>
-<a class="sourceLine" id="cb41-5" data-line-number="5">  <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</a>
-<a class="sourceLine" id="cb41-6" data-line-number="6">)</a>
-<a class="sourceLine" id="cb41-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb41-8" data-line-number="8">predicted &lt;-<span class="st"> </span><span class="kw">predict</span>(model, test.data)</a>
-<a class="sourceLine" id="cb41-9" data-line-number="9"><span class="kw">mean</span>(predicted <span class="op">==</span><span class="st"> </span>test.data<span class="op">$</span>diabetes)</a></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" data-line-number="1">model &lt;-<span class="st"> </span><span class="kw">train</span>(</a>
+<a class="sourceLine" id="cb148-2" data-line-number="2">  diabetes <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</a>
+<a class="sourceLine" id="cb148-3" data-line-number="3">  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb148-4" data-line-number="4">  <span class="dt">tuneLength =</span> <span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb148-5" data-line-number="5">  <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</a>
+<a class="sourceLine" id="cb148-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb148-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb148-8" data-line-number="8">predicted &lt;-<span class="st"> </span><span class="kw">predict</span>(model, test.data)</a>
+<a class="sourceLine" id="cb148-9" data-line-number="9"><span class="kw">mean</span>(predicted <span class="op">==</span><span class="st"> </span>test.data<span class="op">$</span>diabetes)</a></code></pre></div>
 <pre><code>## [1] 0.7948718</code></pre>
 
 </div>

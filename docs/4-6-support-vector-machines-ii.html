@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -220,7 +220,7 @@ where <span class="math inline">\(\lambda\geq 0\)</span> is a tuning parameter. 
 <div class="figure" style="text-align: center"><span id="fig:inOutSampleErrorSVM"></span>
 <img src="04-statisticalLearning_files/figure-html/inOutSampleErrorSVM-1.png" alt="Error vs. reciprocal of lambda." width="80%" />
 <p class="caption">
-Figure 4.10: Error vs. reciprocal of lambda.
+Figure 4.14: Error vs. reciprocal of lambda.
 </p>
 </div>
 <p>We see from the picture that <span class="math inline">\(\lambda\)</span> controls the complexity of the model. When <span class="math inline">\(\lambda\)</span> is large (<span class="math inline">\(1/\lambda\)</span> small), the in-sample and out-of-sample errors are similar and as <span class="math inline">\(\lambda\)</span> becomes smaller, the in-sample error becomes smaller, but the difference between the errors are larger.</p>
@@ -229,7 +229,7 @@ Figure 4.10: Error vs. reciprocal of lambda.
 <span class="math display">\[
 f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle x,x_i  \rangle,
 \]</span>
-where we define the innder product of two points <span class="math inline">\(x\)</span> and <span class="math inline">\(\tilde x\)</span> as,
+where we define the inner product of two points <span class="math inline">\(x\)</span> and <span class="math inline">\(\tilde x\)</span> as,
 <span class="math display">\[
 \langle x,\tilde  x \rangle = \sum_{i=1}^p x_j\tilde x_j.
 \]</span>
@@ -263,10 +263,10 @@ Let us try the radial basis function kernel on our data set.</p>
 <div class="figure" style="text-align: center"><span id="fig:radialBasisSVM"></span>
 <img src="04-statisticalLearning_files/figure-html/radialBasisSVM-1.png" alt="Training data a radial basis SVM classification" width="80%" />
 <p class="caption">
-Figure 4.11: Training data a radial basis SVM classification
+Figure 4.15: Training data a radial basis SVM classification
 </p>
 </div>
-<p>This now has an in-sample error of and out-of-sample error</p>
+<p>This now has an in-sample error of 0.275 and out-of-sample error 0.255555</p>
 </div>
             </section>
 

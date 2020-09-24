@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -204,10 +204,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.5</span> VC-dimension</h2>
 <p>In this section we discuss a measure of the complexity of a hypothesis set <span class="math inline">\(\mathcal H\)</span>, the Vapnik–Chervonenkis (VC) dimension.</p>
 <p>We call one possible way of labelling a set of points, <span class="math inline">\(S\)</span>, a dichotomy and we say that <span class="math inline">\(S\)</span> is shattered by <span class="math inline">\(\mathcal H\)</span> when <span class="math inline">\(\mathcal H\)</span> can generate all possible dichotomies of <span class="math inline">\(S\)</span>. The VC-dimension of <span class="math inline">\(\mathcal H\)</span> is the size of the largest set that can be shattered by <span class="math inline">\(\mathcal H\)</span>.</p>
-<p>First consider the example of the real line and <span class="math inline">\(\mathcal H\)</span> being the intervals. If <span class="math inline">\(S\)</span> consists of two points, all four dichotomies can be realized and so <span class="math inline">\(S\)</span> can be shattered by <span class="math inline">\(\mathcal H\)</span>. However if <span class="math inline">\(S\)</span> consists of three points, the dichotomy (1,0,1) cannot be realized and <span class="math inline">\(S\)</span> cannot be shattered. Therefore the VC-dimension of <span class="math inline">\(\mathcal H\)</span> is <span class="math inline">\(d_{VC}=2\)</span>.</p>
+<p>First consider the example of the real line and <span class="math inline">\(\mathcal H\)</span> being the classifiers that classify to one class to the left of a point and to the other class to the right of the point. If <span class="math inline">\(S\)</span> consists of two points, all four dichotomies can be realized and so <span class="math inline">\(S\)</span> can be shattered by <span class="math inline">\(\mathcal H\)</span>. However if <span class="math inline">\(S\)</span> consists of three points, the dichotomy (1,0,1) cannot be realized and <span class="math inline">\(S\)</span> cannot be shattered. Therefore the VC-dimension of <span class="math inline">\(\mathcal H\)</span> is <span class="math inline">\(d_{VC}=2\)</span>.</p>
+<div class="figure" style="text-align: center"><span id="fig:vcDim1"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim1-1.png" alt="Two points can be shattered" width="80%" />
+<p class="caption">
+Figure 4.9: Two points can be shattered
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:vcDim2"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim2-1.png" alt="Three points that can not be shattered" width="80%" />
+<p class="caption">
+Figure 4.10: Three points that can not be shattered
+</p>
+</div>
 <p>Next consider points on <span class="math inline">\(\mathbb R^2\)</span> and <span class="math inline">\(\mathcal H\)</span> being the set of straight lines, as in the example in the previous section. Clearly three points can be shattered by a straight line, as long as the points are not colinear. However four points can never be shattered. So the VC-dimension is <span class="math inline">\(d_{VC}=3\)</span>. Similarly in <span class="math inline">\(R^d\)</span>, if <span class="math inline">\(\mathcal H\)</span> are the hyperplanes, <span class="math inline">\(d_{VC} = d+1\)</span>.</p>
-<p>We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ t\mapsto sin(\omega t)\mid \omega\in \mathbb R \right\}\)</span>. Then label points as 1 if it is above the curve and 0 otherwise. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.</p>
-The usefullness of the VC-dimension comes from the following result
+<div class="figure" style="text-align: center"><span id="fig:vcDim3"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim3-1.png" alt="Three points can be shattered but not four" width="80%" />
+<p class="caption">
+Figure 4.11: Three points can be shattered but not four
+</p>
+</div>
+<p>
+We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid \omega\in \mathbb R \right\}\)</span>. Then label points as -1 if it is above the curve and 1 otherwise. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
+</p>
+<div class="figure" style="text-align: center"><span id="fig:vcDim4"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim4-1.png" alt="A one parameter function can shatter any number of points" width="80%" />
+<p class="caption">
+Figure 4.12: A one parameter function can shatter any number of points
+</p>
+</div>
+The usefulness of the VC-dimension comes from the following result
 
 <div class="note">
 Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span> Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span>:
@@ -216,18 +242,18 @@ Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span clas
 \]</span>
 </div>
 
-<p>The important quantity here is <span class="math inline">\(m/d_{VC}\)</span>. If the sample size <span class="math inline">\(m\)</span> is large in relation to the VC-dimension <span class="math inline">\(d_{VC}\)</span>, the out-of-sample error is guaranteed to be close to the in-sample error. The bound is loose, so the actual value is not useful in practice. Rather it provides a way of thinking about generalization from in-sample to out-of-sample error. In practice, it is usually the case that models with lower <span class="math inline">\(d_{VC}\)</span> generalizes better than models with higher <span class="math inline">\(d_{VC}\)</span>. A popular rule of thumb is that <span class="math inline">\(n\)</span> should be at least <span class="math inline">\(10\times d_{VC}\)</span>. However, there are also algorithms with <span class="math inline">\(d_{VC}=\infty\)</span> that work well in practice.</p>
+<p>The important quantity here is <span class="math inline">\(n/d_{VC}\)</span>. If the sample size <span class="math inline">\(n\)</span> is large in relation to the VC-dimension <span class="math inline">\(d_{VC}\)</span>, the out-of-sample error is guaranteed to be close to the in-sample error. The bound is loose, so the actual value is not useful in practice. Rather it provides a way of thinking about generalization from in-sample to out-of-sample error. In practice, it is usually the case that models with lower <span class="math inline">\(d_{VC}\)</span> generalizes better than models with higher <span class="math inline">\(d_{VC}\)</span>. A popular rule of thumb is that <span class="math inline">\(n\)</span> should be at least <span class="math inline">\(10\times d_{VC}\)</span>. However, there are also algorithms with <span class="math inline">\(d_{VC}=\infty\)</span> that work well in practice.</p>
 <p>A different way of thinking of this results is
 <span class="math display">\[
-E_{out} = E_{in} + \Omega(N,\mathcal H, \delta),
+E_{out} = E_{in} + \Omega(n,\mathcal H, \delta),
 \]</span>
-where <span class="math inline">\(\Omega\)</span> is a penalty for model complexity. As we choose a more complex <span class="math inline">\(\mathcal H\)</span> (with higher <span class="math inline">\(d_{VC}\)</span>) the in-sample error will become smaller. But, at the same time the penalty <span class="math inline">\(\Omega\)</span> get larger. The penalty also gets smaller when we have more samples. The optimal model, with smallest <span class="math inline">\(E_{out}\)</span>, is therefore a compromise the minimized the sum of the two terms.</p>
-<p>One commonly used way to estimate <span class="math inline">\(E_{out}\)</span> is to split the data into one training set and one test set. The test set is not used for training and so when we calculate <span class="math inline">\(E_{test}\)</span> we do this for only one <span class="math inline">\(h\)</span>, the one with minimimal in-sample error. Therefore Hoeffding’s inequality applies as a generalization bound, which is much tighter than the VC-bound.</p>
+where <span class="math inline">\(\Omega\)</span> is a penalty for model complexity. As we choose a more complex <span class="math inline">\(\mathcal H\)</span> (with higher <span class="math inline">\(d_{VC}\)</span>) the in-sample error will become smaller. But, at the same time the penalty <span class="math inline">\(\Omega\)</span> get larger. The penalty also gets smaller when we have more samples. The optimal model, with smallest <span class="math inline">\(E_{out}\)</span>, is therefore a compromise that minimize the sum of the two terms.</p>
+<p>One commonly used way to estimate <span class="math inline">\(E_{out}\)</span> is to split the data into one <em>training set</em> and one <em>test set</em>. The test set is not used for training and so when we calculate <span class="math inline">\(E_{test}\)</span>, we do this for only one <span class="math inline">\(h\)</span>, the one with minimimal in-sample error. Therefore Hoeffding’s inequality applies as a generalization bound, which is much tighter than the VC-bound.</p>
 <p>In the picture we visualize the partition of the out-of-sample error into in-sample error and generalization error.</p>
 <div class="figure" style="text-align: center"><span id="fig:errorPlotSketch"></span>
 <img src="04-statisticalLearning_files/figure-html/errorPlotSketch-1.png" alt="Sketch of the different components of the error" width="80%" />
 <p class="caption">
-Figure 4.9: Sketch of the different components of the error
+Figure 4.13: Sketch of the different components of the error
 </p>
 </div>
 </div>

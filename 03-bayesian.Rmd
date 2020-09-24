@@ -4,11 +4,11 @@ In this chapter we introduce a different way of thinking about statistical infer
 
 Readings for this chapter is:
 
-AOS 12.1-3.
-
 AOS 11.1, 2, 4, 6, 7, 9.
 
-AOS 24.1, 2, 4, 5 (not Gibbs)
+AOS 12.1-3.
+
+AOS 24.1, 2, 4, 5 (not Gibbs).
 
 ## Some basic decision theory
 
@@ -223,10 +223,10 @@ L(\theta) \propto \prod_{i=1}^n e^{-\frac{1}{2\sigma^2}(x_i-\theta)^2} = e^{-\fr
 $$
 which is the density of $\mathsf N(\bar x, \sigma^2/n)$. Therefore the point estimates and interval estimators will be the same as in likelihood based inference.
 
-A problem with flat priors is however that they are only non-informative in a particular parameterisation. Take again the Bernoulli example. If we say that we do not have any information about $\theta$, then it would be reasonable to say that we also do not have any information about some function of $\theta$. Take for example $\psi = \ln (\theta/(1-\theta))$. If $p(\theta)=1$ for $0\leq\theta\leq 1$, then
+A problem with flat priors is however that they are only non-informative in a particular parameterisation. Take again the Bernoulli example. If we say that we do not have any information about $\theta$, then it would be reasonable to say that we also do not have any information about some function of $\theta$. Take for example $\Psi = \ln (\theta/(1-\theta))$. If $p(\theta)=1$ for $0\leq\theta\leq 1$, then the density of $\Psi$ is
 \begin{align}
-p(\psi) & = \partial_x P(\psi \leq x) = \partial_x P\left( \ln (\theta/(1-\theta)) \leq x\right)\\
-&= \partial_x P\left( \theta \leq \frac{e^x}{1+e^x} \right) = \partial_x \frac{e^x}{1+e^x} = \frac{e^x}{(1+e^x)^2},
+p(\psi) & = \partial_\psi P(\Psi \leq \psi) = \partial_\psi P\left( \ln (\theta/(1-\theta)) \leq \psi \right)\\
+&= \partial_\psi P\left( \theta \leq \frac{e^\psi}{1+e^\psi} \right) = \partial_\psi \frac{e^\psi}{1+e^\psi} = \frac{e^\psi}{(1+e^\psi)^2},
 \end{align}
 which is clearly no longer non-informative. We say that flat priors are not transformation invariant.
 

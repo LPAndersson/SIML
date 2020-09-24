@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-07" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -158,10 +158,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="3-2-bayesian-statistics-1.html"><a href="3-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>3.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-choosing-prior.html"><a href="3-3-choosing-prior.html"><i class="fa fa-check"></i><b>3.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-multiparameter-problems.html"><a href="3-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>3.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain monte carlo</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-markov-chain-monte-carlo.html"><a href="3-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>3.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="3.6" data-path="3-6-an-application-iii.html"><a href="3-6-an-application-iii.html"><i class="fa fa-check"></i><b>3.6</b> An application III</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -207,30 +207,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 h(x_i) = \beta_0 + \sum_{j=1}^p h_j(x_{ij}).
 \]</span>
 Here <span class="math inline">\(h_j\)</span> can be in principle any function, for example smoothing splines. We now present a small example using the wage data from ISLR. First load the data, partition into training/test and plot.</p>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" data-line-number="1"><span class="kw">library</span>(ISLR)</a>
-<a class="sourceLine" id="cb148-2" data-line-number="2"><span class="kw">library</span>(gam)</a></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1"><span class="kw">library</span>(ISLR)</a>
+<a class="sourceLine" id="cb155-2" data-line-number="2"><span class="kw">library</span>(gam)</a></code></pre></div>
 <pre><code>## Loading required package: splines</code></pre>
 <pre><code>## Loading required package: foreach</code></pre>
 <pre><code>## Loaded gam 1.20</code></pre>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1"><span class="kw">library</span>(GGally)</a></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1"><span class="kw">library</span>(GGally)</a></code></pre></div>
 <pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
 ##   method from   
 ##   +.gg   ggplot2</code></pre>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;Wage&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</a>
-<a class="sourceLine" id="cb154-2" data-line-number="2">Wage &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Wage)</a>
-<a class="sourceLine" id="cb154-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb154-4" data-line-number="4"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb154-5" data-line-number="5">training.samples &lt;-</a>
-<a class="sourceLine" id="cb154-6" data-line-number="6"><span class="st">  </span><span class="kw">createDataPartition</span>(Wage<span class="op">$</span>wage, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb154-7" data-line-number="7">train.data  &lt;-<span class="st"> </span>Wage[training.samples,]</a>
-<a class="sourceLine" id="cb154-8" data-line-number="8">test.data &lt;-<span class="st"> </span>Wage[<span class="op">-</span>training.samples,]</a>
-<a class="sourceLine" id="cb154-9" data-line-number="9">cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
-<a class="sourceLine" id="cb154-10" data-line-number="10">          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
-<a class="sourceLine" id="cb154-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb154-12" data-line-number="12"><span class="kw">ggpairs</span>(train.data, <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;wage&quot;</span>,<span class="st">&quot;year&quot;</span>,<span class="st">&quot;age&quot;</span>,<span class="st">&quot;education&quot;</span>),</a>
-<a class="sourceLine" id="cb154-13" data-line-number="13">        <span class="dt">upper=</span><span class="kw">list</span>(<span class="dt">continuous=</span><span class="kw">wrap</span>(<span class="st">&quot;smooth_loess&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.1</span>,<span class="dt">color=</span>cbp1[<span class="dv">2</span>])),</a>
-<a class="sourceLine" id="cb154-14" data-line-number="14">        <span class="dt">lower=</span><span class="kw">list</span>(<span class="dt">continuous=</span><span class="kw">wrap</span>(<span class="st">&quot;smooth_loess&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.1</span>,<span class="dt">color=</span>cbp1[<span class="dv">2</span>]))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb154-15" data-line-number="15"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;Wage&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</a>
+<a class="sourceLine" id="cb161-2" data-line-number="2">Wage &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Wage)</a>
+<a class="sourceLine" id="cb161-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb161-4" data-line-number="4"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb161-5" data-line-number="5">training.samples &lt;-</a>
+<a class="sourceLine" id="cb161-6" data-line-number="6"><span class="st">  </span><span class="kw">createDataPartition</span>(Wage<span class="op">$</span>wage, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb161-7" data-line-number="7">train.data  &lt;-<span class="st"> </span>Wage[training.samples,]</a>
+<a class="sourceLine" id="cb161-8" data-line-number="8">test.data &lt;-<span class="st"> </span>Wage[<span class="op">-</span>training.samples,]</a>
+<a class="sourceLine" id="cb161-9" data-line-number="9">cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</a>
+<a class="sourceLine" id="cb161-10" data-line-number="10">          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</a>
+<a class="sourceLine" id="cb161-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb161-12" data-line-number="12"><span class="kw">ggpairs</span>(train.data, <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;wage&quot;</span>,<span class="st">&quot;year&quot;</span>,<span class="st">&quot;age&quot;</span>,<span class="st">&quot;education&quot;</span>),</a>
+<a class="sourceLine" id="cb161-13" data-line-number="13">        <span class="dt">upper=</span><span class="kw">list</span>(<span class="dt">continuous=</span><span class="kw">wrap</span>(<span class="st">&quot;smooth_loess&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.1</span>,<span class="dt">color=</span>cbp1[<span class="dv">2</span>])),</a>
+<a class="sourceLine" id="cb161-14" data-line-number="14">        <span class="dt">lower=</span><span class="kw">list</span>(<span class="dt">continuous=</span><span class="kw">wrap</span>(<span class="st">&quot;smooth_loess&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.1</span>,<span class="dt">color=</span>cbp1[<span class="dv">2</span>]))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb161-15" data-line-number="15"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
@@ -241,10 +241,10 @@ Figure 5.2: Scatter plot matrix of wage data.
 </p>
 </div>
 <p>Looking at first row, for the year variable it would probably be fine with a linear fit, while for the age variable, a linear fit seems doubtful. Let us fit two models, one which is linear in year and one with a smoothing spline in year. Both are smoothing splines in age.</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1">gam.m1 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</a>
-<a class="sourceLine" id="cb157-2" data-line-number="2">gam.m2 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span><span class="kw">s</span>(year , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</a>
-<a class="sourceLine" id="cb157-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb157-4" data-line-number="4"><span class="kw">anova</span>(gam.m1, gam.m2)</a></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1">gam.m1 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</a>
+<a class="sourceLine" id="cb164-2" data-line-number="2">gam.m2 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span><span class="kw">s</span>(year , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</a>
+<a class="sourceLine" id="cb164-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb164-4" data-line-number="4"><span class="kw">anova</span>(gam.m1, gam.m2)</a></code></pre></div>
 <pre><code>## Analysis of Deviance Table
 ## 
 ## Model 1: wage ~ year + s(age, 4) + education
@@ -253,15 +253,15 @@ Figure 5.2: Scatter plot matrix of wage data.
 ## 1      2990    3696846                     
 ## 2      2987    3692824  3   4021.7   0.3542</code></pre>
 <p>The p-value indicates that the linear fit is satisfactory. Let us calculate the test error, also comparing to a linear model.</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1">ls &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</a>
-<a class="sourceLine" id="cb159-2" data-line-number="2">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data )</a>
-<a class="sourceLine" id="cb159-3" data-line-number="3"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1">ls &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</a>
+<a class="sourceLine" id="cb166-2" data-line-number="2">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data )</a>
+<a class="sourceLine" id="cb166-3" data-line-number="3"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
 <pre><code>## [1] 1248.707</code></pre>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m1, test.data )</a>
-<a class="sourceLine" id="cb161-2" data-line-number="2"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m1, test.data )</a>
+<a class="sourceLine" id="cb168-2" data-line-number="2"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
 <pre><code>## [1] 1174.914</code></pre>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" data-line-number="1">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m2, test.data )</a>
-<a class="sourceLine" id="cb163-2" data-line-number="2"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" data-line-number="1">predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m2, test.data )</a>
+<a class="sourceLine" id="cb170-2" data-line-number="2"><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</a></code></pre></div>
 <pre><code>## [1] 1170.57</code></pre>
 <p>The gam models outperform the linear model. The test error is smaller for the gam model with year as smoothed spline, although the difference is small.</p>
 </div>
