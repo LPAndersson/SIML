@@ -90,7 +90,7 @@ $$
 $$
 On the other hand, if $x$ is such that $\eta(x)< 1/2$, then
 $$
-\underbrace{\left(\underbrace{1_{ h^\star(x) = 1}}_{=0} - \underbrace{1_{ h(x) = 1}}_{= 0 \text{ or } 1}\right)}_{\leq 0}\underbrace{\left(  2\eta(x)-1 \right)}_{\leq 0}\geq 0.
+\underbrace{\left(\underbrace{1_{ h^\star(x) = 1}}_{=0} - \underbrace{1_{ h(x) = 1}}_{= 0 \text{ or } 1}\right)}_{\leq 0}\underbrace{\left(  2\eta(x)-1 \right)}_{< 0}\geq 0.
 $$
 In any case, this implies that
 $$
@@ -398,8 +398,8 @@ cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
 
 ggplot(data = error.df, aes(x = degree, y = inError)) +
   geom_line(color = cbp1[2], size = 1) +
-  xlab("Degree")
-  ylab("In sample error")
+  xlab("Degree") +
+  ylab("In sample error") +
   theme_minimal()
 ```
 
