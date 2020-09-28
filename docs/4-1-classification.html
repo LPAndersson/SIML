@@ -202,7 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="classification" class="section level2">
 <h2><span class="header-section-number">4.1</span> Classification</h2>
-<p>In this section we discuss some theory of classification, without going in to detail about any particlar classification method.</p>
+<p>In this section we discuss some theory of classification, without going in to detail about any particular classification method.</p>
 <p>We are given training data <span class="math inline">\((x_i,y_i)\quad i=1,\ldots, n\)</span> what we assume are a random sample from an unknown distribution <span class="math inline">\(P_{X,Y}\)</span>. The goal is to find a classifier, that is a function <span class="math inline">\(h:\mathcal X \mapsto \mathcal Y= \left\{-1,1\right\}\)</span>, based on the training data. There is a loss function <span class="math inline">\(l:\mathcal Y\times \mathcal Y \mapsto \mathbb R\)</span>. Most commonly this is the 0-1 loss,
 <span class="math display">\[
 l(h(x),y) :=1(h(x)\neq y).
@@ -227,7 +227,7 @@ h^\star(x) &amp;= \begin{cases}
 \end{align*}\]</span>
 </div>
 
-<p>That is, we should classify to the class that has the highest probabability, conditioned on <span class="math inline">\(X\)</span>. The minimal out-of-sample error is called the Bayes risk.</p>
+<p>That is, we should classify to the class that has the highest probability, conditioned on <span class="math inline">\(X\)</span>. The minimal out-of-sample error is called the Bayes risk.</p>
 <p>Let us prove this. The claim is that for any other classifier <span class="math inline">\(h(x)\)</span>, the out-of-sample error is at least as large, i.e.<br />
 <span class="math display">\[
 E_{out}(h) = P\left( h(X)\neq Y \right) \geq P\left( h^\star(X)\neq Y \right) = E_{out}(h^\star).
@@ -272,12 +272,12 @@ It would be done by specifying a class of candidate classifiers <span class="mat
 <span class="math display">\[
 \mathcal H = \left\{ h(x) = \text{sign}(x^T\beta + \beta_0) \mid \beta \in \mathbb R^d, \beta_0\in\mathbb R \right\}.
 \]</span>
-Note that if <span class="math inline">\(y_i(x_i^T\beta + \beta_0)&gt;0\)</span>, then <span class="math inline">\(y_i\)</span> is classified correctly and if <span class="math inline">\(y_i(x_i^T\beta + \beta_0)&lt;0\)</span>, then <span class="math inline">\(y_i\)</span> is missclassified. We can therefore think of <span class="math inline">\(y_i(x_i^T\beta + \beta_0)\)</span> as measuring how close <span class="math inline">\(y_i\)</span> is to being classified correctly or incorrectly. In fact, we can write the 0-1 loss as
+Note that if <span class="math inline">\(y_i(x_i^T\beta + \beta_0)&gt;0\)</span>, then <span class="math inline">\(y_i\)</span> is classified correctly and if <span class="math inline">\(y_i(x_i^T\beta + \beta_0)&lt;0\)</span>, then <span class="math inline">\(y_i\)</span> is misclassified. We can therefore think of <span class="math inline">\(y_i(x_i^T\beta + \beta_0)\)</span> as measuring how close <span class="math inline">\(y_i\)</span> is to being classified correctly or incorrectly. In fact, we can write the 0-1 loss as
 <span class="math display">\[
 l(h(x),y) = I(y(x^T\beta + \beta_0)\leq 0).
 \]</span>
 More generally we can consider a function <span class="math inline">\(f(x)\)</span>, a classifier <span class="math inline">\(h(x) = \text{sign}(f(x))\)</span> and a loss function that depends on the margin <span class="math inline">\(yf(x)\)</span>.</p>
-<p>It turns out that <span class="math inline">\(E_{in}\)</span>, as defined above, is difficult to use for training. The reason for this can be understood in different ways. Mathematically, the 0-1 loss is non-convex, and non-convex functions are in general difficult to optimize. In terms of classification, consider the picture below. Two points are missclassified, but we can see that by moving the classification boundary, we can find a classifier that only missclassifies one point. However, the training algorithm will try to move the boundary a very small step, and see if that gives an improvement. If we use the 0-1 loss, the in-sample error will be the same as long as the boundary is not moved far enough. Therefore it is better to use a loss function that also measures how far away each point is from being classified correctly/incorrectly.</p>
+<p>It turns out that <span class="math inline">\(E_{in}\)</span>, as defined above, is difficult to use for training. The reason for this can be understood in different ways. Mathematically, the 0-1 loss is non-convex, and non-convex functions are in general difficult to optimize. In terms of classification, consider the picture below. Two points are misclassified, but we can see that by moving the classification boundary, we can find a classifier that only misclassifies one point. However, the training algorithm will try to move the boundary a very small step, and see if that gives an improvement. If we use the 0-1 loss, the in-sample error will be the same as long as the boundary is not moved far enough. Therefore it is better to use a loss function that also measures how far away each point is from being classified correctly/incorrectly.</p>
 <div class="figure" style="text-align: center"><span id="fig:classicificationExample"></span>
 <img src="04-statisticalLearning_files/figure-html/classicificationExample-1.png" alt="Example of linear classification" width="80%" />
 <p class="caption">
@@ -295,7 +295,7 @@ Figure 4.2: Loss functions for classification
 <span class="math display">\[
 l(f(x),y)=(1-yf(x))_+,
 \]</span>
-where <span class="math inline">\(f_+:=\max (0,f)\)</span>. This function takes care of our complaints about the 0-1 loss function. If a point <span class="math inline">\(x_i\)</span> is correctly classified, and it is far away from being missclassified, so that <span class="math inline">\(y_if(x_i)\)</span> is large and positive, the loss is 0. However if it is close to being missclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
+where <span class="math inline">\(f_+:=\max (0,f)\)</span>. This function takes care of our complaints about the 0-1 loss function. If a point <span class="math inline">\(x_i\)</span> is correctly classified, and it is far away from being misclassified, so that <span class="math inline">\(y_if(x_i)\)</span> is large and positive, the loss is 0. However if it is close to being misclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
 <span class="math display">\[
 h^\star_{hinge} := \underset{h}{\text{argmin}}~ E\left[(1-Yh(X))_+ \right].
 \]</span>

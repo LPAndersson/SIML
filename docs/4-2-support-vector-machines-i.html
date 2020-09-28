@@ -211,7 +211,7 @@ defines hyperplane (e.g. a line in <span class="math inline">\(\mathbb R^2\)</s
 <span class="math display">\[
 h(x) = \text{sign}(x^T\beta + \beta_0).
 \]</span>
-The value of <span class="math inline">\(f(x_i)\)</span> tells us how far away from the hyperplane the point is and if <span class="math inline">\(y_if(x_i)&gt;0\)</span> the point is classified correctly. That is, if <span class="math inline">\(y_if(x_i)\)</span> is large and positive, the point <span class="math inline">\(x_i\)</span> is classified correctly and with a safe margin. If <span class="math inline">\(y_if(x_i)\)</span> is large and negative, the point is classified incorrectly and is far away from beeing correctly classified. We will consider the hinge loss
+The value of <span class="math inline">\(f(x_i)\)</span> tells us how far away from the hyperplane the point is and if <span class="math inline">\(y_if(x_i)&gt;0\)</span> the point is classified correctly. That is, if <span class="math inline">\(y_if(x_i)\)</span> is large and positive, the point <span class="math inline">\(x_i\)</span> is classified correctly and with a safe margin. If <span class="math inline">\(y_if(x_i)\)</span> is large and negative, the point is classified incorrectly and is far away from being correctly classified. We will consider the hinge loss
 <span class="math display">\[
 l(y,f) = (1-yf)_+ ,
 \]</span>
@@ -220,40 +220,40 @@ here <span class="math inline">\((\cdot)_+\)</span> indicates the positive part.
 \underset{\beta_0,\beta}{\text{minimize}}\quad \frac{1}{n}\sum_{i=1}^n (1-y_if(x_i))_+.
 \]</span></p>
 <p>As an example, we generate some training data from a mixture of normal distributions.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="kw">library</span>(mvtnorm)</a>
-<a class="sourceLine" id="cb109-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb109-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb109-4" data-line-number="4">mu.p &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">10</span>,<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb109-5" data-line-number="5">mu.n &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">10</span>,<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb109-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb109-7" data-line-number="7">n.samples &lt;-<span class="st"> </span><span class="dv">100</span></a>
-<a class="sourceLine" id="cb109-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb109-9" data-line-number="9">data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">2</span><span class="op">*</span>n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb109-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb109-11" data-line-number="11"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</a>
-<a class="sourceLine" id="cb109-12" data-line-number="12">  mu =<span class="st"> </span>mu.p[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.p), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
-<a class="sourceLine" id="cb109-13" data-line-number="13">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb109-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb109-15" data-line-number="15">  data.matrix[<span class="dv">2</span><span class="op">*</span>i<span class="dv">-1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb109-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb109-17" data-line-number="17">  mu =<span class="st"> </span>mu.n[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.n), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
-<a class="sourceLine" id="cb109-18" data-line-number="18">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb109-19" data-line-number="19">  data.matrix[<span class="dv">2</span><span class="op">*</span>i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</a>
-<a class="sourceLine" id="cb109-20" data-line-number="20">}</a>
-<a class="sourceLine" id="cb109-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb109-22" data-line-number="22">data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</a>
-<a class="sourceLine" id="cb109-23" data-line-number="23"><span class="kw">colnames</span>(data.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</a>
-<a class="sourceLine" id="cb109-24" data-line-number="24">data.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.df<span class="op">$</span>y)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(mvtnorm)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">mu.p &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">10</span>,<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">mu.n &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">10</span>,<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">n.samples &lt;-<span class="st"> </span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">2</span><span class="op">*</span>n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">  mu =<span class="st"> </span>mu.p[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.p), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">  data.matrix[<span class="dv">2</span><span class="op">*</span>i<span class="dv">-1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">  mu =<span class="st"> </span>mu.n[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.n), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">  data.matrix[<span class="dv">2</span><span class="op">*</span>i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20">}</a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22">data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</a>
+<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="kw">colnames</span>(data.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</a>
+<a class="sourceLine" id="cb1-24" data-line-number="24">data.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.df<span class="op">$</span>y)</a></code></pre></div>
 <p>Then use R to calculate the hyperplane that minimizes the in-sample error.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1"><span class="kw">library</span>(kernlab)</a>
-<a class="sourceLine" id="cb110-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb110-3" data-line-number="3">svm.model &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y<span class="op">~</span>x1<span class="op">+</span>x2, <span class="dt">data =</span> data.df,</a>
-<a class="sourceLine" id="cb110-4" data-line-number="4">                  <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</a>
-<a class="sourceLine" id="cb110-5" data-line-number="5">                  <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</a>
-<a class="sourceLine" id="cb110-6" data-line-number="6">                  <span class="dt">C =</span> <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb110-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb110-8" data-line-number="8">grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>))</a>
-<a class="sourceLine" id="cb110-9" data-line-number="9">grid<span class="op">$</span>predicted &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">predict</span>(svm.model, grid))</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(kernlab)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">svm.model &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y<span class="op">~</span>x1<span class="op">+</span>x2, <span class="dt">data =</span> data.df,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">                  <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">                  <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">                  <span class="dt">C =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>))</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">grid<span class="op">$</span>predicted &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">predict</span>(svm.model, grid))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:SVMlinear"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMlinear-1.png" alt="Training data and linear classification with hinge loss" width="80%" />
 <p class="caption">
@@ -261,17 +261,17 @@ Figure 4.3: Training data and linear classification with hinge loss
 </p>
 </div>
 <p>We can also calculate the in-sample error</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1"><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model, data.df))</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model, data.df))</a></code></pre></div>
 <pre><code>## [1] 0.285</code></pre>
-<p>Not so bad, but let us try to improve it. We select some basis functions, <span class="math inline">\(\varphi_m(x)\)</span>, <span class="math inline">\(m=1,\ldots, M\)</span> and use the same classifier but with input features <span class="math inline">\(\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m))\)</span>. We can for example choose <span class="math inline">\(\varphi_m\)</span> to be polynomials of increasing order. For order 2, we get the classifier below, an elipsoid.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1"><span class="kw">library</span>(kernlab)</a>
-<a class="sourceLine" id="cb113-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb113-3" data-line-number="3">svm.model &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y<span class="op">~</span><span class="kw">poly</span>(x1, x2, <span class="dt">degree =</span> <span class="dv">2</span>), <span class="dt">data =</span> data.df,</a>
-<a class="sourceLine" id="cb113-4" data-line-number="4">                  <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</a>
-<a class="sourceLine" id="cb113-5" data-line-number="5">                  <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</a>
-<a class="sourceLine" id="cb113-6" data-line-number="6">                  <span class="dt">C =</span> <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb113-7" data-line-number="7">grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>))</a>
-<a class="sourceLine" id="cb113-8" data-line-number="8">grid<span class="op">$</span>predicted &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">predict</span>(svm.model, grid))</a></code></pre></div>
+<p>Not so bad, but let us try to improve it. We select some basis functions, <span class="math inline">\(\varphi_m(x)\)</span>, <span class="math inline">\(m=1,\ldots, M\)</span> and use the same classifier but with input features <span class="math inline">\(\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m))\)</span>. We can for example choose <span class="math inline">\(\varphi_m\)</span> to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">library</span>(kernlab)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">svm.model &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y<span class="op">~</span><span class="kw">poly</span>(x1, x2, <span class="dt">degree =</span> <span class="dv">2</span>), <span class="dt">data =</span> data.df,</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">                  <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">                  <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">                  <span class="dt">C =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>))</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">grid<span class="op">$</span>predicted &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">predict</span>(svm.model, grid))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:SVMpolynomial"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMpolynomial-1.png" alt="Training data and quadratic classification with hinge loss" width="80%" />
 <p class="caption">
@@ -279,23 +279,23 @@ Figure 4.4: Training data and quadratic classification with hinge loss
 </p>
 </div>
 <p>This time the in-sample error is</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1"><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">fitted</span>(svm.model))</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">fitted</span>(svm.model))</a></code></pre></div>
 <pre><code>## [1] 0.275</code></pre>
 <p>Better. Let us continue with increasing order polynomials, and calculate the error.</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="kw">library</span>(kernlab)</a>
-<a class="sourceLine" id="cb116-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb116-3" data-line-number="3">maxDegree &lt;-<span class="st"> </span><span class="dv">20</span></a>
-<a class="sourceLine" id="cb116-4" data-line-number="4">error.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;degree&quot;</span> =<span class="st"> </span><span class="dv">1</span><span class="op">:</span>maxDegree, <span class="dt">inError =</span> <span class="ot">NA</span>, <span class="dt">outError =</span> <span class="ot">NA</span>)</a>
-<a class="sourceLine" id="cb116-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb116-6" data-line-number="6">svm.model.list &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">mode =</span> <span class="st">&quot;list&quot;</span>, <span class="dt">length =</span> maxDegree)</a>
-<a class="sourceLine" id="cb116-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb116-8" data-line-number="8"><span class="cf">for</span> (degree <span class="cf">in</span> <span class="kw">seq</span>(<span class="dv">1</span>,maxDegree)) {</a>
-<a class="sourceLine" id="cb116-9" data-line-number="9">  svm.model.list[degree] &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x1, x2, <span class="dt">degree =</span> degree), <span class="dt">data =</span> data.df,</a>
-<a class="sourceLine" id="cb116-10" data-line-number="10">                                 <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</a>
-<a class="sourceLine" id="cb116-11" data-line-number="11">                                 <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</a>
-<a class="sourceLine" id="cb116-12" data-line-number="12">                                 <span class="dt">C =</span> <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb116-13" data-line-number="13">  error.df<span class="op">$</span>inError[degree] &lt;-<span class="st"> </span><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model.list[[degree]], data.df))</a>
-<a class="sourceLine" id="cb116-14" data-line-number="14">}</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">library</span>(kernlab)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">maxDegree &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">error.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;degree&quot;</span> =<span class="st"> </span><span class="dv">1</span><span class="op">:</span>maxDegree, <span class="dt">inError =</span> <span class="ot">NA</span>, <span class="dt">outError =</span> <span class="ot">NA</span>)</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">svm.model.list &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">mode =</span> <span class="st">&quot;list&quot;</span>, <span class="dt">length =</span> maxDegree)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="cf">for</span> (degree <span class="cf">in</span> <span class="kw">seq</span>(<span class="dv">1</span>,maxDegree)) {</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">  svm.model.list[degree] &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x1, x2, <span class="dt">degree =</span> degree), <span class="dt">data =</span> data.df,</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">                                 <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11">                                 <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</a>
+<a class="sourceLine" id="cb8-12" data-line-number="12">                                 <span class="dt">C =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb8-13" data-line-number="13">  error.df<span class="op">$</span>inError[degree] &lt;-<span class="st"> </span><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model.list[[degree]], data.df))</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">}</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:errorPlot"></span>
 <img src="04-statisticalLearning_files/figure-html/errorPlot-1.png" alt="In sample error vs. degree of polynomial, using hinge loss" width="80%" />
 <p class="caption">
@@ -692,7 +692,7 @@ Figure 4.5: In sample error vs. degree of polynomial, using hinge loss
 ##  - attr(*, &quot;complete&quot;)= logi TRUE
 ##  - attr(*, &quot;validate&quot;)= logi TRUE</code></pre>
 <p>In-sample error gets smaller as we increase the order of the polynomial. For degree 20, the in-sample error is</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1">error.df<span class="op">$</span>inError[<span class="dv">20</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">error.df<span class="op">$</span>inError[<span class="dv">20</span>]</a></code></pre></div>
 <pre><code>## [1] 0.03</code></pre>
 The classifier looks complex.
 <div class="figure" style="text-align: center"><span id="fig:SVMpolynomial20"></span>
@@ -702,32 +702,32 @@ Figure 4.6: Training data and degree 20 polynomial classification
 </p>
 </div>
 <p>Since we know the data generating distribution, we can approximate the out-of-sample error for each classifier, by simulation.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1"><span class="kw">library</span>(mvtnorm)</a>
-<a class="sourceLine" id="cb121-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb121-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb121-4" data-line-number="4">n.samples &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
-<a class="sourceLine" id="cb121-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb121-6" data-line-number="6">data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">2</span><span class="op">*</span>n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb121-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb121-8" data-line-number="8"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</a>
-<a class="sourceLine" id="cb121-9" data-line-number="9">  mu =<span class="st"> </span>mu.p[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.p), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
-<a class="sourceLine" id="cb121-10" data-line-number="10">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb121-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb121-12" data-line-number="12">  data.matrix[<span class="dv">2</span><span class="op">*</span>i<span class="dv">-1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb121-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb121-14" data-line-number="14">  mu =<span class="st"> </span>mu.n[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.n), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
-<a class="sourceLine" id="cb121-15" data-line-number="15">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb121-16" data-line-number="16">  data.matrix[<span class="dv">2</span><span class="op">*</span>i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</a>
-<a class="sourceLine" id="cb121-17" data-line-number="17">}</a>
-<a class="sourceLine" id="cb121-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb121-19" data-line-number="19">data.test.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</a>
-<a class="sourceLine" id="cb121-20" data-line-number="20"><span class="kw">colnames</span>(data.test.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</a>
-<a class="sourceLine" id="cb121-21" data-line-number="21">data.test.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.test.df<span class="op">$</span>y)</a>
-<a class="sourceLine" id="cb121-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb121-23" data-line-number="23"><span class="cf">for</span> (degree <span class="cf">in</span> <span class="kw">seq</span>(<span class="dv">1</span>,maxDegree)) {</a>
-<a class="sourceLine" id="cb121-24" data-line-number="24">  error.df<span class="op">$</span>outError[degree] &lt;-<span class="st"> </span><span class="kw">mean</span>(data.test.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model.list[[degree]],</a>
-<a class="sourceLine" id="cb121-25" data-line-number="25">                                                              data.test.df))</a>
-<a class="sourceLine" id="cb121-26" data-line-number="26">}</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">library</span>(mvtnorm)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">n.samples &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">2</span><span class="op">*</span>n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">  mu =<span class="st"> </span>mu.p[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.p), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">  data.matrix[<span class="dv">2</span><span class="op">*</span>i<span class="dv">-1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb13-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14">  mu =<span class="st"> </span>mu.n[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.n), <span class="dt">size =</span> <span class="dv">1</span>),]</a>
+<a class="sourceLine" id="cb13-15" data-line-number="15">  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">  data.matrix[<span class="dv">2</span><span class="op">*</span>i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb13-17" data-line-number="17">}</a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19">data.test.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</a>
+<a class="sourceLine" id="cb13-20" data-line-number="20"><span class="kw">colnames</span>(data.test.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</a>
+<a class="sourceLine" id="cb13-21" data-line-number="21">data.test.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.test.df<span class="op">$</span>y)</a>
+<a class="sourceLine" id="cb13-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb13-23" data-line-number="23"><span class="cf">for</span> (degree <span class="cf">in</span> <span class="kw">seq</span>(<span class="dv">1</span>,maxDegree)) {</a>
+<a class="sourceLine" id="cb13-24" data-line-number="24">  error.df<span class="op">$</span>outError[degree] &lt;-<span class="st"> </span><span class="kw">mean</span>(data.test.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model.list[[degree]],</a>
+<a class="sourceLine" id="cb13-25" data-line-number="25">                                                              data.test.df))</a>
+<a class="sourceLine" id="cb13-26" data-line-number="26">}</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:inOutSampleError"></span>
 <img src="04-statisticalLearning_files/figure-html/inOutSampleError-1.png" alt="Out-of-sample error vs. degree of polynomial." width="80%" />
 <p class="caption">

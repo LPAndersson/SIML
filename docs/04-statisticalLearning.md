@@ -16,7 +16,7 @@ E\left[ f(X,Y)\right] = \int f(x,y)p_{X,Y}(x,y)dxdy.
 $$
 There is also a loss function $l:\mathcal Y \times \mathcal Y \mapsto \mathbb R$ that tells how close two points in $\mathcal Y$ are to each other.
 
-The problem in statistical learning is to find a function $h:\mathcal X \mapsto \mathcal Y$ that takes an input $x\in \mathcal X$ and gives and ouput $y\in\mathcal Y$. The function should be such that its out-of-sample error is small:
+<p>The problem in statistical learning is to find a function $h:\mathcal X \mapsto \mathcal Y$ that takes an input $x\in \mathcal X$ and gives and output $y\in\mathcal Y$. The function should be such that its out-of-sample error is small:</p>
 \BeginKnitrBlock{note}<div class="note">$$
 E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
 $$</div>\EndKnitrBlock{note}
@@ -36,11 +36,11 @@ ISL 5
 ISL 6.1-2
 ISL 9
 
-The sections on Hoeffding's inequality, generalization error and VC-dimension is not in the course litterature. So it is enough to read these notes.
+The sections on Hoeffding's inequality, generalization error and VC-dimension is not in the course literature. So it is enough to read these notes.
 
 ## Classification
 
-In this section we discuss some theory of classification, without going in to detail about any particlar classification method.
+In this section we discuss some theory of classification, without going in to detail about any particular classification method.
 
 We are given training data $(x_i,y_i)\quad i=1,\ldots, n$ what we assume are a random sample from an unknown distribution $P_{X,Y}$. The goal is to find a classifier, that is a function $h:\mathcal X \mapsto \mathcal Y= \left\{-1,1\right\}$, based on the training data. There is a loss function $l:\mathcal Y\times \mathcal Y \mapsto \mathbb R$. Most commonly this is the 0-1 loss,
 $$
@@ -64,7 +64,7 @@ h^\star(x) &= \begin{cases}
 &= \text{sign} (\eta(x) - 1/2).
 \end{align*}</div>\EndKnitrBlock{note}
 
-That is, we should classify to the class that has the highest probabability, conditioned on $X$. The minimal out-of-sample error is called the Bayes risk.
+That is, we should classify to the class that has the highest probability, conditioned on $X$. The minimal out-of-sample error is called the Bayes risk.
 
 Let us prove this. The claim is that for any other classifier $h(x)$, the out-of-sample error is at least as large, i.e.\
 $$
@@ -112,13 +112,13 @@ It would be done by specifying a class of candidate classifiers $\mathcal H$ fro
 $$
 \mathcal H = \left\{ h(x) = \text{sign}(x^T\beta + \beta_0) \mid \beta \in \mathbb R^d, \beta_0\in\mathbb R \right\}.
 $$
-Note that if $y_i(x_i^T\beta + \beta_0)>0$, then $y_i$ is classified correctly and if $y_i(x_i^T\beta + \beta_0)<0$, then $y_i$ is missclassified. We can therefore think of $y_i(x_i^T\beta + \beta_0)$ as measuring how close $y_i$ is to being classified correctly or incorrectly. In fact, we can write the 0-1 loss as
+Note that if $y_i(x_i^T\beta + \beta_0)>0$, then $y_i$ is classified correctly and if $y_i(x_i^T\beta + \beta_0)<0$, then $y_i$ is misclassified. We can therefore think of $y_i(x_i^T\beta + \beta_0)$ as measuring how close $y_i$ is to being classified correctly or incorrectly. In fact, we can write the 0-1 loss as
 $$
 l(h(x),y) = I(y(x^T\beta + \beta_0)\leq 0).
 $$
 More generally we can consider a function $f(x)$, a classifier $h(x) = \text{sign}(f(x))$ and a loss function that depends on the margin $yf(x)$.
 
-It turns out that $E_{in}$, as defined above, is difficult to use for training. The reason for this can be understood in different ways. Mathematically, the 0-1 loss is non-convex, and non-convex functions are in general difficult to optimize. In terms of classification, consider the picture below. Two points are missclassified, but we can see that by moving the classification boundary, we can find a classifier that only missclassifies one point. However, the training algorithm will try to move the boundary a very small step, and see if that gives an improvement. If we use the 0-1 loss, the in-sample error will be the same as long as the boundary is not moved far enough. Therefore it is better to use a loss function that also measures how far away each point is from being classified correctly/incorrectly.
+It turns out that $E_{in}$, as defined above, is difficult to use for training. The reason for this can be understood in different ways. Mathematically, the 0-1 loss is non-convex, and non-convex functions are in general difficult to optimize. In terms of classification, consider the picture below. Two points are misclassified, but we can see that by moving the classification boundary, we can find a classifier that only misclassifies one point. However, the training algorithm will try to move the boundary a very small step, and see if that gives an improvement. If we use the 0-1 loss, the in-sample error will be the same as long as the boundary is not moved far enough. Therefore it is better to use a loss function that also measures how far away each point is from being classified correctly/incorrectly.
 
 
 <div class="figure" style="text-align: center">
@@ -134,7 +134,7 @@ The hinge loss is
 $$
 l(f(x),y)=(1-yf(x))_+,
 $$
-where $f_+:=\max (0,f)$. This function takes care of our complaints about the 0-1 loss function. If a point $x_i$ is correctly classified, and it is far away from being missclassified, so that $y_if(x_i)$ is large and positive, the loss is 0. However if it is close to being missclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
+where $f_+:=\max (0,f)$. This function takes care of our complaints about the 0-1 loss function. If a point $x_i$ is correctly classified, and it is far away from being misclassified, so that $y_if(x_i)$ is large and positive, the loss is 0. However if it is close to being misclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
 $$
 h^\star_{hinge} := \underset{h}{\text{argmin}}~ E\left[(1-Yh(X))_+ \right].
 $$
@@ -188,7 +188,7 @@ defines hyperplane (e.g. a line in $\mathbb R^2$, a plane in $\mathbb R^3$). We 
 $$
 h(x) = \text{sign}(x^T\beta + \beta_0).
 $$
-The value of $f(x_i)$ tells us how far away from the hyperplane the point is and if $y_if(x_i)>0$ the point is classified correctly. That is, if $y_if(x_i)$ is large and positive, the point $x_i$ is classified correctly and with a safe margin. If $y_if(x_i)$ is large and negative, the point is classified incorrectly and is far away from beeing correctly classified. We will consider the hinge loss
+The value of $f(x_i)$ tells us how far away from the hyperplane the point is and if $y_if(x_i)>0$ the point is classified correctly. That is, if $y_if(x_i)$ is large and positive, the point $x_i$ is classified correctly and with a safe margin. If $y_if(x_i)$ is large and negative, the point is classified incorrectly and is far away from being correctly classified. We will consider the hinge loss
 $$
 l(y,f) = (1-yf)_+ ,
 $$
@@ -255,7 +255,7 @@ mean(data.df$y != predict(svm.model, data.df))
 ## [1] 0.285
 ```
 
-Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m))$. We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an elipsoid.
+Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m))$. We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.
 
 ```r
 library(kernlab)
@@ -944,7 +944,7 @@ But this inequality is not very tight. When $A$ and $B$ tend to happen at the sa
 
 In this section we discuss a measure of the complexity of a hypothesis set $\mathcal H$, the Vapnik–Chervonenkis (VC) dimension.
 
-We call one possible way of labelling a set of points, $S$, a dichotomy and we say that $S$ is shattered by $\mathcal H$ when $\mathcal H$ can generate all possible dichotomies of $S$. The VC-dimension of $\mathcal H$ is the size of the largest set that can be shattered by $\mathcal H$.
+We call one possible way of labeling a set of points, $S$, a dichotomy and we say that $S$ is shattered by $\mathcal H$ when $\mathcal H$ can generate all possible dichotomies of $S$. The VC-dimension of $\mathcal H$ is the size of the largest set that can be shattered by $\mathcal H$.
 
 First consider the example of the real line and $\mathcal H$ being the classifiers that classify to one class to the left of a point and to the other class to the right of the point. If $S$ consists of two points, all four dichotomies can be realized and so $S$ can be shattered by $\mathcal H$. However if $S$ consists of three points, the dichotomy (1,0,1) cannot be realized and $S$ cannot be shattered. Therefore the VC-dimension of $\mathcal H$ is $d_{VC}=2$.
 
@@ -986,7 +986,7 @@ E_{out} = E_{in} + \Omega(n,\mathcal H, \delta),
 $$
 where $\Omega$ is a penalty for model complexity. As we choose a more complex $\mathcal H$ (with higher $d_{VC}$) the in-sample error will become smaller. But, at the same time the penalty $\Omega$ get larger. The penalty also gets smaller when we have more samples. The optimal model, with smallest $E_{out}$, is therefore a compromise that minimize the sum of the two terms.
 
-One commonly used way to estimate $E_{out}$ is to split the data into one <em>training set</em> and one <em>test set</em>. The test set is not used for training and so when we calculate $E_{test}$, we do this for only one $h$, the one with minimimal in-sample error. Therefore Hoeffding's inequality applies as a generalization bound, which is much tighter than the VC-bound.
+One commonly used way to estimate $E_{out}$ is to split the data into one <em>training set</em> and one <em>test set</em>. The test set is not used for training and so when we calculate $E_{test}$, we do this for only one $h$, the one with minimal in-sample error. Therefore Hoeffding's inequality applies as a generalization bound, which is much tighter than the VC-bound.
 
 In the picture we visualize the partition of the out-of-sample error into in-sample error and generalization error.
 
@@ -1083,7 +1083,7 @@ This now has an in-sample error of 0.275 and out-of-sample error 0.255555
 
 In this section we will see another approach for understanding how model complexity affects statistical learning. Instead of bounding the difference between $E_{out}$ and $E_{in}$ we will decompose $E_{out}$ into two different error terms.
 
-We consider the regression problem and therfore we assume a quadratic loss function,
+We consider the regression problem and therefore we assume a quadratic loss function,
 $$
 E_{out}(h^{\mathcal D}) = E_{X,Y}\left[ (Y- h^{\mathcal D}(X))^2 \right].
 $$
@@ -1160,7 +1160,7 @@ truth <- function(x) {
   sin(x * 2 + 1) + x
 }
 ```
-For conveniance, we write a function that fits three different polynomial regressions and returns the plot.
+For convenience, we write a function that fits three different polynomial regressions and returns the plot.
 
 ```r
 fit_plot <- function(){
@@ -1222,12 +1222,12 @@ grid.arrange(fit_plot(), fit_plot(), fit_plot(), fit_plot(),
 </div>
 We see from the pictures that then 2nd degree polynomial fit does not change very much on the different training sets, while the 20th degree polynomial looks very different in the four pictures.
 
-<p>Now let ut repeat this experiment many times, and only plot the mean and variance of $h$.</p>
+<p>Now let us repeat this experiment many times, and only plot the mean and variance of $h$.</p>
 <div class="figure" style="text-align: center">
 <img src="04-statisticalLearning_files/figure-html/polynomialFits-1.png" alt="Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition" width="100%" />
 <p class="caption">(\#fig:polynomialFits)Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition</p>
 </div>
-From the pictures we see that the 2nd degree polynomial has a bias, but for 6h degree, the bias is close to 0. The error in the 2nd degree polynomial is a sum of bias and variance, but for 6th and 20th the error is dominated by the variance term. The variance becomes larger as the degree of the polynomial becomes larger, while the bias is already 0 for 6th degree. Therefore, the total error, the sum of bias and variance, is smallest for a 6th degree polynomial. As before, we see that a very flexibel model will tend to overfit the data and may perform worse than a less flexible model.
+From the pictures we see that the 2nd degree polynomial has a bias, but for 6h degree, the bias is close to 0. The error in the 2nd degree polynomial is a sum of bias and variance, but for 6th and 20th the error is dominated by the variance term. The variance becomes larger as the degree of the polynomial becomes larger, while the bias is already 0 for 6th degree. Therefore, the total error, the sum of bias and variance, is smallest for a 6th degree polynomial. As before, we see that a very flexible model will tend to overfit the data and may perform worse than a less flexible model.
 
 Another way to see the same phenomena is to choose one point, here $x=1.5$, and plot the bias and variance as we vary the degree of the polynomial. We do this for sample size $n=100$ and $n=10000$.
 
@@ -1297,7 +1297,7 @@ and the lasso minimizes
 $$
 E_{in} + \lambda\sum_{i=1}^p | \beta_j |.
 $$
-Here $\lambda$ is a tuning parameter that needs to be determined seperately. Ridge regression and lasso use different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of $\beta_j$ will be smaller in ridge and lasso. I.e.\ the estimates will shrink towards zero. These methods are therefore sometimes called shrinkage methods. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.
+Here $\lambda$ is a tuning parameter that needs to be determined separately. Ridge regression and lasso use different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of $\beta_j$ will be smaller in ridge and lasso. I.e.\ the estimates will shrink towards zero. These methods are therefore sometimes called shrinkage methods. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.
 
 Let us look at the same example above, this time with a degree 20 polynomial, but penalized with ridge and lasso.
 
@@ -1329,7 +1329,7 @@ model.lasso <- glmnet(poly(data.df$x,20), data.df$y, alpha = 1 )
 <img src="04-statisticalLearning_files/figure-html/lasso-1.png" alt="Coefficients as lambda is varied for the lasso" width="80%" />
 <p class="caption">(\#fig:lasso)Coefficients as lambda is varied for the lasso</p>
 </div>
-In the pictures we see that the fitted coefficients decrese towards 0 as $\lambda$ increases. The main difference between the two methods is that in the ridge regression all coefficients are strictly positive for any finite $\lambda$, while for the lasso coefficients become 0 when $\lambda$ is large. This difference relates to model interpretability. That is, the lasso will produce a simple model where many variables can be disregarded. We also mention that the lasso and ridge rigression can, unlike unregularized least squares, handle the case $p>>n$. There is a generalization of ridge and lasso called elastic net, where a parameter $0\leq \alpha \leq 1$ is introduced and the loss function is instead,
+In the pictures we see that the fitted coefficients decrease towards 0 as $\lambda$ increases. The main difference between the two methods is that in the ridge regression all coefficients are strictly positive for any finite $\lambda$, while for the lasso coefficients become 0 when $\lambda$ is large. This difference relates to model interpretability. That is, the lasso will produce a simple model where many variables can be disregarded. We also mention that the lasso and ridge regression can, unlike unregularized least squares, handle the case $p>>n$. There is a generalization of ridge and lasso called elastic net, where a parameter $0\leq \alpha \leq 1$ is introduced and the loss function is instead,
 $$
 E_{in} + \lambda\left( \alpha \sum_{i=1}^p | \beta_j | + (1-\alpha) \sum_{i=1}^p \beta_j^2\right).
 $$
@@ -1338,7 +1338,7 @@ $$
 
 We have seen that in statistical learning a model that is too flexible will lead to overfitting and a model that is not flexible enough will lead to underfitting. We can control the flexibility of our model by either choosing the model class, e.g.\ the degree of a polynomial, or by introducing regularization. In either case this introduces a new parameter that we can not learn from the in-sample error. In this section we discuss how choose this parameter.
 
-One approach is to use a validation set. We would take the available observations and divide them (randomly) into a training set and a validation set. The training set is used only for fitting the model(s) and the validation set is used for estimating the out-of-sample error. We could then choose the model that achieves the smallest error on the validation set. However note that the error of the chosen model is not a good estimate of the out-of-sample error, since again we have used the validation set for chosing a model. The drawback of this method is that the division into training and validation set is random and so if we are unlucky, the division does not represent the underlying distribution well.
+One approach is to use a validation set. We would take the available observations and divide them (randomly) into a training set and a validation set. The training set is used only for fitting the model(s) and the validation set is used for estimating the out-of-sample error. We could then choose the model that achieves the smallest error on the validation set. However note that the error of the chosen model is not a good estimate of the out-of-sample error, since again we have used the validation set for choosing a model. The drawback of this method is that the division into training and validation set is random and so if we are unlucky, the division does not represent the underlying distribution well.
 
 An approach that tries to address this drawback is leave-one-out cross-validation (LOOCV). Here we again divide the observations into a training set and a validation set. The difference is that the validation set will only contain one observation, call this $(x_1,y_1)$. We fit the model on the $n-1$ observations in the training set and predict the observation in the validation set. We then calculate the prediction error and call this (in the regression case) $MSE_1$. We now repeat this, instead keeping $(x_2,y_2)$ in the validation set and all other in the training set. The LOOCV estimate of the out-of-sample error is then
 $$
@@ -1347,7 +1347,7 @@ $$
 
 The advantage compared to the validation set approach is that it always yields the same results and that their is less bias. This is because the size of the training set, $n-1$, is almost the same as the full data set, $n$. Therefore the fit should be almost as good as using the full data set.
 
-The main drawback of LOOCV is that if $n$ is large, it could be expensive to implement. An alternative is therefore k-fold Cross-Validation. Here the data is divided randomly into $k$ groups. We take the first group as validation set and the others as training set. This gives an out-of-sample error, call it $MSE_1$. We comtinue by treating the second group as validation set, giving $MSE_2$, and so on. The k-fold CV estimate of the out-of-sample error is then
+The main drawback of LOOCV is that if $n$ is large, it could be expensive to implement. An alternative is therefore k-fold Cross-Validation. Here the data is divided randomly into $k$ groups. We take the first group as validation set and the others as training set. This gives an out-of-sample error, call it $MSE_1$. We continue by treating the second group as validation set, giving $MSE_2$, and so on. The k-fold CV estimate of the out-of-sample error is then
 $$
 CV_{(k)} = \frac{1}{k}\sum_{i=1}^k MSE_i.
 $$
