@@ -503,10 +503,10 @@ $$
 P\left( \left| \bar Y_n - p \right|\geq \varepsilon \right) = P\left( \bar Y_n \geq p+\varepsilon  \right) + P\left( \bar Y_n \leq p - \varepsilon  \right).
 $$
 Then we use that $\exp$ is an increasing function, together with Markov's inequality, for any $t>0$,
-\begin{align}
+\begin{align*}
 P\left( \bar Y_n \geq p +  \varepsilon  \right) &= P\left( t\sum_{i=1}^n Y_i \geq tn(p + \varepsilon)  \right) = P\left( e^{t\sum_{i=1}^n Y_i }\geq  e^{tn(p +\varepsilon) } \right) \\
 &\overset{\text{Markov}}{\leq} e^{-tn(p+\varepsilon)}E\left[ e^{t\sum_{i=1}^n Y_i } \right] \overset{indep.}{=} e^{-tn(p+\varepsilon)}\prod_{n=1}^nE\left[ e^{t Y_i } \right] =  e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n.
-\end{align}
+\end{align*}
 
 Now we need to bound the last expression. Since $Y_i$ is Bernoulli,
 $$
@@ -687,7 +687,7 @@ Now we can handle also the case with a finite number of $h$. But there is still 
 $$
 P(A\cup B) = P(A) + P(B) - P(A\cap B) \leq P(A) + P(B).
 $$
-But this inequality is not very tight. When $A$ and $B$ tend to happen at the same time $P(A \cup B)\approx P(A)$ and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many $h$ in $\mathcal H$ are similar, so if $\left| E_{in}(h_i) - E_{out}(h_i)  \right|>\varepsilon$ it is likely that also $\left|  E_{in}(h_j) - E_{out}(h_j)  \right|>\varepsilon$.
+But this inequality is not very tight. When $A$ and $B$ tend to happen at the same time $P(A \cup B)\approx P(A)$ and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many $h$ in $\mathcal H$ are similar, so if $\left| E_{in}(h_1) - E_{out}(h_1)  \right|>\varepsilon$ it is likely that also $\left|  E_{in}(h_2) - E_{out}(h_2)  \right|>\varepsilon$.
 
 ## VC-dimension
 
@@ -889,7 +889,7 @@ library(gridExtra)
 grid.arrange(p1,p2, nrow = 1)
 ```
 <p>
-We see a pattern here, the VC-dimension is equal to the number of parameters of $\mathcal H$. This is however not always true. As a counterexample, take the functions $\left\{ x\mapsto sin(\omega x)\mid  \omega\in \mathbb R \right\}$. Then label points as -1 if it is above the curve and 1 otherwise. There is only one parameter, but any $S$ can be shattered and so $d_{VC}=\infty$.</p>
+We see a pattern here, the VC-dimension is equal to the number of parameters of $\mathcal H$. This is however not always true. As a counterexample, take the functions $\left\{ x\mapsto sin(\omega x)\mid  \omega\in \mathbb R \right\}$. Then label a point $x$ according to the sign of $sin(\omega x)<0$. There is only one parameter, but any $S$ can be shattered and so $d_{VC}=\infty$.</p>
 
 ```{r vcDim4, cache=FALSE, echo = FALSE, fig.cap='A one parameter function can shatter any number of points', out.width='80%', fig.asp=.3, fig.align='center', warning=FALSE}
 x <- c(0.5,1,1.5,2,2.5,3)
@@ -960,9 +960,9 @@ ggplot() +
 
 The usefulness of the VC-dimension comes from the following result
 ```{block2, type='note'}
-Let $\mathcal H$ have VC-dimension $d_{VC}$ Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$:
+Let $\mathcal H$ have VC-dimension $d_{VC}$. Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$ @mohri2018foundations :
 $$
-  E_{out}\leq E_{in} +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
+  E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
 $$
 ```
 
@@ -970,7 +970,7 @@ The important quantity here is $n/d_{VC}$. If the sample size $n$ is large in re
 
 A different way of thinking of this results is
 $$
-E_{out} = E_{in} + \Omega(n,\mathcal H, \delta),
+E_{out}(h) = E_{in}(h) + \Omega(n,\mathcal H, \delta),
 $$
 where $\Omega$ is a penalty for model complexity. As we choose a more complex $\mathcal H$ (with higher $d_{VC}$) the in-sample error will become smaller. But, at the same time the penalty $\Omega$ get larger. The penalty also gets smaller when we have more samples. The optimal model, with smallest $E_{out}$, is therefore a compromise that minimize the sum of the two terms.
 
@@ -1143,7 +1143,7 @@ $$
 K(x,\tilde x) = \exp\left( -\gamma  \sum_{i=1}^p (x_i-\tilde x_i)^2\right).
 $$
 Let us try the radial basis function kernel on our data set.
-```{r, warning=FALSE, cache = FALSE, echo=FALSE}
+```{r, warning=FALSE, cache = FALSE, echo=FALSE, message = FALSE}
 library(mvtnorm)
 set.seed(42)
 
@@ -1229,11 +1229,11 @@ In this section we will see another approach for understanding how model complex
 
 We consider the regression problem and therefore we assume a quadratic loss function,
 $$
-E_{out}(h^{\mathcal D}) = E_{X,Y}\left[ (Y- h^{\mathcal D}(X))^2 \right].
+E_{out}(h) = E\left[ (Y- h(X))^2 \right]
 $$
-Here $h^{\mathcal D}$ is the final hypothesis that was learnt from the data $\mathcal D$. We also define
+If $h^{\mathcal D}$ is the final hypothesis that was learnt from the data $\mathcal D$, we also define
 $$
-\bar h(x) := E_{\mathcal D}\left[h^{\mathcal D}(x))\right].
+\bar h(x) := E\left[h^{\mathcal D}(x))\right].
 $$
 This is the average function that we would learn, averaged over all different datasets. It is just a theoretical tool and nothing that we would be able to calculate in practice.
 
@@ -1289,7 +1289,7 @@ In this section we discuss regularization in the context of regression as a way 
 
 Recall that in regression we have observations from $\mathbb R^p$ and our task is to predict a value in $\mathbb R$. We will do this by finding a function $h\in \mathcal H$ that gives a small out-of-sample error
 $$
-E_{out} = E_{X,Y}\left[ (Y-h(X))^2 \right].
+E_{out} = E\left[ (Y-h(X))^2 \right].
 $$
 In linear regression, the collection of functions $\mathcal H$ are the functions of the form
 $$
@@ -1297,7 +1297,7 @@ h(x) = \beta_1x_1 + \cdots + \beta_p x_p,
 $$
 and we are thus to choose the parameters $\beta_1,\ldots,\beta_p$ in a good way. We know from before that the choice that minimizes the in-sample error is
 $$
-\hat\beta = (x^Tx)^{-1}x^Ty.
+\beta = (x^Tx)^{-1}x^Ty.
 $$
 As we have seen, we may specify some function $\varphi_i$ and use $\varphi_1(x),\ldots,\varphi_M(x)$ to predict $y$ and we are still in the case of linear regression. However we need to be careful not to overfit. Let us see a simple example were $\varphi$ are polynomials. First we construct the functions that will generate our data:
 ```{r}
@@ -1371,7 +1371,7 @@ grid.arrange(fit_plot(), fit_plot(), fit_plot(), fit_plot(),
 We see from the pictures that then 2nd degree polynomial fit does not change very much on the different training sets, while the 20th degree polynomial looks very different in the four pictures.
 
 <p>Now let us repeat this experiment many times, and only plot the mean and variance of $h$.</p>
-```{r polynomialFits, cache=FALSE, echo = FALSE, fig.cap='Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition', out.width='100%', fig.asp=1, fig.align='center', warning=FALSE}
+```{r polynomialFits, cache=FALSE, echo = FALSE, fig.cap='Mean fit and 95% CI for the different polynomial regressions', out.width='100%', fig.asp=1, fig.align='center', warning=FALSE}
 n.sim <- 1e3
 
 x.grid <- seq(-2, 2, 0.01)
@@ -1547,7 +1547,8 @@ $$
 Here $\lambda$ is a tuning parameter that needs to be determined separately. Ridge regression and lasso use different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of $\beta_j$ will be smaller in ridge and lasso. I.e.\ the estimates will shrink towards zero. These methods are therefore sometimes called shrinkage methods. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.
 
 Let us look at the same example above, this time with a degree 20 polynomial, but penalized with ridge and lasso.
-```{r, echo = TRUE}
+```{r, echo = TRUE, cache = FALSE, message=FALSE, error = FALSE}
+
 library(ggplot2)
 library(gridExtra)
 library(glmnet)
@@ -1590,7 +1591,7 @@ In practice usually $k=5$ or $k=10$ is used.
 ## An application IV
 
 We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(caret)
 library(glmnet)
 library(ISLR)
@@ -1601,7 +1602,7 @@ Hitters <- na.omit(Hitters)
 Then we randomly split the data into a train and a test set. We keep 80% of the observations in the training set and the rest in the test set.
 ```{r}
 set.seed(42)
-training.samples <- createDataPartition(Hitters$Salary, p = 0.8, list = FALSE)
+training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.8, list = FALSE)
 train.data  <- Hitters[training.samples, ]
 test.data <- Hitters[-training.samples, ]
 ```
@@ -1646,7 +1647,7 @@ We get a worse out-of-sample error. But we need to keep in mind that the number 
 Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations
 ```{r}
 library(caret)
-
+library(mlbench)
 data("PimaIndiansDiabetes2", package = "mlbench")
 PimaIndiansDiabetes2 <- na.omit(PimaIndiansDiabetes2)
 

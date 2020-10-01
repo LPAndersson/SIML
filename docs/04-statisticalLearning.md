@@ -387,10 +387,10 @@ $$
 P\left( \left| \bar Y_n - p \right|\geq \varepsilon \right) = P\left( \bar Y_n \geq p+\varepsilon  \right) + P\left( \bar Y_n \leq p - \varepsilon  \right).
 $$
 Then we use that $\exp$ is an increasing function, together with Markov's inequality, for any $t>0$,
-\begin{align}
+\begin{align*}
 P\left( \bar Y_n \geq p +  \varepsilon  \right) &= P\left( t\sum_{i=1}^n Y_i \geq tn(p + \varepsilon)  \right) = P\left( e^{t\sum_{i=1}^n Y_i }\geq  e^{tn(p +\varepsilon) } \right) \\
 &\overset{\text{Markov}}{\leq} e^{-tn(p+\varepsilon)}E\left[ e^{t\sum_{i=1}^n Y_i } \right] \overset{indep.}{=} e^{-tn(p+\varepsilon)}\prod_{n=1}^nE\left[ e^{t Y_i } \right] =  e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n.
-\end{align}
+\end{align*}
 
 Now we need to bound the last expression. Since $Y_i$ is Bernoulli,
 $$
@@ -543,7 +543,7 @@ Now we can handle also the case with a finite number of $h$. But there is still 
 $$
 P(A\cup B) = P(A) + P(B) - P(A\cap B) \leq P(A) + P(B).
 $$
-But this inequality is not very tight. When $A$ and $B$ tend to happen at the same time $P(A \cup B)\approx P(A)$ and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many $h$ in $\mathcal H$ are similar, so if $\left| E_{in}(h_i) - E_{out}(h_i)  \right|>\varepsilon$ it is likely that also $\left|  E_{in}(h_j) - E_{out}(h_j)  \right|>\varepsilon$.
+But this inequality is not very tight. When $A$ and $B$ tend to happen at the same time $P(A \cup B)\approx P(A)$ and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many $h$ in $\mathcal H$ are similar, so if $\left| E_{in}(h_1) - E_{out}(h_1)  \right|>\varepsilon$ it is likely that also $\left|  E_{in}(h_2) - E_{out}(h_2)  \right|>\varepsilon$.
 
 ## VC-dimension
 
@@ -570,7 +570,7 @@ Next consider points on $\mathbb R^2$ and $\mathcal H$ being the set of straight
 <p class="caption">(\#fig:vcDim3)Three points can be shattered but not four</p>
 </div>
 <p>
-We see a pattern here, the VC-dimension is equal to the number of parameters of $\mathcal H$. This is however not always true. As a counterexample, take the functions $\left\{ x\mapsto sin(\omega x)\mid  \omega\in \mathbb R \right\}$. Then label points as -1 if it is above the curve and 1 otherwise. There is only one parameter, but any $S$ can be shattered and so $d_{VC}=\infty$.</p>
+We see a pattern here, the VC-dimension is equal to the number of parameters of $\mathcal H$. This is however not always true. As a counterexample, take the functions $\left\{ x\mapsto sin(\omega x)\mid  \omega\in \mathbb R \right\}$. Then label a point $x$ according to the sign of $sin(\omega x)<0$. There is only one parameter, but any $S$ can be shattered and so $d_{VC}=\infty$.</p>
 
 <div class="figure" style="text-align: center">
 <img src="04-statisticalLearning_files/figure-html/vcDim4-1.png" alt="A one parameter function can shatter any number of points" width="80%" />
@@ -578,16 +578,16 @@ We see a pattern here, the VC-dimension is equal to the number of parameters of 
 </div>
 
 The usefulness of the VC-dimension comes from the following result
-\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ have VC-dimension $d_{VC}$ Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$:
+\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ have VC-dimension $d_{VC}$. Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$ @mohri2018foundations :
 $$
-  E_{out}\leq E_{in} +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
+  E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
 $$</div>\EndKnitrBlock{note}
 
 The important quantity here is $n/d_{VC}$. If the sample size $n$ is large in relation to the VC-dimension $d_{VC}$, the out-of-sample error is guaranteed to be close to the in-sample error. The bound is loose, so the actual value is not useful in practice. Rather it provides a way of thinking about generalization from in-sample to out-of-sample error. In practice, it is usually the case that models with lower $d_{VC}$ generalizes better than models with higher $d_{VC}$. A popular rule of thumb is that $n$ should be at least $10\times d_{VC}$. However, there are also algorithms with $d_{VC}=\infty$ that work well in practice.
 
 A different way of thinking of this results is
 $$
-E_{out} = E_{in} + \Omega(n,\mathcal H, \delta),
+E_{out}(h) = E_{in}(h) + \Omega(n,\mathcal H, \delta),
 $$
 where $\Omega$ is a penalty for model complexity. As we choose a more complex $\mathcal H$ (with higher $d_{VC}$) the in-sample error will become smaller. But, at the same time the penalty $\Omega$ get larger. The penalty also gets smaller when we have more samples. The optimal model, with smallest $E_{out}$, is therefore a compromise that minimize the sum of the two terms.
 
@@ -690,11 +690,11 @@ In this section we will see another approach for understanding how model complex
 
 We consider the regression problem and therefore we assume a quadratic loss function,
 $$
-E_{out}(h^{\mathcal D}) = E_{X,Y}\left[ (Y- h^{\mathcal D}(X))^2 \right].
+E_{out}(h) = E\left[ (Y- h(X))^2 \right]
 $$
-Here $h^{\mathcal D}$ is the final hypothesis that was learnt from the data $\mathcal D$. We also define
+If $h^{\mathcal D}$ is the final hypothesis that was learnt from the data $\mathcal D$, we also define
 $$
-\bar h(x) := E_{\mathcal D}\left[h^{\mathcal D}(x))\right].
+\bar h(x) := E\left[h^{\mathcal D}(x))\right].
 $$
 This is the average function that we would learn, averaged over all different datasets. It is just a theoretical tool and nothing that we would be able to calculate in practice.
 
@@ -738,7 +738,7 @@ In this section we discuss regularization in the context of regression as a way 
 
 Recall that in regression we have observations from $\mathbb R^p$ and our task is to predict a value in $\mathbb R$. We will do this by finding a function $h\in \mathcal H$ that gives a small out-of-sample error
 $$
-E_{out} = E_{X,Y}\left[ (Y-h(X))^2 \right].
+E_{out} = E\left[ (Y-h(X))^2 \right].
 $$
 In linear regression, the collection of functions $\mathcal H$ are the functions of the form
 $$
@@ -746,7 +746,7 @@ h(x) = \beta_1x_1 + \cdots + \beta_p x_p,
 $$
 and we are thus to choose the parameters $\beta_1,\ldots,\beta_p$ in a good way. We know from before that the choice that minimizes the in-sample error is
 $$
-\hat\beta = (x^Tx)^{-1}x^Ty.
+\beta = (x^Tx)^{-1}x^Ty.
 $$
 As we have seen, we may specify some function $\varphi_i$ and use $\varphi_1(x),\ldots,\varphi_M(x)$ to predict $y$ and we are still in the case of linear regression. However we need to be careful not to overfit. Let us see a simple example were $\varphi$ are polynomials. First we construct the functions that will generate our data:
 
@@ -829,8 +829,8 @@ We see from the pictures that then 2nd degree polynomial fit does not change ver
 
 <p>Now let us repeat this experiment many times, and only plot the mean and variance of $h$.</p>
 <div class="figure" style="text-align: center">
-<img src="04-statisticalLearning_files/figure-html/polynomialFits-1.png" alt="Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition" width="100%" />
-<p class="caption">(\#fig:polynomialFits)Mean fit and 95% CI for the different polynomial regressions and bias variance decomposition</p>
+<img src="04-statisticalLearning_files/figure-html/polynomialFits-1.png" alt="Mean fit and 95% CI for the different polynomial regressions" width="100%" />
+<p class="caption">(\#fig:polynomialFits)Mean fit and 95% CI for the different polynomial regressions</p>
 </div>
 From the pictures we see that the 2nd degree polynomial has a bias, but for 6h degree, the bias is close to 0. The error in the 2nd degree polynomial is a sum of bias and variance, but for 6th and 20th the error is dominated by the variance term. The variance becomes larger as the degree of the polynomial becomes larger, while the bias is already 0 for 6th degree. Therefore, the total error, the sum of bias and variance, is smallest for a 6th degree polynomial. As before, we see that a very flexible model will tend to overfit the data and may perform worse than a less flexible model.
 
@@ -910,17 +910,7 @@ Let us look at the same example above, this time with a degree 20 polynomial, bu
 library(ggplot2)
 library(gridExtra)
 library(glmnet)
-```
 
-```
-## Loading required package: Matrix
-```
-
-```
-## Loaded glmnet 4.0-2
-```
-
-```r
 data.df <- gen_data(truth)
 
 model.ridge <- glmnet(poly(data.df$x,20), data.df$y, alpha = 0 )
@@ -962,11 +952,19 @@ In practice usually $k=5$ or $k=10$ is used.
 
 We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.
 
+```r
+library(caret)
+library(glmnet)
+library(ISLR)
+
+data("Hitters", package = "ISLR")
+Hitters <- na.omit(Hitters)
+```
 Then we randomly split the data into a train and a test set. We keep 80% of the observations in the training set and the rest in the test set.
 
 ```r
 set.seed(42)
-training.samples <- createDataPartition(Hitters$Salary, p = 0.8, list = FALSE)
+training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.8, list = FALSE)
 train.data  <- Hitters[training.samples, ]
 test.data <- Hitters[-training.samples, ]
 ```
@@ -1053,7 +1051,7 @@ Here we show an application using a dataset on whether or not a patient has diab
 
 ```r
 library(caret)
-
+library(mlbench)
 data("PimaIndiansDiabetes2", package = "mlbench")
 PimaIndiansDiabetes2 <- na.omit(PimaIndiansDiabetes2)
 

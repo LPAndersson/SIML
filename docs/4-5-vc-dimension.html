@@ -50,12 +50,13 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -225,7 +228,7 @@ Figure 4.11: Three points can be shattered but not four
 </p>
 </div>
 <p>
-We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid \omega\in \mathbb R \right\}\)</span>. Then label points as -1 if it is above the curve and 1 otherwise. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
+We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid \omega\in \mathbb R \right\}\)</span>. Then label a point <span class="math inline">\(x\)</span> according to the sign of <span class="math inline">\(sin(\omega x)&lt;0\)</span>. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
 </p>
 <div class="figure" style="text-align: center"><span id="fig:vcDim4"></span>
 <img src="04-statisticalLearning_files/figure-html/vcDim4-1.png" alt="A one parameter function can shatter any number of points" width="80%" />
@@ -236,16 +239,16 @@ Figure 4.12: A one parameter function can shatter any number of points
 The usefulness of the VC-dimension comes from the following result
 
 <div class="note">
-Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span> Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span>:
+Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span>. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span> <span class="citation">Mohri, Rostamizadeh, and Talwalkar (<a href="#ref-mohri2018foundations" role="doc-biblioref">2018</a>)</span> :
 <span class="math display">\[
-  E_{out}\leq E_{in} +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
+  E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
 \]</span>
 </div>
 
 <p>The important quantity here is <span class="math inline">\(n/d_{VC}\)</span>. If the sample size <span class="math inline">\(n\)</span> is large in relation to the VC-dimension <span class="math inline">\(d_{VC}\)</span>, the out-of-sample error is guaranteed to be close to the in-sample error. The bound is loose, so the actual value is not useful in practice. Rather it provides a way of thinking about generalization from in-sample to out-of-sample error. In practice, it is usually the case that models with lower <span class="math inline">\(d_{VC}\)</span> generalizes better than models with higher <span class="math inline">\(d_{VC}\)</span>. A popular rule of thumb is that <span class="math inline">\(n\)</span> should be at least <span class="math inline">\(10\times d_{VC}\)</span>. However, there are also algorithms with <span class="math inline">\(d_{VC}=\infty\)</span> that work well in practice.</p>
 <p>A different way of thinking of this results is
 <span class="math display">\[
-E_{out} = E_{in} + \Omega(n,\mathcal H, \delta),
+E_{out}(h) = E_{in}(h) + \Omega(n,\mathcal H, \delta),
 \]</span>
 where <span class="math inline">\(\Omega\)</span> is a penalty for model complexity. As we choose a more complex <span class="math inline">\(\mathcal H\)</span> (with higher <span class="math inline">\(d_{VC}\)</span>) the in-sample error will become smaller. But, at the same time the penalty <span class="math inline">\(\Omega\)</span> get larger. The penalty also gets smaller when we have more samples. The optimal model, with smallest <span class="math inline">\(E_{out}\)</span>, is therefore a compromise that minimize the sum of the two terms.</p>
 <p>One commonly used way to estimate <span class="math inline">\(E_{out}\)</span> is to split the data into one <em>training set</em> and one <em>test set</em>. The test set is not used for training and so when we calculate <span class="math inline">\(E_{test}\)</span>, we do this for only one <span class="math inline">\(h\)</span>, the one with minimal in-sample error. Therefore Hoeffding’s inequality applies as a generalization bound, which is much tighter than the VC-bound.</p>
@@ -255,6 +258,12 @@ where <span class="math inline">\(\Omega\)</span> is a penalty for model complex
 <p class="caption">
 Figure 4.13: Sketch of the different components of the error
 </p>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-mohri2018foundations">
+<p>Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations of Machine Learning</em>. MIT press.</p>
 </div>
 </div>
             </section>
