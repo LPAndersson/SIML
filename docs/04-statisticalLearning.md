@@ -136,19 +136,19 @@ l(f(x),y)=(1-yf(x))_+,
 $$
 where $f_+:=\max (0,f)$. This function takes care of our complaints about the 0-1 loss function. If a point $x_i$ is correctly classified, and it is far away from being misclassified, so that $y_if(x_i)$ is large and positive, the loss is 0. However if it is close to being misclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
 $$
-h^\star_{hinge} := \underset{h}{\text{argmin}}~ E\left[(1-Yh(X))_+ \right].
+f^\star_{hinge} := \underset{h}{\text{argmin}}~ E\left[(1-Yf(X))_+ \right].
 $$
-Let us fix an arbitrary $x$ and then we should find $h(x)$ that minimizes
+Let us fix an arbitrary $x$ and then we should find $f(x)$ that minimizes
 $$
-E\left[(1-Yh(x))_+ \mid X=x\right] = (1-h(x))_+\eta(x) + (1+h(x))_+(1-\eta(x)).
+E\left[(1-Yf(x))_+ \mid X=x\right] = (1-f(x))_+\eta(x) + (1+f(x))_+(1-\eta(x)).
 $$
-We should always have $-1\leq h(x)\leq 1$, because otherwise we could truncate $h(x)$ to get a smaller loss. So with that assumption,
+We should always have $-1\leq f(x)\leq 1$, because otherwise we could truncate $f(x)$ to get a smaller loss. So with that assumption,
 $$
-E\left[(1-Yh(x))_+ \mid X=x\right] = (1-h(x))\eta(x) + (1+h(x))(1-\eta(x)) = 1+(1-2\eta(x))h(x).
+E\left[(1-Yf(x))_+ \mid X=x\right] = (1-f(x))\eta(x) + (1+f(x))(1-\eta(x)) = 1+(1-2\eta(x))f(x).
 $$
-Then we realize that depending on the sign of $1-2\eta(x)$ we should choose $h(x)$ to be as large positive or negative as possible, i.e.\
+Then we realize that depending on the sign of $1-2\eta(x)$ we should choose $f(x)$ to be as large positive or negative as possible, i.e.\
 $$
-h^\star_{hinge} = \begin{cases}
+f^\star_{hinge} = \begin{cases}
 1&\text{if } \eta\geq 1/2\\
 -1&\text{if } \eta< 1/2,
 \end{cases}
@@ -172,7 +172,7 @@ $$
 \log_2\left(1+e^{-f(x)}\right)&\text{if } y=1\\
 \log_2\left(1+e^{f(x)}\right)&\text{if } y=-1
 \end{cases}
-= \log_2(1+e^{yf(x)})=:l(f(x),y)
+= \log_2(1+e^{-yf(x)})=:l(f(x),y)
 $$
 Here we took base 2 logarithm since $\log_2(1+e^0)=1$ and then the loss function is on the same scale as the hinge and 0-1. Also for logistic regression you can show that if you classify according to the class with highest probability, the population minimizer is again the Bayes classifier.
 
@@ -578,7 +578,7 @@ We see a pattern here, the VC-dimension is equal to the number of parameters of 
 </div>
 
 The usefulness of the VC-dimension comes from the following result
-\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ have VC-dimension $d_{VC}$. Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$ @mohri2018foundations :
+\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ have VC-dimension $d_{VC}$. Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$ [@mohri2018foundations] :
 $$
   E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
 $$</div>\EndKnitrBlock{note}

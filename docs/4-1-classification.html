@@ -300,19 +300,19 @@ l(f(x),y)=(1-yf(x))_+,
 \]</span>
 where <span class="math inline">\(f_+:=\max (0,f)\)</span>. This function takes care of our complaints about the 0-1 loss function. If a point <span class="math inline">\(x_i\)</span> is correctly classified, and it is far away from being misclassified, so that <span class="math inline">\(y_if(x_i)\)</span> is large and positive, the loss is 0. However if it is close to being misclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the population minimizer of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
 <span class="math display">\[
-h^\star_{hinge} := \underset{h}{\text{argmin}}~ E\left[(1-Yh(X))_+ \right].
+f^\star_{hinge} := \underset{h}{\text{argmin}}~ E\left[(1-Yf(X))_+ \right].
 \]</span>
-Let us fix an arbitrary <span class="math inline">\(x\)</span> and then we should find <span class="math inline">\(h(x)\)</span> that minimizes
+Let us fix an arbitrary <span class="math inline">\(x\)</span> and then we should find <span class="math inline">\(f(x)\)</span> that minimizes
 <span class="math display">\[
-E\left[(1-Yh(x))_+ \mid X=x\right] = (1-h(x))_+\eta(x) + (1+h(x))_+(1-\eta(x)).
+E\left[(1-Yf(x))_+ \mid X=x\right] = (1-f(x))_+\eta(x) + (1+f(x))_+(1-\eta(x)).
 \]</span>
-We should always have <span class="math inline">\(-1\leq h(x)\leq 1\)</span>, because otherwise we could truncate <span class="math inline">\(h(x)\)</span> to get a smaller loss. So with that assumption,
+We should always have <span class="math inline">\(-1\leq f(x)\leq 1\)</span>, because otherwise we could truncate <span class="math inline">\(f(x)\)</span> to get a smaller loss. So with that assumption,
 <span class="math display">\[
-E\left[(1-Yh(x))_+ \mid X=x\right] = (1-h(x))\eta(x) + (1+h(x))(1-\eta(x)) = 1+(1-2\eta(x))h(x).
+E\left[(1-Yf(x))_+ \mid X=x\right] = (1-f(x))\eta(x) + (1+f(x))(1-\eta(x)) = 1+(1-2\eta(x))f(x).
 \]</span>
-Then we realize that depending on the sign of <span class="math inline">\(1-2\eta(x)\)</span> we should choose <span class="math inline">\(h(x)\)</span> to be as large positive or negative as possible, i.e.<br />
+Then we realize that depending on the sign of <span class="math inline">\(1-2\eta(x)\)</span> we should choose <span class="math inline">\(f(x)\)</span> to be as large positive or negative as possible, i.e.<br />
 <span class="math display">\[
-h^\star_{hinge} = \begin{cases}
+f^\star_{hinge} = \begin{cases}
 1&amp;\text{if } \eta\geq 1/2\\
 -1&amp;\text{if } \eta&lt; 1/2,
 \end{cases}
@@ -335,7 +335,7 @@ Then the negative log-likelihood (which should be minimized) is,
 \log_2\left(1+e^{-f(x)}\right)&amp;\text{if } y=1\\
 \log_2\left(1+e^{f(x)}\right)&amp;\text{if } y=-1
 \end{cases}
-= \log_2(1+e^{yf(x)})=:l(f(x),y)
+= \log_2(1+e^{-yf(x)})=:l(f(x),y)
 \]</span>
 Here we took base 2 logarithm since <span class="math inline">\(\log_2(1+e^0)=1\)</span> and then the loss function is on the same scale as the hinge and 0-1. Also for logistic regression you can show that if you classify according to the class with highest probability, the population minimizer is again the Bayes classifier.</p>
 </div>
