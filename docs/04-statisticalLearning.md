@@ -1166,7 +1166,10 @@ We can also plot the cross-validated accuracy as a function of the regularizatio
 plot(model)
 ```
 
-<img src="04-statisticalLearning_files/figure-html/unnamed-chunk-41-1.png" width="672" />
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/SVMApplicationPlot-1.png" alt="Cross-validated accuracy against the regularization parameter for the SVM" width="80%" />
+<p class="caption">(\#fig:SVMApplicationPlot)Cross-validated accuracy against the regularization parameter for the SVM</p>
+</div>
 <p>The final results are</p>
 
 ```r

@@ -1697,7 +1697,7 @@ We may print a summary of the training of the model
 print(model)
 ```
 We can also plot the cross-validated accuracy as a function of the regularization parameter
-```{r}
+```{r SVMApplicationPlot, cache=FALSE, echo = TRUE, fig.cap='Cross-validated accuracy against the regularization parameter for the SVM', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 plot(model)
 ```
 <p>The final results are</p>
