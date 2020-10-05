@@ -1593,16 +1593,15 @@ In practice usually $k=5$ or $k=10$ is used.
 We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(caret)
-library(glmnet)
 library(ISLR)
 
 data("Hitters", package = "ISLR")
 Hitters <- na.omit(Hitters)
 ```
-Then we randomly split the data into a train and a test set. We keep 80% of the observations in the training set and the rest in the test set.
+Then we randomly split the data into a train and a test set. We keep 70% of the observations in the training set and the rest in the test set.
 ```{r}
-set.seed(42)
-training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.8, list = FALSE)
+set.seed(3)
+training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.7, list = FALSE)
 train.data  <- Hitters[training.samples, ]
 test.data <- Hitters[-training.samples, ]
 ```
@@ -1610,35 +1609,49 @@ We then do linear regression and calculate the out-of-sample error
 ```{r}
 ls <- lm(Salary ~., data = train.data)
 predictions <- predict(ls, test.data)
-mean((predictions - test.data$Salary)^2)
+sqrt(mean((predictions - test.data$Salary)^2))
 ```
 Next we fit a lasso using 10-fold CV.
 ```{r}
-lambda <- 10^seq(-4, 2, length = 1000)
+lambda.grid <- 10^seq(-2, 2, length = 100)
 
+set.seed(42)
 lasso <- train(
   Salary ~., data = train.data, method = "glmnet",
-  trControl = trainControl("cv", number = 10),
-  tuneGrid = expand.grid(alpha = 1, lambda = lambda)
+  trControl = trainControl("repeatedcv", number = 10, repeats = 5),
+  tuneGrid = expand.grid(alpha = 1, lambda = lambda.grid)
 )
+```
+We may plot the cross-validated error against the regularization parameter.
+```{r lassoPlot, cache=FALSE, echo = TRUE, fig.cap='Cross-validated error against the regularization parameter for Lasso.', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+plot(lasso)
+```
+If we print the parameters, we see that some of them have been set to 0. 
+```{r}
 coef(lasso$finalModel, lasso$bestTune$lambda)
 ```
-We see that some of the parameters have been set to 0. We calculate the out-of-sample error
-```{r}
+We calculate the out-of-sample error. 
+```{r echo =TRUE}
 predictions <- predict(lasso, test.data)
-mean((predictions - test.data$Salary)^2)
+sqrt(mean((predictions - test.data$Salary)^2))
 ```
 An improvement over least squares. We might also try elastic-net.
 ```{r}
-lambda <- 10^seq(-4, 2, length = 100)
-alpha <- seq(0, 1, length = 10)
-lasso <- train(
+lambda <- 10^seq(-2, 2.5, length = 100)
+alpha <- seq(0, 0.5, length = 10)
+set.seed(42)
+e.net <- train(
   Salary ~., data = train.data, method = "glmnet",
-  trControl = trainControl("cv", number = 10),
+  trControl = trainControl("repeatedcv", number = 10, repeats = 5),
   tuneGrid = expand.grid(alpha = alpha, lambda = lambda)
 )
-predictions <- predict(lasso, test.data)
-mean((predictions - test.data$Salary)^2)
+```
+```{r elasticNetPlot, cache=FALSE, echo = TRUE, fig.cap='Cross-validated error against the regularization parameter for elastic net', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+plot(e.net)
+```
+```{r echo =TRUE}
+predictions <- predict(e.net, test.data)
+sqrt( mean((predictions - test.data$Salary)^2) )
 ```
 We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.
 
@@ -1659,19 +1672,36 @@ Divide the data into a train and a test set.
 ```{r}
 set.seed(42)
 
-training.samples <- createDataPartition(PimaIndiansDiabetes2$diabetes, p = 0.8, list = FALSE)
+training.samples <- createDataPartition(PimaIndiansDiabetes2$diabetes, 
+                                        p = 0.7, 
+                                        list = FALSE)
+
 train.data  <- PimaIndiansDiabetes2[training.samples, ]
 test.data <- PimaIndiansDiabetes2[-training.samples, ]
 ```
-Then use a SVM, where the parameter is estimated by 10-fold CV.
-```{r}
+Then use a SVM, where the parameter is estimated by 10-fold CV. If you have a computer with multiple cores, there may be a speed-up by using the library doMC.
+```{r echo = TRUE, warning=FALSE, error=FALSE, message=FALSE}
+library(doMC)
+registerDoMC(cores=8)
+```
+```{r echo = TRUE, warning=FALSE, error=FALSE}
 model <- train(
   diabetes ~., data = train.data, method = "svmRadial",
   trControl = trainControl("cv", number = 10),
   tuneLength = 10,
   preProcess = c("center","scale")
 )
-
+```
+We may print a summary of the training of the model
+```{r}
+print(model)
+```
+We can also plot the cross-validated accuracy as a function of the regularization parameter
+```{r}
+plot(model)
+```
+<p>The final results are</p>
+```{r}
 predicted <- predict(model, test.data)
 mean(predicted == test.data$diabetes)
 ```

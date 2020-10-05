@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-24" />
+<meta name="date" content="2020-10-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -207,67 +207,84 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.10</span> An application IV</h2>
 <p>We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="4-10-an-application-iv.html#cb24-1"></a><span class="kw">library</span>(caret)</span>
-<span id="cb24-2"><a href="4-10-an-application-iv.html#cb24-2"></a><span class="kw">library</span>(glmnet)</span>
-<span id="cb24-3"><a href="4-10-an-application-iv.html#cb24-3"></a><span class="kw">library</span>(ISLR)</span>
-<span id="cb24-4"><a href="4-10-an-application-iv.html#cb24-4"></a></span>
-<span id="cb24-5"><a href="4-10-an-application-iv.html#cb24-5"></a><span class="kw">data</span>(<span class="st">&quot;Hitters&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</span>
-<span id="cb24-6"><a href="4-10-an-application-iv.html#cb24-6"></a>Hitters &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Hitters)</span></code></pre></div>
-<p>Then we randomly split the data into a train and a test set. We keep 80% of the observations in the training set and the rest in the test set.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="4-10-an-application-iv.html#cb25-1"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb25-2"><a href="4-10-an-application-iv.html#cb25-2"></a>training.samples &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createDataPartition</span>(Hitters<span class="op">$</span>Salary, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb24-2"><a href="4-10-an-application-iv.html#cb24-2"></a><span class="kw">library</span>(ISLR)</span>
+<span id="cb24-3"><a href="4-10-an-application-iv.html#cb24-3"></a></span>
+<span id="cb24-4"><a href="4-10-an-application-iv.html#cb24-4"></a><span class="kw">data</span>(<span class="st">&quot;Hitters&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</span>
+<span id="cb24-5"><a href="4-10-an-application-iv.html#cb24-5"></a>Hitters &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Hitters)</span></code></pre></div>
+<p>Then we randomly split the data into a train and a test set. We keep 70% of the observations in the training set and the rest in the test set.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="4-10-an-application-iv.html#cb25-1"></a><span class="kw">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb25-2"><a href="4-10-an-application-iv.html#cb25-2"></a>training.samples &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createDataPartition</span>(Hitters<span class="op">$</span>Salary, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb25-3"><a href="4-10-an-application-iv.html#cb25-3"></a>train.data  &lt;-<span class="st"> </span>Hitters[training.samples, ]</span>
 <span id="cb25-4"><a href="4-10-an-application-iv.html#cb25-4"></a>test.data &lt;-<span class="st"> </span>Hitters[<span class="op">-</span>training.samples, ]</span></code></pre></div>
 <p>We then do linear regression and calculate the out-of-sample error</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="4-10-an-application-iv.html#cb26-1"></a>ls &lt;-<span class="st"> </span><span class="kw">lm</span>(Salary <span class="op">~</span>., <span class="dt">data =</span> train.data)</span>
 <span id="cb26-2"><a href="4-10-an-application-iv.html#cb26-2"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data)</span>
-<span id="cb26-3"><a href="4-10-an-application-iv.html#cb26-3"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 155961.4</code></pre>
+<span id="cb26-3"><a href="4-10-an-application-iv.html#cb26-3"></a><span class="kw">sqrt</span>(<span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## [1] 367.6942</code></pre>
 <p>Next we fit a lasso using 10-fold CV.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="4-10-an-application-iv.html#cb28-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">1000</span>)</span>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="4-10-an-application-iv.html#cb28-1"></a>lambda.grid &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">100</span>)</span>
 <span id="cb28-2"><a href="4-10-an-application-iv.html#cb28-2"></a></span>
-<span id="cb28-3"><a href="4-10-an-application-iv.html#cb28-3"></a>lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
-<span id="cb28-4"><a href="4-10-an-application-iv.html#cb28-4"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
-<span id="cb28-5"><a href="4-10-an-application-iv.html#cb28-5"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</span>
-<span id="cb28-6"><a href="4-10-an-application-iv.html#cb28-6"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> lambda)</span>
-<span id="cb28-7"><a href="4-10-an-application-iv.html#cb28-7"></a>)</span>
-<span id="cb28-8"><a href="4-10-an-application-iv.html#cb28-8"></a><span class="kw">coef</span>(lasso<span class="op">$</span>finalModel, lasso<span class="op">$</span>bestTune<span class="op">$</span>lambda)</span></code></pre></div>
+<span id="cb28-3"><a href="4-10-an-application-iv.html#cb28-3"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb28-4"><a href="4-10-an-application-iv.html#cb28-4"></a>lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
+<span id="cb28-5"><a href="4-10-an-application-iv.html#cb28-5"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
+<span id="cb28-6"><a href="4-10-an-application-iv.html#cb28-6"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>, <span class="dt">repeats =</span> <span class="dv">5</span>),</span>
+<span id="cb28-7"><a href="4-10-an-application-iv.html#cb28-7"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> lambda.grid)</span>
+<span id="cb28-8"><a href="4-10-an-application-iv.html#cb28-8"></a>)</span></code></pre></div>
+<p>We may plot the cross-validated error against the regularization parameter.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="4-10-an-application-iv.html#cb29-1"></a><span class="kw">plot</span>(lasso)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:lassoPlot"></span>
+<img src="04-statisticalLearning_files/figure-html/lassoPlot-1.png" alt="Cross-validated error against the regularization parameter for Lasso." width="80%" />
+<p class="caption">
+Figure 4.22: Cross-validated error against the regularization parameter for Lasso.
+</p>
+</div>
+<p>If we print the parameters, we see that some of them have been set to 0.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="4-10-an-application-iv.html#cb30-1"></a><span class="kw">coef</span>(lasso<span class="op">$</span>finalModel, lasso<span class="op">$</span>bestTune<span class="op">$</span>lambda)</span></code></pre></div>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
-##                        1
-## (Intercept)  270.1052313
-## AtBat         -1.9556641
-## Hits           7.9121904
-## HmRun          3.1085056
-## Runs          -3.7028963
-## RBI           -2.1932107
-## Walks          6.1853848
-## Years         -8.8124043
-## CAtBat        -0.1485875
-## CHits          .        
-## CHmRun         .        
-## CRuns          1.1967357
-## CRBI           1.3494757
-## CWalks        -0.8743694
-## LeagueN       48.1895347
-## DivisionW   -127.0301475
-## PutOuts        0.2755881
-## Assists        0.4591150
-## Errors        -7.5155549
-## NewLeagueN     2.1811148</code></pre>
-<p>We see that some of the parameters have been set to 0. We calculate the out-of-sample error</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="4-10-an-application-iv.html#cb30-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</span>
-<span id="cb30-2"><a href="4-10-an-application-iv.html#cb30-2"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 149437.4</code></pre>
+##                         1
+## (Intercept)  -66.88333624
+## AtBat          .         
+## Hits           2.00894789
+## HmRun          .         
+## Runs           .         
+## RBI            0.63610478
+## Walks          3.46312810
+## Years          .         
+## CAtBat         .         
+## CHits          .         
+## CHmRun         0.01178261
+## CRuns          0.08620313
+## CRBI           0.51517895
+## CWalks         .         
+## LeagueN       29.48507342
+## DivisionW   -100.72607403
+## PutOuts        0.17109758
+## Assists       -0.06283794
+## Errors         .         
+## NewLeagueN     .</code></pre>
+<p>We calculate the out-of-sample error.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="4-10-an-application-iv.html#cb32-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</span>
+<span id="cb32-2"><a href="4-10-an-application-iv.html#cb32-2"></a><span class="kw">sqrt</span>(<span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## [1] 358.6614</code></pre>
 <p>An improvement over least squares. We might also try elastic-net.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="4-10-an-application-iv.html#cb32-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">100</span>)</span>
-<span id="cb32-2"><a href="4-10-an-application-iv.html#cb32-2"></a>alpha &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">10</span>)</span>
-<span id="cb32-3"><a href="4-10-an-application-iv.html#cb32-3"></a>lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
-<span id="cb32-4"><a href="4-10-an-application-iv.html#cb32-4"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
-<span id="cb32-5"><a href="4-10-an-application-iv.html#cb32-5"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</span>
-<span id="cb32-6"><a href="4-10-an-application-iv.html#cb32-6"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> alpha, <span class="dt">lambda =</span> lambda)</span>
-<span id="cb32-7"><a href="4-10-an-application-iv.html#cb32-7"></a>)</span>
-<span id="cb32-8"><a href="4-10-an-application-iv.html#cb32-8"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</span>
-<span id="cb32-9"><a href="4-10-an-application-iv.html#cb32-9"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 150373.8</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="4-10-an-application-iv.html#cb34-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="fl">2.5</span>, <span class="dt">length =</span> <span class="dv">100</span>)</span>
+<span id="cb34-2"><a href="4-10-an-application-iv.html#cb34-2"></a>alpha &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dt">length =</span> <span class="dv">10</span>)</span>
+<span id="cb34-3"><a href="4-10-an-application-iv.html#cb34-3"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb34-4"><a href="4-10-an-application-iv.html#cb34-4"></a>e.net &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
+<span id="cb34-5"><a href="4-10-an-application-iv.html#cb34-5"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
+<span id="cb34-6"><a href="4-10-an-application-iv.html#cb34-6"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>, <span class="dt">repeats =</span> <span class="dv">5</span>),</span>
+<span id="cb34-7"><a href="4-10-an-application-iv.html#cb34-7"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> alpha, <span class="dt">lambda =</span> lambda)</span>
+<span id="cb34-8"><a href="4-10-an-application-iv.html#cb34-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="4-10-an-application-iv.html#cb35-1"></a><span class="kw">plot</span>(e.net)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:elasticNetPlot"></span>
+<img src="04-statisticalLearning_files/figure-html/elasticNetPlot-1.png" alt="Cross-validated error against the regularization parameter for elastic net" width="80%" />
+<p class="caption">
+Figure 4.23: Cross-validated error against the regularization parameter for elastic net
+</p>
+</div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="4-10-an-application-iv.html#cb36-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(e.net, test.data)</span>
+<span id="cb36-2"><a href="4-10-an-application-iv.html#cb36-2"></a><span class="kw">sqrt</span>( <span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>) )</span></code></pre></div>
+<pre><code>## [1] 361.3435</code></pre>
 <p>We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.</p>
 </div>
             </section>

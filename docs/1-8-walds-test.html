@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-24" />
+<meta name="date" content="2020-10-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,12 +50,13 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -229,11 +232,11 @@ Since we have a two-sided test, the test statistic is:
 <span class="math display">\[
 \frac{\left| \hat\lambda - \lambda_0  \right|}{\hat\lambda / \sqrt n }.
 \]</span></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">waldStatistics &lt;-<span class="st"> </span><span class="kw">abs</span>(lambdaHat <span class="op">-</span><span class="st"> </span>lambda0)<span class="op">/</span>(lambdaHat<span class="op">/</span><span class="kw">sqrt</span>(n))</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">waldStatistics</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="1-8-walds-test.html#cb19-1"></a>waldStatistics &lt;-<span class="st"> </span><span class="kw">abs</span>(lambdaHat <span class="op">-</span><span class="st"> </span>lambda0)<span class="op">/</span>(lambdaHat<span class="op">/</span><span class="kw">sqrt</span>(n))</span>
+<span id="cb19-2"><a href="1-8-walds-test.html#cb19-2"></a>waldStatistics</span></code></pre></div>
 <pre><code>## [1] 1.41103</code></pre>
 <p>This is now compared to <span class="math inline">\(z_{\alpha/2}=\)</span> 1.96 if <span class="math inline">\(\alpha = 0.05\)</span> and so we do not reject <span class="math inline">\(H_0\)</span>. The p-value is:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="dv">2</span><span class="op">*</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">pnorm</span>(waldStatistics))</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="1-8-walds-test.html#cb21-1"></a><span class="dv">2</span><span class="op">*</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">pnorm</span>(waldStatistics))</span></code></pre></div>
 <pre><code>## [1] 0.1582359</code></pre>
 <p>Here we found the standard deviation of <span class="math inline">\(\hat \lambda\)</span> by knowing the asymptotic distribution of the MLE. It is also possible to calculate this directly from the delta method. That is, we know that
 <span class="math display">\[\begin{align}

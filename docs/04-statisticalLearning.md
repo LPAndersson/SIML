@@ -578,7 +578,7 @@ We see a pattern here, the VC-dimension is equal to the number of parameters of 
 </div>
 
 The usefulness of the VC-dimension comes from the following result
-\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ have VC-dimension $d_{VC}$. Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$ [@mohri2018foundations] :
+\BeginKnitrBlock{note}<div class="note">Let $\mathcal H$ have VC-dimension $d_{VC}$. Then for any $\delta>0$, with probability at least $1-\delta$, the following holds for all $h\in \mathcal H$ [@mohri2018foundations]:
 $$
   E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
 $$</div>\EndKnitrBlock{note}
@@ -954,17 +954,16 @@ We will use the Hitters data set from the ISL book and predict the salary of a B
 
 ```r
 library(caret)
-library(glmnet)
 library(ISLR)
 
 data("Hitters", package = "ISLR")
 Hitters <- na.omit(Hitters)
 ```
-Then we randomly split the data into a train and a test set. We keep 80% of the observations in the training set and the rest in the test set.
+Then we randomly split the data into a train and a test set. We keep 70% of the observations in the training set and the rest in the test set.
 
 ```r
-set.seed(42)
-training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.8, list = FALSE)
+set.seed(3)
+training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.7, list = FALSE)
 train.data  <- Hitters[training.samples, ]
 test.data <- Hitters[-training.samples, ]
 ```
@@ -973,75 +972,103 @@ We then do linear regression and calculate the out-of-sample error
 ```r
 ls <- lm(Salary ~., data = train.data)
 predictions <- predict(ls, test.data)
-mean((predictions - test.data$Salary)^2)
+sqrt(mean((predictions - test.data$Salary)^2))
 ```
 
 ```
-## [1] 155961.4
+## [1] 367.6942
 ```
 Next we fit a lasso using 10-fold CV.
 
 ```r
-lambda <- 10^seq(-4, 2, length = 1000)
+lambda.grid <- 10^seq(-2, 2, length = 100)
 
+set.seed(42)
 lasso <- train(
   Salary ~., data = train.data, method = "glmnet",
-  trControl = trainControl("cv", number = 10),
-  tuneGrid = expand.grid(alpha = 1, lambda = lambda)
+  trControl = trainControl("repeatedcv", number = 10, repeats = 5),
+  tuneGrid = expand.grid(alpha = 1, lambda = lambda.grid)
 )
+```
+We may plot the cross-validated error against the regularization parameter.
+
+```r
+plot(lasso)
+```
+
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/lassoPlot-1.png" alt="Cross-validated error against the regularization parameter for Lasso." width="80%" />
+<p class="caption">(\#fig:lassoPlot)Cross-validated error against the regularization parameter for Lasso.</p>
+</div>
+If we print the parameters, we see that some of them have been set to 0. 
+
+```r
 coef(lasso$finalModel, lasso$bestTune$lambda)
 ```
 
 ```
 ## 20 x 1 sparse Matrix of class "dgCMatrix"
-##                        1
-## (Intercept)  270.1052313
-## AtBat         -1.9556641
-## Hits           7.9121904
-## HmRun          3.1085056
-## Runs          -3.7028963
-## RBI           -2.1932107
-## Walks          6.1853848
-## Years         -8.8124043
-## CAtBat        -0.1485875
-## CHits          .        
-## CHmRun         .        
-## CRuns          1.1967357
-## CRBI           1.3494757
-## CWalks        -0.8743694
-## LeagueN       48.1895347
-## DivisionW   -127.0301475
-## PutOuts        0.2755881
-## Assists        0.4591150
-## Errors        -7.5155549
-## NewLeagueN     2.1811148
+##                         1
+## (Intercept)  -66.88333624
+## AtBat          .         
+## Hits           2.00894789
+## HmRun          .         
+## Runs           .         
+## RBI            0.63610478
+## Walks          3.46312810
+## Years          .         
+## CAtBat         .         
+## CHits          .         
+## CHmRun         0.01178261
+## CRuns          0.08620313
+## CRBI           0.51517895
+## CWalks         .         
+## LeagueN       29.48507342
+## DivisionW   -100.72607403
+## PutOuts        0.17109758
+## Assists       -0.06283794
+## Errors         .         
+## NewLeagueN     .
 ```
-We see that some of the parameters have been set to 0. We calculate the out-of-sample error
+We calculate the out-of-sample error. 
 
 ```r
 predictions <- predict(lasso, test.data)
-mean((predictions - test.data$Salary)^2)
+sqrt(mean((predictions - test.data$Salary)^2))
 ```
 
 ```
-## [1] 149437.4
+## [1] 358.6614
 ```
 An improvement over least squares. We might also try elastic-net.
 
 ```r
-lambda <- 10^seq(-4, 2, length = 100)
-alpha <- seq(0, 1, length = 10)
-lasso <- train(
+lambda <- 10^seq(-2, 2.5, length = 100)
+alpha <- seq(0, 0.5, length = 10)
+set.seed(42)
+e.net <- train(
   Salary ~., data = train.data, method = "glmnet",
-  trControl = trainControl("cv", number = 10),
+  trControl = trainControl("repeatedcv", number = 10, repeats = 5),
   tuneGrid = expand.grid(alpha = alpha, lambda = lambda)
 )
-predictions <- predict(lasso, test.data)
-mean((predictions - test.data$Salary)^2)
+```
+
+```r
+plot(e.net)
+```
+
+<div class="figure" style="text-align: center">
+<img src="04-statisticalLearning_files/figure-html/elasticNetPlot-1.png" alt="Cross-validated error against the regularization parameter for elastic net" width="80%" />
+<p class="caption">(\#fig:elasticNetPlot)Cross-validated error against the regularization parameter for elastic net</p>
+</div>
+
+```r
+predictions <- predict(e.net, test.data)
+sqrt( mean((predictions - test.data$Salary)^2) )
 ```
 
 ```
-## [1] 150373.8
+## [1] 361.3435
 ```
 We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.
 
@@ -1062,7 +1089,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-34)Diabetes data
+Table: (\#tab:unnamed-chunk-36)Diabetes data
 
 |   | pregnant| glucose| pressure| triceps| insulin| mass| pedigree| age|diabetes |
 |:--|--------:|-------:|--------:|-------:|-------:|----:|--------:|---:|:--------|
@@ -1077,11 +1104,19 @@ Divide the data into a train and a test set.
 ```r
 set.seed(42)
 
-training.samples <- createDataPartition(PimaIndiansDiabetes2$diabetes, p = 0.8, list = FALSE)
+training.samples <- createDataPartition(PimaIndiansDiabetes2$diabetes, 
+                                        p = 0.7, 
+                                        list = FALSE)
+
 train.data  <- PimaIndiansDiabetes2[training.samples, ]
 test.data <- PimaIndiansDiabetes2[-training.samples, ]
 ```
-Then use a SVM, where the parameter is estimated by 10-fold CV.
+Then use a SVM, where the parameter is estimated by 10-fold CV. If you have a computer with multiple cores, there may be a speed-up by using the library doMC.
+
+```r
+library(doMC)
+registerDoMC(cores=8)
+```
 
 ```r
 model <- train(
@@ -1090,13 +1125,57 @@ model <- train(
   tuneLength = 10,
   preProcess = c("center","scale")
 )
+```
+We may print a summary of the training of the model
 
+```r
+print(model)
+```
+
+```
+## Support Vector Machines with Radial Basis Function Kernel 
+## 
+## 275 samples
+##   8 predictor
+##   2 classes: 'neg', 'pos' 
+## 
+## Pre-processing: centered (8), scaled (8) 
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 248, 247, 248, 248, 247, 246, ... 
+## Resampling results across tuning parameters:
+## 
+##   C       Accuracy   Kappa    
+##     0.25  0.7602354  0.4003850
+##     0.50  0.7635605  0.4129658
+##     1.00  0.7671319  0.4258676
+##     2.00  0.7484902  0.3867206
+##     4.00  0.7561440  0.4115484
+##     8.00  0.7340540  0.3687010
+##    16.00  0.7230660  0.3528600
+##    32.00  0.7082604  0.3172943
+##    64.00  0.6942209  0.3047575
+##   128.00  0.7087803  0.3466723
+## 
+## Tuning parameter 'sigma' was held constant at a value of 0.114713
+## Accuracy was used to select the optimal model using the largest value.
+## The final values used for the model were sigma = 0.114713 and C = 1.
+```
+We can also plot the cross-validated accuracy as a function of the regularization parameter
+
+```r
+plot(model)
+```
+
+<img src="04-statisticalLearning_files/figure-html/unnamed-chunk-41-1.png" width="672" />
+<p>The final results are</p>
+
+```r
 predicted <- predict(model, test.data)
 mean(predicted == test.data$diabetes)
 ```
 
 ```
-## [1] 0.7948718
+## [1] 0.7606838
 ```
 
 

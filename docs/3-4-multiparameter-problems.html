@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-24" />
+<meta name="date" content="2020-10-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,12 +50,13 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -213,32 +216,32 @@ The parameter that we are interested in is <span class="math inline">\(\tau:=\th
 p(\theta_1,\theta_2\mid x) \propto L(\theta_1,\theta_2) \propto \theta_1^{x_1}(1-\theta_1)^{n_1-x_1}\theta_2^{x_2}(1-\theta_2)^{n_2-x_2}.
 \]</span>
 Note that <span class="math inline">\(\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)\)</span> is independent of <span class="math inline">\(\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).\)</span> Therefore we can simulate from <span class="math inline">\(\tau\mid x\)</span> by drawing <span class="math inline">\(\theta_1^\star\)</span> and <span class="math inline">\(\theta_2^\star\)</span> from the respective distribution and setting <span class="math inline">\(\tau^\star = \theta_2^\star - \theta_1^\star\)</span>.</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb90-2" data-line-number="2"><span class="kw">library</span>(latex2exp)</a>
-<a class="sourceLine" id="cb90-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb90-4" data-line-number="4">n1 &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb90-5" data-line-number="5">n2 &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb90-6" data-line-number="6">theta1 &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb90-7" data-line-number="7">theta2 &lt;-<span class="st"> </span><span class="fl">0.3</span></a>
-<a class="sourceLine" id="cb90-8" data-line-number="8">nPost &lt;-<span class="st"> </span><span class="dv">2000</span></a>
-<a class="sourceLine" id="cb90-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb90-10" data-line-number="10"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb90-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb90-12" data-line-number="12"><span class="co">#Generate data</span></a>
-<a class="sourceLine" id="cb90-13" data-line-number="13">x1 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n1, <span class="dt">prob =</span> theta1)</a>
-<a class="sourceLine" id="cb90-14" data-line-number="14">x2 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n2, <span class="dt">prob =</span> theta2)</a>
-<a class="sourceLine" id="cb90-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb90-16" data-line-number="16"><span class="co">#Posterior for theta</span></a>
-<a class="sourceLine" id="cb90-17" data-line-number="17">theta1.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x1<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n1<span class="op">-</span>x1<span class="op">+</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb90-18" data-line-number="18">theta2.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x2<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n2<span class="op">-</span>x2<span class="op">+</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb90-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb90-20" data-line-number="20">tau.post &lt;-<span class="st"> </span>theta2.post <span class="op">-</span><span class="st"> </span>theta1.post</a>
-<a class="sourceLine" id="cb90-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb90-22" data-line-number="22"><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(tau.post), <span class="kw">aes</span>(<span class="dt">x=</span>tau.post)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb90-23" data-line-number="23"><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y=</span>..density..), <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span></a>
-<a class="sourceLine" id="cb90-24" data-line-number="24"><span class="st"> </span><span class="kw">geom_density</span>(<span class="dt">alpha=</span>.<span class="dv">2</span>, <span class="dt">fill=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb90-25" data-line-number="25"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb90-26" data-line-number="26"><span class="st">  </span><span class="kw">xlab</span>(<span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">tau$&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="3-4-multiparameter-problems.html#cb90-1"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb90-2"><a href="3-4-multiparameter-problems.html#cb90-2"></a><span class="kw">library</span>(latex2exp)</span>
+<span id="cb90-3"><a href="3-4-multiparameter-problems.html#cb90-3"></a></span>
+<span id="cb90-4"><a href="3-4-multiparameter-problems.html#cb90-4"></a>n1 &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb90-5"><a href="3-4-multiparameter-problems.html#cb90-5"></a>n2 &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb90-6"><a href="3-4-multiparameter-problems.html#cb90-6"></a>theta1 &lt;-<span class="st"> </span><span class="fl">0.5</span></span>
+<span id="cb90-7"><a href="3-4-multiparameter-problems.html#cb90-7"></a>theta2 &lt;-<span class="st"> </span><span class="fl">0.3</span></span>
+<span id="cb90-8"><a href="3-4-multiparameter-problems.html#cb90-8"></a>nPost &lt;-<span class="st"> </span><span class="dv">2000</span></span>
+<span id="cb90-9"><a href="3-4-multiparameter-problems.html#cb90-9"></a></span>
+<span id="cb90-10"><a href="3-4-multiparameter-problems.html#cb90-10"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb90-11"><a href="3-4-multiparameter-problems.html#cb90-11"></a></span>
+<span id="cb90-12"><a href="3-4-multiparameter-problems.html#cb90-12"></a><span class="co">#Generate data</span></span>
+<span id="cb90-13"><a href="3-4-multiparameter-problems.html#cb90-13"></a>x1 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n1, <span class="dt">prob =</span> theta1)</span>
+<span id="cb90-14"><a href="3-4-multiparameter-problems.html#cb90-14"></a>x2 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> n2, <span class="dt">prob =</span> theta2)</span>
+<span id="cb90-15"><a href="3-4-multiparameter-problems.html#cb90-15"></a></span>
+<span id="cb90-16"><a href="3-4-multiparameter-problems.html#cb90-16"></a><span class="co">#Posterior for theta</span></span>
+<span id="cb90-17"><a href="3-4-multiparameter-problems.html#cb90-17"></a>theta1.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x1<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n1<span class="op">-</span>x1<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb90-18"><a href="3-4-multiparameter-problems.html#cb90-18"></a>theta2.post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dt">n =</span> nPost, <span class="dt">shape1 =</span> x2<span class="op">+</span><span class="dv">1</span>, <span class="dt">shape2 =</span> n2<span class="op">-</span>x2<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb90-19"><a href="3-4-multiparameter-problems.html#cb90-19"></a></span>
+<span id="cb90-20"><a href="3-4-multiparameter-problems.html#cb90-20"></a>tau.post &lt;-<span class="st"> </span>theta2.post <span class="op">-</span><span class="st"> </span>theta1.post</span>
+<span id="cb90-21"><a href="3-4-multiparameter-problems.html#cb90-21"></a></span>
+<span id="cb90-22"><a href="3-4-multiparameter-problems.html#cb90-22"></a><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(tau.post), <span class="kw">aes</span>(<span class="dt">x=</span>tau.post)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb90-23"><a href="3-4-multiparameter-problems.html#cb90-23"></a><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y=</span>..density..), <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span></span>
+<span id="cb90-24"><a href="3-4-multiparameter-problems.html#cb90-24"></a><span class="st"> </span><span class="kw">geom_density</span>(<span class="dt">alpha=</span>.<span class="dv">2</span>, <span class="dt">fill=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb90-25"><a href="3-4-multiparameter-problems.html#cb90-25"></a><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></span>
+<span id="cb90-26"><a href="3-4-multiparameter-problems.html#cb90-26"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">tau$&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:multiParameterExample"></span>
 <img src="03-bayesian_files/figure-html/multiParameterExample-1.png" alt="Posterior distribution" width="80%" />
 <p class="caption">

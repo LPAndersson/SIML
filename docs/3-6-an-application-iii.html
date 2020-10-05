@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-09-24" />
+<meta name="date" content="2020-10-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,12 +50,13 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +65,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +83,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -286,31 +289,31 @@ p(\beta) \propto \exp\left( -\frac{1}{2\lambda}\sum_{j=1}^3 \beta_j^2 \right)
 \]</span>
 We will use a random walk Metropolis Hastings algorithm with <span class="math inline">\(\varepsilon\overset{iid}\sim \mathsf N(0,\sigma^2)\)</span>.</p>
 <p>Now, we implement this in R. First we load the data.</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">data.df &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/bayesProbit.dat&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb98-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(data.df)</a>
-<a class="sourceLine" id="cb98-3" data-line-number="3">data.df<span class="op">$</span>z0 &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, n)</a>
-<a class="sourceLine" id="cb98-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb98-5" data-line-number="5">col_order &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;y&#39;</span>, <span class="st">&#39;n&#39;</span>,<span class="st">&#39;z0&#39;</span>,<span class="st">&#39;z1&#39;</span>,<span class="st">&#39;z2&#39;</span>,<span class="st">&#39;z3&#39;</span>)</a>
-<a class="sourceLine" id="cb98-6" data-line-number="6">data.df &lt;-<span class="st"> </span>data.df[, col_order]</a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="3-6-an-application-iii.html#cb98-1"></a>data.df &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/bayesProbit.dat&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>)</span>
+<span id="cb98-2"><a href="3-6-an-application-iii.html#cb98-2"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(data.df)</span>
+<span id="cb98-3"><a href="3-6-an-application-iii.html#cb98-3"></a>data.df<span class="op">$</span>z0 &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, n)</span>
+<span id="cb98-4"><a href="3-6-an-application-iii.html#cb98-4"></a></span>
+<span id="cb98-5"><a href="3-6-an-application-iii.html#cb98-5"></a>col_order &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;y&#39;</span>, <span class="st">&#39;n&#39;</span>,<span class="st">&#39;z0&#39;</span>,<span class="st">&#39;z1&#39;</span>,<span class="st">&#39;z2&#39;</span>,<span class="st">&#39;z3&#39;</span>)</span>
+<span id="cb98-6"><a href="3-6-an-application-iii.html#cb98-6"></a>data.df &lt;-<span class="st"> </span>data.df[, col_order]</span></code></pre></div>
 <p>Then implement the likelihood function and prior density. We do this on a log-scale.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1">logLFcn &lt;-<span class="st"> </span><span class="cf">function</span>(data){</a>
-<a class="sourceLine" id="cb99-2" data-line-number="2">  <span class="cf">function</span>(beta){</a>
-<a class="sourceLine" id="cb99-3" data-line-number="3">    p &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">as.matrix</span>(data[<span class="dv">3</span><span class="op">:</span><span class="dv">6</span>])<span class="op">%*%</span>beta)</a>
-<a class="sourceLine" id="cb99-4" data-line-number="4">    sum &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb99-5" data-line-number="5">    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</a>
-<a class="sourceLine" id="cb99-6" data-line-number="6">      sum &lt;-<span class="st"> </span>sum <span class="op">+</span><span class="st"> </span>data<span class="op">$</span>y[i]<span class="op">*</span><span class="kw">log</span>(p[i]) <span class="op">+</span><span class="st"> </span>(data<span class="op">$</span>n[i]<span class="op">-</span>data<span class="op">$</span>y[i])<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p[i])</a>
-<a class="sourceLine" id="cb99-7" data-line-number="7">    }</a>
-<a class="sourceLine" id="cb99-8" data-line-number="8">    sum</a>
-<a class="sourceLine" id="cb99-9" data-line-number="9">  }</a>
-<a class="sourceLine" id="cb99-10" data-line-number="10">}</a>
-<a class="sourceLine" id="cb99-11" data-line-number="11">logL &lt;-<span class="st"> </span><span class="kw">logLFcn</span>(data.df)</a>
-<a class="sourceLine" id="cb99-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb99-13" data-line-number="13">lambda &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb99-14" data-line-number="14">logPrior &lt;-<span class="st"> </span><span class="cf">function</span>(beta){</a>
-<a class="sourceLine" id="cb99-15" data-line-number="15">    <span class="op">-</span><span class="kw">sum</span>(beta<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>lambda)</a>
-<a class="sourceLine" id="cb99-16" data-line-number="16">}</a>
-<a class="sourceLine" id="cb99-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb99-18" data-line-number="18">logPosterior &lt;-<span class="st"> </span><span class="cf">function</span>(beta){ <span class="kw">logL</span>(beta) <span class="op">+</span><span class="st"> </span><span class="kw">logPrior</span>(beta)}</a></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="3-6-an-application-iii.html#cb99-1"></a>logLFcn &lt;-<span class="st"> </span><span class="cf">function</span>(data){</span>
+<span id="cb99-2"><a href="3-6-an-application-iii.html#cb99-2"></a>  <span class="cf">function</span>(beta){</span>
+<span id="cb99-3"><a href="3-6-an-application-iii.html#cb99-3"></a>    p &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">as.matrix</span>(data[<span class="dv">3</span><span class="op">:</span><span class="dv">6</span>])<span class="op">%*%</span>beta)</span>
+<span id="cb99-4"><a href="3-6-an-application-iii.html#cb99-4"></a>    sum &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb99-5"><a href="3-6-an-application-iii.html#cb99-5"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</span>
+<span id="cb99-6"><a href="3-6-an-application-iii.html#cb99-6"></a>      sum &lt;-<span class="st"> </span>sum <span class="op">+</span><span class="st"> </span>data<span class="op">$</span>y[i]<span class="op">*</span><span class="kw">log</span>(p[i]) <span class="op">+</span><span class="st"> </span>(data<span class="op">$</span>n[i]<span class="op">-</span>data<span class="op">$</span>y[i])<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p[i])</span>
+<span id="cb99-7"><a href="3-6-an-application-iii.html#cb99-7"></a>    }</span>
+<span id="cb99-8"><a href="3-6-an-application-iii.html#cb99-8"></a>    sum</span>
+<span id="cb99-9"><a href="3-6-an-application-iii.html#cb99-9"></a>  }</span>
+<span id="cb99-10"><a href="3-6-an-application-iii.html#cb99-10"></a>}</span>
+<span id="cb99-11"><a href="3-6-an-application-iii.html#cb99-11"></a>logL &lt;-<span class="st"> </span><span class="kw">logLFcn</span>(data.df)</span>
+<span id="cb99-12"><a href="3-6-an-application-iii.html#cb99-12"></a></span>
+<span id="cb99-13"><a href="3-6-an-application-iii.html#cb99-13"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb99-14"><a href="3-6-an-application-iii.html#cb99-14"></a>logPrior &lt;-<span class="st"> </span><span class="cf">function</span>(beta){</span>
+<span id="cb99-15"><a href="3-6-an-application-iii.html#cb99-15"></a>    <span class="op">-</span><span class="kw">sum</span>(beta<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>lambda)</span>
+<span id="cb99-16"><a href="3-6-an-application-iii.html#cb99-16"></a>}</span>
+<span id="cb99-17"><a href="3-6-an-application-iii.html#cb99-17"></a></span>
+<span id="cb99-18"><a href="3-6-an-application-iii.html#cb99-18"></a>logPosterior &lt;-<span class="st"> </span><span class="cf">function</span>(beta){ <span class="kw">logL</span>(beta) <span class="op">+</span><span class="st"> </span><span class="kw">logPrior</span>(beta)}</span></code></pre></div>
 <!-- Next we implement the main MCMC-loop. We make it a function so that we can easily reuse it later. -->
 <!-- ```{r, cache=TRUE, echo = TRUE, warning = FALSE} -->
 <!-- mcmc.iter <- function(x, logPosterior, sigma, n.iter){ -->
@@ -337,22 +340,22 @@ We will use a random walk Metropolis Hastings algorithm with <span class="math i
 <!-- } -->
 <!-- ``` -->
 <p>Now run the Markov chain. First a burn-in of 1000 steps, that we then discard. After that a longer run.</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1">beta &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="co">#Initial value</span></a>
-<a class="sourceLine" id="cb100-2" data-line-number="2">nIter &lt;-<span class="st"> </span><span class="dv">100000</span> <span class="co">#Number of MC steps</span></a>
-<a class="sourceLine" id="cb100-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb100-4" data-line-number="4"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb100-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb100-6" data-line-number="6">beta.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(beta,</a>
-<a class="sourceLine" id="cb100-7" data-line-number="7">                       logPosterior,</a>
-<a class="sourceLine" id="cb100-8" data-line-number="8">                       <span class="fl">0.08</span>,</a>
-<a class="sourceLine" id="cb100-9" data-line-number="9">                       <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb100-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb100-11" data-line-number="11">beta.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(beta.mcmc<span class="op">$</span>sample[<span class="kw">nrow</span>(beta.mcmc<span class="op">$</span>sample),],</a>
-<a class="sourceLine" id="cb100-12" data-line-number="12">                       logPosterior,</a>
-<a class="sourceLine" id="cb100-13" data-line-number="13">                       <span class="fl">0.08</span>,</a>
-<a class="sourceLine" id="cb100-14" data-line-number="14">                       nIter)</a></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="3-6-an-application-iii.html#cb100-1"></a>beta &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="co">#Initial value</span></span>
+<span id="cb100-2"><a href="3-6-an-application-iii.html#cb100-2"></a>nIter &lt;-<span class="st"> </span><span class="dv">100000</span> <span class="co">#Number of MC steps</span></span>
+<span id="cb100-3"><a href="3-6-an-application-iii.html#cb100-3"></a></span>
+<span id="cb100-4"><a href="3-6-an-application-iii.html#cb100-4"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb100-5"><a href="3-6-an-application-iii.html#cb100-5"></a></span>
+<span id="cb100-6"><a href="3-6-an-application-iii.html#cb100-6"></a>beta.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(beta,</span>
+<span id="cb100-7"><a href="3-6-an-application-iii.html#cb100-7"></a>                       logPosterior,</span>
+<span id="cb100-8"><a href="3-6-an-application-iii.html#cb100-8"></a>                       <span class="fl">0.08</span>,</span>
+<span id="cb100-9"><a href="3-6-an-application-iii.html#cb100-9"></a>                       <span class="dv">1000</span>)</span>
+<span id="cb100-10"><a href="3-6-an-application-iii.html#cb100-10"></a></span>
+<span id="cb100-11"><a href="3-6-an-application-iii.html#cb100-11"></a>beta.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(beta.mcmc<span class="op">$</span>sample[<span class="kw">nrow</span>(beta.mcmc<span class="op">$</span>sample),],</span>
+<span id="cb100-12"><a href="3-6-an-application-iii.html#cb100-12"></a>                       logPosterior,</span>
+<span id="cb100-13"><a href="3-6-an-application-iii.html#cb100-13"></a>                       <span class="fl">0.08</span>,</span>
+<span id="cb100-14"><a href="3-6-an-application-iii.html#cb100-14"></a>                       nIter)</span></code></pre></div>
 <p>Now we do some diagnostics of the simulation. First check that the acceptance probability is reasonable.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1">beta.mcmc<span class="op">$</span>accProb</a></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="3-6-an-application-iii.html#cb101-1"></a>beta.mcmc<span class="op">$</span>accProb</span></code></pre></div>
 <pre><code>## [1] 0.57037</code></pre>
 Then we plot the trajectories of the parameters. We want to see that the trajectories appear stationary and that they are not stuck in one state. We only plot the first 1000 steps.
 <div class="figure" style="text-align: center"><span id="fig:logProbBayesTrajectory"></span>
@@ -376,19 +379,19 @@ Figure 3.6: Posterior distribution
 </p>
 </div>
 <p>From this we can get point estimates, the mean of the posterior distribution, and credible intervals.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="co">#Point estimates</span></a>
-<a class="sourceLine" id="cb103-2" data-line-number="2"><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="3-6-an-application-iii.html#cb103-1"></a><span class="co">#Point estimates</span></span>
+<span id="cb103-2"><a href="3-6-an-application-iii.html#cb103-2"></a><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, mean)</span></code></pre></div>
 <pre><code>## [1] -1.0903722  0.6038363  1.1894802 -1.9005936</code></pre>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1"><span class="co">#95% CI</span></a>
-<a class="sourceLine" id="cb105-2" data-line-number="2"><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="3-6-an-application-iii.html#cb105-1"></a><span class="co">#95% CI</span></span>
+<span id="cb105-2"><a href="3-6-an-application-iii.html#cb105-2"></a><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>))</span></code></pre></div>
 <pre><code>##           [,1]      [,2]      [,3]      [,4]
 ## 5%  -1.4605295 0.2098086 0.7740177 -2.353467
 ## 95% -0.7401921 1.0111992 1.6204207 -1.465202</code></pre>
 <p>As a final check, let us verify that our estimates makes sense by comparing our data to our predictions.</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1">beta.fit &lt;-<span class="st"> </span><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, mean)</a>
-<a class="sourceLine" id="cb107-2" data-line-number="2">p &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">as.matrix</span>(data.df[<span class="dv">3</span><span class="op">:</span><span class="dv">6</span>])<span class="op">%*%</span>beta.fit)</a>
-<a class="sourceLine" id="cb107-3" data-line-number="3">y.pred &lt;-<span class="st"> </span>data.df<span class="op">$</span>n<span class="op">*</span>p</a>
-<a class="sourceLine" id="cb107-4" data-line-number="4">y.pred</a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="3-6-an-application-iii.html#cb107-1"></a>beta.fit &lt;-<span class="st"> </span><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, mean)</span>
+<span id="cb107-2"><a href="3-6-an-application-iii.html#cb107-2"></a>p &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">as.matrix</span>(data.df[<span class="dv">3</span><span class="op">:</span><span class="dv">6</span>])<span class="op">%*%</span>beta.fit)</span>
+<span id="cb107-3"><a href="3-6-an-application-iii.html#cb107-3"></a>y.pred &lt;-<span class="st"> </span>data.df<span class="op">$</span>n<span class="op">*</span>p</span>
+<span id="cb107-4"><a href="3-6-an-application-iii.html#cb107-4"></a>y.pred</span></code></pre></div>
 <pre><code>##              [,1]
 ## [1,] 11.321624659
 ## [2,]  0.644637408
