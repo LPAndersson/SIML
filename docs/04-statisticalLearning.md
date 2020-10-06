@@ -638,7 +638,7 @@ f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle x,x_i  \rangle,
 $$
 where we define the inner product of two points $x$ and $\tilde x$ as,
 $$
-\langle x,\tilde  x \rangle = \sum_{i=1}^p x_j\tilde x_j.
+\langle x,\tilde  x \rangle = \sum_{j=1}^p x_j\tilde x_j.
 $$
 If we now instead consider the input features $\varphi(x) = (\varphi_1(x),\ldots,\varphi_M(x))$ and functions of the form
 $$
@@ -668,11 +668,6 @@ K(x,\tilde x) = \exp\left( -\gamma  \sum_{i=1}^p (x_i-\tilde x_i)^2\right).
 $$
 Let us try the radial basis function kernel on our data set.
 
-
-
-```
-## Loading required package: lattice
-```
 
 <div class="figure" style="text-align: center">
 <img src="04-statisticalLearning_files/figure-html/radialBasisSVM-1.png" alt="Training data a radial basis SVM classification" width="80%" />
@@ -710,7 +705,7 @@ First let us see what the population minimizer of the error is. That is, assumin
 \begin{align*}
 &E\left[ (Y-h(X))^2 \mid X \right] = E\left[ (Y - E[Y\mid X] + E[Y\mid X] -h(X))^2 \mid X \right] \\
 =&E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right] \\
-&+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X) \mid X \right]}_{=0}\\
+&+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X)) \mid X \right]}_{=0}\\
 =&E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right]
 \end{align*}
 The first part does not depend on $h$ and the second part is minimized by choosing $h(x) = E[Y\mid X=x]$ for every $x$, which therefore is the population minimizer of the error.
@@ -963,7 +958,9 @@ Then we randomly split the data into a train and a test set. We keep 70% of the 
 
 ```r
 set.seed(3)
-training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.7, list = FALSE)
+training.samples <- caret::createDataPartition(Hitters$Salary, 
+                                               p = 0.7, 
+                                               list = FALSE)
 train.data  <- Hitters[training.samples, ]
 test.data <- Hitters[-training.samples, ]
 ```

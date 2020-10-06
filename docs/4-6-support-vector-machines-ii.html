@@ -234,7 +234,7 @@ f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle x,x_i  \rangle,
 \]</span>
 where we define the inner product of two points <span class="math inline">\(x\)</span> and <span class="math inline">\(\tilde x\)</span> as,
 <span class="math display">\[
-\langle x,\tilde  x \rangle = \sum_{i=1}^p x_j\tilde x_j.
+\langle x,\tilde  x \rangle = \sum_{j=1}^p x_j\tilde x_j.
 \]</span>
 If we now instead consider the input features <span class="math inline">\(\varphi(x) = (\varphi_1(x),\ldots,\varphi_M(x))\)</span> and functions of the form
 <span class="math display">\[
@@ -262,7 +262,6 @@ and the radial basis kernel,
 K(x,\tilde x) = \exp\left( -\gamma  \sum_{i=1}^p (x_i-\tilde x_i)^2\right).
 \]</span>
 Let us try the radial basis function kernel on our data set.</p>
-<pre><code>## Loading required package: lattice</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:radialBasisSVM"></span>
 <img src="04-statisticalLearning_files/figure-html/radialBasisSVM-1.png" alt="Training data a radial basis SVM classification" width="80%" />
 <p class="caption">

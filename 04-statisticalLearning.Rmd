@@ -1114,7 +1114,7 @@ f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle x,x_i  \rangle,
 $$
 where we define the inner product of two points $x$ and $\tilde x$ as,
 $$
-\langle x,\tilde  x \rangle = \sum_{i=1}^p x_j\tilde x_j.
+\langle x,\tilde  x \rangle = \sum_{j=1}^p x_j\tilde x_j.
 $$
 If we now instead consider the input features $\varphi(x) = (\varphi_1(x),\ldots,\varphi_M(x))$ and functions of the form
 $$
@@ -1169,7 +1169,7 @@ data.df <- data.frame(data.matrix)
 colnames(data.df) <- c("x1","x2","y")
 data.df$y <- as.factor(data.df$y)
 ```
-```{r, warning=FALSE, cache=FALSE, echo =FALSE}
+```{r, warning=FALSE, cache=FALSE, echo =FALSE, message=FALSE}
 library(mvtnorm)
 set.seed(42)
 
@@ -1194,7 +1194,7 @@ data.test.df$y <- as.factor(data.test.df$y)
 error.in <- mean(data.df$y != predict(svm.model,data.df))
 error.out <- mean(data.test.df$y != predict(svm.model,data.test.df))
 ```
-```{r radialBasisSVM, cache=FALSE, echo = FALSE, fig.cap='Training data a radial basis SVM classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r radialBasisSVM, cache=FALSE, echo = FALSE, fig.cap='Training data a radial basis SVM classification', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message =FALSE}
 library(caret)
 
 svm.model <- train(
@@ -1249,7 +1249,7 @@ First let us see what the population minimizer of the error is. That is, assumin
 \begin{align*}
 &E\left[ (Y-h(X))^2 \mid X \right] = E\left[ (Y - E[Y\mid X] + E[Y\mid X] -h(X))^2 \mid X \right] \\
 =&E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right] \\
-&+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X) \mid X \right]}_{=0}\\
+&+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X)) \mid X \right]}_{=0}\\
 =&E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right]
 \end{align*}
 The first part does not depend on $h$ and the second part is minimized by choosing $h(x) = E[Y\mid X=x]$ for every $x$, which therefore is the population minimizer of the error.
@@ -1601,7 +1601,9 @@ Hitters <- na.omit(Hitters)
 Then we randomly split the data into a train and a test set. We keep 70% of the observations in the training set and the rest in the test set.
 ```{r}
 set.seed(3)
-training.samples <- caret::createDataPartition(Hitters$Salary, p = 0.7, list = FALSE)
+training.samples <- caret::createDataPartition(Hitters$Salary, 
+                                               p = 0.7, 
+                                               list = FALSE)
 train.data  <- Hitters[training.samples, ]
 test.data <- Hitters[-training.samples, ]
 ```

@@ -219,68 +219,68 @@ and we are thus to choose the parameters <span class="math inline">\(\beta_1,\ld
 \beta = (x^Tx)^{-1}x^Ty.
 \]</span>
 As we have seen, we may specify some function <span class="math inline">\(\varphi_i\)</span> and use <span class="math inline">\(\varphi_1(x),\ldots,\varphi_M(x)\)</span> to predict <span class="math inline">\(y\)</span> and we are still in the case of linear regression. However we need to be careful not to overfit. Let us see a simple example were <span class="math inline">\(\varphi\)</span> are polynomials. First we construct the functions that will generate our data:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="4-8-regression-regularization.html#cb19-1"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb19-2"><a href="4-8-regression-regularization.html#cb19-2"></a><span class="kw">library</span>(gridExtra)</span>
-<span id="cb19-3"><a href="4-8-regression-regularization.html#cb19-3"></a><span class="kw">library</span>(resample)</span>
-<span id="cb19-4"><a href="4-8-regression-regularization.html#cb19-4"></a></span>
-<span id="cb19-5"><a href="4-8-regression-regularization.html#cb19-5"></a>gen_data &lt;-<span class="st"> </span><span class="cf">function</span>(truth, <span class="dt">n.obs =</span> <span class="dv">100</span>) {</span>
-<span id="cb19-6"><a href="4-8-regression-regularization.html#cb19-6"></a>  x &lt;-<span class="st"> </span><span class="kw">runif</span>(n.obs, <span class="dt">min =</span> <span class="dv">-2</span>, <span class="dt">max =</span> <span class="dv">2</span>)</span>
-<span id="cb19-7"><a href="4-8-regression-regularization.html#cb19-7"></a>  y &lt;-<span class="st"> </span><span class="kw">truth</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n.obs) <span class="op">*</span><span class="st"> </span><span class="fl">0.4</span></span>
-<span id="cb19-8"><a href="4-8-regression-regularization.html#cb19-8"></a>  data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y =</span> y, <span class="dt">x =</span> x)</span>
-<span id="cb19-9"><a href="4-8-regression-regularization.html#cb19-9"></a>}</span>
-<span id="cb19-10"><a href="4-8-regression-regularization.html#cb19-10"></a></span>
-<span id="cb19-11"><a href="4-8-regression-regularization.html#cb19-11"></a>truth &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb19-12"><a href="4-8-regression-regularization.html#cb19-12"></a>  <span class="kw">sin</span>(x <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>x</span>
-<span id="cb19-13"><a href="4-8-regression-regularization.html#cb19-13"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="4-8-regression-regularization.html#cb18-1"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb18-2"><a href="4-8-regression-regularization.html#cb18-2"></a><span class="kw">library</span>(gridExtra)</span>
+<span id="cb18-3"><a href="4-8-regression-regularization.html#cb18-3"></a><span class="kw">library</span>(resample)</span>
+<span id="cb18-4"><a href="4-8-regression-regularization.html#cb18-4"></a></span>
+<span id="cb18-5"><a href="4-8-regression-regularization.html#cb18-5"></a>gen_data &lt;-<span class="st"> </span><span class="cf">function</span>(truth, <span class="dt">n.obs =</span> <span class="dv">100</span>) {</span>
+<span id="cb18-6"><a href="4-8-regression-regularization.html#cb18-6"></a>  x &lt;-<span class="st"> </span><span class="kw">runif</span>(n.obs, <span class="dt">min =</span> <span class="dv">-2</span>, <span class="dt">max =</span> <span class="dv">2</span>)</span>
+<span id="cb18-7"><a href="4-8-regression-regularization.html#cb18-7"></a>  y &lt;-<span class="st"> </span><span class="kw">truth</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n.obs) <span class="op">*</span><span class="st"> </span><span class="fl">0.4</span></span>
+<span id="cb18-8"><a href="4-8-regression-regularization.html#cb18-8"></a>  data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y =</span> y, <span class="dt">x =</span> x)</span>
+<span id="cb18-9"><a href="4-8-regression-regularization.html#cb18-9"></a>}</span>
+<span id="cb18-10"><a href="4-8-regression-regularization.html#cb18-10"></a></span>
+<span id="cb18-11"><a href="4-8-regression-regularization.html#cb18-11"></a>truth &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb18-12"><a href="4-8-regression-regularization.html#cb18-12"></a>  <span class="kw">sin</span>(x <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>x</span>
+<span id="cb18-13"><a href="4-8-regression-regularization.html#cb18-13"></a>}</span></code></pre></div>
 <p>For convenience, we write a function that fits three different polynomial regressions and returns the plot.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="4-8-regression-regularization.html#cb20-1"></a>fit_plot &lt;-<span class="st"> </span><span class="cf">function</span>(){</span>
-<span id="cb20-2"><a href="4-8-regression-regularization.html#cb20-2"></a>  data.train.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</span>
-<span id="cb20-3"><a href="4-8-regression-regularization.html#cb20-3"></a></span>
-<span id="cb20-4"><a href="4-8-regression-regularization.html#cb20-4"></a>  x.grid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">0.01</span>)</span>
-<span id="cb20-5"><a href="4-8-regression-regularization.html#cb20-5"></a>  x.grid.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x.grid)</span>
-<span id="cb20-6"><a href="4-8-regression-regularization.html#cb20-6"></a></span>
-<span id="cb20-7"><a href="4-8-regression-regularization.html#cb20-7"></a>  fit1 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">2</span>), data.train.df),</span>
-<span id="cb20-8"><a href="4-8-regression-regularization.html#cb20-8"></a>                  x.grid.df)</span>
-<span id="cb20-9"><a href="4-8-regression-regularization.html#cb20-9"></a>  fit2 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">6</span>), data.train.df),</span>
-<span id="cb20-10"><a href="4-8-regression-regularization.html#cb20-10"></a>                  x.grid.df)</span>
-<span id="cb20-11"><a href="4-8-regression-regularization.html#cb20-11"></a>  fit3 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">20</span>), data.train.df),</span>
-<span id="cb20-12"><a href="4-8-regression-regularization.html#cb20-12"></a>                  x.grid.df)</span>
-<span id="cb20-13"><a href="4-8-regression-regularization.html#cb20-13"></a></span>
-<span id="cb20-14"><a href="4-8-regression-regularization.html#cb20-14"></a>  cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
-<span id="cb20-15"><a href="4-8-regression-regularization.html#cb20-15"></a>            <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
-<span id="cb20-16"><a href="4-8-regression-regularization.html#cb20-16"></a></span>
-<span id="cb20-17"><a href="4-8-regression-regularization.html#cb20-17"></a>  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(</span>
-<span id="cb20-18"><a href="4-8-regression-regularization.html#cb20-18"></a>    <span class="dt">x =</span> x.grid,</span>
-<span id="cb20-19"><a href="4-8-regression-regularization.html#cb20-19"></a>    <span class="dt">fit1 =</span> fit1,</span>
-<span id="cb20-20"><a href="4-8-regression-regularization.html#cb20-20"></a>    <span class="dt">fit2 =</span> fit2,</span>
-<span id="cb20-21"><a href="4-8-regression-regularization.html#cb20-21"></a>    <span class="dt">fit3 =</span> fit3</span>
-<span id="cb20-22"><a href="4-8-regression-regularization.html#cb20-22"></a>  )) <span class="op">+</span></span>
-<span id="cb20-23"><a href="4-8-regression-regularization.html#cb20-23"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit1, <span class="dt">color =</span> <span class="st">&quot;1&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb20-24"><a href="4-8-regression-regularization.html#cb20-24"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit2, <span class="dt">color =</span> <span class="st">&quot;2&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb20-25"><a href="4-8-regression-regularization.html#cb20-25"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit3, <span class="dt">color =</span> <span class="st">&quot;3&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb20-26"><a href="4-8-regression-regularization.html#cb20-26"></a><span class="st">    </span><span class="kw">scale_colour_manual</span>(</span>
-<span id="cb20-27"><a href="4-8-regression-regularization.html#cb20-27"></a>      <span class="dt">name =</span> <span class="st">&quot;&quot;</span>,</span>
-<span id="cb20-28"><a href="4-8-regression-regularization.html#cb20-28"></a>      <span class="dt">values =</span> <span class="kw">c</span>(</span>
-<span id="cb20-29"><a href="4-8-regression-regularization.html#cb20-29"></a>        <span class="st">&quot;train&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">1</span>],</span>
-<span id="cb20-30"><a href="4-8-regression-regularization.html#cb20-30"></a>        <span class="st">&quot;1&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">2</span>],</span>
-<span id="cb20-31"><a href="4-8-regression-regularization.html#cb20-31"></a>        <span class="st">&quot;2&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">3</span>],</span>
-<span id="cb20-32"><a href="4-8-regression-regularization.html#cb20-32"></a>        <span class="st">&quot;3&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">4</span>]</span>
-<span id="cb20-33"><a href="4-8-regression-regularization.html#cb20-33"></a>      ),</span>
-<span id="cb20-34"><a href="4-8-regression-regularization.html#cb20-34"></a>      <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;1&quot;</span> =<span class="st"> &quot;2nd&quot;</span>, <span class="st">&quot;2&quot;</span> =<span class="st"> &quot;6th&quot;</span>, <span class="st">&quot;3&quot;</span> =<span class="st"> &quot;20th&quot;</span>)</span>
-<span id="cb20-35"><a href="4-8-regression-regularization.html#cb20-35"></a>    ) <span class="op">+</span></span>
-<span id="cb20-36"><a href="4-8-regression-regularization.html#cb20-36"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">color =</span> <span class="st">&quot;train&quot;</span>),</span>
-<span id="cb20-37"><a href="4-8-regression-regularization.html#cb20-37"></a>               <span class="dt">data =</span> data.train.df,</span>
-<span id="cb20-38"><a href="4-8-regression-regularization.html#cb20-38"></a>               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb20-39"><a href="4-8-regression-regularization.html#cb20-39"></a><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) <span class="op">+</span></span>
-<span id="cb20-40"><a href="4-8-regression-regularization.html#cb20-40"></a><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">2</span>)) <span class="op">+</span></span>
-<span id="cb20-41"><a href="4-8-regression-regularization.html#cb20-41"></a><span class="st">    </span><span class="kw">theme_minimal</span>()</span>
-<span id="cb20-42"><a href="4-8-regression-regularization.html#cb20-42"></a></span>
-<span id="cb20-43"><a href="4-8-regression-regularization.html#cb20-43"></a>  p</span>
-<span id="cb20-44"><a href="4-8-regression-regularization.html#cb20-44"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="4-8-regression-regularization.html#cb19-1"></a>fit_plot &lt;-<span class="st"> </span><span class="cf">function</span>(){</span>
+<span id="cb19-2"><a href="4-8-regression-regularization.html#cb19-2"></a>  data.train.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</span>
+<span id="cb19-3"><a href="4-8-regression-regularization.html#cb19-3"></a></span>
+<span id="cb19-4"><a href="4-8-regression-regularization.html#cb19-4"></a>  x.grid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">0.01</span>)</span>
+<span id="cb19-5"><a href="4-8-regression-regularization.html#cb19-5"></a>  x.grid.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x.grid)</span>
+<span id="cb19-6"><a href="4-8-regression-regularization.html#cb19-6"></a></span>
+<span id="cb19-7"><a href="4-8-regression-regularization.html#cb19-7"></a>  fit1 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">2</span>), data.train.df),</span>
+<span id="cb19-8"><a href="4-8-regression-regularization.html#cb19-8"></a>                  x.grid.df)</span>
+<span id="cb19-9"><a href="4-8-regression-regularization.html#cb19-9"></a>  fit2 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">6</span>), data.train.df),</span>
+<span id="cb19-10"><a href="4-8-regression-regularization.html#cb19-10"></a>                  x.grid.df)</span>
+<span id="cb19-11"><a href="4-8-regression-regularization.html#cb19-11"></a>  fit3 &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, <span class="dv">20</span>), data.train.df),</span>
+<span id="cb19-12"><a href="4-8-regression-regularization.html#cb19-12"></a>                  x.grid.df)</span>
+<span id="cb19-13"><a href="4-8-regression-regularization.html#cb19-13"></a></span>
+<span id="cb19-14"><a href="4-8-regression-regularization.html#cb19-14"></a>  cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
+<span id="cb19-15"><a href="4-8-regression-regularization.html#cb19-15"></a>            <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
+<span id="cb19-16"><a href="4-8-regression-regularization.html#cb19-16"></a></span>
+<span id="cb19-17"><a href="4-8-regression-regularization.html#cb19-17"></a>  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(</span>
+<span id="cb19-18"><a href="4-8-regression-regularization.html#cb19-18"></a>    <span class="dt">x =</span> x.grid,</span>
+<span id="cb19-19"><a href="4-8-regression-regularization.html#cb19-19"></a>    <span class="dt">fit1 =</span> fit1,</span>
+<span id="cb19-20"><a href="4-8-regression-regularization.html#cb19-20"></a>    <span class="dt">fit2 =</span> fit2,</span>
+<span id="cb19-21"><a href="4-8-regression-regularization.html#cb19-21"></a>    <span class="dt">fit3 =</span> fit3</span>
+<span id="cb19-22"><a href="4-8-regression-regularization.html#cb19-22"></a>  )) <span class="op">+</span></span>
+<span id="cb19-23"><a href="4-8-regression-regularization.html#cb19-23"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit1, <span class="dt">color =</span> <span class="st">&quot;1&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb19-24"><a href="4-8-regression-regularization.html#cb19-24"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit2, <span class="dt">color =</span> <span class="st">&quot;2&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb19-25"><a href="4-8-regression-regularization.html#cb19-25"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> fit3, <span class="dt">color =</span> <span class="st">&quot;3&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb19-26"><a href="4-8-regression-regularization.html#cb19-26"></a><span class="st">    </span><span class="kw">scale_colour_manual</span>(</span>
+<span id="cb19-27"><a href="4-8-regression-regularization.html#cb19-27"></a>      <span class="dt">name =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb19-28"><a href="4-8-regression-regularization.html#cb19-28"></a>      <span class="dt">values =</span> <span class="kw">c</span>(</span>
+<span id="cb19-29"><a href="4-8-regression-regularization.html#cb19-29"></a>        <span class="st">&quot;train&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">1</span>],</span>
+<span id="cb19-30"><a href="4-8-regression-regularization.html#cb19-30"></a>        <span class="st">&quot;1&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">2</span>],</span>
+<span id="cb19-31"><a href="4-8-regression-regularization.html#cb19-31"></a>        <span class="st">&quot;2&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">3</span>],</span>
+<span id="cb19-32"><a href="4-8-regression-regularization.html#cb19-32"></a>        <span class="st">&quot;3&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">4</span>]</span>
+<span id="cb19-33"><a href="4-8-regression-regularization.html#cb19-33"></a>      ),</span>
+<span id="cb19-34"><a href="4-8-regression-regularization.html#cb19-34"></a>      <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;1&quot;</span> =<span class="st"> &quot;2nd&quot;</span>, <span class="st">&quot;2&quot;</span> =<span class="st"> &quot;6th&quot;</span>, <span class="st">&quot;3&quot;</span> =<span class="st"> &quot;20th&quot;</span>)</span>
+<span id="cb19-35"><a href="4-8-regression-regularization.html#cb19-35"></a>    ) <span class="op">+</span></span>
+<span id="cb19-36"><a href="4-8-regression-regularization.html#cb19-36"></a><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">color =</span> <span class="st">&quot;train&quot;</span>),</span>
+<span id="cb19-37"><a href="4-8-regression-regularization.html#cb19-37"></a>               <span class="dt">data =</span> data.train.df,</span>
+<span id="cb19-38"><a href="4-8-regression-regularization.html#cb19-38"></a>               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb19-39"><a href="4-8-regression-regularization.html#cb19-39"></a><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-40"><a href="4-8-regression-regularization.html#cb19-40"></a><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">2</span>)) <span class="op">+</span></span>
+<span id="cb19-41"><a href="4-8-regression-regularization.html#cb19-41"></a><span class="st">    </span><span class="kw">theme_minimal</span>()</span>
+<span id="cb19-42"><a href="4-8-regression-regularization.html#cb19-42"></a></span>
+<span id="cb19-43"><a href="4-8-regression-regularization.html#cb19-43"></a>  p</span>
+<span id="cb19-44"><a href="4-8-regression-regularization.html#cb19-44"></a>}</span></code></pre></div>
 <p>Next we fit the polynomial models to four different training sets, generated from the same distribution.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="4-8-regression-regularization.html#cb21-1"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb21-2"><a href="4-8-regression-regularization.html#cb21-2"></a><span class="kw">grid.arrange</span>(<span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(),</span>
-<span id="cb21-3"><a href="4-8-regression-regularization.html#cb21-3"></a>             <span class="dt">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="4-8-regression-regularization.html#cb20-1"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb20-2"><a href="4-8-regression-regularization.html#cb20-2"></a><span class="kw">grid.arrange</span>(<span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(), <span class="kw">fit_plot</span>(),</span>
+<span id="cb20-3"><a href="4-8-regression-regularization.html#cb20-3"></a>             <span class="dt">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:4fits"></span>
 <img src="04-statisticalLearning_files/figure-html/4fits-1.png" alt="Polynomial fits to four different sets of training data, sampled from the same distribution" width="100%" />
 <p class="caption">
@@ -299,48 +299,48 @@ Figure 4.18: Mean fit and 95% CI for the different polynomial regressions
 </div>
 <p>From the pictures we see that the 2nd degree polynomial has a bias, but for 6h degree, the bias is close to 0. The error in the 2nd degree polynomial is a sum of bias and variance, but for 6th and 20th the error is dominated by the variance term. The variance becomes larger as the degree of the polynomial becomes larger, while the bias is already 0 for 6th degree. Therefore, the total error, the sum of bias and variance, is smallest for a 6th degree polynomial. As before, we see that a very flexible model will tend to overfit the data and may perform worse than a less flexible model.</p>
 <p>Another way to see the same phenomena is to choose one point, here <span class="math inline">\(x=1.5\)</span>, and plot the bias and variance as we vary the degree of the polynomial. We do this for sample size <span class="math inline">\(n=100\)</span> and <span class="math inline">\(n=10000\)</span>.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="4-8-regression-regularization.html#cb22-1"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb22-2"><a href="4-8-regression-regularization.html#cb22-2"></a><span class="kw">library</span>(gridExtra)</span>
-<span id="cb22-3"><a href="4-8-regression-regularization.html#cb22-3"></a></span>
-<span id="cb22-4"><a href="4-8-regression-regularization.html#cb22-4"></a>biasVariancePlot &lt;-<span class="st"> </span><span class="cf">function</span>(n.obs, <span class="dt">x0 =</span> <span class="fl">1.5</span>, <span class="dt">n.sim =</span> <span class="fl">1e3</span>, <span class="dt">seed =</span> <span class="dv">42</span>){</span>
-<span id="cb22-5"><a href="4-8-regression-regularization.html#cb22-5"></a>  degrees &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">2</span>,<span class="dv">20</span>,<span class="dv">2</span>)</span>
-<span id="cb22-6"><a href="4-8-regression-regularization.html#cb22-6"></a></span>
-<span id="cb22-7"><a href="4-8-regression-regularization.html#cb22-7"></a>  predictions &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> n.sim, <span class="dt">ncol =</span> <span class="kw">length</span>(degrees))</span>
-<span id="cb22-8"><a href="4-8-regression-regularization.html#cb22-8"></a>  x.df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x0)</span>
-<span id="cb22-9"><a href="4-8-regression-regularization.html#cb22-9"></a></span>
-<span id="cb22-10"><a href="4-8-regression-regularization.html#cb22-10"></a>  <span class="cf">for</span> (sim <span class="cf">in</span> <span class="kw">seq_len</span>(n.sim)) {</span>
-<span id="cb22-11"><a href="4-8-regression-regularization.html#cb22-11"></a>    data.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth, n.obs)</span>
-<span id="cb22-12"><a href="4-8-regression-regularization.html#cb22-12"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq</span>(<span class="kw">length</span>(degrees))) {</span>
-<span id="cb22-13"><a href="4-8-regression-regularization.html#cb22-13"></a>      predictions[sim,i] &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, degrees[i]), data.df),</span>
-<span id="cb22-14"><a href="4-8-regression-regularization.html#cb22-14"></a>                                    x.df)</span>
-<span id="cb22-15"><a href="4-8-regression-regularization.html#cb22-15"></a>    }</span>
-<span id="cb22-16"><a href="4-8-regression-regularization.html#cb22-16"></a>  }</span>
-<span id="cb22-17"><a href="4-8-regression-regularization.html#cb22-17"></a></span>
-<span id="cb22-18"><a href="4-8-regression-regularization.html#cb22-18"></a>  plot.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">hbar =</span> <span class="kw">colMeans</span>(predictions),</span>
-<span id="cb22-19"><a href="4-8-regression-regularization.html#cb22-19"></a>                         <span class="dt">variance =</span> <span class="kw">colVars</span>(predictions),</span>
-<span id="cb22-20"><a href="4-8-regression-regularization.html#cb22-20"></a>                         <span class="dt">bias =</span> (<span class="kw">colMeans</span>(predictions)<span class="op">-</span><span class="kw">truth</span>(x0))<span class="op">^</span><span class="dv">2</span>,</span>
-<span id="cb22-21"><a href="4-8-regression-regularization.html#cb22-21"></a>                         <span class="dt">degree =</span> degrees,</span>
-<span id="cb22-22"><a href="4-8-regression-regularization.html#cb22-22"></a>                         <span class="dt">total =</span> <span class="kw">colVars</span>(predictions) <span class="op">+</span><span class="st"> </span>(<span class="kw">colMeans</span>(predictions)<span class="op">-</span><span class="kw">truth</span>(x0))<span class="op">^</span><span class="dv">2</span>)</span>
-<span id="cb22-23"><a href="4-8-regression-regularization.html#cb22-23"></a></span>
-<span id="cb22-24"><a href="4-8-regression-regularization.html#cb22-24"></a>  cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
-<span id="cb22-25"><a href="4-8-regression-regularization.html#cb22-25"></a>            <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
-<span id="cb22-26"><a href="4-8-regression-regularization.html#cb22-26"></a></span>
-<span id="cb22-27"><a href="4-8-regression-regularization.html#cb22-27"></a>  <span class="kw">ggplot</span>(plot.df, <span class="kw">aes</span>(<span class="dt">x =</span> degree)) <span class="op">+</span></span>
-<span id="cb22-28"><a href="4-8-regression-regularization.html#cb22-28"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> bias, <span class="dt">color =</span> <span class="st">&quot;bias&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb22-29"><a href="4-8-regression-regularization.html#cb22-29"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> variance, <span class="dt">color =</span> <span class="st">&quot;variance&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb22-30"><a href="4-8-regression-regularization.html#cb22-30"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> total, <span class="dt">color =</span> <span class="st">&quot;total&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb22-31"><a href="4-8-regression-regularization.html#cb22-31"></a><span class="st">    </span><span class="kw">scale_colour_manual</span>(<span class="dt">name =</span> <span class="st">&quot;&quot;</span>,</span>
-<span id="cb22-32"><a href="4-8-regression-regularization.html#cb22-32"></a>                        <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;bias&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">2</span>], <span class="st">&quot;variance&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">3</span>], <span class="st">&quot;total&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">4</span>]),</span>
-<span id="cb22-33"><a href="4-8-regression-regularization.html#cb22-33"></a>                        <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;bias&quot;</span> =<span class="st"> &quot;bias&quot;</span>, <span class="st">&quot;variance&quot;</span> =<span class="st"> &quot;variance&quot;</span>, <span class="st">&quot;total&quot;</span> =<span class="st"> &quot;total&quot;</span>)) <span class="op">+</span></span>
-<span id="cb22-34"><a href="4-8-regression-regularization.html#cb22-34"></a><span class="st">    </span><span class="kw">scale_y_continuous</span>(<span class="dt">trans=</span><span class="st">&#39;log10&#39;</span>) <span class="op">+</span></span>
-<span id="cb22-35"><a href="4-8-regression-regularization.html#cb22-35"></a><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Error&quot;</span>) <span class="op">+</span></span>
-<span id="cb22-36"><a href="4-8-regression-regularization.html#cb22-36"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Degree&quot;</span>) <span class="op">+</span></span>
-<span id="cb22-37"><a href="4-8-regression-regularization.html#cb22-37"></a><span class="st">    </span><span class="kw">theme_minimal</span>()</span>
-<span id="cb22-38"><a href="4-8-regression-regularization.html#cb22-38"></a></span>
-<span id="cb22-39"><a href="4-8-regression-regularization.html#cb22-39"></a>}</span>
-<span id="cb22-40"><a href="4-8-regression-regularization.html#cb22-40"></a></span>
-<span id="cb22-41"><a href="4-8-regression-regularization.html#cb22-41"></a><span class="kw">grid.arrange</span>(<span class="kw">biasVariancePlot</span>(<span class="dv">100</span>), <span class="kw">biasVariancePlot</span>(<span class="dv">10000</span>),</span>
-<span id="cb22-42"><a href="4-8-regression-regularization.html#cb22-42"></a>             <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="4-8-regression-regularization.html#cb21-1"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb21-2"><a href="4-8-regression-regularization.html#cb21-2"></a><span class="kw">library</span>(gridExtra)</span>
+<span id="cb21-3"><a href="4-8-regression-regularization.html#cb21-3"></a></span>
+<span id="cb21-4"><a href="4-8-regression-regularization.html#cb21-4"></a>biasVariancePlot &lt;-<span class="st"> </span><span class="cf">function</span>(n.obs, <span class="dt">x0 =</span> <span class="fl">1.5</span>, <span class="dt">n.sim =</span> <span class="fl">1e3</span>, <span class="dt">seed =</span> <span class="dv">42</span>){</span>
+<span id="cb21-5"><a href="4-8-regression-regularization.html#cb21-5"></a>  degrees &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">2</span>,<span class="dv">20</span>,<span class="dv">2</span>)</span>
+<span id="cb21-6"><a href="4-8-regression-regularization.html#cb21-6"></a></span>
+<span id="cb21-7"><a href="4-8-regression-regularization.html#cb21-7"></a>  predictions &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> n.sim, <span class="dt">ncol =</span> <span class="kw">length</span>(degrees))</span>
+<span id="cb21-8"><a href="4-8-regression-regularization.html#cb21-8"></a>  x.df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x0)</span>
+<span id="cb21-9"><a href="4-8-regression-regularization.html#cb21-9"></a></span>
+<span id="cb21-10"><a href="4-8-regression-regularization.html#cb21-10"></a>  <span class="cf">for</span> (sim <span class="cf">in</span> <span class="kw">seq_len</span>(n.sim)) {</span>
+<span id="cb21-11"><a href="4-8-regression-regularization.html#cb21-11"></a>    data.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth, n.obs)</span>
+<span id="cb21-12"><a href="4-8-regression-regularization.html#cb21-12"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq</span>(<span class="kw">length</span>(degrees))) {</span>
+<span id="cb21-13"><a href="4-8-regression-regularization.html#cb21-13"></a>      predictions[sim,i] &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x, degrees[i]), data.df),</span>
+<span id="cb21-14"><a href="4-8-regression-regularization.html#cb21-14"></a>                                    x.df)</span>
+<span id="cb21-15"><a href="4-8-regression-regularization.html#cb21-15"></a>    }</span>
+<span id="cb21-16"><a href="4-8-regression-regularization.html#cb21-16"></a>  }</span>
+<span id="cb21-17"><a href="4-8-regression-regularization.html#cb21-17"></a></span>
+<span id="cb21-18"><a href="4-8-regression-regularization.html#cb21-18"></a>  plot.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">hbar =</span> <span class="kw">colMeans</span>(predictions),</span>
+<span id="cb21-19"><a href="4-8-regression-regularization.html#cb21-19"></a>                         <span class="dt">variance =</span> <span class="kw">colVars</span>(predictions),</span>
+<span id="cb21-20"><a href="4-8-regression-regularization.html#cb21-20"></a>                         <span class="dt">bias =</span> (<span class="kw">colMeans</span>(predictions)<span class="op">-</span><span class="kw">truth</span>(x0))<span class="op">^</span><span class="dv">2</span>,</span>
+<span id="cb21-21"><a href="4-8-regression-regularization.html#cb21-21"></a>                         <span class="dt">degree =</span> degrees,</span>
+<span id="cb21-22"><a href="4-8-regression-regularization.html#cb21-22"></a>                         <span class="dt">total =</span> <span class="kw">colVars</span>(predictions) <span class="op">+</span><span class="st"> </span>(<span class="kw">colMeans</span>(predictions)<span class="op">-</span><span class="kw">truth</span>(x0))<span class="op">^</span><span class="dv">2</span>)</span>
+<span id="cb21-23"><a href="4-8-regression-regularization.html#cb21-23"></a></span>
+<span id="cb21-24"><a href="4-8-regression-regularization.html#cb21-24"></a>  cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
+<span id="cb21-25"><a href="4-8-regression-regularization.html#cb21-25"></a>            <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
+<span id="cb21-26"><a href="4-8-regression-regularization.html#cb21-26"></a></span>
+<span id="cb21-27"><a href="4-8-regression-regularization.html#cb21-27"></a>  <span class="kw">ggplot</span>(plot.df, <span class="kw">aes</span>(<span class="dt">x =</span> degree)) <span class="op">+</span></span>
+<span id="cb21-28"><a href="4-8-regression-regularization.html#cb21-28"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> bias, <span class="dt">color =</span> <span class="st">&quot;bias&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb21-29"><a href="4-8-regression-regularization.html#cb21-29"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> variance, <span class="dt">color =</span> <span class="st">&quot;variance&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb21-30"><a href="4-8-regression-regularization.html#cb21-30"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> total, <span class="dt">color =</span> <span class="st">&quot;total&quot;</span>), <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb21-31"><a href="4-8-regression-regularization.html#cb21-31"></a><span class="st">    </span><span class="kw">scale_colour_manual</span>(<span class="dt">name =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb21-32"><a href="4-8-regression-regularization.html#cb21-32"></a>                        <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;bias&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">2</span>], <span class="st">&quot;variance&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">3</span>], <span class="st">&quot;total&quot;</span> =<span class="st"> </span>cbp1[<span class="dv">4</span>]),</span>
+<span id="cb21-33"><a href="4-8-regression-regularization.html#cb21-33"></a>                        <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;bias&quot;</span> =<span class="st"> &quot;bias&quot;</span>, <span class="st">&quot;variance&quot;</span> =<span class="st"> &quot;variance&quot;</span>, <span class="st">&quot;total&quot;</span> =<span class="st"> &quot;total&quot;</span>)) <span class="op">+</span></span>
+<span id="cb21-34"><a href="4-8-regression-regularization.html#cb21-34"></a><span class="st">    </span><span class="kw">scale_y_continuous</span>(<span class="dt">trans=</span><span class="st">&#39;log10&#39;</span>) <span class="op">+</span></span>
+<span id="cb21-35"><a href="4-8-regression-regularization.html#cb21-35"></a><span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Error&quot;</span>) <span class="op">+</span></span>
+<span id="cb21-36"><a href="4-8-regression-regularization.html#cb21-36"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Degree&quot;</span>) <span class="op">+</span></span>
+<span id="cb21-37"><a href="4-8-regression-regularization.html#cb21-37"></a><span class="st">    </span><span class="kw">theme_minimal</span>()</span>
+<span id="cb21-38"><a href="4-8-regression-regularization.html#cb21-38"></a></span>
+<span id="cb21-39"><a href="4-8-regression-regularization.html#cb21-39"></a>}</span>
+<span id="cb21-40"><a href="4-8-regression-regularization.html#cb21-40"></a></span>
+<span id="cb21-41"><a href="4-8-regression-regularization.html#cb21-41"></a><span class="kw">grid.arrange</span>(<span class="kw">biasVariancePlot</span>(<span class="dv">100</span>), <span class="kw">biasVariancePlot</span>(<span class="dv">10000</span>),</span>
+<span id="cb21-42"><a href="4-8-regression-regularization.html#cb21-42"></a>             <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:errorVsDegree"></span>
 <img src="04-statisticalLearning_files/figure-html/errorVsDegree-1.png" alt="Bias/Variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000" width="80%" />
 <p class="caption">
@@ -363,14 +363,14 @@ E_{in} + \lambda\sum_{i=1}^p | \beta_j |.
 \]</span>
 Here <span class="math inline">\(\lambda\)</span> is a tuning parameter that needs to be determined separately. Ridge regression and lasso use different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of <span class="math inline">\(\beta_j\)</span> will be smaller in ridge and lasso. I.e. the estimates will shrink towards zero. These methods are therefore sometimes called shrinkage methods. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.</p>
 <p>Let us look at the same example above, this time with a degree 20 polynomial, but penalized with ridge and lasso.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="4-8-regression-regularization.html#cb23-1"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb23-2"><a href="4-8-regression-regularization.html#cb23-2"></a><span class="kw">library</span>(gridExtra)</span>
-<span id="cb23-3"><a href="4-8-regression-regularization.html#cb23-3"></a><span class="kw">library</span>(glmnet)</span>
-<span id="cb23-4"><a href="4-8-regression-regularization.html#cb23-4"></a></span>
-<span id="cb23-5"><a href="4-8-regression-regularization.html#cb23-5"></a>data.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</span>
-<span id="cb23-6"><a href="4-8-regression-regularization.html#cb23-6"></a></span>
-<span id="cb23-7"><a href="4-8-regression-regularization.html#cb23-7"></a>model.ridge &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">0</span> )</span>
-<span id="cb23-8"><a href="4-8-regression-regularization.html#cb23-8"></a>model.lasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">1</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="4-8-regression-regularization.html#cb22-1"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb22-2"><a href="4-8-regression-regularization.html#cb22-2"></a><span class="kw">library</span>(gridExtra)</span>
+<span id="cb22-3"><a href="4-8-regression-regularization.html#cb22-3"></a><span class="kw">library</span>(glmnet)</span>
+<span id="cb22-4"><a href="4-8-regression-regularization.html#cb22-4"></a></span>
+<span id="cb22-5"><a href="4-8-regression-regularization.html#cb22-5"></a>data.df &lt;-<span class="st"> </span><span class="kw">gen_data</span>(truth)</span>
+<span id="cb22-6"><a href="4-8-regression-regularization.html#cb22-6"></a></span>
+<span id="cb22-7"><a href="4-8-regression-regularization.html#cb22-7"></a>model.ridge &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">0</span> )</span>
+<span id="cb22-8"><a href="4-8-regression-regularization.html#cb22-8"></a>model.lasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="kw">poly</span>(data.df<span class="op">$</span>x,<span class="dv">20</span>), data.df<span class="op">$</span>y, <span class="dt">alpha =</span> <span class="dv">1</span> )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ridge"></span>
 <img src="04-statisticalLearning_files/figure-html/ridge-1.png" alt="Coefficents as lambda is varied for ridge regression" width="80%" />
 <p class="caption">

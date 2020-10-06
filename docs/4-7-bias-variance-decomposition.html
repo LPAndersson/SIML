@@ -227,7 +227,7 @@ First let us see what the population minimizer of the error is. That is, assumin
 <span class="math display">\[\begin{align*}
 &amp;E\left[ (Y-h(X))^2 \mid X \right] = E\left[ (Y - E[Y\mid X] + E[Y\mid X] -h(X))^2 \mid X \right] \\
 =&amp;E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right] \\
-&amp;+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X) \mid X \right]}_{=0}\\
+&amp;+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X)) \mid X \right]}_{=0}\\
 =&amp;E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right]
 \end{align*}\]</span>
 The first part does not depend on <span class="math inline">\(h\)</span> and the second part is minimized by choosing <span class="math inline">\(h(x) = E[Y\mid X=x]\)</span> for every <span class="math inline">\(x\)</span>, which therefore is the population minimizer of the error.</p>

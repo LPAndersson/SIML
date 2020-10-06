@@ -206,14 +206,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="an-application-v" class="section level2">
 <h2><span class="header-section-number">4.11</span> An application V</h2>
 <p>Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="4-11-an-application-v.html#cb38-1"></a><span class="kw">library</span>(caret)</span>
-<span id="cb38-2"><a href="4-11-an-application-v.html#cb38-2"></a><span class="kw">library</span>(mlbench)</span>
-<span id="cb38-3"><a href="4-11-an-application-v.html#cb38-3"></a><span class="kw">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
-<span id="cb38-4"><a href="4-11-an-application-v.html#cb38-4"></a>PimaIndiansDiabetes2 &lt;-<span class="st"> </span><span class="kw">na.omit</span>(PimaIndiansDiabetes2)</span>
-<span id="cb38-5"><a href="4-11-an-application-v.html#cb38-5"></a></span>
-<span id="cb38-6"><a href="4-11-an-application-v.html#cb38-6"></a>knitr<span class="op">::</span><span class="kw">kable</span>(</span>
-<span id="cb38-7"><a href="4-11-an-application-v.html#cb38-7"></a>  <span class="kw">head</span>(PimaIndiansDiabetes2), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb38-8"><a href="4-11-an-application-v.html#cb38-8"></a>  <span class="dt">caption =</span> <span class="st">&#39;Diabetes data&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="4-11-an-application-v.html#cb37-1"></a><span class="kw">library</span>(caret)</span>
+<span id="cb37-2"><a href="4-11-an-application-v.html#cb37-2"></a><span class="kw">library</span>(mlbench)</span>
+<span id="cb37-3"><a href="4-11-an-application-v.html#cb37-3"></a><span class="kw">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
+<span id="cb37-4"><a href="4-11-an-application-v.html#cb37-4"></a>PimaIndiansDiabetes2 &lt;-<span class="st"> </span><span class="kw">na.omit</span>(PimaIndiansDiabetes2)</span>
+<span id="cb37-5"><a href="4-11-an-application-v.html#cb37-5"></a></span>
+<span id="cb37-6"><a href="4-11-an-application-v.html#cb37-6"></a>knitr<span class="op">::</span><span class="kw">kable</span>(</span>
+<span id="cb37-7"><a href="4-11-an-application-v.html#cb37-7"></a>  <span class="kw">head</span>(PimaIndiansDiabetes2), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb37-8"><a href="4-11-an-application-v.html#cb37-8"></a>  <span class="dt">caption =</span> <span class="st">&#39;Diabetes data&#39;</span>)</span></code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-36">Table 4.1: </span>Diabetes data</caption>
 <thead>
@@ -306,25 +306,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tbody>
 </table>
 <p>Divide the data into a train and a test set.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="4-11-an-application-v.html#cb39-1"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb39-2"><a href="4-11-an-application-v.html#cb39-2"></a></span>
-<span id="cb39-3"><a href="4-11-an-application-v.html#cb39-3"></a>training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(PimaIndiansDiabetes2<span class="op">$</span>diabetes, </span>
-<span id="cb39-4"><a href="4-11-an-application-v.html#cb39-4"></a>                                        <span class="dt">p =</span> <span class="fl">0.7</span>, </span>
-<span id="cb39-5"><a href="4-11-an-application-v.html#cb39-5"></a>                                        <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb39-6"><a href="4-11-an-application-v.html#cb39-6"></a></span>
-<span id="cb39-7"><a href="4-11-an-application-v.html#cb39-7"></a>train.data  &lt;-<span class="st"> </span>PimaIndiansDiabetes2[training.samples, ]</span>
-<span id="cb39-8"><a href="4-11-an-application-v.html#cb39-8"></a>test.data &lt;-<span class="st"> </span>PimaIndiansDiabetes2[<span class="op">-</span>training.samples, ]</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="4-11-an-application-v.html#cb38-1"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb38-2"><a href="4-11-an-application-v.html#cb38-2"></a></span>
+<span id="cb38-3"><a href="4-11-an-application-v.html#cb38-3"></a>training.samples &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(PimaIndiansDiabetes2<span class="op">$</span>diabetes, </span>
+<span id="cb38-4"><a href="4-11-an-application-v.html#cb38-4"></a>                                        <span class="dt">p =</span> <span class="fl">0.7</span>, </span>
+<span id="cb38-5"><a href="4-11-an-application-v.html#cb38-5"></a>                                        <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb38-6"><a href="4-11-an-application-v.html#cb38-6"></a></span>
+<span id="cb38-7"><a href="4-11-an-application-v.html#cb38-7"></a>train.data  &lt;-<span class="st"> </span>PimaIndiansDiabetes2[training.samples, ]</span>
+<span id="cb38-8"><a href="4-11-an-application-v.html#cb38-8"></a>test.data &lt;-<span class="st"> </span>PimaIndiansDiabetes2[<span class="op">-</span>training.samples, ]</span></code></pre></div>
 <p>Then use a SVM, where the parameter is estimated by 10-fold CV. If you have a computer with multiple cores, there may be a speed-up by using the library doMC.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="4-11-an-application-v.html#cb40-1"></a><span class="kw">library</span>(doMC)</span>
-<span id="cb40-2"><a href="4-11-an-application-v.html#cb40-2"></a><span class="kw">registerDoMC</span>(<span class="dt">cores=</span><span class="dv">8</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="4-11-an-application-v.html#cb41-1"></a>model &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
-<span id="cb41-2"><a href="4-11-an-application-v.html#cb41-2"></a>  diabetes <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</span>
-<span id="cb41-3"><a href="4-11-an-application-v.html#cb41-3"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</span>
-<span id="cb41-4"><a href="4-11-an-application-v.html#cb41-4"></a>  <span class="dt">tuneLength =</span> <span class="dv">10</span>,</span>
-<span id="cb41-5"><a href="4-11-an-application-v.html#cb41-5"></a>  <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</span>
-<span id="cb41-6"><a href="4-11-an-application-v.html#cb41-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="4-11-an-application-v.html#cb39-1"></a><span class="kw">library</span>(doMC)</span>
+<span id="cb39-2"><a href="4-11-an-application-v.html#cb39-2"></a><span class="kw">registerDoMC</span>(<span class="dt">cores=</span><span class="dv">8</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="4-11-an-application-v.html#cb40-1"></a>model &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
+<span id="cb40-2"><a href="4-11-an-application-v.html#cb40-2"></a>  diabetes <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</span>
+<span id="cb40-3"><a href="4-11-an-application-v.html#cb40-3"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>),</span>
+<span id="cb40-4"><a href="4-11-an-application-v.html#cb40-4"></a>  <span class="dt">tuneLength =</span> <span class="dv">10</span>,</span>
+<span id="cb40-5"><a href="4-11-an-application-v.html#cb40-5"></a>  <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</span>
+<span id="cb40-6"><a href="4-11-an-application-v.html#cb40-6"></a>)</span></code></pre></div>
 <p>We may print a summary of the training of the model</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="4-11-an-application-v.html#cb42-1"></a><span class="kw">print</span>(model)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="4-11-an-application-v.html#cb41-1"></a><span class="kw">print</span>(model)</span></code></pre></div>
 <pre><code>## Support Vector Machines with Radial Basis Function Kernel 
 ## 
 ## 275 samples
@@ -352,7 +352,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Accuracy was used to select the optimal model using the largest value.
 ## The final values used for the model were sigma = 0.114713 and C = 1.</code></pre>
 <p>We can also plot the cross-validated accuracy as a function of the regularization parameter</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="4-11-an-application-v.html#cb44-1"></a><span class="kw">plot</span>(model)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="4-11-an-application-v.html#cb43-1"></a><span class="kw">plot</span>(model)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:SVMApplicationPlot"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMApplicationPlot-1.png" alt="Cross-validated accuracy against the regularization parameter for the SVM" width="80%" />
 <p class="caption">
@@ -362,8 +362,8 @@ Figure 4.24: Cross-validated accuracy against the regularization parameter for t
 <p>
 The final results are
 </p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="4-11-an-application-v.html#cb45-1"></a>predicted &lt;-<span class="st"> </span><span class="kw">predict</span>(model, test.data)</span>
-<span id="cb45-2"><a href="4-11-an-application-v.html#cb45-2"></a><span class="kw">mean</span>(predicted <span class="op">==</span><span class="st"> </span>test.data<span class="op">$</span>diabetes)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="4-11-an-application-v.html#cb44-1"></a>predicted &lt;-<span class="st"> </span><span class="kw">predict</span>(model, test.data)</span>
+<span id="cb44-2"><a href="4-11-an-application-v.html#cb44-2"></a><span class="kw">mean</span>(predicted <span class="op">==</span><span class="st"> </span>test.data<span class="op">$</span>diabetes)</span></code></pre></div>
 <pre><code>## [1] 0.7606838</code></pre>
 
 </div>
