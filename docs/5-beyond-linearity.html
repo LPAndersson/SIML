@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5.4 Stochasitc gradient descent | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>Chapter 5 Beyond linearity | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5.4 Stochasitc gradient descent | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="Chapter 5 Beyond linearity | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5.4 Stochasitc gradient descent | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="Chapter 5 Beyond linearity | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-10-05" />
+<meta name="date" content="2020-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="5-3-neural-networks.html"/>
-<link rel="next" href="5-5-an-application-vi.html"/>
+<link rel="prev" href="4-11-an-application-v.html"/>
+<link rel="next" href="5-1-smoothing-splines.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -177,11 +177,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-iv.html"><a href="4-10-an-application-iv.html"><i class="fa fa-check"></i><b>4.10</b> An application IV</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-v.html"><a href="4-11-an-application-v.html"><i class="fa fa-check"></i><b>4.11</b> An application V</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
-<li class="chapter" data-level="5.4" data-path="5-4-stochasitc-gradient-descent.html"><a href="5-4-stochasitc-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochasitc gradient descent</a></li>
+<li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
 <li class="chapter" data-level="5.5" data-path="5-5-an-application-vi.html"><a href="5-5-an-application-vi.html"><i class="fa fa-check"></i><b>5.5</b> An application VI</a></li>
 </ul></li>
 <li class="divider"></li>
@@ -203,41 +203,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="stochasitc-gradient-descent" class="section level2">
-<h2><span class="header-section-number">5.4</span> Stochasitc gradient descent</h2>
-<p>In this section we discuss an optimization method called stochastic gradient descent, which is used in training, among other models, NNs.</p>
-<p>However, first let us consider (vanilla) gradient descent. We have a function <span class="math inline">\(f\)</span>, which in general would be a function from <span class="math inline">\(\mathbb R^d\)</span> to <span class="math inline">\(\mathbb R\)</span>, but for simplicity let us say it is from <span class="math inline">\(\mathbb R\)</span> to <span class="math inline">\(\mathbb R\)</span>. We would like to minimize this function, that is we want to find <span class="math inline">\(\theta^\star\)</span> such that <span class="math inline">\(f(\theta^\star)\leq f(\theta)\)</span>, for any <span class="math inline">\(\theta\in \mathbb R\)</span>. Gradient descent is the algorithm that iterates the update:
-<span class="math display">\[
-\theta_{new} = \theta_{old} - \eta f&#39;(\theta_{old}).
-\]</span>
-The algorithm calculates <span class="math inline">\(f&#39;\)</span> evaluated at the current point <span class="math inline">\(\theta_{old}\)</span>. If this is positive, the function is sloping upwards at that point and so if take a small step to the left, the function should decrease. Therefore we take a step in the direction opposite of the sign of <span class="math inline">\(f&#39;\)</span>. Of course, this is only true close to <span class="math inline">\(f&#39;\)</span> so if we take a too large step, we risk increasing the function. Therefore we multiply by a small number <span class="math inline">\(\eta\)</span>, usually called learning rate in machine learning. The choice of the learning rate is crucial, too small and the algorithm will be slow to find the minimum, too big and it might not find it at all. One can write done conditions when gradient descent is guaranteed to converge to the correct value, however in machine learning these conditions are rarely fullfilled. So instead one simply evaluated the model given by the algorithm, and if it works well, one is happy.</p>
-<p>As a toy example, let us implement gradient descent on the function <span class="math inline">\(f(\theta) = \theta^2\)</span>, were clearly <span class="math inline">\(\theta^\star = 0\)</span>.</p>
-<div class="figure" style="text-align: center"><span id="fig:gradientDescentExample"></span>
-<img src="05-beyondLinearity_files/figure-html/gradientDescentExample-1.png" alt="Gradient descent" width="80%" />
-<p class="caption">
-Figure 5.3: Gradient descent
-</p>
-</div>
-<p>We see that the fastest convergence (of these choices) is <span class="math inline">\(\eta = 0.1\)</span>. Making <span class="math inline">\(\eta\)</span> smaller gives slower convergence since the step size is smaller, making <span class="math inline">\(\eta\)</span> larger makes the step size to large so that the algorithm overshoots and <span class="math inline">\(\theta\)</span> becomes negative.</p>
-<p>In statistics we often want to minimize (or maximize) functions of the form
-<span class="math display">\[
-f(\theta) = \frac{1}{n} \sum_{i=1}^n f_i(\theta),
-\]</span>
-and then of course
-<span class="math display">\[
-f&#39;(\theta) = \frac{1}{n} \sum_{i=1}^n f_i&#39;(\theta).
-\]</span>
-Both the log-likelihood and the in-sample error are of this form. If <span class="math inline">\(n\)</span> is large, to calculation of the sum will however be expensive. Stochastic gradient descent therefore samples a small number of terms from the sum and takes a gradient descent step based on the derivative of only those terms. These terms are called a mini-batch and the number of terms is the batch size. Then we choose a number of different terms from the sum, and take a step based on them. Once we have gone through all the <span class="math inline">\(n\)</span> terms, we have completed one epoch.</p>
-<p>The only thing that remains is to discuss how the derivatives are calculated. The parameters that we need to differentiate with respect to are the weight matrices <span class="math inline">\(W\)</span> and the biases <span class="math inline">\(b\)</span>. Doing the differentiation by hand is to complicated and not an option.</p>
-<p>The composition of two functions <span class="math inline">\(f_1\)</span> and <span class="math inline">\(f_2\)</span> is the function <span class="math inline">\(f_1(f_2(x))\)</span>. Sometime we write $f_1f_2(x) $. Note that the neural network is of this form, where a linear transformation is composed with the activation function, which forms a layer. That layer is then composed with the next layer, and so on. Calculating derivatives of composed functions can be done with the chain rule and in the context of neural networks this is known as backpropagation.</p>
+<div id="beyond-linearity" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Beyond linearity</h1>
+<p>In this chapter we discuss some non-linear models. The purpose is only to give a short introduction to each model, enough to be able to use it in practice.</p>
+<p>Readings for this chapter is:
+ISL 7.5, 7.7</p>
+<p>This <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">video series</a> on neural networks</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="5-3-neural-networks.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="5-5-an-application-vi.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4-11-an-application-v.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5-1-smoothing-splines.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

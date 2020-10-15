@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2020-10-05" />
+<meta name="date" content="2020-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="5-2-generalized-additive-models.html"/>
-<link rel="next" href="5-4-stochasitc-gradient-descent.html"/>
+<link rel="next" href="5-4-stochastic-gradient-descent.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -177,11 +177,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-iv.html"><a href="4-10-an-application-iv.html"><i class="fa fa-check"></i><b>4.10</b> An application IV</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-v.html"><a href="4-11-an-application-v.html"><i class="fa fa-check"></i><b>4.11</b> An application V</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
-<li class="chapter" data-level="5.4" data-path="5-4-stochasitc-gradient-descent.html"><a href="5-4-stochasitc-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochasitc gradient descent</a></li>
+<li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
 <li class="chapter" data-level="5.5" data-path="5-5-an-application-vi.html"><a href="5-5-an-application-vi.html"><i class="fa fa-check"></i><b>5.5</b> An application VI</a></li>
 </ul></li>
 <li class="divider"></li>
@@ -228,7 +228,26 @@ a_2 &amp;= \sigma(W^2 a_1 + b^2)\\
 a_L&amp;= \sigma(W^{L-1} a_{L-1} + b^{L-1}) \\
 h &amp;= \text{softmax}(a_L).
 \end{align*}\]</span>
-That essentially all there is, different networks can be obtained by choosing different types of weight matrices and different number of layers <span class="math inline">\(L\)</span>. There are results that show that NNS can approximate essentially any function. So looking back at our discussion about generalization error, it is not surprising that it is possible to achieve a low in-sample error using NN. What is however surprising, given the large number of parameters is that they many times also achieve a low out-of-sample error.</p>
+That is essentially all there is, different networks can be obtained by choosing different types of weight matrices and different number of layers <span class="math inline">\(L\)</span>. There are results that show that NNs can approximate essentially any function. So looking back at our discussion about generalization error, it is not surprising that it is possible to achieve a low in-sample error using NN. What is however surprising, given the large number of parameters, is that they many times also achieve a low out-of-sample error.</p>
+<p>As an example, let us consider the same data set as in Section 4.2. We do classification with 1, 2 and 3 layer NNs and plot the result.</p>
+<div class="figure" style="text-align: center"><span id="fig:NN1layer"></span>
+<img src="05-beyondLinearity_files/figure-html/NN1layer-1.png" alt="Training data and classification with 1 layer neural network" width="80%" />
+<p class="caption">
+Figure 5.3: Training data and classification with 1 layer neural network
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:NN2layer"></span>
+<img src="05-beyondLinearity_files/figure-html/NN2layer-1.png" alt="Training data and classification with 2 layer neural network" width="80%" />
+<p class="caption">
+Figure 5.4: Training data and classification with 2 layer neural network
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:NN3layer"></span>
+<img src="05-beyondLinearity_files/figure-html/NN3layer-1.png" alt="Training data and classification with 3 layer neural network" width="80%" />
+<p class="caption">
+Figure 5.5: Training data and classification with 3 layer neural network
+</p>
+</div>
 <p>What remains to discuss is how to train NNs.</p>
 </div>
             </section>
@@ -237,7 +256,7 @@ That essentially all there is, different networks can be obtained by choosing di
         </div>
       </div>
 <a href="5-2-generalized-additive-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="5-4-stochasitc-gradient-descent.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5-4-stochastic-gradient-descent.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

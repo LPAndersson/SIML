@@ -1,6 +1,11 @@
-# Beyond linearity (draft)
+# Beyond linearity
 
 In this chapter we discuss some non-linear models. The purpose is only to give a short introduction to each model, enough to be able to use it in practice.
+
+Readings for this chapter is:
+ISL 7.5, 7.7
+
+This [video series](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) on neural networks
 
 ## Smoothing splines
 
@@ -191,19 +196,34 @@ a_2 &= \sigma(W^2 a_1 + b^2)\\
 a_L&= \sigma(W^{L-1} a_{L-1} + b^{L-1}) \\
 h &= \text{softmax}(a_L).
 \end{align*}
-That essentially all there is, different networks can be obtained by choosing different types of weight matrices and different number of layers $L$. There are results that show that NNS can approximate essentially any function. So looking back at our discussion about generalization error, it is not surprising that it is possible to achieve a low in-sample error using NN. What is however surprising, given the large number of parameters is that they many times also achieve a low out-of-sample error.
+That is essentially all there is, different networks can be obtained by choosing different types of weight matrices and different number of layers $L$. There are results that show that NNs can approximate essentially any function. So looking back at our discussion about generalization error, it is not surprising that it is possible to achieve a low in-sample error using NN. What is however surprising, given the large number of parameters, is that they many times also achieve a low out-of-sample error.
+
+As an example, let us consider the same data set as in Section 4.2. We do classification with 1, 2 and 3 layer NNs and plot the result.
+
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/NN1layer-1.png" alt="Training data and classification with 1 layer neural network" width="80%" />
+<p class="caption">(\#fig:NN1layer)Training data and classification with 1 layer neural network</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/NN2layer-1.png" alt="Training data and classification with 2 layer neural network" width="80%" />
+<p class="caption">(\#fig:NN2layer)Training data and classification with 2 layer neural network</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="05-beyondLinearity_files/figure-html/NN3layer-1.png" alt="Training data and classification with 3 layer neural network" width="80%" />
+<p class="caption">(\#fig:NN3layer)Training data and classification with 3 layer neural network</p>
+</div>
 
 What remains to discuss is how to train NNs.
 
-## Stochasitc gradient descent
+## Stochastic gradient descent
 
-In this section we discuss an optimization method called stochastic gradient descent, which is used in training, among other models, NNs.
+In this section we discuss an optimization method called *stochastic gradient descent*, which is used in training, among other models, NNs.
 
 However, first let us consider (vanilla) gradient descent. We have a function $f$, which in general would be a function from $\mathbb R^d$ to $\mathbb R$, but for simplicity let us say it is from $\mathbb R$ to $\mathbb R$. We would like to minimize this function, that is we want to find $\theta^\star$ such that $f(\theta^\star)\leq f(\theta)$, for any $\theta\in \mathbb R$. Gradient descent is the algorithm that iterates the update:
 $$
 \theta_{new} = \theta_{old} - \eta f'(\theta_{old}).
 $$
-The algorithm calculates $f'$ evaluated at the current point $\theta_{old}$. If this is positive, the function is sloping upwards at that point and so if take a small step to the left, the function should decrease. Therefore we take a step in the direction opposite of the sign of $f'$. Of course, this is only true close to $f'$ so if we take a too large step, we risk increasing the function. Therefore we multiply by a small number $\eta$, usually called learning rate in machine learning. The choice of the learning rate is crucial, too small and the algorithm will be slow to find the minimum, too big and it might not find it at all. One can write done conditions when gradient descent is guaranteed to converge to the correct value, however in machine learning these conditions are rarely fullfilled. So instead one simply evaluated the model given by the algorithm, and if it works well, one is happy.
+The algorithm calculates $f'$ evaluated at the current point $\theta_{old}$. If this is positive, the function is sloping upwards at that point and so if we take a small step to the left, the function should decrease. Therefore we take a step in the direction opposite of the sign of $f'$. Of course, this is only true close to $\theta_{old}$ so if we take a too large step, we risk increasing the function. Therefore we multiply by a small number $\eta>0$, usually called *learning rate* in machine learning. The choice of the learning rate is crucial, too small and the algorithm will be slow to find the minimum, too big and it might not find it at all. One can write done conditions when gradient descent is guaranteed to converge to the correct value, however in machine learning these conditions are rarely fullfilled. So instead one simply evaluate the model given by the algorithm, and if it works well, one is happy.
 
 As a toy example, let us implement gradient descent on the function $f(\theta) = \theta^2$, were clearly $\theta^\star = 0$.
 
@@ -221,33 +241,34 @@ and then of course
 $$
 f'(\theta) = \frac{1}{n} \sum_{i=1}^n f_i'(\theta).
 $$
-Both the log-likelihood and the in-sample error are of this form. If $n$ is large, to calculation of the sum will however be expensive. Stochastic gradient descent therefore samples a small number of terms from the sum and takes a gradient descent step based on the derivative of only those terms. These terms are called a mini-batch and the number of terms is the batch size. Then we choose a number of different terms from the sum, and take a step based on them. Once we have gone through all the $n$ terms, we have completed one epoch.
+Both the log-likelihood and the in-sample error are of this form. If $n$ is large, to calculation of the sum will however be expensive. Stochastic gradient descent therefore samples a small number of terms from the sum and takes a gradient descent step based on the derivative of only those terms. These terms are called a *mini-batch* and the number of terms is the batch size. Then we choose a number of different terms from the sum, and take a step based on them. Once we have gone through all the $n$ terms, we have completed one *epoch*.
 
-The only thing that remains is to discuss how the derivatives are calculated. The parameters that we need to differentiate with respect to are the weight matrices $W$ and the biases $b$. Doing the differentiation by hand is to complicated and not an option.
+The only thing that remains is to discuss how the derivatives are calculated. The parameters that we need to differentiate with respect to are the weight matrices $W$ and the biases $b$. Doing the differentiation by hand is too complicated and not an option.
 
-The composition of two functions $f_1$ and $f_2$ is the function $f_1(f_2(x))$. Sometime we write $f_1\circ f_2(x) $. Note that the neural network is of this form, where a linear transformation is composed with the activation function, which forms a layer. That layer is then composed with the next layer, and so on. Calculating derivatives of composed functions can be done with the chain rule and in the context of neural networks this is known as backpropagation.
+The composition of two functions $f_1$ and $f_2$ is the function $f_1(f_2(x))$. Note that the neural network is of this form, where a linear transformation is composed with the activation function, which forms a layer. That layer is then composed with the next layer, and so on. Calculating derivatives of composed functions can be done with the chain rule and in the context of neural networks this is known as backpropagation.
+
+For more on backpropogation and a visualization of neural network, I recommend this [video series](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi).
 
 ## An application VI
 
-Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library Tensorflow. Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras.
+Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library Tensorflow. You may find the [documentation](https://keras.rstudio.com) useful
+
+Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras. The first time you install Keras, you do.
+
+```r
+install.packages("keras")
+keras::install_keras(tensorflow = "cpu")
+```
+After that, it should be enough to
 
 ```r
 library(keras)
-install_keras()
-```
-
-```
-## 
-## Installation complete.
-```
-
-```r
-library(keras)
-mnist <- dataset_mnist()
 ```
 The MNIST database is already divided in a training and a test set
 
 ```r
+mnist <- dataset_mnist()
+
 x_train <- mnist$train$x
 y_train <- mnist$train$y
 x_test <- mnist$test$x
@@ -317,7 +338,7 @@ model %>% evaluate(x_test, y_test,verbose = 0)
 
 ```
 ##      loss  accuracy 
-## 0.1061396 0.9687000
+## 0.1125487 0.9679000
 ```
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center">
