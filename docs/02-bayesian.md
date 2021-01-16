@@ -1,4 +1,4 @@
-# Bayesian statistics
+# Bayesian statistics (draft)
 
 In this chapter we introduce a different way of thinking about statistical inference, Bayesian statistics. The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.
 
@@ -26,12 +26,10 @@ l(\theta,\delta(x)) =\begin{cases}
 \end{cases}
 $$
 <p>We would like to choose $\delta$ such that the loss is as small as possible. However, the loss depends on both the data $x$ and the parameter $\theta$ and thus comparison between different decisions becomes complicated. Instead we calculate the *risk* associated with a particular decision.</p>
-```{block2, type='note'}
-The risk is defined as
+\BeginKnitrBlock{note}<div class="note">The risk is defined as
 $$
 R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
-$$
-```
+$$</div>\EndKnitrBlock{note}
 Here the expectation is taken of a random sample $X$, while $\theta$ is held fixed. Still the comparison of different $\delta$ is not trivial. It may be that for $\delta_1$ the risk is lower than the risk of $\delta_2$ for some values of $\theta$, while for some other $\theta$, the risk is higher. As a trivial example, say that we have the squared loss and $\delta(x) \equiv 0$. Then, if the the true $\theta$ is 0, clearly this is a good decision. But if the true $\theta$ is something else, it is a bad decision.
 
 Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample $X$. This is known as *frequentist statistics*. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e.\ for most data $x$. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue, it does not make sense to consider any other data set.
@@ -46,12 +44,10 @@ $$
 $$
 p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
 $$
-```{block2, type='note'}
-The *posterior risk* is then defined as
+\BeginKnitrBlock{note}<div class="note">The *posterior risk* is then defined as
 $$
 \rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x)) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
-$$
-```
+$$</div>\EndKnitrBlock{note}
 Here the random quantity is $\theta$ while the data $x$ is held constant. The *Bayes action* $\delta^\star$ is the decision $\delta$ that minimizes the posterior risk. For example, if the decision is a point estimate of $\theta$ and $l(\theta,\delta) = (\theta - \delta)^2$. Then
 \begin{align}
 \rho(p(\theta),\delta) &= \int (\theta - \delta)^2 p(\theta\mid x)d\theta\\
@@ -62,11 +58,9 @@ Here the random quantity is $\theta$ while the data $x$ is held constant. The *B
 That is, the Bayes action is to choose the mean of the posterior distribution.
 
 A hybrid between the frequentist and the Bayesian approach is the *average risk* (with respect to $p(\theta)$):
-```{block2, type='note'}
-$$
+\BeginKnitrBlock{note}<div class="note">$$
 r(p(\theta),\delta) = \int R(\theta,\delta)p(\theta)d\theta.
-$$
-```
+$$</div>\EndKnitrBlock{note}
 The *Bayes risk* is the minimum of the average risk, taken over all $\delta$ and the decision $\delta(x)$ that achieves the minimum is called the *Bayes rule*. Since the risk here is the frequentist risk, this is fundamentally a frequentist quantity. However, we can write
 \begin{align}
 r(p(\theta),\delta) &= \int \int l(\theta,\delta(x))p(x\mid\theta)dxp(\theta)d\theta\\
@@ -90,11 +84,9 @@ $$
 p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
 $$
 <p>However, note that as $x$ is fixed and we are interested in the distribution of $\theta$, $p(x)$ can be regarded as a constant. Also, $p(x\mid \theta)$ is the likelihood, $L(\theta)$. We therefore may write</p>
-```{block2, type='note'}
-$$
+\BeginKnitrBlock{note}<div class="note">$$
 p(\theta\mid x) = c L(\theta)p(\theta) \propto L(\theta)p(\theta).
-$$
-```
+$$</div>\EndKnitrBlock{note}
 That is, the posterior is proportional to the likelihood times the prior. Another way to write this is by applying the logarithm.
 $$
 \ln p(\theta\mid x) = l(\theta) + \ln p(\theta) + c
@@ -119,25 +111,10 @@ $$
 p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 0\leq \theta\leq 1,
 $$
 <p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
-```{r betaDist, cache=FALSE, echo = FALSE, fig.cap='Density of the beta distribution', out.width='80%', fig.asp=.75, fig.align='center'}
-library(ggplot2)
-library(latex2exp)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
-  stat_function(aes(color = "1"), fun = function(x){dbeta(x,0.5,0.5)}, size = 1.5) +
-  stat_function(aes(color = "2"), fun = function(x){dbeta(x,1,1)}, size = 1.5) +
-  stat_function(aes(color = "3"), fun = function(x){dbeta(x,2,2)}, size = 1.5) +
-  stat_function(aes(color = "4"), fun = function(x){dbeta(x,3,2)}, size = 1.5) +
-  theme_minimal() +
-  xlab("x") + 
-  ylab("density") +
-  scale_colour_manual(values=cbp1, labels = unname(TeX(c("$\\alpha = 0.5,$ $\\beta = 0.5$",
-                                                         "$\\alpha = 1.0,$ $\\beta = 1.0$",
-                                                         "$\\alpha = 2.0,$ $\\beta = 2.0$",
-                                                         "$\\alpha = 3.0,$ $\\beta = 2.0$"))))
-```
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
+<p class="caption">(\#fig:betaDist)Density of the beta distribution</p>
+</div>
 We see from the figure that by changing $\alpha$ and $\beta$ the beta prior can reflect different kinds of prior information. For example, $\alpha = \beta = 1$ is a uniform distribution, that is a prior that gives equal probability to any value of $\theta$. On the other hand, $\alpha =3$, $\beta = 2$ gives small probability to $\theta$ close to 0 and 1 and puts more probability to $\theta>0.5$ than $\theta < 0.5$.
 
 Now let us calculate the posterior distribution of $\theta$ after observing $x=(x_1,\ldots, x_n)$. First we need the likelihood of the observation
@@ -160,46 +137,10 @@ p(x^\text{new} = 1 \mid x^n) = \int p(x^\text{new} = 1\mid \theta) p(\theta\mid 
 $$
 To make things more concrete, let us say that we observe $\bar x = 0.3$. Note how the likelihood, and therefore also the posterior, is a function of data only through $\bar x$. This is because $\bar x$ is a *sufficient statistic*. As an illustration, let us also choose $\mathsf{Beta}(5.0, 2.0)$ as the prior. Below we plot the prior, likelihood and posterior for $n=10$ and $n=100$. Note how the posterior becomes more like the likelihood as the sample size increase.
 
-```{r bernoulliPosterior, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)', out.width='80%', fig.asp=.75, fig.align='center'}
-
-library(ggplot2)
-
-n1 <- 10
-xbar <- 0.3
-alpha <- 5.0
-beta <- 2.0
-
-prior <- function(theta){ dbeta(theta, alpha, beta) }
-posterior10 <- function(theta) {  dbeta(theta, alpha+n1*xbar, beta+n1-n1*xbar) }
-likelihood10 <- function(theta){ posterior10(theta) / prior(theta)}
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-p1 <-ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
-  stat_function(aes(color = "1"), fun = prior, size = 1.5) +
-  stat_function(aes(color = "2"), fun = likelihood10, size = 1.5) +
-    stat_function(aes(color = "3"), fun = posterior10, size = 1.5) +
-  theme_minimal() +
-  xlab(TeX("$\\theta$")) + 
-  ylab("") +
-  scale_colour_manual(values=cbp1, labels = c("prior", "likelihood","posterior"))
-
-n2 <- 100
-posterior100 <- function(theta) {  dbeta(theta, alpha+n2*xbar, beta+n2-n2*xbar) }
-likelihood100 <- function(theta){ posterior100(theta) / prior(theta)}
-
-p2 <-ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
-  stat_function(aes(color = "1"), fun = prior, size = 1.5) +
-  stat_function(aes(color = "2"), fun = likelihood100, size = 1.5) +
-    stat_function(aes(color = "3"), fun = posterior100, size = 1.5) +
-  theme_minimal() +
-  xlab(TeX("$\\theta$")) + 
-  ylab("") +
-  scale_colour_manual(values=cbp1, labels = c("prior", "likelihood","posterior"))
-
-library(gridExtra)
-grid.arrange(p1, p2)
-```
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/bernoulliPosterior-1.png" alt="Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)" width="80%" />
+<p class="caption">(\#fig:bernoulliPosterior)Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)</p>
+</div>
 
 ## Choosing prior
 
@@ -255,8 +196,8 @@ p(\theta_1,\theta_2\mid x) \propto L(\theta_1,\theta_2) \propto \theta_1^{x_1}(1
 $$
 Note that $\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)$ is independent of $\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).$ Therefore we can simulate from $\tau\mid x$ by drawing $\theta_1^\star$ and $\theta_2^\star$ from the respective distribution and setting $\tau^\star = \theta_2^\star - \theta_1^\star$.
 
-```{r multiParameterExample, cache=FALSE, echo = TRUE, message=FALSE, warning = FALSE, fig.cap='Posterior distribution', out.width='80%', fig.asp=.75, fig.align='center'}
 
+```r
 library(ggplot2)
 library(latex2exp)
 
@@ -284,6 +225,11 @@ ggplot(data.frame(tau.post), aes(x=tau.post)) +
   theme_minimal() +
   xlab(TeX("$\\tau$"))
 ```
+
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/multiParameterExample-1.png" alt="Posterior distribution" width="80%" />
+<p class="caption">(\#fig:multiParameterExample)Posterior distribution</p>
+</div>
 
 ## Markov chain Monte Carlo
 
@@ -345,7 +291,8 @@ $$
 Here we know that the normalizing constant is $\lambda$, but the idea of MCMC is that we do not need to know it, so let us proceed as if we did not know it. Also note that here we see $x$ as random, in the typical Bayesian setting we would think of $\lambda$ as random, but is is just a matter of notation.
 
 First we implement the density. We do it on a log-scale. This is because we need to divide two densities in the algorithm. On a log-scale this becomes subtraction, which is numerically more stable.
-```{r echo=TRUE}
+
+```r
 logDensity <- function(x) {
   lambda <- 1
   
@@ -358,7 +305,8 @@ logDensity <- function(x) {
 }
 ```
 Next implement the random-walk Metropolis-Hastings algorithm with normally distributed steps.
-```{r echo=TRUE}
+
+```r
 mcmc.iter <- function(x, logDensity, sigma, n.iter){
   #Random walk Metropolis Hastings MCMC
   
@@ -387,7 +335,8 @@ mcmc.iter <- function(x, logDensity, sigma, n.iter){
 }
 ```
 Now we can run the algorithm. First for 1000 step that we throw away. This is since the distribution of the samples are correct only when the number of steps are large. Then we run it for as many steps as we need samples.
-```{r echo=TRUE}
+
+```r
 x.init <- 1 #Initial value
 nIter <- 100000 #Number of MC steps
 set.seed(42)
@@ -403,25 +352,25 @@ exp.mcmc <- mcmc.iter(exp.mcmc$sample[nrow(exp.mcmc$sample),],
                        nIter)
 ```
 We can check for example that the mean and standard deviation of the samples are as expected, i.e. in our case 1.
-```{r echo=TRUE}
+
+```r
 mean(exp.mcmc$sample)
+```
+
+```
+## [1] 1.072045
+```
+
+```r
 sd(exp.mcmc$sample)
+```
+
+```
+## [1] 1.114397
 ```
 We can plot the histogram of the samples against the density.
 
-```{r mcmcExample, cache=FALSE, echo = FALSE, message=FALSE, warning = FALSE, out.width='80%', fig.asp=.75, fig.align='center'}
-data.df <- data.frame(sample = exp.mcmc$sample)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(data = data.df, aes(x = sample )) +
-  geom_histogram(aes(y=..density..), colour="black", fill="white",binwidth = 0.05) +
-  #geom_density(alpha=.2, fill="black") +
-  stat_function(fun = dexp, args = list(rate = 1), color = cbp1[2], size = 1) +
-  theme_minimal()+ 
-  xlab("x")
-```
+<img src="02-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 ## An application III
@@ -433,14 +382,18 @@ Y_i&\sim \mathsf{Bin}(n_i,\pi_i),\\
 \pi_i &= \Phi(z_i'\beta),
 \end{align}
 where $z_i=\begin{bmatrix} 1&z_{i1} &z_{i2} &z_{i3}  \end{bmatrix}'$ are indicators and $\Phi$ is the $\mathsf N(0,1)$ distribution function. The data is shown in the table.
-```{r bayesProbit, cache=FALSE, echo = FALSE, warning = FALSE}
 
-data.df <- read.csv("data/bayesProbit.dat", header=TRUE)
-knitr::kable(
-  data.df, booktabs = TRUE,
-  caption = 'Data for the Bayesian probit model'
-)
-```
+Table: (\#tab:bayesProbit)Data for the Bayesian probit model
+
+|  y|  n| z1| z2| z3|
+|--:|--:|--:|--:|--:|
+| 11| 98|  1|  1|  1|
+|  1| 18|  0|  1|  1|
+|  0|  2|  0|  0|  1|
+| 23| 26|  1|  1|  0|
+| 28| 58|  0|  1|  0|
+|  0|  9|  1|  0|  0|
+|  8| 40|  0|  0|  0|
 
 The likelihood is
 $$
@@ -457,7 +410,8 @@ $$
 We will use a random walk Metropolis Hastings algorithm with $\varepsilon\overset{iid}\sim \mathsf N(0,\sigma^2)$. 
 
 Now, we implement this in R. First we load the data.
-```{r, cache=TRUE, echo = TRUE, warning = FALSE}
+
+```r
 data.df <- read.csv("data/bayesProbit.dat", header=TRUE)
 n <- nrow(data.df)
 data.df$z0 <- rep(1, n)
@@ -466,7 +420,8 @@ col_order <- c('y', 'n','z0','z1','z2','z3')
 data.df <- data.df[, col_order]
 ```
 Then implement the likelihood function and prior density. We do this on a log-scale.
-```{r, cache=TRUE, echo = TRUE, warning = FALSE}
+
+```r
 logLFcn <- function(data){
   function(beta){
     p <- pnorm(as.matrix(data[3:6])%*%beta)
@@ -516,7 +471,8 @@ logPosterior <- function(beta){ logL(beta) + logPrior(beta)}
 <!-- } -->
 <!-- ``` -->
 Now run the Markov chain. First a burn-in of 1000 steps, that we then discard. After that a longer run.
-```{r, cache=TRUE, echo = TRUE, warning = FALSE}
+
+```r
 beta <- c(0,0,0,0) #Initial value
 nIter <- 100000 #Number of MC steps
 
@@ -533,105 +489,71 @@ beta.mcmc <- mcmc.iter(beta.mcmc$sample[nrow(beta.mcmc$sample),],
                        nIter)
 ```
 Now we do some diagnostics of the simulation. First check that the acceptance probability is reasonable.
-```{r, cache=TRUE, echo = TRUE, warning = FALSE}
+
+```r
 beta.mcmc$accProb
 ```
-Then we plot the trajectories of the parameters. We want to see that the trajectories appear stationary and that they are not stuck in one state. We only plot the first 1000 steps.
-```{r logProbBayesTrajectory, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Trajectories of the Markov chain', out.width='80%', fig.asp=.75, fig.align='center'}
-beta.df <- data.frame(data = beta.mcmc$sample)
-colnames(beta.df) <- c('beta0','beta1','beta2','beta3')
 
-library('ggplot2')
-library('gridExtra')
-library('latex2exp')
-
-p0 <- ggplot(data = beta.df[1:1000,], aes(x = seq(1,1000), y = beta0 )) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_0$'))
-p1 <- ggplot(data = beta.df[1:1000,], aes(x = seq(1,1000), y = beta1 )) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_1$'))
-p2 <- ggplot(data = beta.df[1:1000,], aes(x = seq(1,1000), y = beta2 )) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_2$'))
-p3 <- ggplot(data = beta.df[1:1000,], aes(x = seq(1,1000), y = beta3 )) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_3$'))
-grid.arrange(p0,p1,p2,p3, nrow = 2)
 ```
+## [1] 0.57037
+```
+Then we plot the trajectories of the parameters. We want to see that the trajectories appear stationary and that they are not stuck in one state. We only plot the first 1000 steps.
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/logProbBayesTrajectory-1.png" alt="Trajectories of the Markov chain" width="80%" />
+<p class="caption">(\#fig:logProbBayesTrajectory)Trajectories of the Markov chain</p>
+</div>
 
 Then we calculate the cumulative mean. We want to see that the simulation is long enough so that the law of large numbers have come in to effect.
-```{r logProbBayesCumMean, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Cumulative mean of the Markov chain', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE}
-library('dplyr')
-p0 <- ggplot(data = beta.df, aes(x = seq(1,nrow(beta.df)), y = cummean(beta0))) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_0$'))
-p1 <- ggplot(data = beta.df, aes(x = seq(1,nrow(beta.df)), y = cummean(beta1))) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_1$'))
-p2 <- ggplot(data = beta.df, aes(x = seq(1,nrow(beta.df)), y = cummean(beta2))) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_2$'))
-p3 <- ggplot(data = beta.df, aes(x = seq(1,nrow(beta.df)), y = cummean(beta3))) +
-  geom_line() +
-  theme_minimal() +
-  xlab('') +
-  ylab(TeX('$\\beta_3$'))
-grid.arrange(p0,p1,p2,p3, nrow = 2)
-```
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/logProbBayesCumMean-1.png" alt="Cumulative mean of the Markov chain" width="80%" />
+<p class="caption">(\#fig:logProbBayesCumMean)Cumulative mean of the Markov chain</p>
+</div>
 
 Then we plot the posterior distribution of the parameters.
-```{r logProbBayesPostDist, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Posterior distribution', out.width='80%', fig.asp=.75, fig.align='center'}
-p0 <- ggplot(data = beta.df, aes(x = beta0 )) +
-  geom_histogram(aes(y=..density..), colour="black", fill="white",binwidth = 0.05) +
-  geom_density(alpha=.2, fill="black") +
-  theme_minimal() +
-  xlab(TeX('$\\beta_0$'))
-p1 <- ggplot(data = beta.df, aes(x = beta1 )) +
-  geom_histogram(aes(y=..density..), colour="black", fill="white",binwidth = 0.05) +
-  geom_density(alpha=.2, fill="black") +  
-  theme_minimal() +
-  xlab(TeX('$\\beta_1$'))
-p2 <- ggplot(data = beta.df, aes(x = beta2 )) +
-  geom_histogram(aes(y=..density..), colour="black", fill="white",binwidth = 0.05) +
-  geom_density(alpha=.2, fill="black") +  
-  theme_minimal() +
-  xlab(TeX('$\\beta_2$'))
-p3 <- ggplot(data = beta.df, aes(x = beta3 )) +
-  geom_histogram(aes(y=..density..), colour="black", fill="white",binwidth = 0.05) +
-  geom_density(alpha=.2, fill="black") +  
-  theme_minimal() +
-  xlab(TeX('$\\beta_3$'))
-grid.arrange(p0,p1,p2,p3, nrow = 2)
-```
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/logProbBayesPostDist-1.png" alt="Posterior distribution" width="80%" />
+<p class="caption">(\#fig:logProbBayesPostDist)Posterior distribution</p>
+</div>
 
 From this we can get point estimates, the mean of the posterior distribution, and credible intervals.
-```{r, cache=TRUE, echo = TRUE, warning = FALSE}
+
+```r
 #Point estimates
 apply(beta.mcmc$sample, 2, mean)
+```
+
+```
+## [1] -1.0903722  0.6038363  1.1894802 -1.9005936
+```
+
+```r
 #95% CI
 apply(beta.mcmc$sample, 2, quantile, probs = c(0.05,0.95))
 ```
+
+```
+##           [,1]      [,2]      [,3]      [,4]
+## 5%  -1.4605295 0.2098086 0.7740177 -2.353467
+## 95% -0.7401921 1.0111992 1.6204207 -1.465202
+```
 As a final check, let us verify that our estimates makes sense by comparing our data to our predictions.
-```{r, cache=TRUE, echo = TRUE, warning = FALSE}
+
+```r
 beta.fit <- apply(beta.mcmc$sample, 2, mean)
 p <- pnorm(as.matrix(data.df[3:6])%*%beta.fit)
 y.pred <- data.df$n*p
 y.pred
+```
+
+```
+##              [,1]
+## [1,] 11.321624659
+## [2,]  0.644637408
+## [3,]  0.002780966
+## [4,] 19.732823764
+## [5,] 31.289477413
+## [6,]  2.819642491
+## [7,]  5.510984419
 ```
 This is similar to the data.
 

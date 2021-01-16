@@ -1044,7 +1044,7 @@ $$
 $$
 which can be used for constructing the Wald test.
 
-What this then means is that, if $n$ is large, and we where to estimate $p$ with $\hat p$ for many different samples, the distribution of the esimates would be approximately distributed as $\mathsf N(0,1)$. Let us verify this with a simulation
+What this then means is that, if $n$ is large, and we where to estimate $p$ with $\hat p$ for many different samples, the distribution of the esimates would be approximately distributed as $\mathsf N(0,1)$. Let us verify this with a simulation.
 
 
 ```r

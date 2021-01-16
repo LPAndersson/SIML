@@ -1,4 +1,4 @@
-# Statistical learning {#ch-statLearn}
+# Statistical learning (draft) {#ch-statLearn}
 
 In this chapter we will discuss statistical learning from a mostly theoretical perspective. That is, we will discuss when and why statistical learning can be expected to work.
 
