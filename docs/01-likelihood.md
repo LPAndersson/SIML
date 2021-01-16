@@ -2,6 +2,14 @@
 
 This chapter is about methods for statistical inference based on the likelihood function.
 
+We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval of doing a hypothesis test.
+
+We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.
+
+It turns out that maximum likelhood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelhood function. Based in this we find three different types of asymptotic hypothesis tests.
+
+Finally we will see how this can be applied to the binary regression model.
+
 Readings for this chapter is:
 
 AOS 6
@@ -42,18 +50,15 @@ Let us say we observe a sample of size 100.
 <p class="caption">(\#fig:exp-boxplot)Histogram of the sample</p>
 </div>
 
-We define a function in R that calculates the log-likelihood of a singe observation
+We define a function in R that calculates the log-likelihood
 
 ```r
-logL <- function(t,lambda){
-  log(lambda) - lambda * t
+logLn <- function(lambda){
+  n <- length(t)
+  tbar <- mean(t)
+  
+  n*(log(lambda) - lambda*tbar)
 }
-```
-Since the sample will not change, let us create the log-likelihood function of this particular sample:
-
-```r
-logLn <- Vectorize(function(lambda){sum(logL(t, lambda))},
-                   "lambda")
 ```
 
 Then we may calculate the log-likelihood of, for example, $\lambda = 0.1$,
@@ -65,6 +70,43 @@ logLn(0.1)
 ```
 ## [1] -316.1482
 ```
+However, now the function `logLn` depends on the variable `t` which is in the Global environment. For example
+
+```r
+t <- c(1,2,3)
+logLn(0.1)
+```
+
+```
+## [1] -7.507755
+```
+Instead we wrap the log-likelihood function in a **closure** and get a function that only depends on $\lambda$
+
+```r
+logLFcns <- function(observations){
+  function(lambda){
+    n <- length(observations)
+    tbar <- mean(observations)
+    
+    n * (log(lambda) - lambda*tbar)
+  }
+}
+
+set.seed(1)
+t = rexp(numObs,actualRate)
+
+logLn <- logLFcns(t)
+```
+Now we can again safely calculate the log likelihood
+
+```r
+logLn(0.1)
+```
+
+```
+## [1] -316.1482
+```
+
 <p>In fact, let us plot the log-likelihood for a range of $\lambda$-values.</p>
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/log-likelihood-1.png" alt="Log likelihood of the sample" width="80%" />
@@ -92,12 +134,17 @@ lambdaHat
 We may also find the estimate using numerical optimization.
 
 ```r
-optimResult = optimize(logLn,c(0,10),maximum = TRUE)
-optimResult$maximum
+optimResult <- optim(1.0, 
+            logLn,
+            method = "Brent", 
+            lower = 0.01, 
+            upper = 10.0,
+            control = list(fnscale = -1.0))
+optimResult$par
 ```
 
 ```
-## [1] 0.1164486
+## [1] 0.1164284
 ```
 
 ## Hypothesis testing
@@ -148,7 +195,7 @@ $$
 Since $l(\hat\theta)\geq l(\hat\theta_0)$, we have that $\lambda_{\text{LR}} \geq 0$ and data agrees well with $H_0$ if $\lambda_{\text{LR}}$ is small. Therefore the rejection region will be of the form $\lambda_{\text{LR}} > k$, where $k$ is determined to get the correct size of the test. We can not say more in general, the continuation depends on the particular problem and tends to become complicated for anything but simple models.
 
 As before let us say that we have an iid sample from an exponential distribution and wish to test $H_0:~\lambda = \lambda_0$ against $H_1:~\lambda \neq \lambda_0$, with $\lambda_0=0.1$.
-	
+
 We have already seen that
 $$
 l(\lambda) = n(\ln \lambda - \lambda \bar t)
@@ -221,7 +268,7 @@ $$
 $$
 
 ```r
-2* pgamma(n/lambdaHat, shape = n, rate = lambda0)  
+2* pgamma(n/lambdaHat, shape = n, rate = lambda0)
 ```
 
 ```
@@ -237,7 +284,7 @@ Let us write
 $$
 p(x) = c_0 + c_1(x-x_0) + c_2(x-x_0)^2 + \cdots + c_n(x-x_0)^n.
 $$
-To ensure that $f(x)\approx p(x)$ close to $x_0$, we first require that 
+To ensure that $f(x)\approx p(x)$ close to $x_0$, we first require that
 $$
 f(x_0)=p(x_0)=c_0,
 $$
@@ -286,7 +333,18 @@ $$
 </div>
 
 ## Asymptotic distribution of the MLE
-Here we examine the asymptotic properties of maximum likelihood estimators. To start, we imagine that we observe a random variable $X$, from a parameterized distribution with density $p_\theta$. Our discussion will also be valid if we have a discrete random variable with a probability function $p_\theta$. Then we have a log-likelihood $l_x(\theta):=\ln p_\theta(x)$. Here we will calculate the expected value and variance of the random variable $l_X'(\theta):=\partial_\theta \ln p_\theta(X)$.
+Here we examine the asymptotic properties of maximum likelihood estimators. But first let us recall some properties of the normal distribution, that will be used repeatedly in this chapter.
+
+If $X\sim \mathsf N(\mu,\sigma^2)$ then $a+bX$ also has a normal distribution and
+\begin{align*}
+E[a+bX] &= a+bE[X] = a+b\mu,\\
+\operatorname{Var}(a+bX) &= b^2\operatorname{Var}(X) = b^2\sigma^2.
+\end{align*}
+That is $a+bX\sim \mathsf N(a+b\mu,b^2\sigma^2)$. In particular,
+$$
+\frac{X-\mu}{\sigma} \sim \mathsf N(0,1).
+$$
+Now let us turn to the maximum likelhood estimators. To start, we imagine that we observe a random variable $X$, from a parameterized distribution with density $p_\theta$. Our discussion will also be valid if we have a discrete random variable with a probability function $p_\theta$. Then we have a log-likelihood $l_x(\theta):=\ln p_\theta(x)$. Here we will calculate the expected value and variance of the random variable $l_X'(\theta):=\partial_\theta \ln p_\theta(X)$.
 
 First note that since
 $$
@@ -309,7 +367,7 @@ To find the variance, we instead consider,
 
 Therefore,
 \BeginKnitrBlock{note}<div class="note">$$
-\operatorname{Var}(l'_X(\theta)) = E[(l'_X(\theta))^2] = -E[l''_X(\theta)] := I(\theta).
+\operatorname{Var}(l'_X(\theta)) = E[(l'_X(\theta))^2] = -E[l''_X(\theta)] =: I(\theta).
 $$</div>\EndKnitrBlock{note}
 Here, $I(\theta)$ is called the Fisher information. This calculation was for a sample $X$ of size 1. If we have an independent sample of size $n$, we define the log-likelihood as
 $$
@@ -321,11 +379,22 @@ E[l'_n(\theta)] &= E[\partial_\theta \sum_{i=1}^n l_{X_i}(\theta)] =\sum_{i=1}^n
 Var(l'_n(\theta)) &= Var(\partial_\theta \sum_{i=1}^n l_{X_i}(\theta)) =  \sum_{i=1}^n Var(l_{X_i}'(\theta)) = n I(\theta) =:I_n(\theta).
 \end{align*}
 
+<p>Let us now recall the *law of large numbers* and the *central limit theorem*. They state that if $X_1,\ldots X_n$ are iid random variables with mean $\mu$ and finite variance $\sigma^2$, then for large $n$</p>
+\BeginKnitrBlock{note}<div class="note">\begin{align*}
+\frac{1}{n}\sum_{i=1}^n X_i& \overset{asym.}{\sim} \mu,\\
+\frac{1}{\sqrt{n}}(\sum_{i=1}^n X_i-\mu)& \overset{asym.}{\sim} \mathsf N(0,\sigma^2).
+\end{align*}</div>\EndKnitrBlock{note}
+These asymptotic results in practice mean that we approximate the distribution of the left side with the right side if $n$ is large. For example
+$$
+P\left(\frac{1}{\sqrt{n}}(\sum_{i=1}^n X_i-\mu) \leq x \right) \approx  P\left(\sigma Z\leq x \right),
+$$
+with $Z\sim \mathsf N(0,1)$.
+
 <p>Since $l'_n(\theta)$ is a sum of random variables $l_{X_i}'(\theta)$, and we now know the expected value and variance, we can apply the law of large numbers and central limit theorem to get the following asymptotics:</p>
 \BeginKnitrBlock{note}<div class="note">\begin{align*}
-\frac{1}{n}l'_n(\theta) &\overset{p}{\rightarrow} 0,\quad \text{as }n\to\infty, \\
-\frac{1}{\sqrt{n}}l'_n(\theta) &\overset{d}{\rightarrow} \mathsf{N}(0,I(\theta)),\quad \text{as }n\to\infty,\\
--\frac{1}{n}l''_n(\theta) &\overset{p}{\rightarrow} I(\theta)\text{ as } n\to\infty.
+\frac{1}{n}l'_n(\theta) &\overset{asym.}{\sim} 0, \\
+\frac{1}{\sqrt{n}}l'_n(\theta) &\overset{asym.}{\sim} \mathsf{N}(0,I(\theta)), \\
+-\frac{1}{n}l''_n(\theta) &\overset{asym.}{\sim} I(\theta).
 \end{align*}</div>\EndKnitrBlock{note}
 <p>Now we are ready to find the asymptotic distribution of $\hat\theta_n$. We make a first-order Taylor expansion of $l_n'(\hat\theta_n)$ around $\theta$,</p>
 $$
@@ -337,20 +406,20 @@ $$
 $$
 Now, using the above asymptotics we arrive at:
 \BeginKnitrBlock{note}<div class="note">$$
-\sqrt{n} (\hat\theta_n-\theta) \overset{d}{\rightarrow} \frac{\mathsf N(0,I(\theta))}{I(\theta)} \overset{d}{=} \mathsf N(0,I^{-1}(\theta)).
+\sqrt{n} (\hat\theta_n-\theta) \overset{asym.}{\sim} \frac{\mathsf N(0,I(\theta))}{I(\theta)} \overset{d}{=} \mathsf N(0,I^{-1}(\theta)).
 $$</div>\EndKnitrBlock{note}
-<p>In particular, this implies that $\hat\theta_n - \theta \overset{p}{\rightarrow} 0$, or in other words that $\hat\theta_n$ is a consistent estimator of $\theta$.
+<p>In particular, this implies that $\hat\theta_n - \theta \overset{asym.}{\sim } 0$, or in other words that $\hat\theta_n$ is a consistent estimator of $\theta$.
 One problem with the above is however that $I(\theta)$ is often difficult to calculate. However $-l''_n(\theta)/n=:\hat I(\theta)$ is a consistent estimator of $I(\theta)$. Then we may also write:</p>
 $$
-\sqrt{n \hat I(\theta)}(\hat\theta_n - \theta) \overset{d}{\rightarrow} \mathsf N(0,1).
+\sqrt{n \hat I(\theta)}(\hat\theta_n - \theta) \overset{asym.}{\sim} \mathsf N(0,1).
 $$
 <p>A further problem is that $\theta$ is in general unknown. But since $\hat\theta_n$ is consistent, we may simply replace $\theta$ by $\hat\theta_n$,</p>
 \BeginKnitrBlock{note}<div class="note">$$
-\sqrt{n \hat I(\hat\theta_n)}(\hat\theta_n - \theta) \overset{d}{\rightarrow} \mathsf N(0,1).
+\sqrt{n \hat I(\hat\theta_n)}(\hat\theta_n - \theta) \overset{asym.}{\sim} \mathsf N(0,1).
 $$</div>\EndKnitrBlock{note}
-This is an amazing result. Without knowing in detail how $\hat\theta$ is determined from the sample; perhaps from some numerical optimization, we can say what the large-sample distribution is. We can rewrite this as an approximation:
+This is an amazing result. Without knowing in detail how $\hat\theta$ is determined from the sample; perhaps from some numerical optimization, we can say what the large-sample distribution is. We can rewrite this as
 $$
-\hat \theta_n \approx \mathsf N\left(\theta, \frac{1}{n \hat I(\hat\theta_n)}\right).
+\hat \theta_n \overset{asym.}{\sim} \mathsf N\left(\theta, \frac{1}{n \hat I(\hat\theta_n)}\right).
 $$
 Now let us apply this to the example of the exponential distribution. We had that $\hat\lambda_n = 1/\bar t$. Further
 $$
@@ -369,17 +438,22 @@ $$
 
 In this section we discuss how to find the asymptotic distribution of a function of the estimate. Let us assume that we already know that
 $$
-\sqrt{n} (\hat\theta_n - \theta) \overset{d}{\rightarrow} N(0,\sigma^2).
+\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} N(0,\sigma^2).
 $$
 <p>This might be because $\hat\theta_n$ is the MLE and we have used the results from the previous section or we have applied some central limit theorem. We have a function $f$ and we would like to know the asymptotic distribution of $f(\hat\theta_n)$. Let us again write a Taylor expansion</p>
 $$
 f(\hat\theta_n) \approx f(\theta) + f'(\theta)(\hat\theta_n - \theta).
 $$
 <p>Rearranging and multiplying by $\sqrt n$ gives,</p>
+$$
+\sqrt{n}(f(\hat\theta_n) - f(\theta)) \approx f'(\theta)\sqrt{n}(\hat\theta_n - \theta).
+$$
+The right side is asymptotically normal, by our assumption. We have then arrived at the *first order delta method*:
+
 \BeginKnitrBlock{note}<div class="note">$$
-\sqrt{n}(f(\hat\theta_n) - f(\theta)) \approx f'(\theta)\sqrt{n}(\hat\theta_n - \theta) \overset{d}{\rightarrow} N(0,\sigma^2f'(\theta)^2) .
+\sqrt{n}(f(\hat\theta_n) - f(\theta)) \overset{asym.}{\sim} N(0,\sigma^2f'(\theta)^2) .
 $$</div>\EndKnitrBlock{note}
-<p>This result is called the first order Delta method. For this to make sense we need that $f'(\theta)\neq 0$. If this is not the case we can instead do a second order Taylor expansion</p>
+<p>For this to make sense we need that $f'(\theta)\neq 0$. If this is not the case we can instead do a second order Taylor expansion</p>
 $$
 f(\hat\theta_n) \approx f(\theta) + f'(\theta)(\hat\theta_n - \theta) + \frac{f''(\theta)}{2}(\hat\theta_n - \theta)^2 = f(\theta) + \frac{f''(\theta)}{2}(\hat\theta_n - \theta)^2.
 $$
@@ -387,13 +461,13 @@ Rearranging gives,
 $$
 n(f(\hat\theta_n)  - f(\theta)) \approx \frac{f''(\theta)}{2}(\sqrt{n}(\hat\theta_n-\theta))^2.
 $$
-<p>We assumed that $\sqrt{n} (\hat\theta_n - \theta) \overset{d}{\rightarrow} N(0,\sigma^2)$. The continuous mapping theorem (not covered here) states that if $f$ is a continuous function and if $X_n \overset{d}{\rightarrow} X$, then $f(X_N) \overset{d}{\rightarrow} f(X)$. Therefore, if we let $Z\sim N(0,1),$ we can write our assumption as $\sqrt{n} (\hat\theta_n - \theta) \overset{d}{\rightarrow} \sigma Z$ and thus, recalling that the square of a standard normal random variable has a $\chi^2_1$-distribution,</p>
+<p>We assumed that $\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} N(0,\sigma^2)$. The continuous mapping theorem (not covered here) states that if $f$ is a continuous function and if $X_n \overset{asym.}{\sim} X$, then $f(X_N) \overset{asym.}{\sim} f(X)$. Therefore, if we let $Z\sim N(0,1),$ we can write our assumption as $\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} \sigma Z$ and thus, recalling that the square of a standard normal random variable has a $\chi^2_1$-distribution,</p>
 $$
-(\sqrt{n}(\hat\theta_n-\theta))^2 \overset{d}{\rightarrow} \sigma^2Z^2 \overset{d}{=} \sigma^2 \chi^2_1.
+(\sqrt{n}(\hat\theta_n-\theta))^2 \overset{asym.}{\sim} \sigma^2Z^2 \overset{d}{=} \sigma^2 \chi^2_1.
 $$
 With that we get the second order Delta method:
 \BeginKnitrBlock{note}<div class="note">$$
-n(f(\hat\theta_n)  - f(\theta)) \approx \frac{f''(\theta)}{2}\sigma^2\chi_1^2.
+n(f(\hat\theta_n)  - f(\theta)) \overset{asym.}{\sim} \frac{f''(\theta)}{2}\sigma^2\chi_1^2.
 $$</div>\EndKnitrBlock{note}
 Now let us apply the delta method to the exponential distribution. We would like to estimate the probability that the time until the next event is larger than 10. That is the probability
 $$
@@ -401,19 +475,19 @@ p = P(T>10) = e^{-10\lambda}.
 $$
 The MLE follows from the invariance principle of maximum likelihood, i.e.\ $\hat p = e^{-10\hat\lambda}$. The distribution of $\hat p$ can be found by the delta method if we let $p=f(\lambda) = e^{-10\lambda}$. Then $f'(\lambda) = -10e^{-10\lambda} = -10p$. In this case $f'(\lambda)\neq 0$, so we may apply the first order delta method. Recall from the previous section that
 $$
-\sqrt n\left( \hat\lambda_n - \lambda \right) \approx \mathsf N(0, \lambda^2),
+\sqrt n\left( \hat\lambda_n - \lambda \right) \overset{asym.}{\sim} \mathsf N(0, \lambda^2),
 $$
 that is, the $\sigma^2$ appearing in the delta method is $\lambda^2$. Now, applying the delta method gives
 $$
-\sqrt n(\hat p_n- p) \approx \mathsf N(0,100p^2\lambda^2).
+\sqrt n(\hat p_n- p) \overset{asym.}{\sim} \mathsf N(0,100p^2\lambda^2).
 $$
 As usual, we may replace unknown parameters with a consistent estimate, i.e.\ $p$ with $\hat p$ and $\lambda$ with $\hat\lambda$. Therefore,
 $$
-\sqrt n(\hat p_n- p) \approx \mathsf N(0,100\hat p^2\hat\lambda^2) = \mathsf N(0,0.132),
+\sqrt n(\hat p_n- p) \overset{asym.}{\sim} \mathsf N(0,100\hat p^2\hat\lambda^2) = \mathsf N(0,0.132),
 $$
 or
 $$
-\hat p_n \approx \mathsf N(p,0.132/n).
+\hat p_n \overset{asym.}{\sim} \mathsf N(p,0.132/n).
 $$
 
 
@@ -421,35 +495,35 @@ $$
 
 In the previous sections we found the asymptotic distribution of $\hat\theta_n$. Here we seek the asymptotic distribution of the likelihood ratio $-2(l_n(\theta_0) - l_n(\hat\theta_n)))$. The reason is that, as we have seen, finding the exact distribution is difficult. If we have the approximate, asymptotic, distribution, we can use that to do for example hypothesis testing. For ease of notation we suppress the $n$ and write $l$ and $\hat\theta$.
 
-We will use the following asymptotically valid approximations, that we have seen before:
+We will use the following results, that we have seen before:
 \begin{align*}
 l'(\hat\theta) &= 0,\\
--\frac{1}{n}l''(\hat\theta) &\approx -\frac{1}{n}l''(\theta) \approx I(\theta),\\
-\sqrt{n}(\hat\theta - \theta) &\approx I^{-1/2}(\theta )Z,
+-\frac{1}{n}l''(\hat\theta) &\overset{asym.}{\sim} -\frac{1}{n}l''(\theta) \overset{asym.}{\sim} I(\theta),\\
+\sqrt{n}(\hat\theta - \theta) &\overset{asym.}{\sim} I^{-1/2}(\theta )Z,
 \end{align*}
-with $Z\sim \mathsf N(0,1)$. 
+with $Z\sim \mathsf N(0,1)$.
 
 <p>Just as in the delta method, we now do a Taylor expansion of $l(\theta)$ around $\hat\theta$:</p>
 \begin{align}
 l(\theta) \approx& l(\hat \theta) + l'(\hat\theta)(\theta-\hat\theta) + \frac{l''(\hat\theta)}{2}(\theta-\hat\theta) ^2\\
 =& l(\hat\theta) + \frac{l''(\hat\theta)}{2}(\theta-\hat\theta) ^2 = l(\hat \theta) +\frac{1}{2} \frac{1}{n}l''(\hat\theta)n(\theta-\hat\theta) ^2\\
-\approx & l(\hat\theta) -\frac{1}{2} I(\theta)I^{-1}(\theta)Z^2 = l(\hat\theta) - \frac{1}{2}\chi_1^2.
+\overset{asym.}{\sim} & l(\hat\theta) -\frac{1}{2} I(\theta)I^{-1}(\theta)Z^2 \overset{d}{=} l(\hat\theta) - \frac{1}{2}\chi_1^2.
 \end{align}
 In other words, for a large sample,
 \BeginKnitrBlock{note}<div class="note">$$
-\lambda_{LR} = 2( l_n(\hat\theta)-l_n(\theta_0))\approx \chi_1^2.
+\lambda_{LR} = 2( l_n(\hat\theta)-l_n(\theta_0))\overset{asym.}{\sim} \chi_1^2.
 $$</div>\EndKnitrBlock{note}
 Which is Wilks' theorem.
 
 Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:
 
 ```r
-lrStatistic <- 2*(logLn(optimResult$maximum) - logLn(0.1))
+lrStatistic <- 2*(logLn(optimResult$par) - logLn(0.1))
 lrStatistic
 ```
 
 ```
-## [1] 2.20065
+## [1] 2.200653
 ```
 Recall that we reject $H_0$ if $\lambda_{LR}$ is large. Therefore the p-value is
 
@@ -458,14 +532,14 @@ Recall that we reject $H_0$ if $\lambda_{LR}$ is large. Therefore the p-value is
 ```
 
 ```
-## [1] 0.1379525
+## [1] 0.1379523
 ```
 
 ## Wald's test
 
 <p>Another way to measure if $\hat\theta$ agrees with the null hypothesis is to calculate $\hat\theta - \theta_0$. If this is large, in absolute value, the test should reject the null hypothesis. We have already seen that, under the assumption of $H_0$</p>
 \BeginKnitrBlock{note}<div class="note">$$
-\frac{\hat\theta- \theta_0}{\textrm{Sd}(\hat\theta)} \overset{d}{\approx} \mathsf{N}(0,1),
+\frac{\hat\theta- \theta_0}{\textrm{Sd}(\hat\theta)} \overset{asym.}{\sim} \mathsf{N}(0,1),
 $$</div>\EndKnitrBlock{note}
 where the standard deviation can be calculated as
 $$
@@ -473,7 +547,7 @@ Sd(\hat\theta) = (n\hat I(\hat\theta))^{-1/2}.
 $$
 Therefore the test can be done by comparing the left hand-side with the appropriate quantile of the Normal distribution. Note that this implies also that
 $$
-\frac{(\hat \theta - \theta_0)^2}{Var(\hat\theta)} \approx \chi^2_1,
+\frac{(\hat \theta - \theta_0)^2}{Var(\hat\theta)} \overset{asym.}{\sim} \chi^2_1,
 $$
 which is similar to Wilks' test.
 
@@ -511,11 +585,11 @@ Var\left( T \right) &= \frac{1}{\lambda^2}.
 \end{align}
 So by the central limit theorem ($\bar t$ is a sum of random variables):
 $$
-\sqrt n (\bar t - 1/\lambda) \overset{d}{\rightarrow} N(0,1/\lambda^2).
+\sqrt n (\bar t - 1/\lambda) \overset{asym.}{\sim} N(0,1/\lambda^2).
 $$
 If $f(x)=1/x$, then $\hat\lambda = f(\bar t) = 1/\bar t$ and applying the delta method gives,
 $$
-\sqrt n (\hat\lambda - \lambda) \overset{d}{\rightarrow} N(0,f'(\bar t)^2/\lambda^2) = N(0,f'(1/\lambda)^2/\lambda^2) = N(0,\lambda^2).
+\sqrt n (\hat\lambda - \lambda) \overset{asym.}{\sim} N(0,f'(\bar t)^2/\lambda^2) = N(0,f'(1/\lambda)^2/\lambda^2) = N(0,\lambda^2).
 $$
 This agrees with what we obtained previously.
 
@@ -528,7 +602,7 @@ If $\hat\theta$ is close to $\theta_0$ then we should have that $l'(\theta_0)\ap
 
 We can use the asymptotics we already calculated, that is
 \BeginKnitrBlock{note}<div class="note">$$
-\frac{l_n'(\theta_0)}{\sqrt{I_n(\theta_0)}} \approx \mathsf N(0,1). 
+\frac{l_n'(\theta_0)}{\sqrt{I_n(\theta_0)}} \overset{asym.}{\sim} \mathsf N(0,1).
 $$</div>\EndKnitrBlock{note}
 
 So the score test of size $\alpha$ is to reject $H_0$ if
@@ -567,11 +641,11 @@ We have derived a number of different tests. In principle all of them can be tur
 
 The Wald test is based on that for large $n$:
 $$
-\frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)} \overset{d}{\approx} \mathsf{N}(0,1),
+\frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)} \overset{asym.}{\sim} \mathsf{N}(0,1),
 $$
 Therefore we can write
 $$
-1-\alpha = P\left( -z_{\alpha/2} < \frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)} 
+1-\alpha = P\left( -z_{\alpha/2} < \frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)}
 \leq z_{\alpha/2}  \right) = P\left( \hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}\leq \theta \leq \hat\theta +  \textrm{Sd}(\hat\theta) z_{\alpha/2}\right).
 $$
 Which means that $\left[\hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}, \hat\theta +\textrm{Sd}(\hat\theta) z_{\alpha/2}\right]$ is a $1-\alpha$ confidence interval for $\theta$.
@@ -590,7 +664,7 @@ $$
 \begin{align}
 l'_n(\lambda) &= n\left( \frac{1}{\lambda} - \frac{1}{\hat\lambda} \right),\\
 I_n(\lambda) &= - l''_n(\lambda) = \frac{n}{\lambda^2}.
-\end{align} 
+\end{align}
 <p>We plot the score statistic as a function of $\lambda$:</p>
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/CI-plot-1.png" alt="Score statistic and confidence intervall" width="80%" />
@@ -604,7 +678,7 @@ in terms of $\lambda$. Looking at the figure, this has two solutions, one for $\
 
 ```r
 alpha = 0.05
-scoreStatistic <- function(lambda){ 
+scoreStatistic <- function(lambda){
   abs( n*(1/lambda - 1/lambdaHat) ) / sqrt( n/lambda^2 )
 }
 
@@ -932,11 +1006,11 @@ $$
 
 In this chapter we have seen that this is true in more generallity, whenever we have an MLE. That is
 $$
-\hat\theta \sim \mathsf N(\theta,\sigma^2_{\hat\theta}),
+\hat\theta \overset{asym.}{\sim} \mathsf N(\theta,\sigma^2_{\hat\theta}),
 $$
 the same as
 $$
-\frac{\hat\theta - \theta}{\sigma_{\hat\theta}} \sim \mathsf N(0,1).
+\frac{\hat\theta - \theta}{\sigma_{\hat\theta}} \overset{asym.}{\sim} \mathsf N(0,1).
 $$
 
 So we can again use this for hypothesis testing or CI, the only remaining challenge is finding $\sigma_{\hat\theta}$. We have a couple of different tools to do this.
@@ -945,7 +1019,7 @@ Let us consider an example. We have a sample of size $n$ from $\mathsf{Be}(p)$. 
 
 The MLE of $p$ is $\hat p = \bar x$ and we know that
 $$
-\hat p \sim \mathsf N(p,\sigma^2_{\hat p}).
+\hat p \overset{asym.}{\sim} \mathsf N(p,\sigma^2_{\hat p}).
 $$
 
 Here we can find $\sigma^2_{\hat p}$ by direct calculation.
@@ -954,25 +1028,53 @@ $$
 $$
 Therefore,
 $$
-\hat p \sim \mathsf N\left(p,\frac{p(1-p)}{n}\right).
+\hat p \overset{asym.}{\sim} \mathsf N\left(p,\frac{p(1-p)}{n}\right).
 $$
 If we write this on the form of a test statistic,
 $$
-\frac{\hat p - p}{\sqrt{\frac{p(1-p)}{n}}}\sim \mathsf N\left(0,1\right).
+\frac{\hat p - p}{\sqrt{\frac{p(1-p)}{n}}}\overset{asym.}{\sim} \mathsf N\left(0,1\right).
 $$
 The problem is that the denominator contains the unkown $p$. Since $\hat p$ is the MLE, it is consistent, and we may therefore also say that,
 $$
-\hat p \sim \mathsf N\left(p,\frac{\hat p(1-\hat p)}{n}\right).
+\hat p \overset{asym.}{\sim} \mathsf N\left(p,\frac{\hat p(1-\hat p)}{n}\right).
 $$
 Or,
 $$
-\frac{\hat p - p}{\sqrt{\frac{\hat p(1-\hat p)}{n}}}\sim \mathsf N\left(0,1\right),
+\frac{\hat p - p}{\sqrt{\frac{\hat p(1-\hat p)}{n}}} \overset{asym.}{\sim} \mathsf N\left(0,1\right),
 $$
 which can be used for constructing the Wald test.
 
+What this then means is that, if $n$ is large, and we where to estimate $p$ with $\hat p$ for many different samples, the distribution of the esimates would be approximately distributed as $\mathsf N(0,1)$. Let us verify this with a simulation
+
+
+```r
+set.seed(42)
+
+n <- 100
+p0 <- 0.5
+replications <- 1000
+
+p.hats <- array(dim = replications)
+
+for (i in seq_len(replications)) {
+  x <- sample(c(0,1), size = n, replace = TRUE)
+
+  p.hats[i] <- mean(x)
+}
+
+wald <- (p.hats - p0)/sqrt(p.hats*(1-p.hats)/n)
+```
+
+
+<div class="figure" style="text-align: center">
+<img src="01-likelihood_files/figure-html/waldStatisticExampleFigure-1.png" alt="Simulated density of the wald statistic and the standard normal density" width="80%" />
+<p class="caption">(\#fig:waldStatisticExampleFigure)Simulated density of the wald statistic and the standard normal density</p>
+</div>
+
+
 In this case we were lucky that we could calculate $Var(\hat p)$ directly. Another path is to use the Fisher information. We found that
 $$
-\hat \theta \sim \mathsf N\left(\theta, \frac{1}{nI(\theta)}\right).
+\hat \theta \overset{asym.}{\sim} \mathsf N\left(\theta, \frac{1}{nI(\theta)}\right).
 $$
 The Fisher information is
 $$
@@ -1007,10 +1109,33 @@ The score statistic is then
 $$
 \frac{l_n'(p_0)}{\sqrt{I_n(p_0)}} = \frac{n(\hat p -p_0)}{p_0(1-p_0)}\sqrt{\frac{p_0(1-p_0)}{n}} = \frac{\hat p -p_0}{\sqrt{\frac{p_0(1-p_0)}{n}}},
 $$
-which is distributed as $\mathsf N(0,1)$ if $p=p_0$. This is similar to the Wald statistic. The difference is that $\hat p$ in the denominator is replaced by $p_0$.
+which is asymptotically distributed as $\mathsf N(0,1)$ if $p=p_0$. This is similar to the Wald statistic. The difference is that $\hat p$ in the denominator is replaced by $p_0$.
 
 The final test is the asymptotic likelihood ratio test. It states that, if $p=p_0$,
 $$
-2(l_n(\hat p)-l_n(p_0)) \sim \chi^2_1.
+2(l_n(\hat p)-l_n(p_0)) \overset{asym.}{\sim} \chi^2_1.
 $$
 This is perhaps the easiest test to perform, since it is only a matter of evaluating the log-likelihood and comparing the the appropriate quantile of $\chi^2_1$.
+
+## Review questions
+
+1. What is the likelihood function?
+2. How is the maximum likelihood estimate calculated?
+3. How can one use numerical optimisation to calculate the maximum likelihood estimate?
+4. What is the likelihood ratio?
+5. What is the likelihood ratio test?
+6. How is the Taylor expansion calculated?
+7. What is the Fisher information?
+8. What is the asymptotic distribution of the MLE?
+9. What is the delta method?
+10. What is the difference between the first and second order delta methods?
+11. What is Wilk's test?
+12. What is Wald's test?
+13. What is the score test?
+14. How does one construct a confidence interval based on the Wald test?
+
+
+
+
+
+
