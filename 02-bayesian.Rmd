@@ -424,7 +424,7 @@ ggplot(data = data.df, aes(x = sample )) +
 ```
 
 
-## An application III
+## An application
 <!-- Taken from http://www2.geog.ucl.ac.uk/~mdisney/teaching/GEOGG121/sivia_skilling/mterop_hastings.pdf -->
 
 Here we consider the Bayesian probit model as an example. The data generating model is

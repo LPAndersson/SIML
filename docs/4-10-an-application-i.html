@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.6 Support vector machines II | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.10 An application I | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.6 Support vector machines II | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.10 An application I | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.6 Support vector machines II | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.10 An application I | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="4-5-vc-dimension.html"/>
-<link rel="next" href="4-7-bias-variance-decomposition.html"/>
+<link rel="prev" href="4-9-model-selection.html"/>
+<link rel="next" href="4-11-an-application-ii.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -206,80 +206,99 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="support-vector-machines-ii" class="section level2">
-<h2><span class="header-section-number">4.6</span> Support vector machines II</h2>
-<p>Based on the previous discussion, in this section we develop the final form of SVM.</p>
-<p>The main conclusion from the previous sections is that the in-sample error is not an accurate estimate of the out-of-sample error and if we train a model with high complexity we may overfit the model. One way of dealing with this problem is to limit the complexity of the model, for example in terms of the VC-dimension. In the SVM case this could mean to limit the degree of the polynomial. Another way, which we will explore in this section, is to recall from the previous section that
-<span class="math display">\[
-E_{out} = E_{in} + \Omega(N,\mathcal H, \delta).
-\]</span>
-Now instead of minimizing the in-sample error of our model, we add a term that represents <span class="math inline">\(\Omega\)</span>, which is increasing in the complexity of the model. Then the learning problem instead becomes,
-<span class="math display">\[
-\min_{h\in\mathcal H}\left[ E_{in}(h) + c(h)\right],
-\]</span>
-where <span class="math inline">\(c\)</span> is some function that increases with the complexity of the function <span class="math inline">\(h\)</span>. SVMs are a special case of this. If we have a linear classifier <span class="math inline">\(f(x) = \beta_0+\beta_1x_1 + \ldots \beta_p x_p\)</span> the problem is
-<span class="math display">\[
-\min_{\beta_0,\beta_1,\ldots,\beta_p} \sum_{i=1}^n \left( 1-y_if(x_i) \right)_+ + \lambda \sum_{i=1}^p{\beta_j^2},
-\]</span>
-where <span class="math inline">\(\lambda\geq 0\)</span> is a tuning parameter. Here a large value of <span class="math inline">\(\lambda\)</span> will penalize complex models heavily and force the model to be simple, thereby preventing overfitting. A small value of <span class="math inline">\(\lambda\)</span> will allow more complex models, thereby making the in-sample error smaller, on the other hand risking overfitting.</p>
-<p>As usual, we may take some function of the inputs <span class="math inline">\(\varphi_i(x)\)</span> and consider a linear function of these new features. Let us see what happens when we vary <span class="math inline">\(\lambda\)</span>, using polynomial <span class="math inline">\(\varphi\)</span> of maximum degree 5.</p>
-<div class="figure" style="text-align: center"><span id="fig:inOutSampleErrorSVM"></span>
-<img src="04-statisticalLearning_files/figure-html/inOutSampleErrorSVM-1.png" alt="Error vs. reciprocal of lambda." width="80%" />
+<div id="an-application-i" class="section level2">
+<h2><span class="header-section-number">4.10</span> An application I</h2>
+<p>We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="4-10-an-application-i.html#cb136-1"></a><span class="kw">library</span>(caret)</span>
+<span id="cb136-2"><a href="4-10-an-application-i.html#cb136-2"></a><span class="kw">library</span>(ISLR)</span>
+<span id="cb136-3"><a href="4-10-an-application-i.html#cb136-3"></a></span>
+<span id="cb136-4"><a href="4-10-an-application-i.html#cb136-4"></a><span class="kw">data</span>(<span class="st">&quot;Hitters&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</span>
+<span id="cb136-5"><a href="4-10-an-application-i.html#cb136-5"></a>Hitters &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Hitters)</span></code></pre></div>
+<p>Then we randomly split the data into a train and a test set. We keep 70% of the observations in the training set and the rest in the test set.</p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="4-10-an-application-i.html#cb137-1"></a><span class="kw">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb137-2"><a href="4-10-an-application-i.html#cb137-2"></a>training.samples &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createDataPartition</span>(Hitters<span class="op">$</span>Salary, </span>
+<span id="cb137-3"><a href="4-10-an-application-i.html#cb137-3"></a>                                               <span class="dt">p =</span> <span class="fl">0.7</span>, </span>
+<span id="cb137-4"><a href="4-10-an-application-i.html#cb137-4"></a>                                               <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb137-5"><a href="4-10-an-application-i.html#cb137-5"></a>train.data  &lt;-<span class="st"> </span>Hitters[training.samples, ]</span>
+<span id="cb137-6"><a href="4-10-an-application-i.html#cb137-6"></a>test.data &lt;-<span class="st"> </span>Hitters[<span class="op">-</span>training.samples, ]</span></code></pre></div>
+<p>We then do linear regression and calculate the out-of-sample error</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="4-10-an-application-i.html#cb138-1"></a>ls &lt;-<span class="st"> </span><span class="kw">lm</span>(Salary <span class="op">~</span>., <span class="dt">data =</span> train.data)</span>
+<span id="cb138-2"><a href="4-10-an-application-i.html#cb138-2"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data)</span>
+<span id="cb138-3"><a href="4-10-an-application-i.html#cb138-3"></a><span class="kw">sqrt</span>(<span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## [1] 367.6942</code></pre>
+<p>Next we fit a lasso using 10-fold CV.</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="4-10-an-application-i.html#cb140-1"></a>lambda.grid &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">100</span>)</span>
+<span id="cb140-2"><a href="4-10-an-application-i.html#cb140-2"></a></span>
+<span id="cb140-3"><a href="4-10-an-application-i.html#cb140-3"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb140-4"><a href="4-10-an-application-i.html#cb140-4"></a>lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
+<span id="cb140-5"><a href="4-10-an-application-i.html#cb140-5"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
+<span id="cb140-6"><a href="4-10-an-application-i.html#cb140-6"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>, <span class="dt">repeats =</span> <span class="dv">5</span>),</span>
+<span id="cb140-7"><a href="4-10-an-application-i.html#cb140-7"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> lambda.grid)</span>
+<span id="cb140-8"><a href="4-10-an-application-i.html#cb140-8"></a>)</span></code></pre></div>
+<p>We may plot the cross-validated error against the regularization parameter.</p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="4-10-an-application-i.html#cb141-1"></a><span class="kw">plot</span>(lasso)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:lassoPlot"></span>
+<img src="04-statisticalLearning_files/figure-html/lassoPlot-1.png" alt="Cross-validated error against the regularization parameter for Lasso." width="80%" />
 <p class="caption">
-Figure 4.14: Error vs. reciprocal of lambda.
+Figure 4.22: Cross-validated error against the regularization parameter for Lasso.
 </p>
 </div>
-<p>We see from the picture that <span class="math inline">\(\lambda\)</span> controls the complexity of the model. When <span class="math inline">\(\lambda\)</span> is large (<span class="math inline">\(1/\lambda\)</span> small), the in-sample and out-of-sample errors are similar and as <span class="math inline">\(\lambda\)</span> becomes smaller, the in-sample error becomes smaller, but the difference between the errors are larger.</p>
-<p>With this development, we do not need to limit the complexity of the class of function <span class="math inline">\(\mathcal H\)</span>, since this is done by choosing <span class="math inline">\(\lambda\)</span>. In fact, we can in some cases even choose <span class="math inline">\(\mathcal H\)</span> to be an infinite dimensional space of functions.</p>
-<p>It turns out that the solution to the optimization problem of SVM can be written as
-<span class="math display">\[
-f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle x,x_i  \rangle,
-\]</span>
-where we define the inner product of two points <span class="math inline">\(x\)</span> and <span class="math inline">\(\tilde x\)</span> as,
-<span class="math display">\[
-\langle x,\tilde  x \rangle = \sum_{j=1}^p x_j\tilde x_j.
-\]</span>
-If we now instead consider the input features <span class="math inline">\(\varphi(x) = (\varphi_1(x),\ldots,\varphi_M(x))\)</span> and functions of the form
-<span class="math display">\[
-f(x) = \varphi(x)^T\beta + \beta_0,
-\]</span>
-in the same way as above, the SVM classifier is
-<span class="math display">\[
-f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle \varphi(x),\varphi(x_i)  \rangle.
-\]</span>
-We then see that the features <span class="math inline">\(\varphi\)</span> only appears in the inner product. So it is enough if we specify the function
-<span class="math display">\[
-K(x,x_i):= \langle \varphi(x),\varphi(x_i)  \rangle,
-\]</span>
-which is called a Kernel. We then write
-<span class="math display">\[
-f(x) = \beta_0 + \sum_{i=1}^n\alpha_iK(x,x_i).
-\]</span>
-An important point here is that the dimension of <span class="math inline">\(\varphi\)</span>, <span class="math inline">\(M\)</span>, does not appear here. The sum is over (at most) <span class="math inline">\(n\)</span> terms, even if let <span class="math inline">\(M\to\infty\)</span>.</p>
-<p>In practice, we therefore specify the kernel and not the features. Two examples of kernels are the polynomial kernel
-<span class="math display">\[
-K(x,\tilde x) = (1+\sum_{i=1}^px_i\tilde x_i)^d,
-\]</span>
-and the radial basis kernel,
-<span class="math display">\[
-K(x,\tilde x) = \exp\left( -\gamma  \sum_{i=1}^p (x_i-\tilde x_i)^2\right).
-\]</span>
-Let us try the radial basis function kernel on our data set.</p>
-<div class="figure" style="text-align: center"><span id="fig:radialBasisSVM"></span>
-<img src="04-statisticalLearning_files/figure-html/radialBasisSVM-1.png" alt="Training data a radial basis SVM classification" width="80%" />
+<p>If we print the parameters, we see that some of them have been set to 0.</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="4-10-an-application-i.html#cb142-1"></a><span class="kw">coef</span>(lasso<span class="op">$</span>finalModel, lasso<span class="op">$</span>bestTune<span class="op">$</span>lambda)</span></code></pre></div>
+<pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                         1
+## (Intercept)  -66.88333624
+## AtBat          .         
+## Hits           2.00894789
+## HmRun          .         
+## Runs           .         
+## RBI            0.63610478
+## Walks          3.46312810
+## Years          .         
+## CAtBat         .         
+## CHits          .         
+## CHmRun         0.01178261
+## CRuns          0.08620313
+## CRBI           0.51517895
+## CWalks         .         
+## LeagueN       29.48507342
+## DivisionW   -100.72607403
+## PutOuts        0.17109758
+## Assists       -0.06283794
+## Errors         .         
+## NewLeagueN     .</code></pre>
+<p>We calculate the out-of-sample error.</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="4-10-an-application-i.html#cb144-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</span>
+<span id="cb144-2"><a href="4-10-an-application-i.html#cb144-2"></a><span class="kw">sqrt</span>(<span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## [1] 358.6614</code></pre>
+<p>An improvement over least squares. We might also try elastic-net.</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="4-10-an-application-i.html#cb146-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="fl">2.5</span>, <span class="dt">length =</span> <span class="dv">100</span>)</span>
+<span id="cb146-2"><a href="4-10-an-application-i.html#cb146-2"></a>alpha &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dt">length =</span> <span class="dv">10</span>)</span>
+<span id="cb146-3"><a href="4-10-an-application-i.html#cb146-3"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb146-4"><a href="4-10-an-application-i.html#cb146-4"></a>e.net &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
+<span id="cb146-5"><a href="4-10-an-application-i.html#cb146-5"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
+<span id="cb146-6"><a href="4-10-an-application-i.html#cb146-6"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>, <span class="dt">repeats =</span> <span class="dv">5</span>),</span>
+<span id="cb146-7"><a href="4-10-an-application-i.html#cb146-7"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> alpha, <span class="dt">lambda =</span> lambda)</span>
+<span id="cb146-8"><a href="4-10-an-application-i.html#cb146-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="4-10-an-application-i.html#cb147-1"></a><span class="kw">plot</span>(e.net)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:elasticNetPlot"></span>
+<img src="04-statisticalLearning_files/figure-html/elasticNetPlot-1.png" alt="Cross-validated error against the regularization parameter for elastic net" width="80%" />
 <p class="caption">
-Figure 4.15: Training data a radial basis SVM classification
+Figure 4.23: Cross-validated error against the regularization parameter for elastic net
 </p>
 </div>
-<p>This now has an in-sample error of 0.275 and out-of-sample error 0.255555</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="4-10-an-application-i.html#cb148-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(e.net, test.data)</span>
+<span id="cb148-2"><a href="4-10-an-application-i.html#cb148-2"></a><span class="kw">sqrt</span>( <span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>) )</span></code></pre></div>
+<pre><code>## [1] 361.3435</code></pre>
+<p>We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="4-5-vc-dimension.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4-7-bias-variance-decomposition.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4-9-model-selection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4-11-an-application-ii.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

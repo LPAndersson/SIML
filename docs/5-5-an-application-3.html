@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.6 Support vector machines II | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>5.5 An application | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.6 Support vector machines II | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="5.5 An application | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.6 Support vector machines II | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="5.5 An application | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="4-5-vc-dimension.html"/>
-<link rel="next" href="4-7-bias-variance-decomposition.html"/>
+<link rel="prev" href="5-4-stochastic-gradient-descent.html"/>
+
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -206,80 +206,91 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="support-vector-machines-ii" class="section level2">
-<h2><span class="header-section-number">4.6</span> Support vector machines II</h2>
-<p>Based on the previous discussion, in this section we develop the final form of SVM.</p>
-<p>The main conclusion from the previous sections is that the in-sample error is not an accurate estimate of the out-of-sample error and if we train a model with high complexity we may overfit the model. One way of dealing with this problem is to limit the complexity of the model, for example in terms of the VC-dimension. In the SVM case this could mean to limit the degree of the polynomial. Another way, which we will explore in this section, is to recall from the previous section that
-<span class="math display">\[
-E_{out} = E_{in} + \Omega(N,\mathcal H, \delta).
-\]</span>
-Now instead of minimizing the in-sample error of our model, we add a term that represents <span class="math inline">\(\Omega\)</span>, which is increasing in the complexity of the model. Then the learning problem instead becomes,
-<span class="math display">\[
-\min_{h\in\mathcal H}\left[ E_{in}(h) + c(h)\right],
-\]</span>
-where <span class="math inline">\(c\)</span> is some function that increases with the complexity of the function <span class="math inline">\(h\)</span>. SVMs are a special case of this. If we have a linear classifier <span class="math inline">\(f(x) = \beta_0+\beta_1x_1 + \ldots \beta_p x_p\)</span> the problem is
-<span class="math display">\[
-\min_{\beta_0,\beta_1,\ldots,\beta_p} \sum_{i=1}^n \left( 1-y_if(x_i) \right)_+ + \lambda \sum_{i=1}^p{\beta_j^2},
-\]</span>
-where <span class="math inline">\(\lambda\geq 0\)</span> is a tuning parameter. Here a large value of <span class="math inline">\(\lambda\)</span> will penalize complex models heavily and force the model to be simple, thereby preventing overfitting. A small value of <span class="math inline">\(\lambda\)</span> will allow more complex models, thereby making the in-sample error smaller, on the other hand risking overfitting.</p>
-<p>As usual, we may take some function of the inputs <span class="math inline">\(\varphi_i(x)\)</span> and consider a linear function of these new features. Let us see what happens when we vary <span class="math inline">\(\lambda\)</span>, using polynomial <span class="math inline">\(\varphi\)</span> of maximum degree 5.</p>
-<div class="figure" style="text-align: center"><span id="fig:inOutSampleErrorSVM"></span>
-<img src="04-statisticalLearning_files/figure-html/inOutSampleErrorSVM-1.png" alt="Error vs. reciprocal of lambda." width="80%" />
+<div id="an-application-3" class="section level2">
+<h2><span class="header-section-number">5.5</span> An application</h2>
+<p>Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library Tensorflow. You may find the <a href="https://keras.rstudio.com">documentation</a> useful</p>
+<p>Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras. The first time you install Keras, you do.</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="5-5-an-application-3.html#cb181-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;keras&quot;</span>)</span>
+<span id="cb181-2"><a href="5-5-an-application-3.html#cb181-2"></a>keras<span class="op">::</span><span class="kw">install_keras</span>(<span class="dt">tensorflow =</span> <span class="st">&quot;cpu&quot;</span>)</span></code></pre></div>
+<p>After that, it should be enough to</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="5-5-an-application-3.html#cb182-1"></a><span class="kw">library</span>(keras)</span></code></pre></div>
+<p>The MNIST database is already divided in a training and a test set</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="5-5-an-application-3.html#cb183-1"></a>mnist &lt;-<span class="st"> </span><span class="kw">dataset_mnist</span>()</span>
+<span id="cb183-2"><a href="5-5-an-application-3.html#cb183-2"></a></span>
+<span id="cb183-3"><a href="5-5-an-application-3.html#cb183-3"></a>x_train &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>x</span>
+<span id="cb183-4"><a href="5-5-an-application-3.html#cb183-4"></a>y_train &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>y</span>
+<span id="cb183-5"><a href="5-5-an-application-3.html#cb183-5"></a>x_test &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>x</span>
+<span id="cb183-6"><a href="5-5-an-application-3.html#cb183-6"></a>y_test &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>y</span></code></pre></div>
+Let us see what the pictures look like.
+<div class="figure" style="text-align: center"><span id="fig:mnist1"></span>
+<img src="05-beyondLinearity_files/figure-html/mnist1-1.png" alt="Examples from MNIST" width="80%" />
 <p class="caption">
-Figure 4.14: Error vs. reciprocal of lambda.
+Figure 5.7: Examples from MNIST
 </p>
 </div>
-<p>We see from the picture that <span class="math inline">\(\lambda\)</span> controls the complexity of the model. When <span class="math inline">\(\lambda\)</span> is large (<span class="math inline">\(1/\lambda\)</span> small), the in-sample and out-of-sample errors are similar and as <span class="math inline">\(\lambda\)</span> becomes smaller, the in-sample error becomes smaller, but the difference between the errors are larger.</p>
-<p>With this development, we do not need to limit the complexity of the class of function <span class="math inline">\(\mathcal H\)</span>, since this is done by choosing <span class="math inline">\(\lambda\)</span>. In fact, we can in some cases even choose <span class="math inline">\(\mathcal H\)</span> to be an infinite dimensional space of functions.</p>
-<p>It turns out that the solution to the optimization problem of SVM can be written as
-<span class="math display">\[
-f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle x,x_i  \rangle,
-\]</span>
-where we define the inner product of two points <span class="math inline">\(x\)</span> and <span class="math inline">\(\tilde x\)</span> as,
-<span class="math display">\[
-\langle x,\tilde  x \rangle = \sum_{j=1}^p x_j\tilde x_j.
-\]</span>
-If we now instead consider the input features <span class="math inline">\(\varphi(x) = (\varphi_1(x),\ldots,\varphi_M(x))\)</span> and functions of the form
-<span class="math display">\[
-f(x) = \varphi(x)^T\beta + \beta_0,
-\]</span>
-in the same way as above, the SVM classifier is
-<span class="math display">\[
-f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle \varphi(x),\varphi(x_i)  \rangle.
-\]</span>
-We then see that the features <span class="math inline">\(\varphi\)</span> only appears in the inner product. So it is enough if we specify the function
-<span class="math display">\[
-K(x,x_i):= \langle \varphi(x),\varphi(x_i)  \rangle,
-\]</span>
-which is called a Kernel. We then write
-<span class="math display">\[
-f(x) = \beta_0 + \sum_{i=1}^n\alpha_iK(x,x_i).
-\]</span>
-An important point here is that the dimension of <span class="math inline">\(\varphi\)</span>, <span class="math inline">\(M\)</span>, does not appear here. The sum is over (at most) <span class="math inline">\(n\)</span> terms, even if let <span class="math inline">\(M\to\infty\)</span>.</p>
-<p>In practice, we therefore specify the kernel and not the features. Two examples of kernels are the polynomial kernel
-<span class="math display">\[
-K(x,\tilde x) = (1+\sum_{i=1}^px_i\tilde x_i)^d,
-\]</span>
-and the radial basis kernel,
-<span class="math display">\[
-K(x,\tilde x) = \exp\left( -\gamma  \sum_{i=1}^p (x_i-\tilde x_i)^2\right).
-\]</span>
-Let us try the radial basis function kernel on our data set.</p>
-<div class="figure" style="text-align: center"><span id="fig:radialBasisSVM"></span>
-<img src="04-statisticalLearning_files/figure-html/radialBasisSVM-1.png" alt="Training data a radial basis SVM classification" width="80%" />
+<p>Each image is represented as a 28x28 matrix of pixel values between 0 and 255. We reshape each matrix in to a vector and scale the pixel value so that it is between 0 and 1.</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="5-5-an-application-3.html#cb184-1"></a><span class="kw">dim</span>(x_train) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_train), <span class="dv">784</span>)</span>
+<span id="cb184-2"><a href="5-5-an-application-3.html#cb184-2"></a><span class="kw">dim</span>(x_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_test), <span class="dv">784</span>)</span>
+<span id="cb184-3"><a href="5-5-an-application-3.html#cb184-3"></a></span>
+<span id="cb184-4"><a href="5-5-an-application-3.html#cb184-4"></a>x_train &lt;-<span class="st"> </span>x_train <span class="op">/</span><span class="st"> </span><span class="dv">255</span></span>
+<span id="cb184-5"><a href="5-5-an-application-3.html#cb184-5"></a>x_test &lt;-<span class="st"> </span>x_test <span class="op">/</span><span class="st"> </span><span class="dv">255</span></span></code></pre></div>
+<p>The <span class="math inline">\(y\)</span> variables are given as an integer between 0 and 9. We transform it to a vector of dummy variables.</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="5-5-an-application-3.html#cb185-1"></a>y_train &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(y_train, <span class="dv">10</span>)</span>
+<span id="cb185-2"><a href="5-5-an-application-3.html#cb185-2"></a>y_test &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(y_test, <span class="dv">10</span>)</span></code></pre></div>
+<p>Now we specify a 2-layer NN with Relu activation in the hidden layer and softmax in the last layer.</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="5-5-an-application-3.html#cb186-1"></a>model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()</span>
+<span id="cb186-2"><a href="5-5-an-application-3.html#cb186-2"></a>model <span class="op">%&gt;%</span></span>
+<span id="cb186-3"><a href="5-5-an-application-3.html#cb186-3"></a><span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">50</span>, <span class="dt">activation =</span> <span class="st">&quot;relu&quot;</span>, <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">784</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb186-4"><a href="5-5-an-application-3.html#cb186-4"></a><span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">&quot;softmax&quot;</span>)</span></code></pre></div>
+<p>We compile the model by specifying the loss and the optimization method.</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="5-5-an-application-3.html#cb187-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(</span>
+<span id="cb187-2"><a href="5-5-an-application-3.html#cb187-2"></a>  <span class="dt">loss =</span> <span class="st">&quot;categorical_crossentropy&quot;</span>,</span>
+<span id="cb187-3"><a href="5-5-an-application-3.html#cb187-3"></a>  <span class="dt">optimizer =</span> <span class="kw">optimizer_rmsprop</span>(),</span>
+<span id="cb187-4"><a href="5-5-an-application-3.html#cb187-4"></a>  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&quot;accuracy&quot;</span>)</span>
+<span id="cb187-5"><a href="5-5-an-application-3.html#cb187-5"></a>)</span></code></pre></div>
+<p>Here, cross entropy loss is just the negative of a multinomial log likelihood. The optimizer, RMSprop, is a way of choosing the learning rate adaptively. Now we train the NN.</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="5-5-an-application-3.html#cb188-1"></a>history &lt;-<span class="st"> </span>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(</span>
+<span id="cb188-2"><a href="5-5-an-application-3.html#cb188-2"></a>  x_train, y_train,</span>
+<span id="cb188-3"><a href="5-5-an-application-3.html#cb188-3"></a>  <span class="dt">epochs =</span> <span class="dv">10</span>, <span class="dt">batch_size =</span> <span class="dv">128</span>,</span>
+<span id="cb188-4"><a href="5-5-an-application-3.html#cb188-4"></a>  <span class="dt">validation_split =</span> <span class="fl">0.2</span></span>
+<span id="cb188-5"><a href="5-5-an-application-3.html#cb188-5"></a>)</span></code></pre></div>
+<p>Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called early stopping.</p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:mnistHistory"></span>
+<img src="05-beyondLinearity_files/figure-html/mnistHistory-1.png" alt="Training and validation loss/accuracy for each epoch" width="80%" />
 <p class="caption">
-Figure 4.15: Training data a radial basis SVM classification
+Figure 5.8: Training and validation loss/accuracy for each epoch
 </p>
 </div>
-<p>This now has an in-sample error of 0.275 and out-of-sample error 0.255555</p>
+<p>We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="5-5-an-application-3.html#cb190-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test,<span class="dt">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>##      loss  accuracy 
+## 0.1021595 0.9704000</code></pre>
+The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
+<div class="figure" style="text-align: center"><span id="fig:mnist2"></span>
+<img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />
+<p class="caption">
+Figure 5.9: Predictions on the test set
+</p>
 </div>
+
+<div id="refs" class="references">
+<div>
+<p>Efron, Bradley, and Trevor Hastie. 2016. <em>Computer Age Statistical Inference</em>. Vol. 5. Cambridge University Press.</p>
+</div>
+<div>
+<p>Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations of Machine Learning</em>. MIT press.</p>
+</div>
+</div>
+</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="4-5-vc-dimension.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4-7-bias-variance-decomposition.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5-4-stochastic-gradient-descent.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

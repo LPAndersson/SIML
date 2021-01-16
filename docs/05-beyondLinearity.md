@@ -249,7 +249,7 @@ The composition of two functions $f_1$ and $f_2$ is the function $f_1(f_2(x))$. 
 
 For more on backpropogation and a visualization of neural network, I recommend this [video series](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi).
 
-## An application VI
+## An application
 
 Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library Tensorflow. You may find the [documentation](https://keras.rstudio.com) useful
 
@@ -338,7 +338,7 @@ model %>% evaluate(x_test, y_test,verbose = 0)
 
 ```
 ##      loss  accuracy 
-## 0.1079757 0.9691000
+## 0.1021595 0.9704000
 ```
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center">

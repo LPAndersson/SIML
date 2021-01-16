@@ -373,7 +373,7 @@ We can plot the histogram of the samples against the density.
 <img src="02-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" />
 
 
-## An application III
+## An application
 <!-- Taken from http://www2.geog.ucl.ac.uk/~mdisney/teaching/GEOGG121/sivia_skilling/mterop_hastings.pdf -->
 
 Here we consider the Bayesian probit model as an example. The data generating model is

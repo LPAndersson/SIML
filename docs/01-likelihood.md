@@ -733,7 +733,7 @@ rightCILimit
 
 Again, in this particular example, the two intervals are the same.
 
-## An application I
+## An application
 Here we present an application of what we have learned in this chapter.
 
 
@@ -771,14 +771,17 @@ s <- function(x) {
   exp(x) / (exp(x) + 1)
 }
 
-logL <- function(beta, x, y) {
-  s <- s(x * beta)
-  sum(y * log(s) + (1 - y) * log(1 - s))
+logLFcns <- function(data){
+  function(beta){
+    x <- data$x
+    y <- data$y
+    s <- s(data$x * beta)
+    
+    sum(y * log(s) + (1 - y) * log(1 - s))
+  }
 }
 
-logLOurSample <- Vectorize(
-  function(beta) { logL(beta, data.df$x, data.df$y) },
-  "beta")
+logLn <- Vectorize(logLFcns(data.df))
 ```
 To maximize the likelihood there are now two options. Either we ask the computer to solve
 $$
@@ -787,13 +790,19 @@ $$
 or we calculate and solve $l'(\beta)=0$. For practice we do both ways here.
 
 ```r
-optimResult = optimize(logLOurSample, c(0,3), maximum = TRUE)
-betahat <- optimResult$maximum
+optimResult <- optim(1.0, 
+            logLn,
+            method = "Brent", 
+            lower = 0.0, 
+            upper = 3.0,
+            control = list(fnscale = -1.0))
+
+betahat <- optimResult$par
 betahat
 ```
 
 ```
-## [1] 1.791579
+## [1] 1.79158
 ```
 For the second way we need
 \begin{align}
@@ -805,16 +814,18 @@ In R:
 ```r
 sp <- function(x){ exp(x)/(1+exp(x))^2 }
 
-logLp <- function(beta,x,y){
-  s <- s(x*beta)
-  sp <- sp(x*beta)
-  sum( -x*(1-y)*sp/(1-s)+x*y*sp/s )
+logLpFcns <- function(data){
+  function(beta){
+    s <- s(data$x * beta)
+    sp <- sp(data$x * beta)
+    
+    sum( -data$x * (1-data$y) * sp / (1-s) + data$x * data$y * sp / s )
+  }
 }
 
-logLpOurSample <- Vectorize(function(beta){ logLp(beta, data.df$x, data.df$y) },
-                            "beta")
+logLp <- Vectorize( logLpFcns( data.df ) )
 
-rootResults <- uniroot(logLpOurSample, interval = c(0,3))
+rootResults <- uniroot(logLp, interval = c(0,3))
 rootResults$root
 ```
 
@@ -838,7 +849,7 @@ Now we turn to hypothesis testing. Let us say we want to test $H_0: \beta = 2$ a
 
 ```r
 lr <- function(beta0){
-  2*(logLOurSample(betahat) - logLOurSample(beta0))
+  2*(logLn(betahat) - logLn(beta0))
 }
 lr(2.0)
 ```
@@ -860,13 +871,13 @@ Next we do a Wald's test. For this we need an estimate of the standard deviation
 
 ```r
 observedFisherInfo <- function(beta){
-  drop(-pracma::hessian(logLOurSample,beta))
+  drop(-pracma::hessian(logLn,beta))
 }
 observedFisherInfo(betahat)
 ```
 
 ```
-## [1] 72.6459
+## [1] 72.64589
 ```
 Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
 $$
@@ -876,24 +887,31 @@ Implemented in R:
 
 ```r
 spp <- function(x){ -exp(x)*(exp(x)-1)/(exp(x)+1)^3 }
-logLpp <- function(beta,x,y){
-  s <- s(x*beta)
-  sp <- sp(x*beta)
-  spp <- spp(x*beta)
 
-  sum( (1-y)*(-x^2*sp^2/(1-s)^2 - x^2*spp/(1-s))+y*(-x^2*sp^2/s^2 + x^2*spp/s) )
+logLppFcns <- function(data){
+  function(beta){
+    x <- data$x
+    y <- data$y
+    
+    s <- s(x*beta)
+    sp <- sp(x*beta)
+    spp <- spp(x*beta)
+
+    sum( (1-y)*(-x^2*sp^2/(1-s)^2 - x^2*spp/(1-s))+y*(-x^2*sp^2/s^2 + x^2*spp/s) )
+  }
 }
-logLppOurSample <- Vectorize( function(beta){ logLpp(beta, data.df$x, data.df$y) },
-                            "beta")
+
+logLpp <- Vectorize( logLppFcns(data.df))
 
 observedFisherInfo <- function(beta){
-  -logLppOurSample(beta)
+  -logLpp(beta)
 }
+
 observedFisherInfo(betahat)
 ```
 
 ```
-## [1] 72.64591
+## [1] 72.64589
 ```
 Recall that Wald's test statistic is standard normal under $H_0$. So we may calculate the p-value:
 
@@ -905,14 +923,14 @@ zWald <- function(beta0){
 ```
 
 ```
-## [1] 0.07566311
+## [1] 0.07566354
 ```
 
 We might also do a Score test. Here, all we need is $l'$ and $l''$, which we have already calculated. The score statistic is again standard normal under $H_0$.
 
 ```r
 zScore <- function(beta0){
-  abs(pracma::grad(logLOurSample,beta0)/sqrt(observedFisherInfo(beta0)))
+  abs(pracma::grad(logLn,beta0)/sqrt(observedFisherInfo(beta0)))
 }
 2 * ( 1 - pnorm(zScore(2.0) ) )
 ```
@@ -932,7 +950,7 @@ leftCILimit
 ```
 
 ```
-## [1] 1.561624
+## [1] 1.561625
 ```
 
 ```r

@@ -943,7 +943,7 @@ CV_{(k)} = \frac{1}{k}\sum_{i=1}^k MSE_i.
 $$
 In practice usually $k=5$ or $k=10$ is used.
 
-## An application IV
+## An application I
 
 We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.
 
@@ -1069,7 +1069,7 @@ sqrt( mean((predictions - test.data$Salary)^2) )
 ```
 We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.
 
-## An application V
+## An application II
 
 Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations
 

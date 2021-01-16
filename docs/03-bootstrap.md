@@ -401,7 +401,7 @@ sd(tstar)
 ```
 
 
-## An application II
+## An application
 
 Here we present an application of what we have learned in this chapter. The application is based on an example in @efron2016computer.
 

@@ -265,7 +265,7 @@ Figure 5.8: Training and validation loss/accuracy for each epoch
 <p>We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.</p>
 <div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="5-5-an-application-vi.html#cb190-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test,<span class="dt">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>##      loss  accuracy 
-## 0.1079757 0.9691000</code></pre>
+## 0.1182565 0.9668000</code></pre>
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center"><span id="fig:mnist2"></span>
 <img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />
