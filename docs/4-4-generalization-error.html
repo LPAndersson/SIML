@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-01-16" />
+<meta name="date" content="2021-02-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -152,20 +152,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
 <li class="chapter" data-level="1.13" data-path="1-13-review-questions.html"><a href="1-13-review-questions.html"><i class="fa fa-check"></i><b>1.13</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="2-bayesian-statistics-draft.html"><a href="2-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="2.1" data-path="2-1-some-basic-decision-theory.html"><a href="2-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics.html"><a href="2-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics-1.html"><a href="2-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="2.3" data-path="2-3-choosing-prior.html"><a href="2-3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="2.4" data-path="2-4-multiparameter-problems.html"><a href="2-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-markov-chain-monte-carlo.html"><a href="2-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
 <li class="chapter" data-level="2.6" data-path="2-6-an-application-1.html"><a href="2-6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
+<li class="chapter" data-level="2.7" data-path="2-7-summary-1.html"><a href="2-7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
+<li class="chapter" data-level="2.8" data-path="2-8-review-questions-1.html"><a href="2-8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-parametric-vs-non-parametric.html"><a href="3-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
 <li class="chapter" data-level="3.2" data-path="3-2-non-parametric-estimation.html"><a href="3-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-bootstrap.html"><a href="3-3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-parametric-bootstrap.html"><a href="3-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>3.4</b> Parametric bootstrap</a></li>
 <li class="chapter" data-level="3.5" data-path="3-5-an-application-2.html"><a href="3-5-an-application-2.html"><i class="fa fa-check"></i><b>3.5</b> An application</a></li>
+<li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+<li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
@@ -225,57 +229,57 @@ Figure 4.8: Training data and classification rule
 </p>
 </div>
 <p>We can now calculate the in-sample error:</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="4-4-generalization-error.html#cb125-1"></a>H &lt;-<span class="st"> </span><span class="cf">function</span>(a,b){</span>
-<span id="cb125-2"><a href="4-4-generalization-error.html#cb125-2"></a>  <span class="cf">function</span>(x1,x2){</span>
-<span id="cb125-3"><a href="4-4-generalization-error.html#cb125-3"></a>    <span class="cf">if</span>(a<span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span>b<span class="op">*</span>x2 <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="st">&quot;1&quot;</span></span>
-<span id="cb125-4"><a href="4-4-generalization-error.html#cb125-4"></a>    <span class="cf">else</span> <span class="st">&quot;-1&quot;</span></span>
-<span id="cb125-5"><a href="4-4-generalization-error.html#cb125-5"></a>  }</span>
-<span id="cb125-6"><a href="4-4-generalization-error.html#cb125-6"></a>}</span>
-<span id="cb125-7"><a href="4-4-generalization-error.html#cb125-7"></a></span>
-<span id="cb125-8"><a href="4-4-generalization-error.html#cb125-8"></a>h &lt;-<span class="st"> </span><span class="kw">H</span>(<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb125-9"><a href="4-4-generalization-error.html#cb125-9"></a></span>
-<span id="cb125-10"><a href="4-4-generalization-error.html#cb125-10"></a>error &lt;-<span class="st"> </span><span class="cf">function</span>(data, classifier){</span>
-<span id="cb125-11"><a href="4-4-generalization-error.html#cb125-11"></a>  missClass &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb125-12"><a href="4-4-generalization-error.html#cb125-12"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</span>
-<span id="cb125-13"><a href="4-4-generalization-error.html#cb125-13"></a>    x1 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x1</span>
-<span id="cb125-14"><a href="4-4-generalization-error.html#cb125-14"></a>    x2 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x2</span>
-<span id="cb125-15"><a href="4-4-generalization-error.html#cb125-15"></a>    y &lt;-data[i,]<span class="op">$</span>y</span>
-<span id="cb125-16"><a href="4-4-generalization-error.html#cb125-16"></a>    <span class="cf">if</span>(<span class="kw">classifier</span>(x1,x2) <span class="op">!=</span><span class="st"> </span>y )</span>
-<span id="cb125-17"><a href="4-4-generalization-error.html#cb125-17"></a>      missClass &lt;-<span class="st"> </span>missClass <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb125-18"><a href="4-4-generalization-error.html#cb125-18"></a>  }</span>
-<span id="cb125-19"><a href="4-4-generalization-error.html#cb125-19"></a>  missClass<span class="op">/</span><span class="kw">nrow</span>(data)</span>
-<span id="cb125-20"><a href="4-4-generalization-error.html#cb125-20"></a>}</span>
-<span id="cb125-21"><a href="4-4-generalization-error.html#cb125-21"></a></span>
-<span id="cb125-22"><a href="4-4-generalization-error.html#cb125-22"></a><span class="kw">error</span>(data.df, h)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="4-4-generalization-error.html#cb129-1"></a>H &lt;-<span class="st"> </span><span class="cf">function</span>(a,b){</span>
+<span id="cb129-2"><a href="4-4-generalization-error.html#cb129-2"></a>  <span class="cf">function</span>(x1,x2){</span>
+<span id="cb129-3"><a href="4-4-generalization-error.html#cb129-3"></a>    <span class="cf">if</span>(a<span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span>b<span class="op">*</span>x2 <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="st">&quot;1&quot;</span></span>
+<span id="cb129-4"><a href="4-4-generalization-error.html#cb129-4"></a>    <span class="cf">else</span> <span class="st">&quot;-1&quot;</span></span>
+<span id="cb129-5"><a href="4-4-generalization-error.html#cb129-5"></a>  }</span>
+<span id="cb129-6"><a href="4-4-generalization-error.html#cb129-6"></a>}</span>
+<span id="cb129-7"><a href="4-4-generalization-error.html#cb129-7"></a></span>
+<span id="cb129-8"><a href="4-4-generalization-error.html#cb129-8"></a>h &lt;-<span class="st"> </span><span class="kw">H</span>(<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb129-9"><a href="4-4-generalization-error.html#cb129-9"></a></span>
+<span id="cb129-10"><a href="4-4-generalization-error.html#cb129-10"></a>error &lt;-<span class="st"> </span><span class="cf">function</span>(data, classifier){</span>
+<span id="cb129-11"><a href="4-4-generalization-error.html#cb129-11"></a>  missClass &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb129-12"><a href="4-4-generalization-error.html#cb129-12"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</span>
+<span id="cb129-13"><a href="4-4-generalization-error.html#cb129-13"></a>    x1 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x1</span>
+<span id="cb129-14"><a href="4-4-generalization-error.html#cb129-14"></a>    x2 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x2</span>
+<span id="cb129-15"><a href="4-4-generalization-error.html#cb129-15"></a>    y &lt;-data[i,]<span class="op">$</span>y</span>
+<span id="cb129-16"><a href="4-4-generalization-error.html#cb129-16"></a>    <span class="cf">if</span>(<span class="kw">classifier</span>(x1,x2) <span class="op">!=</span><span class="st"> </span>y )</span>
+<span id="cb129-17"><a href="4-4-generalization-error.html#cb129-17"></a>      missClass &lt;-<span class="st"> </span>missClass <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb129-18"><a href="4-4-generalization-error.html#cb129-18"></a>  }</span>
+<span id="cb129-19"><a href="4-4-generalization-error.html#cb129-19"></a>  missClass<span class="op">/</span><span class="kw">nrow</span>(data)</span>
+<span id="cb129-20"><a href="4-4-generalization-error.html#cb129-20"></a>}</span>
+<span id="cb129-21"><a href="4-4-generalization-error.html#cb129-21"></a></span>
+<span id="cb129-22"><a href="4-4-generalization-error.html#cb129-22"></a><span class="kw">error</span>(data.df, h)</span></code></pre></div>
 <pre><code>## [1] 0.32</code></pre>
 <p>In this case, <span class="math inline">\(h\)</span> is not a function of the training data so the in-sample error is an unbiased estimate of the out-of-sample error. Since we know the distribution of <span class="math inline">\(X,Y\)</span> we can calculate the out-of-sample error by simulation.</p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="4-4-generalization-error.html#cb127-1"></a>n.samples &lt;-<span class="st"> </span><span class="fl">1e4</span></span>
-<span id="cb127-2"><a href="4-4-generalization-error.html#cb127-2"></a></span>
-<span id="cb127-3"><a href="4-4-generalization-error.html#cb127-3"></a>data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb127-4"><a href="4-4-generalization-error.html#cb127-4"></a></span>
-<span id="cb127-5"><a href="4-4-generalization-error.html#cb127-5"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</span>
-<span id="cb127-6"><a href="4-4-generalization-error.html#cb127-6"></a>  <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>)<span class="op">&gt;</span><span class="fl">0.5</span>) {</span>
-<span id="cb127-7"><a href="4-4-generalization-error.html#cb127-7"></a>    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.p, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.p))</span>
-<span id="cb127-8"><a href="4-4-generalization-error.html#cb127-8"></a>    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</span>
-<span id="cb127-9"><a href="4-4-generalization-error.html#cb127-9"></a>  }</span>
-<span id="cb127-10"><a href="4-4-generalization-error.html#cb127-10"></a>  <span class="cf">else</span>{</span>
-<span id="cb127-11"><a href="4-4-generalization-error.html#cb127-11"></a>    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.n, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.n))</span>
-<span id="cb127-12"><a href="4-4-generalization-error.html#cb127-12"></a>    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</span>
-<span id="cb127-13"><a href="4-4-generalization-error.html#cb127-13"></a>  }</span>
-<span id="cb127-14"><a href="4-4-generalization-error.html#cb127-14"></a>}</span>
-<span id="cb127-15"><a href="4-4-generalization-error.html#cb127-15"></a></span>
-<span id="cb127-16"><a href="4-4-generalization-error.html#cb127-16"></a>data.test.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</span>
-<span id="cb127-17"><a href="4-4-generalization-error.html#cb127-17"></a><span class="kw">colnames</span>(data.test.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
-<span id="cb127-18"><a href="4-4-generalization-error.html#cb127-18"></a>data.test.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.test.df<span class="op">$</span>y)</span>
-<span id="cb127-19"><a href="4-4-generalization-error.html#cb127-19"></a><span class="kw">error</span>(data.test.df, h)</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="4-4-generalization-error.html#cb131-1"></a>n.samples &lt;-<span class="st"> </span><span class="fl">1e4</span></span>
+<span id="cb131-2"><a href="4-4-generalization-error.html#cb131-2"></a></span>
+<span id="cb131-3"><a href="4-4-generalization-error.html#cb131-3"></a>data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb131-4"><a href="4-4-generalization-error.html#cb131-4"></a></span>
+<span id="cb131-5"><a href="4-4-generalization-error.html#cb131-5"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</span>
+<span id="cb131-6"><a href="4-4-generalization-error.html#cb131-6"></a>  <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>)<span class="op">&gt;</span><span class="fl">0.5</span>) {</span>
+<span id="cb131-7"><a href="4-4-generalization-error.html#cb131-7"></a>    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.p, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.p))</span>
+<span id="cb131-8"><a href="4-4-generalization-error.html#cb131-8"></a>    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</span>
+<span id="cb131-9"><a href="4-4-generalization-error.html#cb131-9"></a>  }</span>
+<span id="cb131-10"><a href="4-4-generalization-error.html#cb131-10"></a>  <span class="cf">else</span>{</span>
+<span id="cb131-11"><a href="4-4-generalization-error.html#cb131-11"></a>    sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu.n, <span class="dt">sigma =</span> <span class="kw">diag</span>(sd.n))</span>
+<span id="cb131-12"><a href="4-4-generalization-error.html#cb131-12"></a>    data.matrix[i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</span>
+<span id="cb131-13"><a href="4-4-generalization-error.html#cb131-13"></a>  }</span>
+<span id="cb131-14"><a href="4-4-generalization-error.html#cb131-14"></a>}</span>
+<span id="cb131-15"><a href="4-4-generalization-error.html#cb131-15"></a></span>
+<span id="cb131-16"><a href="4-4-generalization-error.html#cb131-16"></a>data.test.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</span>
+<span id="cb131-17"><a href="4-4-generalization-error.html#cb131-17"></a><span class="kw">colnames</span>(data.test.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
+<span id="cb131-18"><a href="4-4-generalization-error.html#cb131-18"></a>data.test.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.test.df<span class="op">$</span>y)</span>
+<span id="cb131-19"><a href="4-4-generalization-error.html#cb131-19"></a><span class="kw">error</span>(data.test.df, h)</span></code></pre></div>
 <pre><code>## [1] 0.3548</code></pre>
 <p>Using Hoeffding’s inequality, we can give a guarantee of the difference between the in-sample and the out-of-sample error. Let us review: A pair <span class="math inline">\(X,Y\)</span> is drawn from some distribution. We then apply the function <span class="math inline">\(h\)</span> and with some probability we make an error on the classification, this probability is <span class="math inline">\(E_{out}(h)\)</span> and corresponds to the probability <span class="math inline">\(p\)</span> in Hoeffding. What we have is a sample of size <span class="math inline">\(n\)</span> and an estimate <span class="math inline">\(E_{in}(h)\)</span> of the probability of an error. This corresponds to <span class="math inline">\(\bar Y_n\)</span> in Hoeffding. Therefore this situation is exactly like the Bernoulli experiment from the previous section. We can say that with probability at least <span class="math inline">\(1-\delta\)</span>,
 <span class="math display">\[
 E_{out}(h) \leq  E_{in}(h) + \sqrt{\frac{\ln \frac{2}{\delta}}{2n}}.
 \]</span>
 Let us say we want to have confidence 95%, i.e. <span class="math inline">\(\delta = 0.05\)</span>, we then have the generalization bound</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="4-4-generalization-error.html#cb129-1"></a>delta =<span class="st"> </span><span class="fl">0.05</span></span>
-<span id="cb129-2"><a href="4-4-generalization-error.html#cb129-2"></a><span class="kw">error</span>(data.df,h) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">log</span>(<span class="dv">2</span><span class="op">/</span>delta)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span><span class="kw">nrow</span>(data.df)))</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="4-4-generalization-error.html#cb133-1"></a>delta =<span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb133-2"><a href="4-4-generalization-error.html#cb133-2"></a><span class="kw">error</span>(data.df,h) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">log</span>(<span class="dv">2</span><span class="op">/</span>delta)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span><span class="kw">nrow</span>(data.df)))</span></code></pre></div>
 <pre><code>## [1] 0.5120646</code></pre>
 <p>
 Above we picked an <span class="math inline">\(h\)</span> without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where <span class="math inline">\(h\)</span> is chosen from some collection <span class="math inline">\(\mathcal H\)</span>. Let us first consider the case where <span class="math inline">\(\mathcal H\)</span> is finite, i.e. there is a finite number of functions <span class="math inline">\(h\)</span> in the collection. Call this number be <span class="math inline">\(|\mathcal H|\)</span>. The statement of the learning bound then becomes

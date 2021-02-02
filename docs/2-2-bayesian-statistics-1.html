@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.10 An application IV | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>2.2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.10 An application IV | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="2.2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.10 An application IV | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="2.2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-01-16" />
+<meta name="date" content="2021-02-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="4-9-model-selection.html"/>
-<link rel="next" href="4-11-an-application-v.html"/>
+<link rel="prev" href="2-1-some-basic-decision-theory.html"/>
+<link rel="next" href="2-3-choosing-prior.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -148,24 +148,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.8" data-path="1-8-walds-test.html"><a href="1-8-walds-test.html"><i class="fa fa-check"></i><b>1.8</b> Wald’s test</a></li>
 <li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
 <li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
-<li class="chapter" data-level="1.11" data-path="1-11-an-application-i.html"><a href="1-11-an-application-i.html"><i class="fa fa-check"></i><b>1.11</b> An application I</a></li>
+<li class="chapter" data-level="1.11" data-path="1-11-an-application.html"><a href="1-11-an-application.html"><i class="fa fa-check"></i><b>1.11</b> An application</a></li>
 <li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
 <li class="chapter" data-level="1.13" data-path="1-13-review-questions.html"><a href="1-13-review-questions.html"><i class="fa fa-check"></i><b>1.13</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="2-bayesian-statistics-draft.html"><a href="2-bayesian-statistics-draft.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics (draft)</a><ul>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a><ul>
 <li class="chapter" data-level="2.1" data-path="2-1-some-basic-decision-theory.html"><a href="2-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics.html"><a href="2-2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics-1.html"><a href="2-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="2.3" data-path="2-3-choosing-prior.html"><a href="2-3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
 <li class="chapter" data-level="2.4" data-path="2-4-multiparameter-problems.html"><a href="2-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
 <li class="chapter" data-level="2.5" data-path="2-5-markov-chain-monte-carlo.html"><a href="2-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
-<li class="chapter" data-level="2.6" data-path="2-6-an-application-iii.html"><a href="2-6-an-application-iii.html"><i class="fa fa-check"></i><b>2.6</b> An application III</a></li>
+<li class="chapter" data-level="2.6" data-path="2-6-an-application-1.html"><a href="2-6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
+<li class="chapter" data-level="2.7" data-path="2-7-summary-1.html"><a href="2-7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
+<li class="chapter" data-level="2.8" data-path="2-8-review-questions-1.html"><a href="2-8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap (draft)</a><ul>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a><ul>
 <li class="chapter" data-level="3.1" data-path="3-1-parametric-vs-non-parametric.html"><a href="3-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
 <li class="chapter" data-level="3.2" data-path="3-2-non-parametric-estimation.html"><a href="3-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-bootstrap.html"><a href="3-3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
 <li class="chapter" data-level="3.4" data-path="3-4-parametric-bootstrap.html"><a href="3-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>3.4</b> Parametric bootstrap</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-an-application-ii.html"><a href="3-5-an-application-ii.html"><i class="fa fa-check"></i><b>3.5</b> An application II</a></li>
+<li class="chapter" data-level="3.5" data-path="3-5-an-application-2.html"><a href="3-5-an-application-2.html"><i class="fa fa-check"></i><b>3.5</b> An application</a></li>
+<li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+<li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
@@ -177,15 +181,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.7" data-path="4-7-bias-variance-decomposition.html"><a href="4-7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
 <li class="chapter" data-level="4.8" data-path="4-8-regression-regularization.html"><a href="4-8-regression-regularization.html"><i class="fa fa-check"></i><b>4.8</b> Regression regularization</a></li>
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
-<li class="chapter" data-level="4.10" data-path="4-10-an-application-iv.html"><a href="4-10-an-application-iv.html"><i class="fa fa-check"></i><b>4.10</b> An application IV</a></li>
-<li class="chapter" data-level="4.11" data-path="4-11-an-application-v.html"><a href="4-11-an-application-v.html"><i class="fa fa-check"></i><b>4.11</b> An application V</a></li>
+<li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
+<li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
 <li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
-<li class="chapter" data-level="5.5" data-path="5-5-an-application-vi.html"><a href="5-5-an-application-vi.html"><i class="fa fa-check"></i><b>5.5</b> An application VI</a></li>
+<li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -206,99 +210,95 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="an-application-iv" class="section level2">
-<h2><span class="header-section-number">4.10</span> An application IV</h2>
-<p>We will use the Hitters data set from the ISL book and predict the salary of a Baseball player based on various covariates.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="4-10-an-application-iv.html#cb136-1"></a><span class="kw">library</span>(caret)</span>
-<span id="cb136-2"><a href="4-10-an-application-iv.html#cb136-2"></a><span class="kw">library</span>(ISLR)</span>
-<span id="cb136-3"><a href="4-10-an-application-iv.html#cb136-3"></a></span>
-<span id="cb136-4"><a href="4-10-an-application-iv.html#cb136-4"></a><span class="kw">data</span>(<span class="st">&quot;Hitters&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</span>
-<span id="cb136-5"><a href="4-10-an-application-iv.html#cb136-5"></a>Hitters &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Hitters)</span></code></pre></div>
-<p>Then we randomly split the data into a train and a test set. We keep 70% of the observations in the training set and the rest in the test set.</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="4-10-an-application-iv.html#cb137-1"></a><span class="kw">set.seed</span>(<span class="dv">3</span>)</span>
-<span id="cb137-2"><a href="4-10-an-application-iv.html#cb137-2"></a>training.samples &lt;-<span class="st"> </span>caret<span class="op">::</span><span class="kw">createDataPartition</span>(Hitters<span class="op">$</span>Salary, </span>
-<span id="cb137-3"><a href="4-10-an-application-iv.html#cb137-3"></a>                                               <span class="dt">p =</span> <span class="fl">0.7</span>, </span>
-<span id="cb137-4"><a href="4-10-an-application-iv.html#cb137-4"></a>                                               <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb137-5"><a href="4-10-an-application-iv.html#cb137-5"></a>train.data  &lt;-<span class="st"> </span>Hitters[training.samples, ]</span>
-<span id="cb137-6"><a href="4-10-an-application-iv.html#cb137-6"></a>test.data &lt;-<span class="st"> </span>Hitters[<span class="op">-</span>training.samples, ]</span></code></pre></div>
-<p>We then do linear regression and calculate the out-of-sample error</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="4-10-an-application-iv.html#cb138-1"></a>ls &lt;-<span class="st"> </span><span class="kw">lm</span>(Salary <span class="op">~</span>., <span class="dt">data =</span> train.data)</span>
-<span id="cb138-2"><a href="4-10-an-application-iv.html#cb138-2"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data)</span>
-<span id="cb138-3"><a href="4-10-an-application-iv.html#cb138-3"></a><span class="kw">sqrt</span>(<span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
-<pre><code>## [1] 367.6942</code></pre>
-<p>Next we fit a lasso using 10-fold CV.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="4-10-an-application-iv.html#cb140-1"></a>lambda.grid &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">length =</span> <span class="dv">100</span>)</span>
-<span id="cb140-2"><a href="4-10-an-application-iv.html#cb140-2"></a></span>
-<span id="cb140-3"><a href="4-10-an-application-iv.html#cb140-3"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb140-4"><a href="4-10-an-application-iv.html#cb140-4"></a>lasso &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
-<span id="cb140-5"><a href="4-10-an-application-iv.html#cb140-5"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
-<span id="cb140-6"><a href="4-10-an-application-iv.html#cb140-6"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>, <span class="dt">repeats =</span> <span class="dv">5</span>),</span>
-<span id="cb140-7"><a href="4-10-an-application-iv.html#cb140-7"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> <span class="dv">1</span>, <span class="dt">lambda =</span> lambda.grid)</span>
-<span id="cb140-8"><a href="4-10-an-application-iv.html#cb140-8"></a>)</span></code></pre></div>
-<p>We may plot the cross-validated error against the regularization parameter.</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="4-10-an-application-iv.html#cb141-1"></a><span class="kw">plot</span>(lasso)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:lassoPlot"></span>
-<img src="04-statisticalLearning_files/figure-html/lassoPlot-1.png" alt="Cross-validated error against the regularization parameter for Lasso." width="80%" />
+<div id="bayesian-statistics-1" class="section level2">
+<h2><span class="header-section-number">2.2</span> Bayesian statistics</h2>
+<p>In the previous section we saw that the difference between the frequentist methods and the Bayesian methods is that the frequentist averages over different samples while the Bayesian averages over different parameter values. The <em>Bayesian method</em> is therefore to assign a prior distribution <span class="math inline">\(p(\theta)\)</span> to the unknown parameter. This distribution reflects our belief about the parameter before we see the data.</p>
+<p>We model how data is generated by <span class="math inline">\(p(x\mid \theta)\)</span>. That is, the probability or density of obtaining a particular sample, conditioned on knowing <span class="math inline">\(\theta\)</span>.</p>
+We then calculate the <em>posterior distribution</em> of the parameter, given the observations
+<span class="math display">\[
+p(\theta \mid x) = \frac{p(x\mid \theta)p(\theta)}{p(x)}.
+\]</span>
+<p>
+Here <span class="math inline">\(p(x)\)</span> is the marginal density of the observed data. We can write it formally as
+</p>
+<span class="math display">\[
+p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
+\]</span>
+<p>
+However, note that since <span class="math inline">\(x\)</span> is fixed and we are interested in the distribution of <span class="math inline">\(\theta\)</span>, <span class="math inline">\(p(x)\)</span> can be regarded as a constant. Also, <span class="math inline">\(p(x\mid \theta)\)</span> is the likelihood, <span class="math inline">\(L(\theta)\)</span>. We may therefore write
+</p>
+
+<div class="note">
+<span class="math display">\[
+p(\theta\mid x) = c L(\theta)p(\theta) \propto L(\theta)p(\theta).
+\]</span>
+</div>
+
+<p>That is, the posterior is proportional to the likelihood times the prior. Another way to write this is by applying the logarithm.
+<span class="math display">\[
+\ln p(\theta\mid x) = l(\theta) + \ln p(\theta) + c
+\]</span>
+We see that the total information regarding <span class="math inline">\(\theta\)</span>, expressed as the posterior distribution, is a combination of the likelihood obtained from the observations and the knowledge before the observations, expressed in the prior distribution.</p>
+<p>Once we have the posterior, we can keep it as it is. Perhaps <span class="math inline">\(\theta\)</span> is one part of a larger model and by using the full distribution we are able to take full account of the uncertainty. But we might also summarize the posterior in the posterior mean
+<span class="math display">\[
+\bar \theta = \int \theta p(\theta\mid x)d\theta,
+\]</span>
+or construct a <span class="math inline">\(1-\alpha\)</span> posterior interval That is <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> such that
+<span class="math display">\[
+P\left( a\leq \theta \leq b \right) = \int_a^b p(\theta\mid x)d\theta = 1-\alpha.
+\]</span>
+We might also want to predict a new observation <span class="math inline">\(x^\text{new}\)</span>,
+<span class="math display">\[
+p(x^\text{new}\mid x) = \int p(x^\text{new}\mid \theta) p(\theta\mid x)d\theta.
+\]</span></p>
+<p>
+Let us examine a simple example: We flip a coin <span class="math inline">\(n\)</span> times and we want to make Bayesian inference regarding the probability of heads, <span class="math inline">\(\theta\)</span>. The first step is to decide on the data generating model. It seems natural to assume that <span class="math inline">\(X_1,\ldots X_n \overset{iid}\sim \mathsf{Bernoulli}(\theta)\)</span>. The second step is to decide on a prior distribution of <span class="math inline">\(\theta\)</span>. Since <span class="math inline">\(\theta\)</span> represents a probability, the prior distribution should be confined to <span class="math inline">\([0,1]\)</span>. A popular choice of prior distribution on probabilities is the beta distribution. It has density,
+</p>
+<span class="math display">\[
+p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 0\leq \theta\leq 1,
+\]</span>
+<p>
+where <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(\beta&gt;0\)</span> are parameters. Also, <span class="math inline">\(B(\alpha,\beta)\)</span> is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>.
+</p>
+<div class="figure" style="text-align: center"><span id="fig:betaDist"></span>
+<img src="02-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
 <p class="caption">
-Figure 4.22: Cross-validated error against the regularization parameter for Lasso.
+Figure 2.1: Density of the beta distribution
 </p>
 </div>
-<p>If we print the parameters, we see that some of them have been set to 0.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="4-10-an-application-iv.html#cb142-1"></a><span class="kw">coef</span>(lasso<span class="op">$</span>finalModel, lasso<span class="op">$</span>bestTune<span class="op">$</span>lambda)</span></code></pre></div>
-<pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
-##                         1
-## (Intercept)  -66.88333624
-## AtBat          .         
-## Hits           2.00894789
-## HmRun          .         
-## Runs           .         
-## RBI            0.63610478
-## Walks          3.46312810
-## Years          .         
-## CAtBat         .         
-## CHits          .         
-## CHmRun         0.01178261
-## CRuns          0.08620313
-## CRBI           0.51517895
-## CWalks         .         
-## LeagueN       29.48507342
-## DivisionW   -100.72607403
-## PutOuts        0.17109758
-## Assists       -0.06283794
-## Errors         .         
-## NewLeagueN     .</code></pre>
-<p>We calculate the out-of-sample error.</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="4-10-an-application-iv.html#cb144-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(lasso, test.data)</span>
-<span id="cb144-2"><a href="4-10-an-application-iv.html#cb144-2"></a><span class="kw">sqrt</span>(<span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>))</span></code></pre></div>
-<pre><code>## [1] 358.6614</code></pre>
-<p>An improvement over least squares. We might also try elastic-net.</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="4-10-an-application-iv.html#cb146-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="fl">2.5</span>, <span class="dt">length =</span> <span class="dv">100</span>)</span>
-<span id="cb146-2"><a href="4-10-an-application-iv.html#cb146-2"></a>alpha &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dt">length =</span> <span class="dv">10</span>)</span>
-<span id="cb146-3"><a href="4-10-an-application-iv.html#cb146-3"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb146-4"><a href="4-10-an-application-iv.html#cb146-4"></a>e.net &lt;-<span class="st"> </span><span class="kw">train</span>(</span>
-<span id="cb146-5"><a href="4-10-an-application-iv.html#cb146-5"></a>  Salary <span class="op">~</span>., <span class="dt">data =</span> train.data, <span class="dt">method =</span> <span class="st">&quot;glmnet&quot;</span>,</span>
-<span id="cb146-6"><a href="4-10-an-application-iv.html#cb146-6"></a>  <span class="dt">trControl =</span> <span class="kw">trainControl</span>(<span class="st">&quot;repeatedcv&quot;</span>, <span class="dt">number =</span> <span class="dv">10</span>, <span class="dt">repeats =</span> <span class="dv">5</span>),</span>
-<span id="cb146-7"><a href="4-10-an-application-iv.html#cb146-7"></a>  <span class="dt">tuneGrid =</span> <span class="kw">expand.grid</span>(<span class="dt">alpha =</span> alpha, <span class="dt">lambda =</span> lambda)</span>
-<span id="cb146-8"><a href="4-10-an-application-iv.html#cb146-8"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="4-10-an-application-iv.html#cb147-1"></a><span class="kw">plot</span>(e.net)</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:elasticNetPlot"></span>
-<img src="04-statisticalLearning_files/figure-html/elasticNetPlot-1.png" alt="Cross-validated error against the regularization parameter for elastic net" width="80%" />
+<p>We see from the figure that by changing <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> the beta prior can reflect different kinds of prior information. For example, <span class="math inline">\(\alpha = \beta = 1\)</span> is a uniform distribution, that is a prior that gives equal probability to any value of <span class="math inline">\(\theta\)</span>. On the other hand, <span class="math inline">\(\alpha =3\)</span>, <span class="math inline">\(\beta = 2\)</span> gives small probability to <span class="math inline">\(\theta\)</span> close to 0 and 1 and puts more probability to <span class="math inline">\(\theta&gt;0.5\)</span> than <span class="math inline">\(\theta &lt; 0.5\)</span>.</p>
+<p>Now let us calculate the posterior distribution of <span class="math inline">\(\theta\)</span> after observing <span class="math inline">\(x=(x_1,\ldots, x_n)\)</span>. First we need the likelihood of the observation
+<span class="math display">\[
+L(\theta) = \prod_{i=1}^n\theta^{x_i}(1-\theta)^{1-x_i} = \theta^{n\bar x}(1-\theta)^{n-n\bar x},
+\]</span>
+where <span class="math inline">\(n \bar x = \sum_i x_i\)</span>. Then the posterior is
+<span class="math display">\[
+p(\theta\mid x) \propto L(\theta)p(\theta) \propto \theta^{n\bar x}(1-\theta)^{n-n\bar x} \theta^{\alpha-1}(1-\theta)^{\beta-1} = \theta^{\alpha + n\bar x -1}(1-\theta)^{\beta + n - n\bar x -1},
+\]</span>
+we recognize this as a <span class="math inline">\(\mathsf{Beta}(\alpha+n\bar x, \beta+n-n\bar x)\)</span> distribution. In this situation, when the prior and posterior happen to be in the same family of distributions, the prior is said to be conjugate with respect to the model.</p>
+<p>From here we easily get that the mean of the posterior is
+<span class="math display">\[
+E\left[ \theta \mid x \right] = \frac{\alpha + n\bar x}{\alpha+\beta + n}.
+\]</span>
+It can be interesting to note here that as <span class="math inline">\(n\to \infty\)</span>, the above converges to <span class="math inline">\(\bar x\)</span>, i.e. for a large sample, the influence of the prior becomes small and the mean of the posterior is simply the MLE. If we wish to predict a new sample, we would calculate
+<span class="math display">\[
+p(x^\text{new} = 1 \mid x^n) = \int p(x^\text{new} = 1\mid \theta) p(\theta\mid x^n)d\theta = \int \theta p(\theta \mid x^n)d\theta = E\left[ \theta \mid x^n \right].
+\]</span>
+To make things more concrete, let us say that we observe <span class="math inline">\(\bar x = 0.3\)</span>. Note how the likelihood, and therefore also the posterior, is a function of data only through <span class="math inline">\(\bar x\)</span>. This is because <span class="math inline">\(\bar x\)</span> is a <em>sufficient statistic</em>. As an illustration, let us also choose <span class="math inline">\(\mathsf{Beta}(5.0, 2.0)\)</span> as the prior. Below we plot the prior, likelihood and posterior for <span class="math inline">\(n=10\)</span> and <span class="math inline">\(n=100\)</span>. Note how the posterior becomes more like the likelihood as the sample size increase.</p>
+<div class="figure" style="text-align: center"><span id="fig:bernoulliPosterior"></span>
+<img src="02-bayesian_files/figure-html/bernoulliPosterior-1.png" alt="Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)" width="80%" />
 <p class="caption">
-Figure 4.23: Cross-validated error against the regularization parameter for elastic net
+Figure 2.2: Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)
 </p>
 </div>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="4-10-an-application-iv.html#cb148-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(e.net, test.data)</span>
-<span id="cb148-2"><a href="4-10-an-application-iv.html#cb148-2"></a><span class="kw">sqrt</span>( <span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>Salary)<span class="op">^</span><span class="dv">2</span>) )</span></code></pre></div>
-<pre><code>## [1] 361.3435</code></pre>
-<p>We get a worse out-of-sample error. But we need to keep in mind that the number of observations in the test-set is not very large.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="4-9-model-selection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4-11-an-application-v.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2-1-some-basic-decision-theory.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2-3-choosing-prior.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -1,6 +1,12 @@
-# Bayesian statistics (draft)
+# Bayesian statistics
 
-In this chapter we introduce a different way of thinking about statistical inference, Bayesian statistics. The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.
+In this chapter we introduce a different way of thinking about statistical inference, Bayesian statistics. 
+
+The statistics that we have seen so far in this course, and also in previous courses, is called frequentist statistics. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behoviour of an estimator.
+
+Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the prior distribtution. After making the observations, that distribution is updated, using Bayes' formula, and we call the updated distribution the posterior distribution. The posterior distributin can the be used to construct point estimates of the parameter, intervals etc.
+
+The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.
 
 Readings for this chapter is:
 
@@ -14,7 +20,7 @@ AOS 24.1, 2, 4, 5 (not Gibbs).
 
 In this section we introduce *statistical decision theory*, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.
 
-<p>Consider a statistical model with a parameter $\theta\in\Theta$. Based on data $x$, we are going to make a *decision* $\delta(x)$. For example, the decision might be a point estimate $\delta(x)=\bar x$ or some interval estimator. To evaluate if our decision is good we have a loss function $l(\theta,\delta(x))$. It is the penalty of making decision $\delta(x)$ when the true parameter is $\theta$. In the continuous we might take squared loss</p>
+<p>Consider a statistical model with a parameter $\theta\in\Theta$. Based on data $x$, we are going to make a *decision* $\delta(x)$. For example, the decision might be a point estimate $\delta(x)=\bar x$ or some interval estimator. To evaluate if our decision is good we have a loss function $l(\theta,\delta(x))$. It is the penalty of making decision $\delta(x)$ when the true parameter is $\theta$. If $\theta$ is a real-valued parameter we might take squared loss</p>
 $$
 l(\theta,\delta(x)) = (\theta-\delta(x))^2,
 $$
@@ -25,7 +31,7 @@ l(\theta,\delta(x)) =\begin{cases}
 1\text{ if } \theta\neq \delta(x).
 \end{cases}
 $$
-<p>We would like to choose $\delta$ such that the loss is as small as possible. However, the loss depends on both the data $x$ and the parameter $\theta$ and thus comparison between different decisions becomes complicated. Instead we calculate the *risk* associated with a particular decision.</p>
+<p>We would like to choose $\delta$ such that the loss is as small as possible. However, the loss depends on both the data $x$ and the parameter $\theta$ and thus a comparison between different decisions becomes complicated. Instead we calculate the *risk* associated with a particular decision.</p>
 \BeginKnitrBlock{note}<div class="note">The risk is defined as
 $$
 R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
@@ -83,7 +89,7 @@ $$
 $$
 p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
 $$
-<p>However, note that as $x$ is fixed and we are interested in the distribution of $\theta$, $p(x)$ can be regarded as a constant. Also, $p(x\mid \theta)$ is the likelihood, $L(\theta)$. We therefore may write</p>
+<p>However, note that since $x$ is fixed and we are interested in the distribution of $\theta$, $p(x)$ can be regarded as a constant. Also, $p(x\mid \theta)$ is the likelihood, $L(\theta)$. We may therefore write</p>
 \BeginKnitrBlock{note}<div class="note">$$
 p(\theta\mid x) = c L(\theta)p(\theta) \propto L(\theta)p(\theta).
 $$</div>\EndKnitrBlock{note}
@@ -106,11 +112,11 @@ $$
 p(x^\text{new}\mid x) = \int p(x^\text{new}\mid \theta) p(\theta\mid x)d\theta.
 $$
 
-<p>Let us examine a simple example: We flip a coin $n$ times and we want to make Bayesian inference regarding the probability of head, $p$. The first step is to decide on the data generating model. It seems natural to assume that $X_1,\ldots X_n \overset{iid}\sim \mathsf{Bernoulli}(\theta)$. The second step is to decide on a prior distribution of $\theta$. Since $\theta$ represents a probability, the prior distribution should be confined to $[0,1]$. A popular choice of prior distribution on probabilities is the beta distribution. It has density,</p>
+<p>Let us examine a simple example: We flip a coin $n$ times and we want to make Bayesian inference regarding the probability of heads, $\theta$. The first step is to decide on the data generating model. It seems natural to assume that $X_1,\ldots X_n \overset{iid}\sim \mathsf{Bernoulli}(\theta)$. The second step is to decide on a prior distribution of $\theta$. Since $\theta$ represents a probability, the prior distribution should be confined to $[0,1]$. A popular choice of prior distribution on probabilities is the beta distribution. It has density,</p>
 $$
 p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 0\leq \theta\leq 1,
 $$
-<p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
+<p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta)$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
 <div class="figure" style="text-align: center">
 <img src="02-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
 <p class="caption">(\#fig:betaDist)Density of the beta distribution</p>
@@ -241,7 +247,7 @@ Many times, and in particular if $\theta$ is high dimensional, we will not be ab
 
 In this section we will see how we can, instead of calculating it, generate samples from the posterior distribution. This is the method that is used in modern Bayesian statistics. Here we are only able to scratch the surface. Both in terms of theory, since explaining why the method works would require first learning about Markov chains, and in terms of complexity of the methods, since the methods that are used in practice are usually more advanced version of what we present here.
 
-We assume that we are able to write down the likelihood of our data generating model and the prior on our parameters. This is possible for most models and so we are able to write the prior distribution up to a multiplying constant.
+We assume that we are able to write down the likelihood of our data generating model and the prior on our parameters. Therefore we are also able to write down the posterior distribution up to a multiplying constant.
 
 The method we will discuss is called the *Metropolis-Hastings algorithm* and it is an example of a *Markov chain Monte Carlo* (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte Carlo means that is is an algorithm that depends on random sampling.
 
@@ -270,7 +276,7 @@ It remains to choose $q(\theta^\star\mid x)$. One common choice is called *rando
 $$
 \theta^\star = \theta_{i-1} + \varepsilon_{i-1},
 $$
-where $\varepsilon_{i-1}$ is and independent random variable. For example $\varepsilon_{i-1}\overset{iid}{\sim} \mathsf N(0,b^2)$ for some $b^2$. In this case $q(\theta_{i-1}\mid \theta^\star)=q(\theta^\star\mid \theta_{i-1})$ and so the acceptance probability becomes
+where $\varepsilon_{i-1}$ is and independent random variable. For example $\varepsilon_{i-1}\overset{iid}{\sim} \mathsf N(0,b^2)$ for some variance $b^2$. In this case $q(\theta_{i-1}\mid \theta^\star)=q(\theta^\star\mid \theta_{i-1})$ and so the acceptance probability becomes
 $$
 r=\min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)} ,1\right\}
 $$
@@ -374,9 +380,10 @@ We can plot the histogram of the samples against the density.
 
 
 ## An application
-<!-- Taken from http://www2.geog.ucl.ac.uk/~mdisney/teaching/GEOGG121/sivia_skilling/mterop_hastings.pdf -->
 
-Here we consider the Bayesian probit model as an example. The data generating model is
+Here we consider the Bayesian probit model as an example.
+
+The data generating model is
 \begin{align}
 Y_i&\sim \mathsf{Bin}(n_i,\pi_i),\\
 \pi_i &= \Phi(z_i'\beta),
@@ -387,13 +394,13 @@ Table: (\#tab:bayesProbit)Data for the Bayesian probit model
 
 |  y|  n| z1| z2| z3|
 |--:|--:|--:|--:|--:|
-| 11| 98|  1|  1|  1|
-|  1| 18|  0|  1|  1|
-|  0|  2|  0|  0|  1|
-| 23| 26|  1|  1|  0|
-| 28| 58|  0|  1|  0|
-|  0|  9|  1|  0|  0|
-|  8| 40|  0|  0|  0|
+| 11| 84|  1|  1|  1|
+|  5| 61|  0|  1|  1|
+|  0| 29|  0|  0|  1|
+| 21| 36|  1|  1|  0|
+| 35| 69|  0|  1|  0|
+|  2|  4|  1|  0|  0|
+|  4| 42|  0|  0|  0|
 
 The likelihood is
 $$
@@ -441,35 +448,7 @@ logPrior <- function(beta){
 
 logPosterior <- function(beta){ logL(beta) + logPrior(beta)}
 ```
-<!-- Next we implement the main MCMC-loop. We make it a function so that we can easily reuse it later. -->
-<!-- ```{r, cache=TRUE, echo = TRUE, warning = FALSE} -->
-<!-- mcmc.iter <- function(x, logPosterior, sigma, n.iter){ -->
-<!-- #Random walk Metropolis Hastings MCMC -->
 
-<!--   res <- matrix(NA, n.iter+1, length(x)) #Create empty matrix -->
-<!--   res[1,] <- x -->
-<!--   logPost <- logPosterior(x) -->
-
-<!--   accProb <- 0 #keep track of the proportion of proposals that are accepted -->
-
-<!--   for (i in seq_len(n.iter)){ -->
-<!--     #New proposal -->
-<!--     xProp <- x + rnorm(length(x), 0, sigma) -->
-<!--     #Log posterior of proposal -->
-<!--     logPostProp <- logPosterior(xProp) -->
-<!--     #Acceptance probability -->
-<!--     r <- min( c(1, exp(logPostProp - logPost) ) ) -->
-
-<!--     if(r>runif(1)){ #Accept with probability 1 -->
-<!--       x <- xProp -->
-<!--       logPost <- logPostProp -->
-<!--       accProb <- accProb + 1 -->
-<!--     } -->
-<!--     res[i+1,] <- x -->
-<!--   } -->
-<!--   list(sample = res, accProb = accProb/n.iter) -->
-<!-- } -->
-<!-- ``` -->
 Now run the Markov chain. First a burn-in of 1000 steps, that we then discard. After that a longer run.
 
 ```r
@@ -556,4 +535,113 @@ y.pred
 ## [7,]  5.510984419
 ```
 This is similar to the data.
+
+## Summary
+
+In this section we summarize the chapter by doing a simple example that can be solved by direct calculation.
+
+In the 2020 season of the Swedish football league *Allsvenskan* there was 488 goals scored in 240 games. Assume that $X_1, \ldots X_{488}$, the number of goals scored in each game, are i.i.d\ and distributed as $\mathsf{Po}(\lambda)$. We wish to do Bayesian inference on the unknown parameter $\lambda$.
+
+First we find the likelihood. Since the probability function of a Poisson distributed random variable is
+$$
+p(x) = \frac{\lambda^x e^{-\lambda}}{x!},~x = 0,1,2\ldots,
+$$
+if we denote the number of goals in game $i$ by $x_i$, the total likelihood is
+$$
+L(\lambda) = \prod_{i=1}^{n} \frac{\lambda^{x_i} e^{-\lambda}}{x_i!} \propto \lambda^{\sum x_i}e^{-n\lambda}.
+$$
+
+<p>Then we decide on an appropriate prior distribution. Since $\lambda >0$ we should choose a distribution with all probability on the positive real numbers. A convenient choice, it turns out, is the gamma distribution. Let us choose the parameters of the gamma distribution based on our subjective (prior) belief. As prior belief we will say that the mean of $\lambda$ should be 3, and that it is unlikely that the average number of goals is larger than 5. Since $\lambda \sim \mathsf{Gamma}(\alpha,\beta)$ implies that</p>
+$$
+E\left[ \lambda \right] = \frac{\alpha}{\beta},
+$$
+<p>we will choose $\beta = \alpha/3$. It remains to choose $\alpha$. To do this we plot the density for different choices of $\alpha$.</p>
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/gammaDist-1.png" alt="Density of the gamma distribution" width="80%" />
+<p class="caption">(\#fig:gammaDist)Density of the gamma distribution</p>
+</div>
+
+Based on this picture we decide that $\alpha = 20$ fits with our prior beliefs.
+
+Now we shall calculate the posterior distribution. The prior distribution has the density (from a textbook)
+$$
+p(\lambda) = \frac{\beta^\alpha}{\Gamma(\alpha)} \lambda^{\alpha-1} e^{-\beta\lambda}.
+$$
+Therefore the posterior distribution has density
+$$
+p(\lambda \mid x) \propto L(\lambda)p(\lambda) \propto \lambda^{\sum x_i}e^{-n\lambda} \lambda^{\alpha-1} e^{-\beta\lambda} = \lambda^{\alpha + \sum x_i - 1}e^{-\lambda(\beta + n)}.
+$$
+<p>That is, the posterior distribution is $\mathsf{Gamma}(\alpha + \sum x_i, \beta + n)$. With our prior we therefore get the posterior $\mathsf{Gamma}(518, 246.7)$, illustrated in the figure.</p>
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/gammaDistPostSubj-1.png" alt="Density of the posterior distribution when prior is subjective" width="80%" />
+<p class="caption">(\#fig:gammaDistPostSubj)Density of the posterior distribution when prior is subjective</p>
+</div>
+The mean of the posterior, and our point estimate of $\lambda$ is $518/246.7 \approx 2.1$ and a 95\% credibility interval is given by
+
+```r
+lower <- qgamma(0.025, shape = 518, 20/3 + 240)
+upper <- qgamma(0.975, shape = 518, 20/3 + 240)
+c( lower, upper )
+```
+
+```
+## [1] 1.923027 2.284652
+```
+
+<p>We could instead use a flat prior $p(\lambda) = c, \quad \lambda>0$. Note that this corresponds to a $\mathsf{Gamma}(1,0)$ distribution. So we may recycle the above calculations which gives the posterior $\mathsf{Gamma}(489,240)$.</p>
+<div class="figure" style="text-align: center">
+<img src="02-bayesian_files/figure-html/gammaDistPostFlat-1.png" alt="Density of the posterior distribution when prior is flat" width="80%" />
+<p class="caption">(\#fig:gammaDistPostFlat)Density of the posterior distribution when prior is flat</p>
+</div>
+Now our point estimate of $\lambda$ is $489/240 \approx 2$ and a 95\% credibility interval is given by
+
+```r
+lower <- qgamma(0.025, shape = 489, 240)
+upper <- qgamma(0.975, shape = 489, 240)
+c( lower, upper )
+```
+
+```
+## [1] 1.860889 2.222002
+```
+
+We could also use Jeffreys prior which is proportional to the square root of the Fisher information. The Fisher information can be calculated, for example, as
+$$
+I(\lambda) = Var(l'(\lambda)).
+$$
+The log-likelihod and its derivative is
+\begin{align}
+l(\lambda) &= \sum_{i=1}^n\left( -\ln x_i! + x_i\ln \lambda - \lambda \right)\\
+l'(\lambda) &= \sum_{i=1}^n\left( \frac{x_i}{\lambda} -1  \right) = n\left( \frac{\bar x}{\lambda} -1 \right).
+\end{align}
+Which gives
+$$
+I(\lambda) = Var\left(\frac{n\bar X}{\lambda} \right) = \frac{n^2}{\lambda} Var\left(\bar X\right) = \frac{n^2}{\lambda}\frac{\lambda}{n} = \frac{n}{\lambda}.
+$$
+Then, finally, Jeffreys prior is $p(\lambda) \propto \lambda^{-1/2}$, corresponding to $\mathsf{Gamma}(1/2,0)$ and then the procedure follows the same steps as above.
+
+
+## Review questions
+
+1. What is the main difference between frequentist and Bayesian inference?
+2. What is the risk associated with a decision?
+3. What is the posterior risk?
+4. What is the Bayes action?
+5. What is the Bayes rule?
+6. What is the relationship between the prior, the likelihood and the posterior?
+7. What is a point estimate in Bayesian statistics?
+8. What is a posterior interval?
+9. When is the Beta distribution a good choice as a prior distribution?
+10. What is a subjective prior?
+11. What is a flat prior?
+12. What is a possible critisism of flat priors?
+13. What is Jeffreys prior?
+14. What is the computational problem that Markov chain Monte Carlo solves?
+15. What is the difference between random walk Metropolis Hastings and independence Metropolis Hastings?
+
+
+
+
+
+
 
