@@ -1,7 +1,7 @@
 --- 
 title: "Lecture notes for Statistical Inference and Machine Learning"
 author: "Patrik Andersson"
-date: "2021-02-02"
+date: "2021-02-11"
 site: bookdown::bookdown_site
 output: 
   bookdown::gitbook:
@@ -12,6 +12,8 @@ biblio-style: "apalike"
 link-citations: true
 description: "These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University."
 ---
+
+
 
 # Preface {-}
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -215,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In this section we will see another approach for understanding how model complexity affects statistical learning. Instead of bounding the difference between <span class="math inline">\(E_{out}\)</span> and <span class="math inline">\(E_{in}\)</span> we will decompose <span class="math inline">\(E_{out}\)</span> into two different error terms.</p>
 <p>We consider the regression problem and therefore we assume a quadratic loss function,
 <span class="math display">\[
-E_{out}(h) = E\left[ (Y- h(X))^2 \right]
+E_{out}(h) = E\left[ (Y- h(X))^2 \right].
 \]</span>
 If <span class="math inline">\(h^{\mathcal D}\)</span> is the final hypothesis that was learnt from the data <span class="math inline">\(\mathcal D\)</span>, we also define
 <span class="math display">\[
@@ -246,8 +247,8 @@ The first part does not depend on <span class="math inline">\(h\)</span> and the
 =&amp; E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
  (\bar h(x) - f(x) )^2
 \end{align}\]</span>
-The first term is the variance of <span class="math inline">\(h^\mathcal D\)</span> as the data set <span class="math inline">\(\mathcal D\)</span> is varied. The other term is the difference between the average function <span class="math inline">\(\bar h\)</span> and the true regression function <span class="math inline">\(f(x)\)</span> and is called the bias. This is the Bias-variance decomposition.</p>
-<p>If we choose a large class of function <span class="math inline">\(\mathcal H\)</span> from which we choose <span class="math inline">\(h^\mathcal D\)</span>, it will be possible to closely approximate <span class="math inline">\(f\)</span>, on average. In this case the bias will be small. However, many times if <span class="math inline">\(\mathcal H\)</span> is large, <span class="math inline">\(h^\mathcal D\)</span> will be sensitive to data, i.e. we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.</p>
+The first term is the variance of <span class="math inline">\(h^\mathcal D\)</span> as the data set <span class="math inline">\(\mathcal D\)</span> is varied. The second term is the difference between the average function <span class="math inline">\(\bar h\)</span> and the true regression function <span class="math inline">\(f(x)\)</span> and is called the bias. This is the <em>Bias-variance decomposition</em>.</p>
+<p>If we choose a large class of function <span class="math inline">\(\mathcal H\)</span> from which we choose <span class="math inline">\(h^\mathcal D\)</span>, it will be possible to closely approximate <span class="math inline">\(f\)</span>, on average. In this case the bias will be small. However, many times if <span class="math inline">\(\mathcal H\)</span> is large, <span class="math inline">\(h^\mathcal D\)</span> will be sensitive to data, that is we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.</p>
 <div class="figure" style="text-align: center"><span id="fig:biasVarianceSketch"></span>
 <img src="04-statisticalLearning_files/figure-html/biasVarianceSketch-1.png" alt="Sketch of the bias-variance decomposition" width="80%" />
 <p class="caption">

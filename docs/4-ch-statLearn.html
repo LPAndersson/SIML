@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Statistical learning (draft) | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>Chapter 4 Statistical learning | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Statistical learning (draft) | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="Chapter 4 Statistical learning | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Statistical learning (draft) | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="Chapter 4 Statistical learning | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -211,8 +212,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="ch-statLearn" class="section level1">
-<h1><span class="header-section-number">Chapter 4</span> Statistical learning (draft)</h1>
-<p>In this chapter we will discuss statistical learning from a mostly theoretical perspective. That is, we will discuss when and why statistical learning can be expected to work.</p>
+<h1><span class="header-section-number">Chapter 4</span> Statistical learning</h1>
+<p>In this chapter we will discuss <em>statistical learning</em> from a mostly theoretical perspective. That is, we will discuss when and why statistical learning can be expected to work.</p>
 <p>We begin by defining what we mean by statistical learning and the different types of statistical learning. Then we will display some examples that motivate our theoretical discussion and after that we will see two different theoretical perspectives on learning.</p>
 <p>We begin by defining two spaces:
 <span class="math display">\[\begin{align}
@@ -225,7 +226,7 @@ E\left[ f(X,Y)\right] = \int f(x,y)p_{X,Y}(x,y)dxdy.
 \]</span>
 There is also a loss function <span class="math inline">\(l:\mathcal Y \times \mathcal Y \mapsto \mathbb R\)</span> that tells how close two points in <span class="math inline">\(\mathcal Y\)</span> are to each other.</p>
 <p>
-The problem in statistical learning is to find a function <span class="math inline">\(h:\mathcal X \mapsto \mathcal Y\)</span> that takes an input <span class="math inline">\(x\in \mathcal X\)</span> and gives and output <span class="math inline">\(y\in\mathcal Y\)</span>. The function should be such that its out-of-sample error is small:
+The problem in statistical learning is to find a function <span class="math inline">\(h:\mathcal X \mapsto \mathcal Y\)</span> that takes an input <span class="math inline">\(x\in \mathcal X\)</span> and gives and output <span class="math inline">\(y\in\mathcal Y\)</span>. For a given <span class="math inline">\(h\)</span> we define the <em>out-of-sample error</em> as
 </p>
 
 <div class="note">
@@ -234,16 +235,16 @@ E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
 \]</span>
 </div>
 
-<p>This tells us how the function <span class="math inline">\(h\)</span> performs on average. We would like to choose the function <span class="math inline">\(h\)</span> so that this error is as small as possible. The fundamental problem of learning is that the distribution of <span class="math inline">\(X,Y\)</span> is unknown and so direct minimization of <span class="math inline">\(E_{out}\)</span> is not possible.</p>
-<p>Methods in statistical learning can be partitioned in various ways. The two main ways is in supervised and unsupervised learning. In supervised learning we are given a set of <span class="math inline">\(n\)</span> examples <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span> and the task is to predict <span class="math inline">\(y\)</span> for a previously unseen point <span class="math inline">\(x\)</span>. In unsupervised learning we are only given <span class="math inline">\(x_1,\ldots, x_n\)</span> and the goal is to describe the associations and patterns among a set of input measures. A third scenario is <a href="https://en.wikipedia.org/wiki/Reinforcement_learning">reinforcement learning</a>, that we will not cover in this course.</p>
-<p>In supervised learning the two main tasks are classification and regression. In classification the task is to assign a class to each item. In the terms we defined above, <span class="math inline">\(\mathcal X = \mathbb R^d\)</span> and if it is binary classification <span class="math inline">\(\mathcal Y = \{-1,1\}\)</span>. Many times the loss is taken to be the 0-1 loss, <span class="math inline">\(l(y_1,y_2)=1(y_1\neq y_2)\)</span>.</p>
-<p>In regression the task is to predict a real value for each item, that is <span class="math inline">\(\mathcal X = \mathbb R^d\)</span>, <span class="math inline">\(\mathcal Y = \mathbb R\)</span>. Many times in regression the squared error is used, <span class="math inline">\(l(y_1,y_2)=(y_1-y_2)^2\)</span>.</p>
+<p>This tells us how the function <span class="math inline">\(h\)</span> performs on average, on random observation from <span class="math inline">\(P_{X,Y}\)</span>. We would like to choose the function <span class="math inline">\(h\)</span> so that this error is as small as possible. The fundamental problem of learning is that the distribution of <span class="math inline">\(X,Y\)</span> is unknown and so direct minimization of <span class="math inline">\(E_{out}\)</span> is not possible.</p>
+<p>Methods in statistical learning can be partitioned in various ways. The two main ways is in <em>supervised</em> and <em>unsupervised</em> learning. In supervised learning we are given a set of <span class="math inline">\(n\)</span> examples <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span> and the task is to predict <span class="math inline">\(y\)</span> for a previously unseen point <span class="math inline">\(x\)</span>. In unsupervised learning we are only given <span class="math inline">\(x_1,\ldots, x_n\)</span> and the goal is to describe the associations and patterns among a set of input measures. A third scenario is <a href="https://en.wikipedia.org/wiki/Reinforcement_learning"><em>reinforcement learning</em></a>, that we will not cover in this course.</p>
+<p>In supervised learning the two main tasks are <em>classification</em> and <em>regression</em>. In classification the task is to assign a class to each item. If it is binary classification then, in the terms defined above, <span class="math inline">\(\mathcal Y = \{-1,1\}\)</span>. Many times the loss is taken to be the 0-1 loss, <span class="math inline">\(l(y_1,y_2)=1_{y_1\neq y_2}(y_1,y_2)\)</span>.</p>
+<p>In regression the task is to predict a real value for each item, <span class="math inline">\(\mathcal Y = \mathbb R\)</span>. Many times in regression the squared error is used, <span class="math inline">\(l(y_1,y_2)=(y_1-y_2)^2\)</span>.</p>
 <p>Readings for this chapter is:
-ISL 2
-ISL 4.1-2
-ISL 5
-ISL 6.1-2
-ISL 9</p>
+ISL 2</p>
+<p>ISL 4.1-2</p>
+<p>ISL 5</p>
+<p>ISL 6.1-2</p>
+<p>ISL 9</p>
 <p>The sections on Hoeffding’s inequality, generalization error and VC-dimension is not in the course literature. So it is enough to read these notes.</p>
 </div>
             </section>

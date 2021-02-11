@@ -12,6 +12,12 @@ biblio-style: "apalike"
 link-citations: true
 description: "These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University."
 ---
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>", echo = FALSE, cache = TRUE
+)
+```
+
 
 # Preface {-}
 

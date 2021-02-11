@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -212,8 +213,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="vc-dimension" class="section level2">
 <h2><span class="header-section-number">4.5</span> VC-dimension</h2>
-<p>In this section we discuss a measure of the complexity of a hypothesis set <span class="math inline">\(\mathcal H\)</span>, the Vapnik–Chervonenkis (VC) dimension.</p>
-<p>We call one possible way of labeling a set of points, <span class="math inline">\(S\)</span>, a dichotomy and we say that <span class="math inline">\(S\)</span> is shattered by <span class="math inline">\(\mathcal H\)</span> when <span class="math inline">\(\mathcal H\)</span> can generate all possible dichotomies of <span class="math inline">\(S\)</span>. The VC-dimension of <span class="math inline">\(\mathcal H\)</span> is the size of the largest set that can be shattered by <span class="math inline">\(\mathcal H\)</span>.</p>
+<p>In this section we discuss a measure of the complexity of a hypothesis set <span class="math inline">\(\mathcal H\)</span>, the <em>Vapnik–Chervonenkis</em> (VC) dimension.</p>
+<p>We call one possible way of labeling a set of points, <span class="math inline">\(S\)</span>, a <em>dichotomy</em> and we say that <span class="math inline">\(S\)</span> is <em>shattered</em> by <span class="math inline">\(\mathcal H\)</span> when <span class="math inline">\(\mathcal H\)</span> can generate all possible dichotomies of <span class="math inline">\(S\)</span>. The VC-dimension of <span class="math inline">\(\mathcal H\)</span> is the size of the largest set that can be shattered by <span class="math inline">\(\mathcal H\)</span>.</p>
 <p>First consider the example of the real line and <span class="math inline">\(\mathcal H\)</span> being the classifiers that classify to one class to the left of a point and to the other class to the right of the point. If <span class="math inline">\(S\)</span> consists of two points, all four dichotomies can be realized and so <span class="math inline">\(S\)</span> can be shattered by <span class="math inline">\(\mathcal H\)</span>. However if <span class="math inline">\(S\)</span> consists of three points, the dichotomy (1,0,1) cannot be realized and <span class="math inline">\(S\)</span> cannot be shattered. Therefore the VC-dimension of <span class="math inline">\(\mathcal H\)</span> is <span class="math inline">\(d_{VC}=2\)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:vcDim1"></span>
 <img src="04-statisticalLearning_files/figure-html/vcDim1-1.png" alt="Two points can be shattered" width="80%" />
@@ -235,7 +236,7 @@ Figure 4.11: Three points can be shattered but not four
 </p>
 </div>
 <p>
-We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid \omega\in \mathbb R \right\}\)</span>. Then label a point <span class="math inline">\(x\)</span> according to the sign of <span class="math inline">\(sin(\omega x)&lt;0\)</span>. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
+We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid \omega\in \mathbb R \right\}\)</span>. Then label a point <span class="math inline">\(x\)</span> according to the sign of <span class="math inline">\(sin(\omega x)\)</span>. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
 </p>
 <div class="figure" style="text-align: center"><span id="fig:vcDim4"></span>
 <img src="04-statisticalLearning_files/figure-html/vcDim4-1.png" alt="A one parameter function can shatter any number of points" width="80%" />
@@ -243,7 +244,7 @@ We see a pattern here, the VC-dimension is equal to the number of parameters of 
 Figure 4.12: A one parameter function can shatter any number of points
 </p>
 </div>
-The usefulness of the VC-dimension comes from the following result
+The usefulness of the VC-dimension comes from the following result.
 
 <div class="note">
 Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span>. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span> <span class="citation">(Mohri, Rostamizadeh, and Talwalkar <a href="#ref-mohri2018foundations" role="doc-biblioref">2018</a>)</span>:
@@ -257,9 +258,9 @@ Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span clas
 <span class="math display">\[
 E_{out}(h) = E_{in}(h) + \Omega(n,\mathcal H, \delta),
 \]</span>
-where <span class="math inline">\(\Omega\)</span> is a penalty for model complexity. As we choose a more complex <span class="math inline">\(\mathcal H\)</span> (with higher <span class="math inline">\(d_{VC}\)</span>) the in-sample error will become smaller. But, at the same time the penalty <span class="math inline">\(\Omega\)</span> get larger. The penalty also gets smaller when we have more samples. The optimal model, with smallest <span class="math inline">\(E_{out}\)</span>, is therefore a compromise that minimize the sum of the two terms.</p>
+where <span class="math inline">\(\Omega\)</span> is a penalty for model complexity. As we choose a more complex <span class="math inline">\(\mathcal H\)</span> (with higher <span class="math inline">\(d_{VC}\)</span>) the in-sample error will become smaller. But, at the same time the penalty <span class="math inline">\(\Omega\)</span> gets larger. The penalty gets smaller when we have more samples. The optimal model, with smallest <span class="math inline">\(E_{out}\)</span>, is therefore a compromise that minimize the sum of the two terms.</p>
 <p>One commonly used way to estimate <span class="math inline">\(E_{out}\)</span> is to split the data into one <em>training set</em> and one <em>test set</em>. The test set is not used for training and so when we calculate <span class="math inline">\(E_{test}\)</span>, we do this for only one <span class="math inline">\(h\)</span>, the one with minimal in-sample error. Therefore Hoeffding’s inequality applies as a generalization bound, which is much tighter than the VC-bound.</p>
-<p>In the picture we visualize the partition of the out-of-sample error into in-sample error and generalization error.</p>
+<p>In the figure below we visualize the partition of the out-of-sample error into in-sample error and generalization error.</p>
 <div class="figure" style="text-align: center"><span id="fig:errorPlotSketch"></span>
 <img src="04-statisticalLearning_files/figure-html/errorPlotSketch-1.png" alt="Sketch of the different components of the error" width="80%" />
 <p class="caption">

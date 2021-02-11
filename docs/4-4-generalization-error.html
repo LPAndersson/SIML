@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -212,13 +213,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="generalization-error" class="section level2">
 <h2><span class="header-section-number">4.4</span> Generalization error</h2>
-<p>In this section we will study the generalization error, that is the difference between <span class="math inline">\(E_{out}(h)\)</span> and <span class="math inline">\(E_{in}(h)\)</span>.</p>
+<p>In this section we will study the <em>generalization error</em>, that is the difference between <span class="math inline">\(E_{out}(h)\)</span> and <span class="math inline">\(E_{in}(h)\)</span>.</p>
 <p>We will only consider binary classification and we will assume that there is a function <span class="math inline">\(h\)</span> such that <span class="math inline">\(Y=h(X)\)</span>. This is a simplification since it means that we only need to consider the distribution of <span class="math inline">\(X\)</span>. To make things concrete we study an example where <span class="math inline">\(\mathcal X = \mathbb R^2\)</span> and a linear classification, where observations are classified according to which side of a straight line they fall.</p>
 Before looking at the data, let us choose a classification algorithm completely willy-nilly. Let us choose:
 <span class="math display">\[
 h(x_1,x_2)=\begin{cases}
 1 \text{ if } x_1 &gt;0\\
--1 \text{ o.w}.
+-1 \text{ otherwise}.
 \end{cases}
 \]</span>
 Now we generate some data:
@@ -229,8 +230,8 @@ Figure 4.8: Training data and classification rule
 </p>
 </div>
 <p>We can now calculate the in-sample error:</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="4-4-generalization-error.html#cb129-1"></a>H &lt;-<span class="st"> </span><span class="cf">function</span>(a,b){</span>
-<span id="cb129-2"><a href="4-4-generalization-error.html#cb129-2"></a>  <span class="cf">function</span>(x1,x2){</span>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="4-4-generalization-error.html#cb129-1"></a>H &lt;-<span class="st"> </span><span class="cf">function</span>(a, b){</span>
+<span id="cb129-2"><a href="4-4-generalization-error.html#cb129-2"></a>  <span class="cf">function</span>(x1, x2){</span>
 <span id="cb129-3"><a href="4-4-generalization-error.html#cb129-3"></a>    <span class="cf">if</span>(a<span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span>b<span class="op">*</span>x2 <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="st">&quot;1&quot;</span></span>
 <span id="cb129-4"><a href="4-4-generalization-error.html#cb129-4"></a>    <span class="cf">else</span> <span class="st">&quot;-1&quot;</span></span>
 <span id="cb129-5"><a href="4-4-generalization-error.html#cb129-5"></a>  }</span>
@@ -243,7 +244,7 @@ Figure 4.8: Training data and classification rule
 <span id="cb129-12"><a href="4-4-generalization-error.html#cb129-12"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</span>
 <span id="cb129-13"><a href="4-4-generalization-error.html#cb129-13"></a>    x1 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x1</span>
 <span id="cb129-14"><a href="4-4-generalization-error.html#cb129-14"></a>    x2 &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>x2</span>
-<span id="cb129-15"><a href="4-4-generalization-error.html#cb129-15"></a>    y &lt;-data[i,]<span class="op">$</span>y</span>
+<span id="cb129-15"><a href="4-4-generalization-error.html#cb129-15"></a>    y &lt;-<span class="st"> </span>data[i,]<span class="op">$</span>y</span>
 <span id="cb129-16"><a href="4-4-generalization-error.html#cb129-16"></a>    <span class="cf">if</span>(<span class="kw">classifier</span>(x1,x2) <span class="op">!=</span><span class="st"> </span>y )</span>
 <span id="cb129-17"><a href="4-4-generalization-error.html#cb129-17"></a>      missClass &lt;-<span class="st"> </span>missClass <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
 <span id="cb129-18"><a href="4-4-generalization-error.html#cb129-18"></a>  }</span>
@@ -277,12 +278,13 @@ Figure 4.8: Training data and classification rule
 <span class="math display">\[
 E_{out}(h) \leq  E_{in}(h) + \sqrt{\frac{\ln \frac{2}{\delta}}{2n}}.
 \]</span>
-Let us say we want to have confidence 95%, i.e. <span class="math inline">\(\delta = 0.05\)</span>, we then have the generalization bound</p>
+Let us say we want to have confidence 95%, that is <span class="math inline">\(\delta = 0.05\)</span>, we then have the generalization bound</p>
 <div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="4-4-generalization-error.html#cb133-1"></a>delta =<span class="st"> </span><span class="fl">0.05</span></span>
 <span id="cb133-2"><a href="4-4-generalization-error.html#cb133-2"></a><span class="kw">error</span>(data.df,h) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">log</span>(<span class="dv">2</span><span class="op">/</span>delta)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span><span class="kw">nrow</span>(data.df)))</span></code></pre></div>
 <pre><code>## [1] 0.5120646</code></pre>
+<p>That is, with confidence 95%, the out-of-sample error is not larger than this.</p>
 <p>
-Above we picked an <span class="math inline">\(h\)</span> without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where <span class="math inline">\(h\)</span> is chosen from some collection <span class="math inline">\(\mathcal H\)</span>. Let us first consider the case where <span class="math inline">\(\mathcal H\)</span> is finite, i.e. there is a finite number of functions <span class="math inline">\(h\)</span> in the collection. Call this number be <span class="math inline">\(|\mathcal H|\)</span>. The statement of the learning bound then becomes
+Above we picked an <span class="math inline">\(h\)</span> without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where <span class="math inline">\(h\)</span> is chosen from some collection <span class="math inline">\(\mathcal H\)</span>. Let us first consider the case where <span class="math inline">\(\mathcal H\)</span> is finite, that is there is a finite number of functions <span class="math inline">\(h\)</span> in the collection. Call this number <span class="math inline">\(|\mathcal H|\)</span>. The statement of the learning bound then becomes
 </p>
 
 <div class="note">
@@ -294,13 +296,13 @@ Let <span class="math inline">\(\mathcal H\)</span> be finite. Then for any <spa
 
 <p>The proof of this is again an application of Hoeffding. Let <span class="math inline">\(h_1,\ldots,h_{|\mathcal H|}\)</span> be the elements of <span class="math inline">\(\mathcal H\)</span>. Then
 <span class="math display">\[\begin{align}
-&amp;P\left( \exists h\in\mathcal H \mid \left| E_{in}(h) - E_{out}(h)  \right|&gt;\varepsilon \right)\\
+&amp;P\left( \exists h\in\mathcal H : \left| E_{in}(h) - E_{out}(h)  \right|&gt;\varepsilon \right)\\
 =&amp; P\left( \left\{ \left| E_{in}(h_1) - E_{out}(h_1)  \right| &gt; \varepsilon \right\} \cup \ldots \cup \left\{ \left| E_{in}(h_{|\mathcal H |}) - E_{out}( (h_{| \mathcal H |})  \right| &gt; \varepsilon \right\} \right)\\
 \leq &amp; \sum_{i=1}^{|\mathcal H|} P\left(\left| E_{in}(h_i) - E_{out}(h_i)  \right|&gt;\varepsilon \right)\\
 \leq &amp; 2 |\mathcal H  | e^{-2n\varepsilon^2}.
 \end{align}\]</span>
 Setting this equal to <span class="math inline">\(\delta\)</span> and solving for <span class="math inline">\(\varepsilon\)</span> gives the result.</p>
-<p>Now we can handle also the case with a finite number of <span class="math inline">\(h\)</span>. But there is still room for improvement. Most classifications methods will have an infinite <span class="math inline">\(\mathcal H\)</span>. For example, in the example above, we would consider all different straight lines and no only <span class="math inline">\(x_1 = 0\)</span>. The above argument will not work for infinite <span class="math inline">\(\mathcal H\)</span>. There is however some hope. We used that, for two events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>,
+<p>Now we can handle also the case with a finite number of <span class="math inline">\(h\)</span>. But there is still not very useful. Most classifications methods will have an infinite <span class="math inline">\(\mathcal H\)</span>. For example, in the example above, we would consider all different straight lines and no only <span class="math inline">\(x_1 = 0\)</span>. The above argument will not work for infinite <span class="math inline">\(\mathcal H\)</span>. There is however some hope. We used that, for two events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>,
 <span class="math display">\[
 P(A\cup B) = P(A) + P(B) - P(A\cap B) \leq P(A) + P(B).
 \]</span>

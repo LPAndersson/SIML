@@ -43,7 +43,7 @@ $$
 l_n(\lambda):=\ln L_n(\lambda) = \sum_{i=1}^n( \ln \lambda - \lambda t_i  ) = n\ln\lambda - \lambda\sum_{i=1}^n t_i= n(\ln\lambda - \lambda \bar t) ,
 $$
 where we as usual let $\bar t = \frac{1}{n}\sum_{i=1}^n t_i$.
-```{r exp-obs, echo = FALSE, tidy=FALSE, cache=FALSE}
+```{r exp-obs, echo = FALSE, tidy=FALSE, cache = TRUE}
 set.seed(1)
 numObs = 100
 actualRate= 0.12
@@ -51,7 +51,7 @@ t = rexp(numObs,actualRate)
 t.df = data.frame(t)
 ```
 Let us say we observe a sample of size `r numObs`.
-```{r exp-boxplot, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Histogram of the sample", out.width='80%', fig.asp=.75, fig.align='center'}
+```{r exp-boxplot, echo = FALSE, tidy=TRUE, cache = TRUE, message=FALSE, fig.cap = "Histogram of the sample", out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 ggplot(t.df, aes(x = t)) +
   geom_histogram() +
@@ -99,7 +99,7 @@ logLn(0.1)
 ```
 
 <p>In fact, let us plot the log-likelihood for a range of $\lambda$-values.</p>
-```{r log-likelihood, cache=FALSE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r log-likelihood, cache = TRUE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 
 ggplot(data.frame(x = c(0.01, 0.2)), aes(x = x)) +
@@ -126,7 +126,7 @@ lambdaHat <- 1/mean(t)
 lambdaHat
 ```
 We may also find the estimate using numerical optimization.
-```{r cache=FALSE}
+```{r cache = TRUE}
 optimResult <- optim(1.0, 
             logLn,
             method = "Brent", 
@@ -138,7 +138,7 @@ optimResult$par
 
 ## Hypothesis testing
 In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure \@ref(fig:hypTestIllustration). 
-```{r hypTestIllustration, cache=FALSE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r hypTestIllustration, cache = TRUE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
 
 library(ggplot2)
 library(latex2exp)
@@ -212,7 +212,7 @@ $$
 \lambda_{\text{LR}} = 2(l(\hat\lambda) - l(\lambda_0)) = 2n\left( \ln\hat\lambda - 1 - \ln \lambda_0 + \frac{\lambda_0}{\hat\lambda}  \right) = 2n\left(\ln \frac{\hat\lambda}{\lambda_0} + \frac{\lambda_0-\hat\lambda}{\hat\lambda}\right).
 $$
 <p>Recall that we should reject $H_0$ if $\lambda_{\text{LR}}>k$, and that $k$ is set to get the correct size. But to do this we need to know the distribution of $\lambda_{\text{LR}}$ and looking at the formula above, this seems difficult. Instead we search for something which is equivalent to $\lambda_{\text{LR}}>k$, but with a known distribution. Towards this we plot $\lambda_{LR}(\hat\lambda)$:</p>
-```{r LR-testExp, cache=FALSE, echo = FALSE, fig.cap='Illustration of the likelihood ratio', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r LR-testExp, cache = TRUE, echo = FALSE, fig.cap='Illustration of the likelihood ratio', out.width='80%', fig.asp=.75, fig.align='center'}
 f <- function(l){
   l0 = 0.1
   200*(log(l/l0) + (l0-l)/l)
@@ -247,7 +247,7 @@ $$
 $$
 
 Let us implement this:
-```{r cache=FALSE}
+```{r cache = TRUE}
 alpha <- 0.05
 lambda0 <- 0.1
 n <- 100
@@ -267,7 +267,7 @@ and therefore the p-value is
 $$
 2P\left( \Gamma(n,\lambda_0) < \frac{n}{\hat\lambda} \right).
 $$
-```{r cache=FALSE}
+```{r cache = TRUE}
 2* pgamma(n/lambdaHat, shape = n, rate = lambda0)
 ```
 Again we see that we would not reject $H_0$ on the 5\%-level.
@@ -325,7 +325,7 @@ $$
 \ln x \approx (x-1) - \frac{1}{2}(x-1)^2 + \frac{1}{3}(x-1)^3.
 $$
 
-```{r taylor-series, cache=FALSE, message=FALSE, fig.cap='Taylor series approximation of ln x', out.width='80%', fig.asp=.75, fig.align='center', echo = FALSE}
+```{r taylor-series, cache = TRUE, message=FALSE, fig.cap='Taylor series approximation of ln x', out.width='80%', fig.asp=.75, fig.align='center', echo = FALSE}
 f <- log
 
 p <- function(n,x){
@@ -681,7 +681,7 @@ l'_n(\lambda) &= n\left( \frac{1}{\lambda} - \frac{1}{\hat\lambda} \right),\\
 I_n(\lambda) &= - l''_n(\lambda) = \frac{n}{\lambda^2}.
 \end{align}
 <p>We plot the score statistic as a function of $\lambda$:</p>
-```{r CI-plot, cache=FALSE, echo = FALSE, fig.cap='Score statistic and confidence intervall', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r CI-plot, cache = TRUE, echo = FALSE, fig.cap='Score statistic and confidence intervall', out.width='80%', fig.asp=.75, fig.align='center'}
 
 library(ggplot2)
 library(latex2exp)
@@ -750,7 +750,7 @@ Again, in this particular example, the two intervals are the same.
 
 ## An application
 Here we present an application of what we have learned in this chapter.
-```{r binRegLoadData, cache=FALSE, echo = FALSE}
+```{r binRegLoadData, cache = TRUE, echo = FALSE}
 getData <- function(n = 1000, seed = 1){
 
   set.seed(1.0)
@@ -778,7 +778,7 @@ $$
 is the logistic function. We have a sample of size $n=$ `r nrow(data.df)` and we would like to do inference on $\beta$.
 
 First we plot our data.
-```{r binRegrDataPlot, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Observed sample", out.width='80%', fig.asp=.75, fig.align='center'}
+```{r binRegrDataPlot, echo = FALSE, tidy=TRUE, cache = TRUE, message=FALSE, fig.cap = "Observed sample", out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 ggplot(data.df, aes(x = x, y = y)) +
   geom_point() +
@@ -856,7 +856,7 @@ rootResults$root
 Both methods giving the same result.
 
 To confirm that we indeed found the MLE we plot the log-likelihood.
-```{r BinReglog-likelihood, cache=FALSE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r BinReglog-likelihood, cache = TRUE, echo = FALSE, fig.cap='Log likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 
 ggplot(data.frame(x = c(0, 4)), aes(x = x)) +
@@ -868,7 +868,7 @@ ggplot(data.frame(x = c(0, 4)), aes(x = x)) +
   ylab("log likelihood")
 ```
 
-```{r binRegrDataPlotWithFit, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Observed sample and fitted model", out.width='80%', fig.asp=.75, fig.align='center'}
+```{r binRegrDataPlotWithFit, echo = FALSE, tidy=TRUE, cache = TRUE, message=FALSE, fig.cap = "Observed sample and fitted model", out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 f <- function(x){ s(betahat*x) }
 ggplot(data.df, aes(x = x, y = y)) +
@@ -952,7 +952,7 @@ rightCILimit
 ```
 
 For a score based CI we first plot the score statistic.
-```{r applicationScoreCI, echo = FALSE, tidy=TRUE, cache=FALSE, message=FALSE, fig.cap = "Observed sample and fitted model", out.width='80%', fig.asp=.75, fig.align='center'}
+```{r applicationScoreCI, echo = FALSE, tidy=TRUE, cache = TRUE, message=FALSE, fig.cap = "Observed sample and fitted model", out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 library(latex2exp)
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -221,7 +222,7 @@ Now instead of minimizing the in-sample error of our model, we add a term that r
 <span class="math display">\[
 \min_{h\in\mathcal H}\left[ E_{in}(h) + c(h)\right],
 \]</span>
-where <span class="math inline">\(c\)</span> is some function that increases with the complexity of the function <span class="math inline">\(h\)</span>. SVMs are a special case of this. If we have a linear classifier <span class="math inline">\(f(x) = \beta_0+\beta_1x_1 + \ldots \beta_p x_p\)</span> the problem is
+where <span class="math inline">\(c\)</span> is some function that increases with the complexity of the function <span class="math inline">\(h\)</span>. SVMs are a special case of this. If we have a linear classifier <span class="math inline">\(f(x) = \beta_0+\beta_1x_1 + \ldots \beta_p x_p\)</span> the optimisation problem is
 <span class="math display">\[
 \min_{\beta_0,\beta_1,\ldots,\beta_p} \sum_{i=1}^n \left( 1-y_if(x_i) \right)_+ + \lambda \sum_{i=1}^p{\beta_j^2},
 \]</span>
@@ -255,7 +256,7 @@ We then see that the features <span class="math inline">\(\varphi\)</span> only 
 <span class="math display">\[
 K(x,x_i):= \langle \varphi(x),\varphi(x_i)  \rangle,
 \]</span>
-which is called a Kernel. We then write
+which is called a <em>kernel</em>. We then write
 <span class="math display">\[
 f(x) = \beta_0 + \sum_{i=1}^n\alpha_iK(x,x_i).
 \]</span>

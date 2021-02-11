@@ -5,4 +5,4 @@ language:
 delete_merged_file: true
 new_session: yes
 output_dir: "docs"
-#rmd_files: ["index.Rmd", "03-bootstrap.Rmd"]
+#rmd_files: ["index.Rmd", "04-statisticalLearning.Rmd"]

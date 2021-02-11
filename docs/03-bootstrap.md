@@ -530,7 +530,6 @@ $$
 
 We conclude that the basic bootstrap interval is of the same form as the usual normal CI. The lower limit can be obtained with similar calculations. In the bootstrap interval the next step was to replace the unknown $H$ with a bootstrap estimate.
 
-
 ## Review questions
 
 1. When writing $\int x dF(x)$, what does $dF(x)$ mean?
@@ -541,7 +540,3 @@ We conclude that the basic bootstrap interval is of the same form as the usual n
 6. What does it mean, in practice, when we write $X_1^*,\ldots,X_n^*\sim \hat F_n$?
 7. How is the basic bootstrap interval calculated?
 8. What is the difference between parametric and non-parametric bootstrap?
-
-
-
-

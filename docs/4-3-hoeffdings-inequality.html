@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -212,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="hoeffdings-inequality" class="section level2">
 <h2><span class="header-section-number">4.3</span> Hoeffding’s inequality</h2>
-<p>One tool to understand the connection between the in-sample and out-of-sample error is Hoeffding’s inequality. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.</p>
+<p>One tool to understand the connection between the in-sample and out-of-sample error is <em>Hoeffding’s inequality</em>. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.</p>
 
 <div class="note">
 Hoeffding’s inequality states that:
@@ -226,7 +227,7 @@ P\left( \left| \bar Y_n - \mu \right|&gt;\varepsilon \right) \leq 2e^{-2n\vareps
 <span class="math display">\[
 P\left( \left| \bar Y_n - p \right|&gt;\varepsilon \right) \leq 2e^{-2n\varepsilon^2}.
 \]</span>
-We start by deriving Markov’s inequality: Let <span class="math inline">\(X\)</span> be a non-negative random variable. Then for any <span class="math inline">\(t&gt;0\)</span>,
+We start by deriving <em>Markov’s inequality</em>: Let <span class="math inline">\(X\)</span> be a non-negative random variable. Then for any <span class="math inline">\(t&gt;0\)</span>,
 <span class="math display">\[\begin{align}
 E[X] &amp;= \int_0^\infty xp(x)dx = \int_0^t xp(x)dx + \int_t^\infty xp(x)dx \\
 &amp;\geq \int_t^\infty x p(x)dx \geq t \int_t^\infty p(x)dx = tP(X&gt; t).
@@ -234,7 +235,7 @@ E[X] &amp;= \int_0^\infty xp(x)dx = \int_0^t xp(x)dx + \int_t^\infty xp(x)dx \\
 We usually write this as <span class="math inline">\(P(X&gt;t)\leq E(X)/t\)</span>.</p>
 <p>Now we turn to Hoeffding’s inequality. Firstly,
 <span class="math display">\[
-P\left( \left| \bar Y_n - p \right|\geq \varepsilon \right) = P\left( \bar Y_n \geq p+\varepsilon  \right) + P\left( \bar Y_n \leq p - \varepsilon  \right).
+P\left( \left| \bar Y_n  - p \right|\geq \varepsilon \right) = P\left( \bar Y_n \geq p+\varepsilon  \right) + P\left( \bar Y_n \leq p - \varepsilon  \right).
 \]</span>
 Then we use that <span class="math inline">\(\exp\)</span> is an increasing function, together with Markov’s inequality, for any <span class="math inline">\(t&gt;0\)</span>,
 <span class="math display">\[\begin{align*}
@@ -245,7 +246,7 @@ P\left( \bar Y_n \geq p +  \varepsilon  \right) &amp;= P\left( t\sum_{i=1}^n Y_i
 <span class="math display">\[
 E\left[ e^{t Y_i } \right] = e^{t\cdot 1}P(Y_i=1) + e^{t\cdot 0}P(Y_i=0) = pe^t + (1-p).
 \]</span>
-Now we would like to show that <span class="math inline">\(pe^t+1-p\leq e^{tp+t^2/8}\)</span>. Since then,
+We would like to show that <span class="math inline">\(pe^t+1-p\leq e^{tp+t^2/8}\)</span>. Since then,
 <span class="math display">\[
 P\left( \bar Y_n \geq p +  \varepsilon  \right) \leq e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n \leq e^{-tn(p+\varepsilon)} e^{ntp+nt^2/8} = e^{-nt\varepsilon + nt^2/8} \leq e^{-2n\varepsilon^2},
 \]</span>

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -212,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="regression-regularization" class="section level2">
 <h2><span class="header-section-number">4.8</span> Regression regularization</h2>
-<p>In this section we discuss regularization in the context of regression as a way of controlling overfit.</p>
+<p>In this section we discuss <em>regularization</em> in the context of regression as a way of controlling overfit.</p>
 <p>Recall that in regression we have observations from <span class="math inline">\(\mathbb R^p\)</span> and our task is to predict a value in <span class="math inline">\(\mathbb R\)</span>. We will do this by finding a function <span class="math inline">\(h\in \mathcal H\)</span> that gives a small out-of-sample error
 <span class="math display">\[
 E_{out} = E\left[ (Y-h(X))^2 \right].
@@ -294,7 +295,7 @@ As we have seen, we may specify some function <span class="math inline">\(\varph
 Figure 4.17: Polynomial fits to four different sets of training data, sampled from the same distribution
 </p>
 </div>
-<p>We see from the pictures that then 2nd degree polynomial fit does not change very much on the different training sets, while the 20th degree polynomial looks very different in the four pictures.</p>
+<p>We see from the pictures that the 2nd degree polynomial fit does not change very much on the different training sets, while the 20th degree polynomial looks very different in the four pictures.</p>
 <p>
 Now let us repeat this experiment many times, and only plot the mean and variance of <span class="math inline">\(h\)</span>.
 </p>
@@ -304,7 +305,7 @@ Now let us repeat this experiment many times, and only plot the mean and varianc
 Figure 4.18: Mean fit and 95% CI for the different polynomial regressions
 </p>
 </div>
-<p>From the pictures we see that the 2nd degree polynomial has a bias, but for 6h degree, the bias is close to 0. The error in the 2nd degree polynomial is a sum of bias and variance, but for 6th and 20th the error is dominated by the variance term. The variance becomes larger as the degree of the polynomial becomes larger, while the bias is already 0 for 6th degree. Therefore, the total error, the sum of bias and variance, is smallest for a 6th degree polynomial. As before, we see that a very flexible model will tend to overfit the data and may perform worse than a less flexible model.</p>
+<p>From the pictures we see that the 2nd degree polynomial has a bias, but for 6th degree, the bias is close to 0. The error in the 2nd degree polynomial is a sum of bias and variance, but for 6th and 20th the error is dominated by the variance term. The variance becomes larger as the degree of the polynomial becomes larger, while the bias is already close to 0 for 6th degree. Therefore, the total error, the sum of bias and variance, is smallest for a 6th degree polynomial. As before, we see that a very flexible model will tend to overfit the data and may perform worse than a less flexible model.</p>
 <p>Another way to see the same phenomena is to choose one point, here <span class="math inline">\(x=1.5\)</span>, and plot the bias and variance as we vary the degree of the polynomial. We do this for sample size <span class="math inline">\(n=100\)</span> and <span class="math inline">\(n=10000\)</span>.</p>
 <div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="4-8-regression-regularization.html#cb138-1"></a><span class="kw">library</span>(ggplot2)</span>
 <span id="cb138-2"><a href="4-8-regression-regularization.html#cb138-2"></a><span class="kw">library</span>(gridExtra)</span>
@@ -349,9 +350,9 @@ Figure 4.18: Mean fit and 95% CI for the different polynomial regressions
 <span id="cb138-41"><a href="4-8-regression-regularization.html#cb138-41"></a><span class="kw">grid.arrange</span>(<span class="kw">biasVariancePlot</span>(<span class="dv">100</span>), <span class="kw">biasVariancePlot</span>(<span class="dv">10000</span>),</span>
 <span id="cb138-42"><a href="4-8-regression-regularization.html#cb138-42"></a>             <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:errorVsDegree"></span>
-<img src="04-statisticalLearning_files/figure-html/errorVsDegree-1.png" alt="Bias/Variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000" width="80%" />
+<img src="04-statisticalLearning_files/figure-html/errorVsDegree-1.png" alt="Bias-variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000" width="80%" />
 <p class="caption">
-Figure 4.19: Bias/Variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000
+Figure 4.19: Bias-variance decomposition when varying the degree of the polynomial. Left picture with n = 100, right with n = 10000
 </p>
 </div>
 <p>From the pictures we see that the bias is decreasing and the variance is increasing, as the degree increases. In the left picture, <span class="math inline">\(n=100\)</span>, the minimum total error is at a degree around 3. When the sample size increases, in the right picture, we can fit a more complex model, and the minimum error is at a degree around 8.</p>
@@ -368,7 +369,7 @@ and the lasso minimizes
 <span class="math display">\[
 E_{in} + \lambda\sum_{i=1}^p | \beta_j |.
 \]</span>
-Here <span class="math inline">\(\lambda\)</span> is a tuning parameter that needs to be determined separately. Ridge regression and lasso use different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of <span class="math inline">\(\beta_j\)</span> will be smaller in ridge and lasso. I.e. the estimates will shrink towards zero. These methods are therefore sometimes called shrinkage methods. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.</p>
+Here <span class="math inline">\(\lambda\)</span> is a tuning parameter that needs to be determined separately. Ridge regression and lasso use different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of <span class="math inline">\(\beta_j\)</span> will be smaller in ridge and lasso. That is the estimates will shrink towards zero. These methods are therefore sometimes called <em>shrinkage methods</em>. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.</p>
 <p>Let us look at the same example above, this time with a degree 20 polynomial, but penalized with ridge and lasso.</p>
 <div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="4-8-regression-regularization.html#cb139-1"></a><span class="kw">library</span>(ggplot2)</span>
 <span id="cb139-2"><a href="4-8-regression-regularization.html#cb139-2"></a><span class="kw">library</span>(gridExtra)</span>
@@ -390,7 +391,7 @@ Figure 4.20: Coefficents as lambda is varied for ridge regression
 Figure 4.21: Coefficients as lambda is varied for the lasso
 </p>
 </div>
-<p>In the pictures we see that the fitted coefficients decrease towards 0 as <span class="math inline">\(\lambda\)</span> increases. The main difference between the two methods is that in the ridge regression all coefficients are strictly positive for any finite <span class="math inline">\(\lambda\)</span>, while for the lasso coefficients become 0 when <span class="math inline">\(\lambda\)</span> is large. This difference relates to model interpretability. That is, the lasso will produce a simple model where many variables can be disregarded. We also mention that the lasso and ridge regression can, unlike unregularized least squares, handle the case <span class="math inline">\(p&gt;&gt;n\)</span>. There is a generalization of ridge and lasso called elastic net, where a parameter <span class="math inline">\(0\leq \alpha \leq 1\)</span> is introduced and the loss function is instead,
+<p>In the pictures we see that the fitted coefficients decrease towards 0 as <span class="math inline">\(\lambda\)</span> increases. The main difference between the two methods is that in the ridge regression all coefficients are strictly positive for any finite <span class="math inline">\(\lambda\)</span>, while for the lasso, coefficients become 0 when <span class="math inline">\(\lambda\)</span> is large. This difference relates to model interpretability. That is, the lasso will produce a simple model where many variables can be disregarded. We also mention that the lasso and ridge regression can, unlike unregularized least squares, handle the case <span class="math inline">\(p&gt;&gt;n\)</span>. There is a generalization of ridge and lasso called elastic net, where a parameter <span class="math inline">\(0\leq \alpha \leq 1\)</span> is introduced and the loss function is instead,
 <span class="math display">\[
 E_{in} + \lambda\left( \alpha \sum_{i=1}^p | \beta_j | + (1-\alpha) \sum_{i=1}^p \beta_j^2\right).
 \]</span></p>

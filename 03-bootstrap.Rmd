@@ -70,7 +70,7 @@ I(x_i\leq x) =
 $$
 ```
 In the example below, we draw a sample of size 100 from the $\mathsf{N}(0,1)$ distribution and plot the empirical distribution function of the sample. This can be done easily using gg-plot.
-```{r empiricalDistrFcnExample, echo = TRUE, tidy=FALSE, cache=FALSE, message=FALSE, fig.cap = "Empirical and true distribution function", out.width='80%', fig.asp=.75, fig.align='center'}
+```{r empiricalDistrFcnExample, echo = TRUE, tidy=FALSE, cache = TRUE, message=FALSE, fig.cap = "Empirical and true distribution function", out.width='80%', fig.asp=.75, fig.align='center'}
 
 set.seed(42)
 data.df <- data.frame( x = rnorm(100) )
@@ -331,7 +331,7 @@ sd(tstar)
 Here we present an application of what we have learned in this chapter. The application is based on an example in @efron2016computer.
 
 The data set consists of measurements on the kidney function of 157 individuals. We fit a smoothing spline to the data and plot.
-```{r kidneyData, echo = TRUE, tidy=FALSE, cache=FALSE, message=FALSE, fig.cap = "Kidney function vs age", out.width='80%', fig.asp=.75, fig.align='center'}
+```{r kidneyData, echo = TRUE, tidy=FALSE, cache = TRUE, message=FALSE, fig.cap = "Kidney function vs age", out.width='80%', fig.asp=.75, fig.align='center'}
 kidney.df <- read.table("data/kidney.dat", header = TRUE)
 
 kidney.spline <- smooth.spline(kidney.df$age, kidney.df$tot, df = 10)

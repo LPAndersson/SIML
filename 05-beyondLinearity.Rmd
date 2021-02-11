@@ -33,7 +33,7 @@ smooth <- smooth.spline(train.data$age,train.data$wage, cv = TRUE)
 predictions <- predict(smooth, test.data$age)
 mean((predictions$y - test.data$wage)^2)
 ```
-```{r smoothingSpline, cache=FALSE, echo = FALSE, fig.cap='Smoothing spline fit to wage date', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r smoothingSpline, cache = TRUE, echo = FALSE, fig.cap='Smoothing spline fit to wage date', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
           "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
@@ -52,7 +52,7 @@ $$
 h(x_i) = \beta_0 + \sum_{j=1}^p h_j(x_{ij}).
 $$
 Here $h_j$ can be in principle any function, for example smoothing splines. We now present a small example using the wage data from ISLR. First load the data, partition into training/test and plot.
-```{r wageDataPlot, cache=FALSE, echo = TRUE, fig.cap='Scatter plot matrix of wage data.', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r wageDataPlot, cache = TRUE, echo = TRUE, fig.cap='Scatter plot matrix of wage data.', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 library(ISLR)
 library(gam)
 library(GGally)
@@ -278,7 +278,7 @@ The algorithm calculates $f'$ evaluated at the current point $\theta_{old}$. If 
 
 As a toy example, let us implement gradient descent on the function $f(\theta) = \theta^2$, were clearly $\theta^\star = 0$.
 
-```{r gradientDescentExample, cache=FALSE, echo = FALSE, fig.cap='Gradient descent', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r gradientDescentExample, cache = TRUE, echo = FALSE, fig.cap='Gradient descent', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 library(ggplot2)
 f  <- function(x) {
   x ^ 2
@@ -363,7 +363,7 @@ x_test <- mnist$test$x
 y_test <- mnist$test$y
 ```
 Let us see what the pictures look like.
-```{r mnist1, cache=FALSE, echo = FALSE, fig.cap='Examples from MNIST', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r mnist1, cache = TRUE, echo = FALSE, fig.cap='Examples from MNIST', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 par(mfcol=c(6,6))
 par(mar=c(0, 0, 3, 0), xaxs='i', yaxs='i')
 for (idx in 1:36) {
@@ -410,7 +410,7 @@ history <- model %>% fit(
 )
 ```
 Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called early stopping.
-```{r mnistHistory, cache=FALSE, echo = FALSE, fig.cap='Training and validation loss/accuracy for each epoch', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r mnistHistory, cache = TRUE, echo = FALSE, fig.cap='Training and validation loss/accuracy for each epoch', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 plot(history) +
   theme_minimal()
 ```
@@ -419,7 +419,7 @@ We see that the validation accuracy is still increasing, so we could probably ru
 model %>% evaluate(x_test, y_test,verbose = 0)
 ```
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
-```{r mnist2, cache=FALSE, echo = FALSE, fig.cap='Predictions on the test set', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r mnist2, cache = TRUE, echo = FALSE, fig.cap='Predictions on the test set', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 y_pred <- model %>% predict_classes(x_test)
 
 par(mfcol=c(6,6))

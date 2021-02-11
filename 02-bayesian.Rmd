@@ -125,7 +125,7 @@ $$
 p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 0\leq \theta\leq 1,
 $$
 <p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta)$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
-```{r betaDist, cache=FALSE, echo = FALSE, fig.cap='Density of the beta distribution', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r betaDist, cache=TRUE, echo = FALSE, fig.cap='Density of the beta distribution', out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 library(latex2exp)
 
@@ -166,7 +166,7 @@ p(x^\text{new} = 1 \mid x^n) = \int p(x^\text{new} = 1\mid \theta) p(\theta\mid 
 $$
 To make things more concrete, let us say that we observe $\bar x = 0.3$. Note how the likelihood, and therefore also the posterior, is a function of data only through $\bar x$. This is because $\bar x$ is a *sufficient statistic*. As an illustration, let us also choose $\mathsf{Beta}(5.0, 2.0)$ as the prior. Below we plot the prior, likelihood and posterior for $n=10$ and $n=100$. Note how the posterior becomes more like the likelihood as the sample size increase.
 
-```{r bernoulliPosterior, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r bernoulliPosterior, cache=TRUE, echo = FALSE, warning = FALSE, fig.cap='Prior, likelihood and posterior when n = 10 (top) and n=100 (bottom)', out.width='80%', fig.asp=.75, fig.align='center'}
 
 library(ggplot2)
 
@@ -261,7 +261,7 @@ p(\theta_1,\theta_2\mid x) \propto L(\theta_1,\theta_2) \propto \theta_1^{x_1}(1
 $$
 Note that $\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)$ is independent of $\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).$ Therefore we can simulate from $\tau\mid x$ by drawing $\theta_1^\star$ and $\theta_2^\star$ from the respective distribution and setting $\tau^\star = \theta_2^\star - \theta_1^\star$.
 
-```{r multiParameterExample, cache=FALSE, echo = TRUE, message=FALSE, warning = FALSE, fig.cap='Posterior distribution', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r multiParameterExample, cache=TRUE, echo = TRUE, message=FALSE, warning = FALSE, fig.cap='Posterior distribution', out.width='80%', fig.asp=.75, fig.align='center'}
 
 library(ggplot2)
 library(latex2exp)
@@ -415,7 +415,7 @@ sd(exp.mcmc$sample)
 ```
 We can plot the histogram of the samples against the density.
 
-```{r mcmcExample, cache=FALSE, echo = FALSE, message=FALSE, warning = FALSE, out.width='80%', fig.asp=.75, fig.align='center'}
+```{r mcmcExample, cache=TRUE, echo = FALSE, message=FALSE, warning = FALSE, out.width='80%', fig.asp=.75, fig.align='center'}
 data.df <- data.frame(sample = exp.mcmc$sample)
 
 cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -440,7 +440,7 @@ Y_i&\sim \mathsf{Bin}(n_i,\pi_i),\\
 \pi_i &= \Phi(z_i'\beta),
 \end{align}
 where $z_i=\begin{bmatrix} 1&z_{i1} &z_{i2} &z_{i3}  \end{bmatrix}'$ are indicators and $\Phi$ is the $\mathsf N(0,1)$ distribution function. The data is shown in the table.
-```{r bayesProbit, cache=FALSE, echo = FALSE, warning = FALSE}
+```{r bayesProbit, cache=TRUE, echo = FALSE, warning = FALSE}
 
 data.df <- read.csv("data/bayesProbit.dat", header=TRUE)
 knitr::kable(
@@ -516,7 +516,7 @@ Now we do some diagnostics of the simulation. First check that the acceptance pr
 beta.mcmc$accProb
 ```
 Then we plot the trajectories of the parameters. We want to see that the trajectories appear stationary and that they are not stuck in one state. We only plot the first 1000 steps.
-```{r logProbBayesTrajectory, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Trajectories of the Markov chain', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r logProbBayesTrajectory, cache=TRUE, echo = FALSE, warning = FALSE, fig.cap='Trajectories of the Markov chain', out.width='80%', fig.asp=.75, fig.align='center'}
 beta.df <- data.frame(data = beta.mcmc$sample)
 colnames(beta.df) <- c('beta0','beta1','beta2','beta3')
 
@@ -548,7 +548,7 @@ grid.arrange(p0,p1,p2,p3, nrow = 2)
 ```
 
 Then we calculate the cumulative mean. We want to see that the simulation is long enough so that the law of large numbers have come in to effect.
-```{r logProbBayesCumMean, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Cumulative mean of the Markov chain', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE}
+```{r logProbBayesCumMean, cache=TRUE, echo = FALSE, warning = FALSE, fig.cap='Cumulative mean of the Markov chain', out.width='80%', fig.asp=.75, fig.align='center', message=FALSE}
 library('dplyr')
 p0 <- ggplot(data = beta.df, aes(x = seq(1,nrow(beta.df)), y = cummean(beta0))) +
   geom_line() +
@@ -574,7 +574,7 @@ grid.arrange(p0,p1,p2,p3, nrow = 2)
 ```
 
 Then we plot the posterior distribution of the parameters.
-```{r logProbBayesPostDist, cache=FALSE, echo = FALSE, warning = FALSE, fig.cap='Posterior distribution', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r logProbBayesPostDist, cache=TRUE, echo = FALSE, warning = FALSE, fig.cap='Posterior distribution', out.width='80%', fig.asp=.75, fig.align='center'}
 p0 <- ggplot(data = beta.df, aes(x = beta0 )) +
   geom_histogram(aes(y=..density..), colour="black", fill="white",binwidth = 0.05) +
   geom_density(alpha=.2, fill="black") +
@@ -634,7 +634,7 @@ $$
 E\left[ \lambda \right] = \frac{\alpha}{\beta},
 $$
 <p>we will choose $\beta = \alpha/3$. It remains to choose $\alpha$. To do this we plot the density for different choices of $\alpha$.</p>
-```{r gammaDist, cache=FALSE, echo = FALSE, fig.cap='Density of the gamma distribution', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r gammaDist, cache=TRUE, echo = FALSE, fig.cap='Density of the gamma distribution', out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 library(latex2exp)
 
@@ -665,7 +665,7 @@ $$
 p(\lambda \mid x) \propto L(\lambda)p(\lambda) \propto \lambda^{\sum x_i}e^{-n\lambda} \lambda^{\alpha-1} e^{-\beta\lambda} = \lambda^{\alpha + \sum x_i - 1}e^{-\lambda(\beta + n)}.
 $$
 <p>That is, the posterior distribution is $\mathsf{Gamma}(\alpha + \sum x_i, \beta + n)$. With our prior we therefore get the posterior $\mathsf{Gamma}(518, 246.7)$, illustrated in the figure.</p>
-```{r gammaDistPostSubj, cache=FALSE, echo = FALSE, fig.cap='Density of the posterior distribution when prior is subjective', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r gammaDistPostSubj, cache=TRUE, echo = FALSE, fig.cap='Density of the posterior distribution when prior is subjective', out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 library(latex2exp)
 
@@ -686,7 +686,7 @@ c( lower, upper )
 ```
 
 <p>We could instead use a flat prior $p(\lambda) = c, \quad \lambda>0$. Note that this corresponds to a $\mathsf{Gamma}(1,0)$ distribution. So we may recycle the above calculations which gives the posterior $\mathsf{Gamma}(489,240)$.</p>
-```{r gammaDistPostFlat, cache=FALSE, echo = FALSE, fig.cap='Density of the posterior distribution when prior is flat', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r gammaDistPostFlat, cache=TRUE, echo = FALSE, fig.cap='Density of the posterior distribution when prior is flat', out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 library(latex2exp)
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-02" />
+<meta name="date" content="2021-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning (draft)</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
 <li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
@@ -212,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="support-vector-machines-i" class="section level2">
 <h2><span class="header-section-number">4.2</span> Support vector machines I</h2>
-<p>In this section will discuss binary classification and in particular support vector machines (SVM). The approach taken here is different from the one in ISL. Our approach is easier to explain, generalizes to other method and perhaps also more modern. The approach in ISL however provides a different intuition and is also relevant when implementing the algorithms.</p>
+<p>In this section will discuss binary classification and in particular <em>support vector machines</em> (SVM). The approach taken here is different from the one in ISL. Our approach is easier to explain, generalizes to other method and perhaps also more modern. The approach in ISL however provides a different intuition and is also relevant when implementing the algorithms.</p>
 <p>
 <p>We are given training examples <span class="math inline">\((x_i,y_i)\)</span>, where <span class="math inline">\(x_i\in \mathbb R^p\)</span> and <span class="math inline">\(y_i\in \left\{-1,1\right\}\)</span>. The equation <span class="math display">\[
 f(x):=x^T\beta + \beta_0 = 0,
@@ -355,7 +356,7 @@ Figure 4.6: Training data and degree 20 polynomial classification
 Figure 4.7: Out-of-sample error vs. degree of polynomial.
 </p>
 </div>
-<p>The in-sample error is decreasing as the degree of the polynomial increases, and so also the complexity of the model. When the degree is small, the in-sample error is a close approximation of the out-of-sample error, but as the degree increases the difference increases and for large degrees the in-sample error provides little information about the out-of-sample error. The out-of-sample error is at first decreasing, but unlike the in-sample-error, starts increasing after degree.</p>
+<p>The in-sample error is decreasing as the degree of the polynomial increases, and so also the complexity of the model. When the degree is small, the in-sample error is a close approximation of the out-of-sample error, but as the degree increases the difference increases and for large degrees the in-sample error provides little information about the out-of-sample error. The out-of-sample error is at first decreasing, but unlike the in-sample-error, starts increasing after degree 4.</p>
 <p>In the following sections we will investigate the connection between the in-sample and out-of-sample error.</p>
 </div>
             </section>

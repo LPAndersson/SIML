@@ -337,8 +337,8 @@ model %>% evaluate(x_test, y_test,verbose = 0)
 ```
 
 ```
-##      loss  accuracy 
-## 0.1069675 0.9687000
+##     loss accuracy 
+## 0.111491 0.967500
 ```
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center">

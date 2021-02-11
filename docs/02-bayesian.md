@@ -474,7 +474,7 @@ beta.mcmc$accProb
 ```
 
 ```
-## [1] 0.57037
+## [1] 0.53389
 ```
 Then we plot the trajectories of the parameters. We want to see that the trajectories appear stationary and that they are not stuck in one state. We only plot the first 1000 steps.
 <div class="figure" style="text-align: center">
@@ -502,7 +502,7 @@ apply(beta.mcmc$sample, 2, mean)
 ```
 
 ```
-## [1] -1.0903722  0.6038363  1.1894802 -1.9005936
+## [1] -1.1829531  0.3175842  1.1576232 -1.4132245
 ```
 
 ```r
@@ -511,9 +511,9 @@ apply(beta.mcmc$sample, 2, quantile, probs = c(0.05,0.95))
 ```
 
 ```
-##           [,1]      [,2]      [,3]      [,4]
-## 5%  -1.4605295 0.2098086 0.7740177 -2.353467
-## 95% -0.7401921 1.0111992 1.6204207 -1.465202
+##           [,1]       [,2]      [,3]      [,4]
+## 5%  -1.5791352 0.01517242 0.7428645 -1.736278
+## 95% -0.8206941 0.63006163 1.6063078 -1.101808
 ```
 As a final check, let us verify that our estimates makes sense by comparing our data to our predictions.
 
@@ -525,14 +525,14 @@ y.pred
 ```
 
 ```
-##              [,1]
-## [1,] 11.321624659
-## [2,]  0.644637408
-## [3,]  0.002780966
-## [4,] 19.732823764
-## [5,] 31.289477413
-## [6,]  2.819642491
-## [7,]  5.510984419
+##            [,1]
+## [1,] 11.0166258
+## [2,]  4.5834439
+## [3,]  0.1366877
+## [4,] 22.1383420
+## [5,] 33.8028200
+## [6,]  0.7736728
+## [7,]  4.9733827
 ```
 This is similar to the data.
 

@@ -99,6 +99,7 @@ regression-regularization
 model-selection
 an-application-i
 an-application-ii
+review-questions-3
 beyond-linearity-draft
 smoothing-splines
 generalized-additive-models
