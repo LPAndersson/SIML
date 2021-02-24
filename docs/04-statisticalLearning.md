@@ -891,15 +891,15 @@ We have seen that we also in the regression setting need to bound the model comp
 
 Recall that least squares regression minimizes the in-sample error:
 $$
-E_{in} = \sum_{i=1}^n\left( y_i - \beta_0 - \sum_{i=1}^p \beta_j x_{ij} \right)^2.
+E_{in} = \sum_{i=1}^n\left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \right)^2.
 $$
 Ridge regression instead minimizes
 $$
-E_{in} + \lambda\sum_{i=1}^p \beta_j^2,
+E_{in} + \lambda\sum_{j=1}^p \beta_j^2,
 $$
 and the lasso minimizes
 $$
-E_{in} + \lambda\sum_{i=1}^p | \beta_j |.
+E_{in} + \lambda\sum_{j=1}^p | \beta_j |.
 $$
 Here $\lambda$ is a tuning parameter that needs to be determined separately. Ridge regression and lasso use different penalty terms of model complexity, but the main idea is the same. Models with many and large parameters will be penalized in favor of less complex models. Compared to least squares regression, the estimates of $\beta_j$ will be smaller in ridge and lasso. That is the estimates will shrink towards zero. These methods are therefore sometimes called *shrinkage methods*. We know that the estimates in least squares regression are unbiased and shrinkage methods therefore introduce a bias. The hope is that the variance will decrease sufficiently, so that the total prediction error is smaller. Note that neither of these methods are scale invariant, however usually software will take care of this automatically.
 
@@ -925,7 +925,7 @@ model.lasso <- glmnet(poly(data.df$x,20), data.df$y, alpha = 1 )
 </div>
 In the pictures we see that the fitted coefficients decrease towards 0 as $\lambda$ increases. The main difference between the two methods is that in the ridge regression all coefficients are strictly positive for any finite $\lambda$, while for the lasso, coefficients become 0 when $\lambda$ is large. This difference relates to model interpretability. That is, the lasso will produce a simple model where many variables can be disregarded. We also mention that the lasso and ridge regression can, unlike unregularized least squares, handle the case $p>>n$. There is a generalization of ridge and lasso called elastic net, where a parameter $0\leq \alpha \leq 1$ is introduced and the loss function is instead,
 $$
-E_{in} + \lambda\left( \alpha \sum_{i=1}^p | \beta_j | + (1-\alpha) \sum_{i=1}^p \beta_j^2\right).
+E_{in} + \lambda\left( \alpha \sum_{j=1}^p | \beta_j | + (1-\alpha) \sum_{j=1}^p \beta_j^2\right).
 $$
 
 ## Model selection
