@@ -477,6 +477,6 @@ for (idx in 1:36) {
 10. What is a mini-batch?
 11. What is an epoch?
 12. What is backpropagation?
-13. How is NNs usually regularized?
+13. How are NNs usually regularized?
 
 
