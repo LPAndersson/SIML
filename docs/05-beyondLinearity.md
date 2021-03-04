@@ -377,6 +377,6 @@ The accuracy is 97%, which is not too bad. Let us make predictions on the test s
 10. What is a mini-batch?
 11. What is an epoch?
 12. What is backpropagation?
-13. How is NNs usually regularized?
+13. How are NNs usually regularized?
 
 
