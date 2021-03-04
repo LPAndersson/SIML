@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-11" />
+<meta name="date" content="2021-03-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,8 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -185,13 +183,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
 <li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
 <li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
+<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -237,7 +237,7 @@ f&#39;(\theta) = \frac{1}{n} \sum_{i=1}^n f_i&#39;(\theta).
 \]</span>
 Both the log-likelihood and the in-sample error are of this form. If <span class="math inline">\(n\)</span> is large, to calculation of the sum will however be expensive. Stochastic gradient descent therefore samples a small number of terms from the sum and takes a gradient descent step based on the derivative of only those terms. These terms are called a <em>mini-batch</em> and the number of terms is the batch size. Then we choose a number of different terms from the sum, and take a step based on them. Once we have gone through all the <span class="math inline">\(n\)</span> terms, we have completed one <em>epoch</em>.</p>
 <p>The only thing that remains is to discuss how the derivatives are calculated. The parameters that we need to differentiate with respect to are the weight matrices <span class="math inline">\(W\)</span> and the biases <span class="math inline">\(b\)</span>. Doing the differentiation by hand is too complicated and not an option.</p>
-<p>The composition of two functions <span class="math inline">\(f_1\)</span> and <span class="math inline">\(f_2\)</span> is the function <span class="math inline">\(f_1(f_2(x))\)</span>. Note that the neural network is of this form, where a linear transformation is composed with the activation function, which forms a layer. That layer is then composed with the next layer, and so on. Calculating derivatives of composed functions can be done with the chain rule and in the context of neural networks this is known as backpropagation.</p>
+<p>The composition of two functions <span class="math inline">\(f_1\)</span> and <span class="math inline">\(f_2\)</span> is the function <span class="math inline">\(f_1(f_2(x))\)</span>. Note that the neural network is of this form, where a linear transformation is composed with the activation function, which forms a layer. That layer is then composed with the next layer, and so on. Calculating derivatives of composed functions can be done with the chain rule and in the context of neural networks this is known as <em>backpropagation</em>.</p>
 <p>For more on backpropogation and a visualization of neural network, I recommend this <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">video series</a>.</p>
 </div>
             </section>

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-11" />
+<meta name="date" content="2021-03-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="5-4-stochastic-gradient-descent.html"/>
-
+<link rel="next" href="5-6-review-questions-4.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,8 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -185,13 +183,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
 <li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
 <li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
+<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -213,19 +213,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="an-application-3" class="section level2">
 <h2><span class="header-section-number">5.5</span> An application</h2>
-<p>Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library Tensorflow. You may find the <a href="https://keras.rstudio.com">documentation</a> useful</p>
+<p>Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library <em>Tensorflow</em>. You may find the <a href="https://keras.rstudio.com">documentation</a> useful</p>
 <p>Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras. The first time you install Keras, you do.</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="5-5-an-application-3.html#cb185-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;keras&quot;</span>)</span>
-<span id="cb185-2"><a href="5-5-an-application-3.html#cb185-2"></a>keras<span class="op">::</span><span class="kw">install_keras</span>(<span class="dt">tensorflow =</span> <span class="st">&quot;cpu&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="5-5-an-application-3.html#cb186-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;keras&quot;</span>)</span>
+<span id="cb186-2"><a href="5-5-an-application-3.html#cb186-2"></a>keras<span class="op">::</span><span class="kw">install_keras</span>(<span class="dt">tensorflow =</span> <span class="st">&quot;cpu&quot;</span>)</span></code></pre></div>
 <p>After that, it should be enough to</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="5-5-an-application-3.html#cb186-1"></a><span class="kw">library</span>(keras)</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="5-5-an-application-3.html#cb187-1"></a><span class="kw">library</span>(keras)</span></code></pre></div>
 <p>The MNIST database is already divided in a training and a test set</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="5-5-an-application-3.html#cb187-1"></a>mnist &lt;-<span class="st"> </span><span class="kw">dataset_mnist</span>()</span>
-<span id="cb187-2"><a href="5-5-an-application-3.html#cb187-2"></a></span>
-<span id="cb187-3"><a href="5-5-an-application-3.html#cb187-3"></a>x_train &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>x</span>
-<span id="cb187-4"><a href="5-5-an-application-3.html#cb187-4"></a>y_train &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>y</span>
-<span id="cb187-5"><a href="5-5-an-application-3.html#cb187-5"></a>x_test &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>x</span>
-<span id="cb187-6"><a href="5-5-an-application-3.html#cb187-6"></a>y_test &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>y</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="5-5-an-application-3.html#cb188-1"></a>mnist &lt;-<span class="st"> </span><span class="kw">dataset_mnist</span>()</span>
+<span id="cb188-2"><a href="5-5-an-application-3.html#cb188-2"></a></span>
+<span id="cb188-3"><a href="5-5-an-application-3.html#cb188-3"></a>x_train &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>x</span>
+<span id="cb188-4"><a href="5-5-an-application-3.html#cb188-4"></a>y_train &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>y</span>
+<span id="cb188-5"><a href="5-5-an-application-3.html#cb188-5"></a>x_test &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>x</span>
+<span id="cb188-6"><a href="5-5-an-application-3.html#cb188-6"></a>y_test &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>y</span></code></pre></div>
 Let us see what the pictures look like.
 <div class="figure" style="text-align: center"><span id="fig:mnist1"></span>
 <img src="05-beyondLinearity_files/figure-html/mnist1-1.png" alt="Examples from MNIST" width="80%" />
@@ -234,32 +234,32 @@ Figure 5.7: Examples from MNIST
 </p>
 </div>
 <p>Each image is represented as a 28x28 matrix of pixel values between 0 and 255. We reshape each matrix in to a vector and scale the pixel value so that it is between 0 and 1.</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="5-5-an-application-3.html#cb188-1"></a><span class="kw">dim</span>(x_train) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_train), <span class="dv">784</span>)</span>
-<span id="cb188-2"><a href="5-5-an-application-3.html#cb188-2"></a><span class="kw">dim</span>(x_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_test), <span class="dv">784</span>)</span>
-<span id="cb188-3"><a href="5-5-an-application-3.html#cb188-3"></a></span>
-<span id="cb188-4"><a href="5-5-an-application-3.html#cb188-4"></a>x_train &lt;-<span class="st"> </span>x_train <span class="op">/</span><span class="st"> </span><span class="dv">255</span></span>
-<span id="cb188-5"><a href="5-5-an-application-3.html#cb188-5"></a>x_test &lt;-<span class="st"> </span>x_test <span class="op">/</span><span class="st"> </span><span class="dv">255</span></span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="5-5-an-application-3.html#cb189-1"></a><span class="kw">dim</span>(x_train) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_train), <span class="dv">784</span>)</span>
+<span id="cb189-2"><a href="5-5-an-application-3.html#cb189-2"></a><span class="kw">dim</span>(x_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_test), <span class="dv">784</span>)</span>
+<span id="cb189-3"><a href="5-5-an-application-3.html#cb189-3"></a></span>
+<span id="cb189-4"><a href="5-5-an-application-3.html#cb189-4"></a>x_train &lt;-<span class="st"> </span>x_train <span class="op">/</span><span class="st"> </span><span class="dv">255</span></span>
+<span id="cb189-5"><a href="5-5-an-application-3.html#cb189-5"></a>x_test &lt;-<span class="st"> </span>x_test <span class="op">/</span><span class="st"> </span><span class="dv">255</span></span></code></pre></div>
 <p>The <span class="math inline">\(y\)</span> variables are given as an integer between 0 and 9. We transform it to a vector of dummy variables.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="5-5-an-application-3.html#cb189-1"></a>y_train &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(y_train, <span class="dv">10</span>)</span>
-<span id="cb189-2"><a href="5-5-an-application-3.html#cb189-2"></a>y_test &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(y_test, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="5-5-an-application-3.html#cb190-1"></a>y_train &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(y_train, <span class="dv">10</span>)</span>
+<span id="cb190-2"><a href="5-5-an-application-3.html#cb190-2"></a>y_test &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(y_test, <span class="dv">10</span>)</span></code></pre></div>
 <p>Now we specify a 2-layer NN with Relu activation in the hidden layer and softmax in the last layer.</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="5-5-an-application-3.html#cb190-1"></a>model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()</span>
-<span id="cb190-2"><a href="5-5-an-application-3.html#cb190-2"></a>model <span class="op">%&gt;%</span></span>
-<span id="cb190-3"><a href="5-5-an-application-3.html#cb190-3"></a><span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">50</span>, <span class="dt">activation =</span> <span class="st">&quot;relu&quot;</span>, <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">784</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb190-4"><a href="5-5-an-application-3.html#cb190-4"></a><span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">&quot;softmax&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="5-5-an-application-3.html#cb191-1"></a>model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()</span>
+<span id="cb191-2"><a href="5-5-an-application-3.html#cb191-2"></a>model <span class="op">%&gt;%</span></span>
+<span id="cb191-3"><a href="5-5-an-application-3.html#cb191-3"></a><span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">50</span>, <span class="dt">activation =</span> <span class="st">&quot;relu&quot;</span>, <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">784</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb191-4"><a href="5-5-an-application-3.html#cb191-4"></a><span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">&quot;softmax&quot;</span>)</span></code></pre></div>
 <p>We compile the model by specifying the loss and the optimization method.</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="5-5-an-application-3.html#cb191-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(</span>
-<span id="cb191-2"><a href="5-5-an-application-3.html#cb191-2"></a>  <span class="dt">loss =</span> <span class="st">&quot;categorical_crossentropy&quot;</span>,</span>
-<span id="cb191-3"><a href="5-5-an-application-3.html#cb191-3"></a>  <span class="dt">optimizer =</span> <span class="kw">optimizer_rmsprop</span>(),</span>
-<span id="cb191-4"><a href="5-5-an-application-3.html#cb191-4"></a>  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&quot;accuracy&quot;</span>)</span>
-<span id="cb191-5"><a href="5-5-an-application-3.html#cb191-5"></a>)</span></code></pre></div>
-<p>Here, cross entropy loss is just the negative of a multinomial log likelihood. The optimizer, RMSprop, is a way of choosing the learning rate adaptively. Now we train the NN.</p>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="5-5-an-application-3.html#cb192-1"></a>history &lt;-<span class="st"> </span>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(</span>
-<span id="cb192-2"><a href="5-5-an-application-3.html#cb192-2"></a>  x_train, y_train,</span>
-<span id="cb192-3"><a href="5-5-an-application-3.html#cb192-3"></a>  <span class="dt">epochs =</span> <span class="dv">10</span>, <span class="dt">batch_size =</span> <span class="dv">128</span>,</span>
-<span id="cb192-4"><a href="5-5-an-application-3.html#cb192-4"></a>  <span class="dt">validation_split =</span> <span class="fl">0.2</span></span>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="5-5-an-application-3.html#cb192-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(</span>
+<span id="cb192-2"><a href="5-5-an-application-3.html#cb192-2"></a>  <span class="dt">loss =</span> <span class="st">&quot;categorical_crossentropy&quot;</span>,</span>
+<span id="cb192-3"><a href="5-5-an-application-3.html#cb192-3"></a>  <span class="dt">optimizer =</span> <span class="kw">optimizer_rmsprop</span>(),</span>
+<span id="cb192-4"><a href="5-5-an-application-3.html#cb192-4"></a>  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&quot;accuracy&quot;</span>)</span>
 <span id="cb192-5"><a href="5-5-an-application-3.html#cb192-5"></a>)</span></code></pre></div>
-<p>Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called early stopping.</p>
+<p>Here, cross entropy loss is just the negative of a multinomial log likelihood. The optimizer, RMSprop, is a way of choosing the learning rate adaptively. Now we train the NN.</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="5-5-an-application-3.html#cb193-1"></a>history &lt;-<span class="st"> </span>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(</span>
+<span id="cb193-2"><a href="5-5-an-application-3.html#cb193-2"></a>  x_train, y_train,</span>
+<span id="cb193-3"><a href="5-5-an-application-3.html#cb193-3"></a>  <span class="dt">epochs =</span> <span class="dv">10</span>, <span class="dt">batch_size =</span> <span class="dv">128</span>,</span>
+<span id="cb193-4"><a href="5-5-an-application-3.html#cb193-4"></a>  <span class="dt">validation_split =</span> <span class="fl">0.2</span></span>
+<span id="cb193-5"><a href="5-5-an-application-3.html#cb193-5"></a>)</span></code></pre></div>
+<p>Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called <em>early stopping</em>.</p>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:mnistHistory"></span>
 <img src="05-beyondLinearity_files/figure-html/mnistHistory-1.png" alt="Training and validation loss/accuracy for each epoch" width="80%" />
@@ -268,9 +268,9 @@ Figure 5.8: Training and validation loss/accuracy for each epoch
 </p>
 </div>
 <p>We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.</p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="5-5-an-application-3.html#cb194-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test,<span class="dt">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="5-5-an-application-3.html#cb195-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test,<span class="dt">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>##     loss accuracy 
-## 0.111491 0.967500</code></pre>
+## 0.115221 0.966300</code></pre>
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center"><span id="fig:mnist2"></span>
 <img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />
@@ -278,24 +278,14 @@ The accuracy is 97%, which is not too bad. Let us make predictions on the test s
 Figure 5.9: Predictions on the test set
 </p>
 </div>
-
-<div id="refs" class="references">
-<div>
-<p>Efron, Bradley, and Trevor Hastie. 2016. <em>Computer Age Statistical Inference</em>. Vol. 5. Cambridge University Press.</p>
 </div>
-<div>
-<p>Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations of Machine Learning</em>. MIT press.</p>
-</div>
-</div>
-</div>
-<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="5-4-stochastic-gradient-descent.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="5-4-stochastic-gradient-descent.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5-6-review-questions-4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-11" />
+<meta name="date" content="2021-03-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,8 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -185,13 +183,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
 <li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
 <li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
+<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -218,33 +218,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 h(x_i) = \beta_0 + \sum_{j=1}^p h_j(x_{ij}).
 \]</span>
 Here <span class="math inline">\(h_j\)</span> can be in principle any function, for example smoothing splines. We now present a small example using the wage data from ISLR. First load the data, partition into training/test and plot.</p>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="5-2-generalized-additive-models.html#cb168-1"></a><span class="kw">library</span>(ISLR)</span>
-<span id="cb168-2"><a href="5-2-generalized-additive-models.html#cb168-2"></a><span class="kw">library</span>(gam)</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="5-2-generalized-additive-models.html#cb168-1"></a><span class="kw">library</span>(caret)</span></code></pre></div>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="5-2-generalized-additive-models.html#cb171-1"></a><span class="kw">library</span>(ISLR)</span>
+<span id="cb171-2"><a href="5-2-generalized-additive-models.html#cb171-2"></a><span class="kw">library</span>(gam)</span></code></pre></div>
 <pre><code>## Loading required package: splines</code></pre>
 <pre><code>## Loading required package: foreach</code></pre>
 <pre><code>## Loaded gam 1.20</code></pre>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="5-2-generalized-additive-models.html#cb172-1"></a><span class="kw">library</span>(GGally)</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="5-2-generalized-additive-models.html#cb175-1"></a><span class="kw">library</span>(GGally)</span></code></pre></div>
 <pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
 ##   method from   
 ##   +.gg   ggplot2</code></pre>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="5-2-generalized-additive-models.html#cb174-1"></a><span class="kw">data</span>(<span class="st">&quot;Wage&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</span>
-<span id="cb174-2"><a href="5-2-generalized-additive-models.html#cb174-2"></a>Wage &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Wage)</span>
-<span id="cb174-3"><a href="5-2-generalized-additive-models.html#cb174-3"></a></span>
-<span id="cb174-4"><a href="5-2-generalized-additive-models.html#cb174-4"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb174-5"><a href="5-2-generalized-additive-models.html#cb174-5"></a>training.samples &lt;-</span>
-<span id="cb174-6"><a href="5-2-generalized-additive-models.html#cb174-6"></a><span class="st">  </span><span class="kw">createDataPartition</span>(Wage<span class="op">$</span>wage, <span class="dt">p =</span> <span class="fl">0.8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb174-7"><a href="5-2-generalized-additive-models.html#cb174-7"></a>train.data  &lt;-<span class="st"> </span>Wage[training.samples,]</span>
-<span id="cb174-8"><a href="5-2-generalized-additive-models.html#cb174-8"></a>test.data &lt;-<span class="st"> </span>Wage[<span class="op">-</span>training.samples,]</span>
-<span id="cb174-9"><a href="5-2-generalized-additive-models.html#cb174-9"></a>cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
-<span id="cb174-10"><a href="5-2-generalized-additive-models.html#cb174-10"></a>          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
-<span id="cb174-11"><a href="5-2-generalized-additive-models.html#cb174-11"></a></span>
-<span id="cb174-12"><a href="5-2-generalized-additive-models.html#cb174-12"></a><span class="kw">ggpairs</span>(train.data, <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;wage&quot;</span>,<span class="st">&quot;year&quot;</span>,<span class="st">&quot;age&quot;</span>,<span class="st">&quot;education&quot;</span>),</span>
-<span id="cb174-13"><a href="5-2-generalized-additive-models.html#cb174-13"></a>        <span class="dt">upper=</span><span class="kw">list</span>(<span class="dt">continuous=</span><span class="kw">wrap</span>(<span class="st">&quot;smooth_loess&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.1</span>,<span class="dt">color=</span>cbp1[<span class="dv">2</span>])),</span>
-<span id="cb174-14"><a href="5-2-generalized-additive-models.html#cb174-14"></a>        <span class="dt">lower=</span><span class="kw">list</span>(<span class="dt">continuous=</span><span class="kw">wrap</span>(<span class="st">&quot;smooth_loess&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.1</span>,<span class="dt">color=</span>cbp1[<span class="dv">2</span>]))) <span class="op">+</span></span>
-<span id="cb174-15"><a href="5-2-generalized-additive-models.html#cb174-15"></a><span class="st">  </span><span class="kw">theme_minimal</span>()</span></code></pre></div>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="5-2-generalized-additive-models.html#cb177-1"></a><span class="kw">data</span>(<span class="st">&quot;Wage&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;ISLR&quot;</span>)</span>
+<span id="cb177-2"><a href="5-2-generalized-additive-models.html#cb177-2"></a>Wage &lt;-<span class="st"> </span><span class="kw">na.omit</span>(Wage)</span>
+<span id="cb177-3"><a href="5-2-generalized-additive-models.html#cb177-3"></a></span>
+<span id="cb177-4"><a href="5-2-generalized-additive-models.html#cb177-4"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb177-5"><a href="5-2-generalized-additive-models.html#cb177-5"></a>training.samples &lt;-</span>
+<span id="cb177-6"><a href="5-2-generalized-additive-models.html#cb177-6"></a><span class="st">  </span><span class="kw">createDataPartition</span>(Wage<span class="op">$</span>wage, <span class="dt">p =</span> <span class="fl">0.7</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb177-7"><a href="5-2-generalized-additive-models.html#cb177-7"></a>train.data  &lt;-<span class="st"> </span>Wage[training.samples,]</span>
+<span id="cb177-8"><a href="5-2-generalized-additive-models.html#cb177-8"></a>test.data &lt;-<span class="st"> </span>Wage[<span class="op">-</span>training.samples,]</span>
+<span id="cb177-9"><a href="5-2-generalized-additive-models.html#cb177-9"></a>cbp1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
+<span id="cb177-10"><a href="5-2-generalized-additive-models.html#cb177-10"></a>          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
+<span id="cb177-11"><a href="5-2-generalized-additive-models.html#cb177-11"></a></span>
+<span id="cb177-12"><a href="5-2-generalized-additive-models.html#cb177-12"></a><span class="kw">ggpairs</span>(train.data, <span class="dt">columns=</span><span class="kw">c</span>(<span class="st">&quot;wage&quot;</span>,<span class="st">&quot;year&quot;</span>,<span class="st">&quot;age&quot;</span>,<span class="st">&quot;education&quot;</span>),</span>
+<span id="cb177-13"><a href="5-2-generalized-additive-models.html#cb177-13"></a>        <span class="dt">upper=</span><span class="kw">list</span>(<span class="dt">continuous=</span><span class="kw">wrap</span>(<span class="st">&quot;smooth_loess&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.1</span>,<span class="dt">color=</span>cbp1[<span class="dv">2</span>])),</span>
+<span id="cb177-14"><a href="5-2-generalized-additive-models.html#cb177-14"></a>        <span class="dt">lower =</span> <span class="kw">list</span>(<span class="dt">combo =</span> <span class="kw">wrap</span>(ggally_facethist, <span class="dt">bins =</span> <span class="dv">30</span>))) <span class="op">+</span></span>
+<span id="cb177-15"><a href="5-2-generalized-additive-models.html#cb177-15"></a><span class="st">  </span><span class="kw">theme_minimal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:wageDataPlot"></span>
 <img src="05-beyondLinearity_files/figure-html/wageDataPlot-1.png" alt="Scatter plot matrix of wage data." width="80%" />
 <p class="caption">
@@ -252,10 +252,10 @@ Figure 5.2: Scatter plot matrix of wage data.
 </p>
 </div>
 <p>Looking at first row, for the year variable it would probably be fine with a linear fit, while for the age variable, a linear fit seems doubtful. Let us fit two models, one which is linear in year and one with a smoothing spline in year. Both are smoothing splines in age.</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="5-2-generalized-additive-models.html#cb177-1"></a>gam.m1 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</span>
-<span id="cb177-2"><a href="5-2-generalized-additive-models.html#cb177-2"></a>gam.m2 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span><span class="kw">s</span>(year , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</span>
-<span id="cb177-3"><a href="5-2-generalized-additive-models.html#cb177-3"></a></span>
-<span id="cb177-4"><a href="5-2-generalized-additive-models.html#cb177-4"></a><span class="kw">anova</span>(gam.m1, gam.m2)</span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="5-2-generalized-additive-models.html#cb178-1"></a>gam.m1 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</span>
+<span id="cb178-2"><a href="5-2-generalized-additive-models.html#cb178-2"></a>gam.m2 &lt;-<span class="st"> </span><span class="kw">gam</span>(wage<span class="op">~</span><span class="st"> </span><span class="kw">s</span>(year , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">s</span>(age , <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</span>
+<span id="cb178-3"><a href="5-2-generalized-additive-models.html#cb178-3"></a></span>
+<span id="cb178-4"><a href="5-2-generalized-additive-models.html#cb178-4"></a><span class="kw">anova</span>(gam.m1, gam.m2)</span></code></pre></div>
 <pre><code>## Analysis of Deviance Table
 ## 
 ## Model 1: wage ~ year + s(age, 4) + education
@@ -264,16 +264,16 @@ Figure 5.2: Scatter plot matrix of wage data.
 ## 1      2990    3696846                     
 ## 2      2987    3692824  3   4021.7   0.3542</code></pre>
 <p>The p-value indicates that the linear fit is satisfactory. Let us calculate the test error, also comparing to a linear model.</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="5-2-generalized-additive-models.html#cb179-1"></a>ls &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</span>
-<span id="cb179-2"><a href="5-2-generalized-additive-models.html#cb179-2"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data )</span>
-<span id="cb179-3"><a href="5-2-generalized-additive-models.html#cb179-3"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 1248.707</code></pre>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="5-2-generalized-additive-models.html#cb181-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m1, test.data )</span>
-<span id="cb181-2"><a href="5-2-generalized-additive-models.html#cb181-2"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 1174.914</code></pre>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="5-2-generalized-additive-models.html#cb183-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m2, test.data )</span>
-<span id="cb183-2"><a href="5-2-generalized-additive-models.html#cb183-2"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 1170.57</code></pre>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="5-2-generalized-additive-models.html#cb180-1"></a>ls &lt;-<span class="st"> </span><span class="kw">lm</span>(wage<span class="op">~</span><span class="st"> </span>year <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>education , <span class="dt">data =</span> Wage)</span>
+<span id="cb180-2"><a href="5-2-generalized-additive-models.html#cb180-2"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(ls, test.data )</span>
+<span id="cb180-3"><a href="5-2-generalized-additive-models.html#cb180-3"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1431.626</code></pre>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="5-2-generalized-additive-models.html#cb182-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m1, test.data )</span>
+<span id="cb182-2"><a href="5-2-generalized-additive-models.html#cb182-2"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1373.112</code></pre>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="5-2-generalized-additive-models.html#cb184-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(gam.m2, test.data )</span>
+<span id="cb184-2"><a href="5-2-generalized-additive-models.html#cb184-2"></a><span class="kw">mean</span>((predictions <span class="op">-</span><span class="st"> </span>test.data<span class="op">$</span>wage)<span class="op">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1371.094</code></pre>
 <p>The gam models outperform the linear model. The test error is smaller for the gam model with year as smoothed spline, although the difference is small.</p>
 </div>
             </section>

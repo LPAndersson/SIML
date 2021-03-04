@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2.7 Summary | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>5.6 Review questions | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2.7 Summary | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="5.6 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2.7 Summary | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="5.6 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="2-6-an-application-1.html"/>
-<link rel="next" href="2-8-review-questions-1.html"/>
+<link rel="prev" href="5-5-an-application-3.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -211,92 +211,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="summary-1" class="section level2">
-<h2><span class="header-section-number">2.7</span> Summary</h2>
-<p>In this section we summarize the chapter by doing a simple example that can be solved by direct calculation.</p>
-<p>In the 2020 season of the Swedish football league <em>Allsvenskan</em> there was 488 goals scored in 240 games. Assume that <span class="math inline">\(X_1, \ldots X_{488}\)</span>, the number of goals scored in each game, are i.i.d and distributed as <span class="math inline">\(\mathsf{Po}(\lambda)\)</span>. We wish to do Bayesian inference on the unknown parameter <span class="math inline">\(\lambda\)</span>.</p>
-<p>First we find the likelihood. Since the probability function of a Poisson distributed random variable is
-<span class="math display">\[
-p(x) = \frac{\lambda^x e^{-\lambda}}{x!},~x = 0,1,2\ldots,
-\]</span>
-if we denote the number of goals in game <span class="math inline">\(i\)</span> by <span class="math inline">\(x_i\)</span>, the total likelihood is
-<span class="math display">\[
-L(\lambda) = \prod_{i=1}^{n} \frac{\lambda^{x_i} e^{-\lambda}}{x_i!} \propto \lambda^{\sum x_i}e^{-n\lambda}.
-\]</span></p>
-<p>
-Then we decide on an appropriate prior distribution. Since <span class="math inline">\(\lambda &gt;0\)</span> we should choose a distribution with all probability on the positive real numbers. A convenient choice, it turns out, is the gamma distribution. Let us choose the parameters of the gamma distribution based on our subjective (prior) belief. As prior belief we will say that the mean of <span class="math inline">\(\lambda\)</span> should be 3, and that it is unlikely that the average number of goals is larger than 5. Since <span class="math inline">\(\lambda \sim \mathsf{Gamma}(\alpha,\beta)\)</span> implies that
-</p>
-<span class="math display">\[
-E\left[ \lambda \right] = \frac{\alpha}{\beta},
-\]</span>
-<p>
-we will choose <span class="math inline">\(\beta = \alpha/3\)</span>. It remains to choose <span class="math inline">\(\alpha\)</span>. To do this we plot the density for different choices of <span class="math inline">\(\alpha\)</span>.
-</p>
-<div class="figure" style="text-align: center"><span id="fig:gammaDist"></span>
-<img src="02-bayesian_files/figure-html/gammaDist-1.png" alt="Density of the gamma distribution" width="80%" />
-<p class="caption">
-Figure 2.7: Density of the gamma distribution
-</p>
+<div id="review-questions-4" class="section level2">
+<h2><span class="header-section-number">5.6</span> Review questions</h2>
+<ol style="list-style-type: decimal">
+<li>What is the optimization problem that is solved for smoothing splines?</li>
+<li>What is the hypothesis set for smoothing splines?</li>
+<li>What is the hypothesis set for generalized additive models?</li>
+<li>What is an activation function?</li>
+<li>What is an ReLU?</li>
+<li>What is the softmax function?</li>
+<li>What is a layer?</li>
+<li>What is gradient descent?</li>
+<li>What is the trade-off in choosing the learning rate?</li>
+<li>What is a mini-batch?</li>
+<li>What is an epoch?</li>
+<li>What is backpropagation?</li>
+<li>How is NNs usually regularized?</li>
+</ol>
+
 </div>
-<p>Based on this picture we decide that <span class="math inline">\(\alpha = 20\)</span> fits with our prior beliefs.</p>
-Now we shall calculate the posterior distribution. The prior distribution has the density (from a textbook)
-<span class="math display">\[
-p(\lambda) = \frac{\beta^\alpha}{\Gamma(\alpha)} \lambda^{\alpha-1} e^{-\beta\lambda}.
-\]</span>
-Therefore the posterior distribution has density
-<span class="math display">\[
-p(\lambda \mid x) \propto L(\lambda)p(\lambda) \propto \lambda^{\sum x_i}e^{-n\lambda} \lambda^{\alpha-1} e^{-\beta\lambda} = \lambda^{\alpha + \sum x_i - 1}e^{-\lambda(\beta + n)}.
-\]</span>
-<p>
-That is, the posterior distribution is <span class="math inline">\(\mathsf{Gamma}(\alpha + \sum x_i, \beta + n)\)</span>. With our prior we therefore get the posterior <span class="math inline">\(\mathsf{Gamma}(518, 246.7)\)</span>, illustrated in the figure.
-</p>
-<div class="figure" style="text-align: center"><span id="fig:gammaDistPostSubj"></span>
-<img src="02-bayesian_files/figure-html/gammaDistPostSubj-1.png" alt="Density of the posterior distribution when prior is subjective" width="80%" />
-<p class="caption">
-Figure 2.8: Density of the posterior distribution when prior is subjective
-</p>
-</div>
-<p>The mean of the posterior, and our point estimate of <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(518/246.7 \approx 2.1\)</span> and a 95% credibility interval is given by</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="2-7-summary-1.html#cb84-1"></a>lower &lt;-<span class="st"> </span><span class="kw">qgamma</span>(<span class="fl">0.025</span>, <span class="dt">shape =</span> <span class="dv">518</span>, <span class="dv">20</span><span class="op">/</span><span class="dv">3</span> <span class="op">+</span><span class="st"> </span><span class="dv">240</span>)</span>
-<span id="cb84-2"><a href="2-7-summary-1.html#cb84-2"></a>upper &lt;-<span class="st"> </span><span class="kw">qgamma</span>(<span class="fl">0.975</span>, <span class="dt">shape =</span> <span class="dv">518</span>, <span class="dv">20</span><span class="op">/</span><span class="dv">3</span> <span class="op">+</span><span class="st"> </span><span class="dv">240</span>)</span>
-<span id="cb84-3"><a href="2-7-summary-1.html#cb84-3"></a><span class="kw">c</span>( lower, upper )</span></code></pre></div>
-<pre><code>## [1] 1.923027 2.284652</code></pre>
-<p>
-We could instead use a flat prior <span class="math inline">\(p(\lambda) = c, \quad \lambda&gt;0\)</span>. Note that this corresponds to a <span class="math inline">\(\mathsf{Gamma}(1,0)\)</span> distribution. So we may recycle the above calculations which gives the posterior <span class="math inline">\(\mathsf{Gamma}(489,240)\)</span>.
-</p>
-<div class="figure" style="text-align: center"><span id="fig:gammaDistPostFlat"></span>
-<img src="02-bayesian_files/figure-html/gammaDistPostFlat-1.png" alt="Density of the posterior distribution when prior is flat" width="80%" />
-<p class="caption">
-Figure 2.9: Density of the posterior distribution when prior is flat
-</p>
-</div>
-<p>Now our point estimate of <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(489/240 \approx 2\)</span> and a 95% credibility interval is given by</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="2-7-summary-1.html#cb86-1"></a>lower &lt;-<span class="st"> </span><span class="kw">qgamma</span>(<span class="fl">0.025</span>, <span class="dt">shape =</span> <span class="dv">489</span>, <span class="dv">240</span>)</span>
-<span id="cb86-2"><a href="2-7-summary-1.html#cb86-2"></a>upper &lt;-<span class="st"> </span><span class="kw">qgamma</span>(<span class="fl">0.975</span>, <span class="dt">shape =</span> <span class="dv">489</span>, <span class="dv">240</span>)</span>
-<span id="cb86-3"><a href="2-7-summary-1.html#cb86-3"></a><span class="kw">c</span>( lower, upper )</span></code></pre></div>
-<pre><code>## [1] 1.860889 2.222002</code></pre>
-<p>We could also use Jeffreys prior which is proportional to the square root of the Fisher information. The Fisher information can be calculated, for example, as
-<span class="math display">\[
-I(\lambda) = Var(l&#39;(\lambda)).
-\]</span>
-The log-likelihod and its derivative is
-<span class="math display">\[\begin{align}
-l(\lambda) &amp;= \sum_{i=1}^n\left( -\ln x_i! + x_i\ln \lambda - \lambda \right)\\
-l&#39;(\lambda) &amp;= \sum_{i=1}^n\left( \frac{x_i}{\lambda} -1  \right) = n\left( \frac{\bar x}{\lambda} -1 \right).
-\end{align}\]</span>
-Which gives
-<span class="math display">\[
-I(\lambda) = Var\left(\frac{n\bar X}{\lambda} \right) = \frac{n^2}{\lambda} Var\left(\bar X\right) = \frac{n^2}{\lambda}\frac{\lambda}{n} = \frac{n}{\lambda}.
-\]</span>
-Then, finally, Jeffreys prior is <span class="math inline">\(p(\lambda) \propto \lambda^{-1/2}\)</span>, corresponding to <span class="math inline">\(\mathsf{Gamma}(1/2,0)\)</span> and then the procedure follows the same steps as above.</p>
-</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="2-6-an-application-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2-8-review-questions-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5-5-an-application-3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

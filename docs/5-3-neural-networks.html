@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-02-11" />
+<meta name="date" content="2021-03-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,8 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -185,13 +183,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
 <li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
 <li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
+<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -213,13 +213,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="neural-networks" class="section level2">
 <h2><span class="header-section-number">5.3</span> Neural networks</h2>
-<p>In this section we give a short introduction to (artificial) neural networks (NN). After reading this you should know enough to understand enough to implement a simple NN and be able to learn about more advanced models on your own.</p>
+<p>In this section we give a short introduction to (artificial) neural networks (NN). After reading this you should know enough to understand how to implement a simple NN and be able to learn about more advanced models on your own.</p>
 <p>Let us consider the classification setting, the regression setting is very similar. We have a set of predictors <span class="math inline">\(x_1,\ldots, x_p\)</span> and wish to classify into one of <span class="math inline">\(K\)</span> classes. Consider the following simple model:
 <span class="math display">\[\begin{align*}
 a &amp;= \sigma(Wx + b)\\
 h &amp;= \text{softmax}(a).
 \end{align*}\]</span>
-Here <span class="math inline">\(W\in \mathbb R^{K\times p}\)</span> is a weight matrix, <span class="math inline">\(b\in \mathbb R^K\)</span> is a bias vector and <span class="math inline">\(\sigma\)</span> is called the activation function. Traditionally sigmoid functions (s-shaped) were used as activiation function but recently it is more populare to use the so called rectified linear unit (ReLU), which is
+Here <span class="math inline">\(W\in \mathbb R^{K\times p}\)</span> is a weight matrix, <span class="math inline">\(b\in \mathbb R^K\)</span> is a bias vector and <span class="math inline">\(\sigma\)</span> is called the activation function. Traditionally sigmoid functions (s-shaped) were used as activiation function but recently it is more popular to use the so called rectified linear unit (ReLU), which is
 <span class="math display">\[
 \sigma(x) = \max(0,x).
 \]</span>
@@ -256,6 +256,7 @@ Figure 5.4: Training data and classification with 2 layer neural network
 Figure 5.5: Training data and classification with 3 layer neural network
 </p>
 </div>
+<p>We see that NNs produce a flexible class of classifiers.</p>
 <p>What remains to discuss is how to train NNs.</p>
 </div>
             </section>

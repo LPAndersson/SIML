@@ -1,4 +1,4 @@
-# Beyond linearity (draft)
+# Beyond linearity
 
 In this chapter we discuss some non-linear models. The purpose is only to give a short introduction to each model, enough to be able to use it in practice.
 
@@ -13,42 +13,54 @@ For smoothing splines, the hypothesis set is the functions with two continuous d
 $$
 \min_{h\in C^2} \sum_{i=1}^n\left( y_i - h(x_i) \right)^2 + \lambda \int h''(t)^2dt.
 $$
-The second term penalizes variability in $h$. Note that there are no parameters in this model and so it is a little surprising that the solutions can be easily characterized. It turns out that the optimal $h$ is a piecewise cubic polynomial with knots at $x_1,\ldots x_n$ and continuous first and second derivatives. The parameter $\lambda$ is usually determined by CV. Instead of $\lambda$ the penalty parameters is sometimes reparametrized as degrees of freedom, which has a similar interpretation as in linear regression.
+The second term penalizes variability in $h$. Note that there are no parameters in this model and so it is a little surprising that the solutions can be easily characterized. It turns out that the optimal $h$ is a piecewise cubic polynomial with knots at $x_1,\ldots x_n$ and continuous first and second derivatives. The parameter $\lambda$ is usually determined by CV. Instead of $\lambda$, the penalty parameters is sometimes reparametrized as degrees of freedom, which has a similar interpretation as in linear regression.
 
-Let us apply this in an example.
+Let us apply this in an example. We wish to predict wage based on age. We first split the data into a training and test set and take a look at the data.
 
 ```r
 library(caret)
-```
-
-```
-## Loading required package: lattice
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```r
 library(ISLR)
 
 data("Wage", package = "ISLR")
 Wage <- na.omit(Wage)
 
 set.seed(42)
-training.samples <- createDataPartition(Wage$wage, p = 0.8, list = FALSE)
+training.samples <- createDataPartition(Wage$wage, p = 0.7, list = FALSE)
 train.data  <- Wage[training.samples, ]
 test.data <- Wage[-training.samples, ]
 
-smooth <- smooth.spline(train.data$age,train.data$wage, cv = TRUE)
+ggplot(train.data, aes(x = age, y = wage)) +
+  geom_point() +
+  theme_minimal()
+```
 
-predictions <- predict(smooth, test.data$age)
-mean((predictions$y - test.data$wage)^2)
+<img src="05-beyondLinearity_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+<p>We see that the relationship appears non-linear. For lower ages, the wage increases with age and is then roughly constant. Let us fit a smoothing spline. To determine $\lambda$ by CV, the default in this package is leave-one-out CV.</p>
+
+```r
+model.smooth <- smooth.spline(train.data$age,train.data$wage, cv = TRUE)
+
+predictions.smooth <- predict(model.smooth, test.data$age)
+mean((predictions.smooth$y - test.data$wage)^2)
 ```
 
 ```
 ## [1] 1553.058
 ```
+Let us compare this to a polynomial regression.
+
+```r
+model.linear <- lm(wage ~ poly(age,3), data = train.data)
+
+predictions.linear <- predict(model.linear, test.data)
+mean((predictions.linear - test.data$wage)^2)
+```
+
+```
+## [1] 1545.619
+```
+
+We plot both models.
 <div class="figure" style="text-align: center">
 <img src="05-beyondLinearity_files/figure-html/smoothingSpline-1.png" alt="Smoothing spline fit to wage date" width="80%" />
 <p class="caption">(\#fig:smoothingSpline)Smoothing spline fit to wage date</p>
@@ -61,6 +73,18 @@ $$
 h(x_i) = \beta_0 + \sum_{j=1}^p h_j(x_{ij}).
 $$
 Here $h_j$ can be in principle any function, for example smoothing splines. We now present a small example using the wage data from ISLR. First load the data, partition into training/test and plot.
+
+```r
+library(caret)
+```
+
+```
+## Loading required package: lattice
+```
+
+```
+## Loading required package: ggplot2
+```
 
 ```r
 library(ISLR)
@@ -95,7 +119,7 @@ Wage <- na.omit(Wage)
 
 set.seed(42)
 training.samples <-
-  createDataPartition(Wage$wage, p = 0.8, list = FALSE)
+  createDataPartition(Wage$wage, p = 0.7, list = FALSE)
 train.data  <- Wage[training.samples,]
 test.data <- Wage[-training.samples,]
 cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -103,17 +127,8 @@ cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
 
 ggpairs(train.data, columns=c("wage","year","age","education"),
         upper=list(continuous=wrap("smooth_loess",alpha=0.1,color=cbp1[2])),
-        lower=list(continuous=wrap("smooth_loess",alpha=0.1,color=cbp1[2]))) +
+        lower = list(combo = wrap(ggally_facethist, bins = 30))) +
   theme_minimal()
-```
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
 <div class="figure" style="text-align: center">
@@ -147,7 +162,7 @@ mean((predictions - test.data$wage)^2)
 ```
 
 ```
-## [1] 1248.707
+## [1] 1431.626
 ```
 
 ```r
@@ -156,7 +171,7 @@ mean((predictions - test.data$wage)^2)
 ```
 
 ```
-## [1] 1174.914
+## [1] 1373.112
 ```
 
 ```r
@@ -165,20 +180,20 @@ mean((predictions - test.data$wage)^2)
 ```
 
 ```
-## [1] 1170.57
+## [1] 1371.094
 ```
 The gam models outperform the linear model. The test error is smaller for the gam model with year as smoothed spline, although the difference is small.
 
 ## Neural networks
 
-In this section we give a short introduction to (artificial) neural networks (NN). After reading this you should know enough to understand enough to implement a simple NN and be able to learn about more advanced models on your own.
+In this section we give a short introduction to (artificial) neural networks (NN). After reading this you should know enough to understand how to implement a simple NN and be able to learn about more advanced models on your own.
 
 Let us consider the classification setting, the regression setting is very similar. We have a set of predictors $x_1,\ldots, x_p$ and wish to classify into one of $K$ classes. Consider the following simple model:
 \begin{align*}
 a &= \sigma(Wx + b)\\
 h &= \text{softmax}(a).
 \end{align*}
-Here $W\in \mathbb R^{K\times p}$ is a weight matrix, $b\in \mathbb R^K$ is a bias vector and $\sigma$ is called the activation function. Traditionally sigmoid functions (s-shaped) were used as activiation function but recently it is more populare to use the so called rectified linear unit (ReLU), which is
+Here $W\in \mathbb R^{K\times p}$ is a weight matrix, $b\in \mathbb R^K$ is a bias vector and $\sigma$ is called the activation function. Traditionally sigmoid functions (s-shaped) were used as activiation function but recently it is more popular to use the so called rectified linear unit (ReLU), which is
 $$
 \sigma(x) = \max(0,x).
 $$
@@ -213,6 +228,8 @@ As an example, let us consider the same data set as in Section 4.2. We do classi
 <p class="caption">(\#fig:NN3layer)Training data and classification with 3 layer neural network</p>
 </div>
 
+We see that NNs produce a flexible class of classifiers.
+
 What remains to discuss is how to train NNs.
 
 ## Stochastic gradient descent
@@ -245,13 +262,13 @@ Both the log-likelihood and the in-sample error are of this form. If $n$ is larg
 
 The only thing that remains is to discuss how the derivatives are calculated. The parameters that we need to differentiate with respect to are the weight matrices $W$ and the biases $b$. Doing the differentiation by hand is too complicated and not an option.
 
-The composition of two functions $f_1$ and $f_2$ is the function $f_1(f_2(x))$. Note that the neural network is of this form, where a linear transformation is composed with the activation function, which forms a layer. That layer is then composed with the next layer, and so on. Calculating derivatives of composed functions can be done with the chain rule and in the context of neural networks this is known as backpropagation.
+The composition of two functions $f_1$ and $f_2$ is the function $f_1(f_2(x))$. Note that the neural network is of this form, where a linear transformation is composed with the activation function, which forms a layer. That layer is then composed with the next layer, and so on. Calculating derivatives of composed functions can be done with the chain rule and in the context of neural networks this is known as *backpropagation*.
 
 For more on backpropogation and a visualization of neural network, I recommend this [video series](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi).
 
 ## An application
 
-Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library Tensorflow. You may find the [documentation](https://keras.rstudio.com) useful
+Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library *Tensorflow*. You may find the [documentation](https://keras.rstudio.com) useful
 
 Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras. The first time you install Keras, you do.
 
@@ -320,7 +337,7 @@ history <- model %>% fit(
   validation_split = 0.2
 )
 ```
-Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called early stopping.
+Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called *early stopping*.
 
 ```
 ## `geom_smooth()` using formula 'y ~ x'
@@ -338,7 +355,7 @@ model %>% evaluate(x_test, y_test,verbose = 0)
 
 ```
 ##     loss accuracy 
-## 0.111491 0.967500
+## 0.115221 0.966300
 ```
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center">
@@ -346,6 +363,20 @@ The accuracy is 97%, which is not too bad. Let us make predictions on the test s
 <p class="caption">(\#fig:mnist2)Predictions on the test set</p>
 </div>
 
+## Review questions
 
+1. What is the optimization problem that is solved for smoothing splines?
+2. What is the hypothesis set for smoothing splines?
+3. What is the hypothesis set for generalized additive models?
+4. What is an activation function?
+5. What is an ReLU?
+6. What is the softmax function?
+7. What is a layer?
+8. What is gradient descent?
+9. What is the trade-off in choosing the learning rate?
+10. What is a mini-batch?
+11. What is an epoch?
+12. What is backpropagation?
+13. How is NNs usually regularized?
 
 

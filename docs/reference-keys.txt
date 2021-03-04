@@ -100,9 +100,10 @@ model-selection
 an-application-i
 an-application-ii
 review-questions-3
-beyond-linearity-draft
+beyond-linearity
 smoothing-splines
 generalized-additive-models
 neural-networks
 stochastic-gradient-descent
 an-application-3
+review-questions-4
