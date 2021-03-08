@@ -441,7 +441,7 @@ history <- model %>% fit(
 )
 ```
 Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called *early stopping*.
-```{r mnistHistory, cache = TRUE, echo = FALSE, fig.cap='Training and validation loss/accuracy for each epoch', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
+```{r mnistHistory, cache = TRUE, echo = FALSE, fig.cap='Training and validation loss/accuracy for each epoch', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, message=FALSE}
 plot(history) +
   theme_minimal()
 ```

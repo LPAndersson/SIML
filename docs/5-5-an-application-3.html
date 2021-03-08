@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-03-04" />
+<meta name="date" content="2021-03-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -259,8 +259,7 @@ Figure 5.7: Examples from MNIST
 <span id="cb193-3"><a href="5-5-an-application-3.html#cb193-3"></a>  <span class="dt">epochs =</span> <span class="dv">10</span>, <span class="dt">batch_size =</span> <span class="dv">128</span>,</span>
 <span id="cb193-4"><a href="5-5-an-application-3.html#cb193-4"></a>  <span class="dt">validation_split =</span> <span class="fl">0.2</span></span>
 <span id="cb193-5"><a href="5-5-an-application-3.html#cb193-5"></a>)</span></code></pre></div>
-<p>Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called <em>early stopping</em>.</p>
-<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called <em>early stopping</em>.
 <div class="figure" style="text-align: center"><span id="fig:mnistHistory"></span>
 <img src="05-beyondLinearity_files/figure-html/mnistHistory-1.png" alt="Training and validation loss/accuracy for each epoch" width="80%" />
 <p class="caption">
@@ -268,7 +267,7 @@ Figure 5.8: Training and validation loss/accuracy for each epoch
 </p>
 </div>
 <p>We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="5-5-an-application-3.html#cb195-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test,<span class="dt">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="5-5-an-application-3.html#cb194-1"></a>model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test,<span class="dt">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
 <pre><code>##     loss accuracy 
 ## 0.115221 0.966300</code></pre>
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.

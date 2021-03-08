@@ -338,11 +338,6 @@ history <- model %>% fit(
 )
 ```
 Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called *early stopping*.
-
-```
-## `geom_smooth()` using formula 'y ~ x'
-```
-
 <div class="figure" style="text-align: center">
 <img src="05-beyondLinearity_files/figure-html/mnistHistory-1.png" alt="Training and validation loss/accuracy for each epoch" width="80%" />
 <p class="caption">(\#fig:mnistHistory)Training and validation loss/accuracy for each epoch</p>
