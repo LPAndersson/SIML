@@ -208,7 +208,7 @@ The function above, $\sigma(Wx + b)$ is called a layer, and now we can stack the
 a_1 &= \sigma(W^1 x + b^1)\\
 a_2 &= \sigma(W^2 a_1 + b^2)\\
 &\vdots \\
-a_L&= \sigma(W^{L-1} a_{L-1} + b^{L-1}) \\
+a_L&= \sigma(W^{L} a_{L-1} + b^{L}) \\
 h &= \text{softmax}(a_L).
 \end{align*}
 That is essentially all there is, different networks can be obtained by choosing different types of weight matrices and different number of layers $L$. There are results that show that NNs can approximate essentially any function. So looking back at our discussion about generalization error, it is not surprising that it is possible to achieve a low in-sample error using NN. What is however surprising, given the large number of parameters, is that they many times also achieve a low out-of-sample error.
