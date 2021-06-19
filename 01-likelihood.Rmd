@@ -18,6 +18,11 @@ AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9
 
 AOS 10.0-3, 10.6
 
+## The likelihood function
+
+In this section we introduce the *likelihood function*, the tool we will use in this chapter for doing inference.
+
+
 
 ## Maximum likelihood estimation
 
