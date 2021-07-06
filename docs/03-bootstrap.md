@@ -2,7 +2,7 @@
 
 This chapter's main topic is a method for measuring the accuracy of sample estimates. Recall that in frequentist statistics we consider the variability of an estimate as we imagine that we draw new samples from the same distribution. In reality we only have one sample and so the solution has been to assume a distribution of the observations and theoretically derive the sampling distribution of the estimator. For example this is what we did using asymptotic approximations in the first chapter.
 
-In this chapter we introduce the Bootstrap as an alternative way of finding the accuracy of an estimator. Instead of assuming a distribtion of the observations, we will let the sample represent the whole sampling distribution. In that way we can get repeated approximate samples from the sampling distribution by resampling with replacement from the sample. This is a powerful method that lets us estimate standard deviations and construct confidence intervals even for complicated estimators, with very little effort.
+In this chapter we introduce the *Bootstrap* as an alternative way of finding the accuracy of an estimator. Instead of assuming a distribution of the observations, we will let the sample represent the whole sampling distribution. In that way we can get repeated approximate samples from the sampling distribution by resampling with replacement from the sample. This is a powerful method that lets us estimate standard deviations and construct confidence intervals even for complicated estimators, with very little effort.
 
 But first we will discuss the distinction between parametric and non-parametric statistics.
 
@@ -140,7 +140,7 @@ quantile(data.df$x, probs = c(0.75), type = 1)
 
 In this section we discuss how to calculate standard errors and confidence intervals for a statistic $T(X_1,X_2,\ldots, X_n)$. But first let us take a step back and consider the basics of what we are doing.
 
-We are given a sample $(x_1,\ldots, x_n)$. We have some function, $T$, that we apply to the sample and call a statistic. This may be a simple function like the sample mean, or some more complicated function like a parameter in a regression problem. We apply the function to the data and get a number $t=T(x_1,\ldots,x_n)$. To do inference we also need to know the variability of that number if we were to repeat the same experiment many times. We therefore consider the random variable $T_n := T(X_1,\ldots, X_n)$, where $X_i\overset{iid}{\sim }F$. The distribution of this random variable is called the sampling distribution. In some cases, for a particular $T$ and $F$ we may be able to find the sampling distribution either exactly or approximately. For example, we previously found the asymptotic sampling distribution of the maximum likelihood estimate. Once we have that, we can do hypothesis testing, construct confidence intervals or simply state the standard deviation. The procedure can be summarized as:
+We are given a sample $(x_1,\ldots, x_n)$. We have some function, $T$, that we apply to the sample and call a statistic. This may be a simple function like the sample mean, or some more complicated function like a parameter in a regression problem. We apply the function to the data and get a number $t=T(x_1,\ldots,x_n)$. To do inference we also need to know the variability of that number if we were to repeat the same experiment. We therefore consider the random variable $T_n := T(X_1,\ldots, X_n)$, where $X_i\overset{iid}{\sim }F$. The distribution of this random variable is called the sampling distribution. In some cases, for a particular $T$ and $F$, we may be able to find the sampling distribution either exactly or approximately. For example, we previously found the asymptotic sampling distribution of the maximum likelihood estimate. Once we have that, we can do hypothesis testing, construct confidence intervals or simply state the standard deviation. The procedure can be summarized as:
 $$
 F\overset{sample}{\to} x \overset{T}{\to} t.
 $$
@@ -204,7 +204,7 @@ $$
 $$</div>\EndKnitrBlock{note}
 <p>To be clear, step 1 above, draw $X_1^\star,\ldots, X_n^\star \overset{iid}{\sim} \hat F_n$, simply means to draw one of the observations in the sample randomly and call it $X_1^\star$. Put the observation back in the sample and independently draw another observation, call it $X_2^\star$ and so on.</p>
 
-Let us implement this method to calculate the standard error of the median:
+Let us implement this method to calculate the standard error of the median using the normaly distributed data set from the previous section:
 
 ```r
 T <- median
@@ -248,7 +248,7 @@ boot(data = data.df,
 ```
 Note that the two bootstrap functions do not give exactly the same result. This is because of the Monte carlo error, i.e.\ the error in approximating the sample mean with the expected value as in Equation \@ref(eq:MCapproximation).
 
-Since here we know $F$ we can calculate standard deviation by simulating from $F$, an alternative not available in practice.
+Since here we know $F$ we can calculate the standard deviation by simulating from $F$, an alternative not available in practice.
 
 ```r
 n <- nrow(data.df)
@@ -269,7 +269,7 @@ sd(Tsim) #Standard error of median
 
 It is also possible to construct confidence intervals using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals.
 
-Let us call $T(F) = \theta$ and $ T(\hat F_n)= \hat\theta_n $ and define the pivot $R_n = \hat\theta_n - \theta$. Write the distribution function of $R_n$ as:
+Let us call $T(F) = \theta$ and $T(\hat F_n )=\hat\theta_n$ and define the pivot $R_n = \hat\theta_n - \theta$. Write the distribution function of $R_n$ as:
 $$
 H(r) := P(R_n\leq r).
 $$
