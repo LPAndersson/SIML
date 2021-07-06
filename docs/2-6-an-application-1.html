@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2.6 An application | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2.6 An application | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -33,6 +33,7 @@
   
 <link rel="prev" href="2-5-markov-chain-monte-carlo.html"/>
 <link rel="next" href="2-7-summary-1.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,22 +51,23 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,7 +87,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -118,6 +120,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -135,22 +138,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a><ul>
-<li class="chapter" data-level="1.1" data-path="1-1-maximum-likelihood-estimation.html"><a href="1-1-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.1</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="1.2" data-path="1-2-hypothesis-testing.html"><a href="1-2-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.2</b> Hypothesis testing</a></li>
-<li class="chapter" data-level="1.3" data-path="1-3-likelihood-ratio-test.html"><a href="1-3-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.3</b> Likelihood ratio test</a></li>
-<li class="chapter" data-level="1.4" data-path="1-4-mathematical-aside-taylor-expansion.html"><a href="1-4-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.4</b> Mathematical aside: Taylor expansion</a></li>
-<li class="chapter" data-level="1.5" data-path="1-5-asymptotic-distribution-of-the-mle.html"><a href="1-5-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.5</b> Asymptotic distribution of the MLE</a></li>
-<li class="chapter" data-level="1.6" data-path="1-6-the-delta-method.html"><a href="1-6-the-delta-method.html"><i class="fa fa-check"></i><b>1.6</b> The delta method</a></li>
-<li class="chapter" data-level="1.7" data-path="1-7-wilks-test.html"><a href="1-7-wilks-test.html"><i class="fa fa-check"></i><b>1.7</b> Wilks’ test</a></li>
-<li class="chapter" data-level="1.8" data-path="1-8-walds-test.html"><a href="1-8-walds-test.html"><i class="fa fa-check"></i><b>1.8</b> Wald’s test</a></li>
-<li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
-<li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
-<li class="chapter" data-level="1.11" data-path="1-11-an-application.html"><a href="1-11-an-application.html"><i class="fa fa-check"></i><b>1.11</b> An application</a></li>
-<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
-<li class="chapter" data-level="1.13" data-path="1-13-review-questions.html"><a href="1-13-review-questions.html"><i class="fa fa-check"></i><b>1.13</b> Review questions</a></li>
+<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-1-the-likelihood-function.html"><a href="1-1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
+<li class="chapter" data-level="1.2" data-path="1-2-maximum-likelihood-estimation.html"><a href="1-2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="1.3" data-path="1-3-hypothesis-testing.html"><a href="1-3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
+<li class="chapter" data-level="1.4" data-path="1-4-likelihood-ratio-test.html"><a href="1-4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
+<li class="chapter" data-level="1.5" data-path="1-5-mathematical-aside-taylor-expansion.html"><a href="1-5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
+<li class="chapter" data-level="1.6" data-path="1-6-asymptotic-distribution-of-the-mle.html"><a href="1-6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
+<li class="chapter" data-level="1.7" data-path="1-7-the-delta-method.html"><a href="1-7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
+<li class="chapter" data-level="1.8" data-path="1-8-wilks-test.html"><a href="1-8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
+<li class="chapter" data-level="1.9" data-path="1-9-walds-test.html"><a href="1-9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
+<li class="chapter" data-level="1.10" data-path="1-10-score-test.html"><a href="1-10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
+<li class="chapter" data-level="1.11" data-path="1-11-confidence-intervals.html"><a href="1-11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-an-application.html"><a href="1-12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
+<li class="chapter" data-level="1.13" data-path="1-13-summary.html"><a href="1-13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
+<li class="chapter" data-level="1.14" data-path="1-14-review-questions.html"><a href="1-14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a><ul>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="2-1-some-basic-decision-theory.html"><a href="2-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
 <li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics-1.html"><a href="2-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="2.3" data-path="2-3-choosing-prior.html"><a href="2-3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
@@ -160,7 +166,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.7" data-path="2-7-summary-1.html"><a href="2-7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
 <li class="chapter" data-level="2.8" data-path="2-8-review-questions-1.html"><a href="2-8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a><ul>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="3-1-parametric-vs-non-parametric.html"><a href="3-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
 <li class="chapter" data-level="3.2" data-path="3-2-non-parametric-estimation.html"><a href="3-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-bootstrap.html"><a href="3-3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
@@ -169,7 +176,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,7 +191,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
@@ -211,15 +220,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="an-application-1" class="section level2">
+<div id="an-application-1" class="section level2" number="2.6">
 <h2><span class="header-section-number">2.6</span> An application</h2>
 <p>Here we consider the Bayesian probit model as an example.</p>
 <p>The data generating model is
 <span class="math display">\[\begin{align}
 Y_i&amp;\sim \mathsf{Bin}(n_i,\pi_i),\\
-\pi_i &amp;= \Phi(z_i&#39;\beta),
+\pi_i &amp;= \Phi(\beta_0 + \beta_1 z_{i1} + \beta_2 z_{i2} + \beta_3 z_{i3}),
 \end{align}\]</span>
-where <span class="math inline">\(z_i=\begin{bmatrix} 1&amp;z_{i1} &amp;z_{i2} &amp;z_{i3} \end{bmatrix}&#39;\)</span> are indicators and <span class="math inline">\(\Phi\)</span> is the <span class="math inline">\(\mathsf N(0,1)\)</span> distribution function. The data is shown in the table.</p>
+where <span class="math inline">\(z_{ij}\)</span> are indicators and <span class="math inline">\(\Phi\)</span> is the <span class="math inline">\(\mathsf N(0,1)\)</span> distribution function. The data is shown in the table.</p>
 <table>
 <caption><span id="tab:bayesProbit">Table 2.1: </span>Data for the Bayesian probit model</caption>
 <thead>
@@ -285,60 +294,66 @@ where <span class="math inline">\(z_i=\begin{bmatrix} 1&amp;z_{i1} &amp;z_{i2} &
 </table>
 <p>The likelihood is
 <span class="math display">\[
-L(\beta)\propto \prod_{i=1}^n\Phi(z_i&#39;\beta)^{y_i}(1-\Phi(z_i&#39;\beta))^{n_i-y_i}.
+L(\beta)\propto \prod_{i=1}^n\Phi(\beta_0 + \beta_1 z_{i1} + \beta_2 z_{i2} + \beta_3 z_{i3})^{y_i}(1-\Phi( \beta_0 + \beta_1 z_{i1} + \beta_2 z_{i2} + \beta_3 z_{i3}))^{n_i-y_i}.
 \]</span>
-We choose a normal distribution as prior on <span class="math inline">\(\beta\)</span>,
+We choose a normal distribution as prior for each <span class="math inline">\(\beta_i\)</span>,
 <span class="math display">\[
-\beta \overset{iid}\sim \mathsf N(0,\lambda),
+\beta_i \overset{iid}\sim \mathsf N(0,\lambda),
 \]</span>
 with <span class="math inline">\(\lambda=10\)</span>. That is, the prior can be written as
 <span class="math display">\[
-p(\beta) \propto \exp\left( -\frac{1}{2\lambda}\sum_{j=1}^3 \beta_j^2 \right)
+p(\beta) \propto \exp\left( -\frac{1}{2\lambda}\sum_{j=0}^3 \beta_j^2 \right).
 \]</span>
 We will use a random walk Metropolis Hastings algorithm with <span class="math inline">\(\varepsilon\overset{iid}\sim \mathsf N(0,\sigma^2)\)</span>.</p>
 <p>Now, we implement this in R. First we load the data.</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="2-6-an-application-1.html#cb73-1"></a>data.df &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/bayesProbit.dat&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>)</span>
-<span id="cb73-2"><a href="2-6-an-application-1.html#cb73-2"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(data.df)</span>
-<span id="cb73-3"><a href="2-6-an-application-1.html#cb73-3"></a>data.df<span class="op">$</span>z0 &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, n)</span>
-<span id="cb73-4"><a href="2-6-an-application-1.html#cb73-4"></a></span>
-<span id="cb73-5"><a href="2-6-an-application-1.html#cb73-5"></a>col_order &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;y&#39;</span>, <span class="st">&#39;n&#39;</span>,<span class="st">&#39;z0&#39;</span>,<span class="st">&#39;z1&#39;</span>,<span class="st">&#39;z2&#39;</span>,<span class="st">&#39;z3&#39;</span>)</span>
-<span id="cb73-6"><a href="2-6-an-application-1.html#cb73-6"></a>data.df &lt;-<span class="st"> </span>data.df[, col_order]</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="2-6-an-application-1.html#cb9-1" aria-hidden="true" tabindex="-1"></a>data.df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/bayesProbit.dat&quot;</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb9-2"><a href="2-6-an-application-1.html#cb9-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb9-3"><a href="2-6-an-application-1.html#cb9-3" aria-hidden="true" tabindex="-1"></a>data.df<span class="sc">$</span>z0 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, n)</span>
+<span id="cb9-4"><a href="2-6-an-application-1.html#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="2-6-an-application-1.html#cb9-5" aria-hidden="true" tabindex="-1"></a>col_order <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;y&#39;</span>, <span class="st">&#39;n&#39;</span>,<span class="st">&#39;z0&#39;</span>,<span class="st">&#39;z1&#39;</span>,<span class="st">&#39;z2&#39;</span>,<span class="st">&#39;z3&#39;</span>)</span>
+<span id="cb9-6"><a href="2-6-an-application-1.html#cb9-6" aria-hidden="true" tabindex="-1"></a>data.df <span class="ot">&lt;-</span> data.df[, col_order]</span></code></pre></div>
 <p>Then implement the likelihood function and prior density. We do this on a log-scale.</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="2-6-an-application-1.html#cb74-1"></a>logLFcn &lt;-<span class="st"> </span><span class="cf">function</span>(data){</span>
-<span id="cb74-2"><a href="2-6-an-application-1.html#cb74-2"></a>  <span class="cf">function</span>(beta){</span>
-<span id="cb74-3"><a href="2-6-an-application-1.html#cb74-3"></a>    p &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">as.matrix</span>(data[<span class="dv">3</span><span class="op">:</span><span class="dv">6</span>])<span class="op">%*%</span>beta)</span>
-<span id="cb74-4"><a href="2-6-an-application-1.html#cb74-4"></a>    sum &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb74-5"><a href="2-6-an-application-1.html#cb74-5"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(data))) {</span>
-<span id="cb74-6"><a href="2-6-an-application-1.html#cb74-6"></a>      sum &lt;-<span class="st"> </span>sum <span class="op">+</span><span class="st"> </span>data<span class="op">$</span>y[i]<span class="op">*</span><span class="kw">log</span>(p[i]) <span class="op">+</span><span class="st"> </span>(data<span class="op">$</span>n[i]<span class="op">-</span>data<span class="op">$</span>y[i])<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p[i])</span>
-<span id="cb74-7"><a href="2-6-an-application-1.html#cb74-7"></a>    }</span>
-<span id="cb74-8"><a href="2-6-an-application-1.html#cb74-8"></a>    sum</span>
-<span id="cb74-9"><a href="2-6-an-application-1.html#cb74-9"></a>  }</span>
-<span id="cb74-10"><a href="2-6-an-application-1.html#cb74-10"></a>}</span>
-<span id="cb74-11"><a href="2-6-an-application-1.html#cb74-11"></a>logL &lt;-<span class="st"> </span><span class="kw">logLFcn</span>(data.df)</span>
-<span id="cb74-12"><a href="2-6-an-application-1.html#cb74-12"></a></span>
-<span id="cb74-13"><a href="2-6-an-application-1.html#cb74-13"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span></span>
-<span id="cb74-14"><a href="2-6-an-application-1.html#cb74-14"></a>logPrior &lt;-<span class="st"> </span><span class="cf">function</span>(beta){</span>
-<span id="cb74-15"><a href="2-6-an-application-1.html#cb74-15"></a>    <span class="op">-</span><span class="kw">sum</span>(beta<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>lambda)</span>
-<span id="cb74-16"><a href="2-6-an-application-1.html#cb74-16"></a>}</span>
-<span id="cb74-17"><a href="2-6-an-application-1.html#cb74-17"></a></span>
-<span id="cb74-18"><a href="2-6-an-application-1.html#cb74-18"></a>logPosterior &lt;-<span class="st"> </span><span class="cf">function</span>(beta){ <span class="kw">logL</span>(beta) <span class="op">+</span><span class="st"> </span><span class="kw">logPrior</span>(beta)}</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="2-6-an-application-1.html#cb10-1" aria-hidden="true" tabindex="-1"></a>logL <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb10-2"><a href="2-6-an-application-1.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="2-6-an-application-1.html#cb10-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> data.df<span class="sc">$</span>y</span>
+<span id="cb10-4"><a href="2-6-an-application-1.html#cb10-4" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> data.df<span class="sc">$</span>n</span>
+<span id="cb10-5"><a href="2-6-an-application-1.html#cb10-5" aria-hidden="true" tabindex="-1"></a>  z0 <span class="ot">&lt;-</span>data.df[<span class="dv">3</span>]</span>
+<span id="cb10-6"><a href="2-6-an-application-1.html#cb10-6" aria-hidden="true" tabindex="-1"></a>  z1 <span class="ot">&lt;-</span>data.df[<span class="dv">4</span>]</span>
+<span id="cb10-7"><a href="2-6-an-application-1.html#cb10-7" aria-hidden="true" tabindex="-1"></a>  z2 <span class="ot">&lt;-</span>data.df[<span class="dv">5</span>]</span>
+<span id="cb10-8"><a href="2-6-an-application-1.html#cb10-8" aria-hidden="true" tabindex="-1"></a>  z3 <span class="ot">&lt;-</span>data.df[<span class="dv">6</span>]</span>
+<span id="cb10-9"><a href="2-6-an-application-1.html#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="2-6-an-application-1.html#cb10-10" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="fu">as.matrix</span>(z0 <span class="sc">*</span> beta[<span class="dv">1</span>] <span class="sc">+</span> z1 <span class="sc">*</span> beta[<span class="dv">2</span>] <span class="sc">+</span> z2 <span class="sc">*</span> beta[<span class="dv">3</span>] <span class="sc">+</span> z3 <span class="sc">*</span> beta[<span class="dv">4</span>]))</span>
+<span id="cb10-11"><a href="2-6-an-application-1.html#cb10-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-12"><a href="2-6-an-application-1.html#cb10-12" aria-hidden="true" tabindex="-1"></a>  sum <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb10-13"><a href="2-6-an-application-1.html#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(data.df))) {</span>
+<span id="cb10-14"><a href="2-6-an-application-1.html#cb10-14" aria-hidden="true" tabindex="-1"></a>    sum <span class="ot">&lt;-</span> sum <span class="sc">+</span> y[i]<span class="sc">*</span><span class="fu">log</span>(p[i]) <span class="sc">+</span> (n[i]<span class="sc">-</span>y[i])<span class="sc">*</span><span class="fu">log</span>(<span class="dv">1</span><span class="sc">-</span>p[i])</span>
+<span id="cb10-15"><a href="2-6-an-application-1.html#cb10-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-16"><a href="2-6-an-application-1.html#cb10-16" aria-hidden="true" tabindex="-1"></a>  sum</span>
+<span id="cb10-17"><a href="2-6-an-application-1.html#cb10-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-18"><a href="2-6-an-application-1.html#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="2-6-an-application-1.html#cb10-19" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb10-20"><a href="2-6-an-application-1.html#cb10-20" aria-hidden="true" tabindex="-1"></a>logPrior <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb10-21"><a href="2-6-an-application-1.html#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">sum</span>(beta<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>lambda)</span>
+<span id="cb10-22"><a href="2-6-an-application-1.html#cb10-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-23"><a href="2-6-an-application-1.html#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="2-6-an-application-1.html#cb10-24" aria-hidden="true" tabindex="-1"></a>logPosterior <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){ <span class="fu">logL</span>(beta) <span class="sc">+</span> <span class="fu">logPrior</span>(beta)}</span></code></pre></div>
 <p>Now run the Markov chain. First a burn-in of 1000 steps, that we then discard. After that a longer run.</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="2-6-an-application-1.html#cb75-1"></a>beta &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="co">#Initial value</span></span>
-<span id="cb75-2"><a href="2-6-an-application-1.html#cb75-2"></a>nIter &lt;-<span class="st"> </span><span class="dv">100000</span> <span class="co">#Number of MC steps</span></span>
-<span id="cb75-3"><a href="2-6-an-application-1.html#cb75-3"></a></span>
-<span id="cb75-4"><a href="2-6-an-application-1.html#cb75-4"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb75-5"><a href="2-6-an-application-1.html#cb75-5"></a></span>
-<span id="cb75-6"><a href="2-6-an-application-1.html#cb75-6"></a>beta.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(beta,</span>
-<span id="cb75-7"><a href="2-6-an-application-1.html#cb75-7"></a>                       logPosterior,</span>
-<span id="cb75-8"><a href="2-6-an-application-1.html#cb75-8"></a>                       <span class="fl">0.08</span>,</span>
-<span id="cb75-9"><a href="2-6-an-application-1.html#cb75-9"></a>                       <span class="dv">1000</span>)</span>
-<span id="cb75-10"><a href="2-6-an-application-1.html#cb75-10"></a></span>
-<span id="cb75-11"><a href="2-6-an-application-1.html#cb75-11"></a>beta.mcmc &lt;-<span class="st"> </span><span class="kw">mcmc.iter</span>(beta.mcmc<span class="op">$</span>sample[<span class="kw">nrow</span>(beta.mcmc<span class="op">$</span>sample),],</span>
-<span id="cb75-12"><a href="2-6-an-application-1.html#cb75-12"></a>                       logPosterior,</span>
-<span id="cb75-13"><a href="2-6-an-application-1.html#cb75-13"></a>                       <span class="fl">0.08</span>,</span>
-<span id="cb75-14"><a href="2-6-an-application-1.html#cb75-14"></a>                       nIter)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="2-6-an-application-1.html#cb11-1" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="co">#Initial value</span></span>
+<span id="cb11-2"><a href="2-6-an-application-1.html#cb11-2" aria-hidden="true" tabindex="-1"></a>nIter <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="co">#Number of MC steps</span></span>
+<span id="cb11-3"><a href="2-6-an-application-1.html#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="2-6-an-application-1.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb11-5"><a href="2-6-an-application-1.html#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="2-6-an-application-1.html#cb11-6" aria-hidden="true" tabindex="-1"></a>beta.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(beta,</span>
+<span id="cb11-7"><a href="2-6-an-application-1.html#cb11-7" aria-hidden="true" tabindex="-1"></a>                       logPosterior,</span>
+<span id="cb11-8"><a href="2-6-an-application-1.html#cb11-8" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.08</span>,</span>
+<span id="cb11-9"><a href="2-6-an-application-1.html#cb11-9" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">1000</span>)</span>
+<span id="cb11-10"><a href="2-6-an-application-1.html#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="2-6-an-application-1.html#cb11-11" aria-hidden="true" tabindex="-1"></a>beta.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(beta.mcmc<span class="sc">$</span>sample[<span class="fu">nrow</span>(beta.mcmc<span class="sc">$</span>sample),],</span>
+<span id="cb11-12"><a href="2-6-an-application-1.html#cb11-12" aria-hidden="true" tabindex="-1"></a>                       logPosterior,</span>
+<span id="cb11-13"><a href="2-6-an-application-1.html#cb11-13" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.08</span>,</span>
+<span id="cb11-14"><a href="2-6-an-application-1.html#cb11-14" aria-hidden="true" tabindex="-1"></a>                       nIter)</span></code></pre></div>
 <p>Now we do some diagnostics of the simulation. First check that the acceptance probability is reasonable.</p>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="2-6-an-application-1.html#cb76-1"></a>beta.mcmc<span class="op">$</span>accProb</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="2-6-an-application-1.html#cb12-1" aria-hidden="true" tabindex="-1"></a>beta.mcmc<span class="sc">$</span>accProb</span></code></pre></div>
 <pre><code>## [1] 0.53389</code></pre>
 Then we plot the trajectories of the parameters. We want to see that the trajectories appear stationary and that they are not stuck in one state. We only plot the first 1000 steps.
 <div class="figure" style="text-align: center"><span id="fig:logProbBayesTrajectory"></span>
@@ -362,19 +377,19 @@ Figure 2.6: Posterior distribution
 </p>
 </div>
 <p>From this we can get point estimates, the mean of the posterior distribution, and credible intervals.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="2-6-an-application-1.html#cb78-1"></a><span class="co">#Point estimates</span></span>
-<span id="cb78-2"><a href="2-6-an-application-1.html#cb78-2"></a><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, mean)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="2-6-an-application-1.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Point estimates</span></span>
+<span id="cb14-2"><a href="2-6-an-application-1.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(beta.mcmc<span class="sc">$</span>sample, <span class="dv">2</span>, mean)</span></code></pre></div>
 <pre><code>## [1] -1.1829531  0.3175842  1.1576232 -1.4132245</code></pre>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="2-6-an-application-1.html#cb80-1"></a><span class="co">#95% CI</span></span>
-<span id="cb80-2"><a href="2-6-an-application-1.html#cb80-2"></a><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="2-6-an-application-1.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#95% CI</span></span>
+<span id="cb16-2"><a href="2-6-an-application-1.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(beta.mcmc<span class="sc">$</span>sample, <span class="dv">2</span>, quantile, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>))</span></code></pre></div>
 <pre><code>##           [,1]       [,2]      [,3]      [,4]
 ## 5%  -1.5791352 0.01517242 0.7428645 -1.736278
 ## 95% -0.8206941 0.63006163 1.6063078 -1.101808</code></pre>
 <p>As a final check, let us verify that our estimates makes sense by comparing our data to our predictions.</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="2-6-an-application-1.html#cb82-1"></a>beta.fit &lt;-<span class="st"> </span><span class="kw">apply</span>(beta.mcmc<span class="op">$</span>sample, <span class="dv">2</span>, mean)</span>
-<span id="cb82-2"><a href="2-6-an-application-1.html#cb82-2"></a>p &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">as.matrix</span>(data.df[<span class="dv">3</span><span class="op">:</span><span class="dv">6</span>])<span class="op">%*%</span>beta.fit)</span>
-<span id="cb82-3"><a href="2-6-an-application-1.html#cb82-3"></a>y.pred &lt;-<span class="st"> </span>data.df<span class="op">$</span>n<span class="op">*</span>p</span>
-<span id="cb82-4"><a href="2-6-an-application-1.html#cb82-4"></a>y.pred</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="2-6-an-application-1.html#cb18-1" aria-hidden="true" tabindex="-1"></a>beta.fit <span class="ot">&lt;-</span> <span class="fu">apply</span>(beta.mcmc<span class="sc">$</span>sample, <span class="dv">2</span>, mean)</span>
+<span id="cb18-2"><a href="2-6-an-application-1.html#cb18-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(<span class="fu">as.matrix</span>(data.df[<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>])<span class="sc">%*%</span>beta.fit)</span>
+<span id="cb18-3"><a href="2-6-an-application-1.html#cb18-3" aria-hidden="true" tabindex="-1"></a>y.pred <span class="ot">&lt;-</span> data.df<span class="sc">$</span>n<span class="sc">*</span>p</span>
+<span id="cb18-4"><a href="2-6-an-application-1.html#cb18-4" aria-hidden="true" tabindex="-1"></a>y.pred</span></code></pre></div>
 <pre><code>##            [,1]
 ## [1,] 11.0166258
 ## [2,]  4.5834439
@@ -414,6 +429,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

@@ -1,10 +1,10 @@
 # Bayesian statistics
 
-In this chapter we introduce a different way of thinking about statistical inference, Bayesian statistics. 
+In this chapter we introduce a different way of thinking about statistical inference, *Bayesian statistics*. 
 
-The statistics that we have seen so far in this course, and also in previous courses, is called frequentist statistics. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behoviour of an estimator.
+The type of statistics that we have seen so far in this course, and also in previous courses, is called *frequentist statistics*. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.
 
-Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the prior distribtution. After making the observations, that distribution is updated, using Bayes' formula, and we call the updated distribution the posterior distribution. The posterior distributin can the be used to construct point estimates of the parameter, intervals etc.
+Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the *prior distribution*. After making the observations, that distribution is updated, using Bayes' formula, and we call the updated distribution the *posterior distribution*. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.
 
 The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.
 
@@ -38,7 +38,7 @@ R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
 $$</div>\EndKnitrBlock{note}
 Here the expectation is taken of a random sample $X$, while $\theta$ is held fixed. Still the comparison of different $\delta$ is not trivial. It may be that for $\delta_1$ the risk is lower than the risk of $\delta_2$ for some values of $\theta$, while for some other $\theta$, the risk is higher. As a trivial example, say that we have the squared loss and $\delta(x) \equiv 0$. Then, if the the true $\theta$ is 0, clearly this is a good decision. But if the true $\theta$ is something else, it is a bad decision.
 
-Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample $X$. This is known as *frequentist statistics*. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e.\ for most data $x$. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue, it does not make sense to consider any other data set.
+Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample $X$. This is known as *frequentist statistics*. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e.\ for most data $x$. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue that, it does not make sense to consider any other data set.
 
 The Bayesian way is to instead consider $\theta$ as random, with a distribution $p(\theta)$. Even if we consider $\theta$ to have a fixed unknown value it could make sense to consider it having a distribution. For example, if we let $\theta$ be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, clearly this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative.
 
@@ -131,7 +131,7 @@ where $n \bar x = \sum_i x_i$. Then the posterior is
 $$
 p(\theta\mid x) \propto L(\theta)p(\theta) \propto \theta^{n\bar x}(1-\theta)^{n-n\bar x} \theta^{\alpha-1}(1-\theta)^{\beta-1} = \theta^{\alpha + n\bar x -1}(1-\theta)^{\beta + n - n\bar x -1},
 $$
-we recognize this as a $\mathsf{Beta}(\alpha+n\bar x, \beta+n-n\bar x)$ distribution. In this situation, when the prior and posterior happen to be in the same family of distributions, the prior is said to be conjugate with respect to the model.
+we recognize this as a $\mathsf{Beta}(\alpha+n\bar x, \beta+n-n\bar x)$ distribution. In this situation, when the prior and posterior happen to be in the same family of distributions, the prior is said to be *conjugate* with respect to the model.
 
 From here we easily get that the mean of the posterior is 
 $$
@@ -160,7 +160,7 @@ Consider the model $X\sim \mathsf N(\theta,\sigma^2)$, $\sigma^2$ known. Here th
 $$
 \int_{-\infty}^\infty p(\theta)d\theta = \infty,
 $$
-for every choice of $c$. Then $p$ is said to be an improper prior. Although a little curious, we can still perform the Bayesian inference program. Now the posterior distribution is
+for every choice of $c$. Then $p$ is said to be an *improper prior*. Although a little curious, we can still perform the Bayesian inference program. The posterior distribution is
 $$
 p(\theta \mid x) \propto L(\theta)p(\theta) \propto L(\theta).
 $$
@@ -189,7 +189,7 @@ which is a $\mathsf{Beta}(1/2,1/2)$.
 
 ## Multiparameter problems
 
-If there is more than one parameter, the previous discussion applies without any major changes. What might complicate things is if we wish to do inference on just one of the parameters. Then we need to calculate the marginal posterior distribution of the parameter, which may not be practical. One remedy is to simply simulate from the joint posterior distribution and from the simulation pick the parameters that are of interest.
+If there is more than one parameter, the previous discussion applies without any major changes. What might complicate things is if we wish to do inference on just one of the parameters. Then we need to calculate the marginal posterior distribution of the parameter, which may not be practical. One remedy is to simply draw samples from the joint posterior distribution and from the samples pick the parameters that are of interest.
 
 Let us consider the example of comparing two binomials. The data generating model is
 \begin{align}
@@ -243,13 +243,13 @@ So far we have been using that the posterior distribution is proportional to the
 $$
 \int p(x\mid \theta)p(\theta)d\theta.
 $$
-Many times, and in particular if $\theta$ is high dimensional, we will not be able to calculate this.
+Many times, and in particular if $\theta$ is high dimensional, it is not possible to calculate this integral.
 
 In this section we will see how we can, instead of calculating it, generate samples from the posterior distribution. This is the method that is used in modern Bayesian statistics. Here we are only able to scratch the surface. Both in terms of theory, since explaining why the method works would require first learning about Markov chains, and in terms of complexity of the methods, since the methods that are used in practice are usually more advanced version of what we present here.
 
 We assume that we are able to write down the likelihood of our data generating model and the prior on our parameters. Therefore we are also able to write down the posterior distribution up to a multiplying constant.
 
-The method we will discuss is called the *Metropolis-Hastings algorithm* and it is an example of a *Markov chain Monte Carlo* (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte Carlo means that is is an algorithm that depends on random sampling.
+The method we will discuss is called the *Metropolis-Hastings algorithm* and it is an example of a *Markov chain Monte Carlo* (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte Carlo means that is is an algorithm that uses on random sampling.
 
 The Metropolis-Hastings algorithm is as follows: Suppose we want to sample from the posterior $p(\theta\mid x).$ Suppose also that this is not possible directly, but that we are able to generate samples from some other distribution $q(\theta^\star \mid \theta).$ Then do the following:
 
@@ -280,7 +280,7 @@ where $\varepsilon_{i-1}$ is and independent random variable. For example $\vare
 $$
 r=\min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)} ,1\right\}
 $$
-Here it is important to choose $b$ such that the correlation between $\theta_i$ and $\theta_{i-1}$ is small. If $b$ is small, almost all proposals will be accepted, but since $\varepsilon_i$ is small, $\theta_{i+1}$ will be highly correlated with $\theta_{i}$. On the other hand, if $b$ is large, the proposal will rarely be accepted, and $\theta_i=\theta_{i-1}$. As a rule of thumb, $b$ should be set such that about $50\%$ of the proposals are accepted.
+Here it is important to choose $b$ such that the correlation between $\theta_i$ and $\theta_{i-1}$ is small. If $b$ is small, almost all proposals will be accepted, but since $\varepsilon_i$ also tends to be small, $\theta_{i+1}$ will be highly correlated with $\theta_{i}$. On the other hand, if $b$ is large, the proposal will rarely be accepted, and $\theta_i=\theta_{i-1}$. As a rule of thumb, $b$ should be set such that about $50\%$ of the proposals are accepted.
 
 Another class of proposal distributions is $q(\theta^\star\mid \theta_{i-1})\equiv q(\theta^\star)$, that is $\theta^\star$ is independent of $\theta_{i-1}$. The acceptance probability is then
 $$
@@ -386,9 +386,9 @@ Here we consider the Bayesian probit model as an example.
 The data generating model is
 \begin{align}
 Y_i&\sim \mathsf{Bin}(n_i,\pi_i),\\
-\pi_i &= \Phi(z_i'\beta),
+\pi_i &= \Phi(\beta_0 + \beta_1 z_{i1} + \beta_2 z_{i2} + \beta_3 z_{i3}),
 \end{align}
-where $z_i=\begin{bmatrix} 1&z_{i1} &z_{i2} &z_{i3}  \end{bmatrix}'$ are indicators and $\Phi$ is the $\mathsf N(0,1)$ distribution function. The data is shown in the table.
+where $z_{ij}$ are indicators and $\Phi$ is the $\mathsf N(0,1)$ distribution function. The data is shown in the table.
 
 Table: (\#tab:bayesProbit)Data for the Bayesian probit model
 
@@ -404,15 +404,15 @@ Table: (\#tab:bayesProbit)Data for the Bayesian probit model
 
 The likelihood is
 $$
-L(\beta)\propto \prod_{i=1}^n\Phi(z_i'\beta)^{y_i}(1-\Phi(z_i'\beta))^{n_i-y_i}.
+L(\beta)\propto \prod_{i=1}^n\Phi(\beta_0 + \beta_1 z_{i1} + \beta_2 z_{i2} + \beta_3 z_{i3})^{y_i}(1-\Phi( \beta_0 + \beta_1 z_{i1} + \beta_2 z_{i2} + \beta_3 z_{i3}))^{n_i-y_i}.
 $$
-We choose a normal distribution as prior on $\beta$,
+We choose a normal distribution as prior for each $\beta_i$,
 $$
-\beta \overset{iid}\sim \mathsf N(0,\lambda),
+\beta_i \overset{iid}\sim \mathsf N(0,\lambda),
 $$
 with $\lambda=10$. That is, the prior can be written as
 $$
-p(\beta) \propto \exp\left( -\frac{1}{2\lambda}\sum_{j=1}^3 \beta_j^2 \right)
+p(\beta) \propto \exp\left( -\frac{1}{2\lambda}\sum_{j=0}^3 \beta_j^2 \right).
 $$
 We will use a random walk Metropolis Hastings algorithm with $\varepsilon\overset{iid}\sim \mathsf N(0,\sigma^2)$. 
 
@@ -429,17 +429,23 @@ data.df <- data.df[, col_order]
 Then implement the likelihood function and prior density. We do this on a log-scale.
 
 ```r
-logLFcn <- function(data){
-  function(beta){
-    p <- pnorm(as.matrix(data[3:6])%*%beta)
-    sum <- 0
-    for (i in seq_len(nrow(data))) {
-      sum <- sum + data$y[i]*log(p[i]) + (data$n[i]-data$y[i])*log(1-p[i])
-    }
-    sum
+logL <- function(beta){
+
+  y <- data.df$y
+  n <- data.df$n
+  z0 <-data.df[3]
+  z1 <-data.df[4]
+  z2 <-data.df[5]
+  z3 <-data.df[6]
+
+  p <- pnorm(as.matrix(z0 * beta[1] + z1 * beta[2] + z2 * beta[3] + z3 * beta[4]))
+  
+  sum <- 0
+  for (i in seq_len(nrow(data.df))) {
+    sum <- sum + y[i]*log(p[i]) + (n[i]-y[i])*log(1-p[i])
   }
+  sum
 }
-logL <- logLFcn(data.df)
 
 lambda <- 10
 logPrior <- function(beta){

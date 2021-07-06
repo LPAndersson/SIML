@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2.1 Some basic decision theory | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2.1 Some basic decision theory | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -33,6 +33,7 @@
   
 <link rel="prev" href="2-bayesian-statistics.html"/>
 <link rel="next" href="2-2-bayesian-statistics-1.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,22 +51,23 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,7 +87,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -118,6 +120,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -135,22 +138,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a><ul>
-<li class="chapter" data-level="1.1" data-path="1-1-maximum-likelihood-estimation.html"><a href="1-1-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.1</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="1.2" data-path="1-2-hypothesis-testing.html"><a href="1-2-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.2</b> Hypothesis testing</a></li>
-<li class="chapter" data-level="1.3" data-path="1-3-likelihood-ratio-test.html"><a href="1-3-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.3</b> Likelihood ratio test</a></li>
-<li class="chapter" data-level="1.4" data-path="1-4-mathematical-aside-taylor-expansion.html"><a href="1-4-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.4</b> Mathematical aside: Taylor expansion</a></li>
-<li class="chapter" data-level="1.5" data-path="1-5-asymptotic-distribution-of-the-mle.html"><a href="1-5-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.5</b> Asymptotic distribution of the MLE</a></li>
-<li class="chapter" data-level="1.6" data-path="1-6-the-delta-method.html"><a href="1-6-the-delta-method.html"><i class="fa fa-check"></i><b>1.6</b> The delta method</a></li>
-<li class="chapter" data-level="1.7" data-path="1-7-wilks-test.html"><a href="1-7-wilks-test.html"><i class="fa fa-check"></i><b>1.7</b> Wilks’ test</a></li>
-<li class="chapter" data-level="1.8" data-path="1-8-walds-test.html"><a href="1-8-walds-test.html"><i class="fa fa-check"></i><b>1.8</b> Wald’s test</a></li>
-<li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
-<li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
-<li class="chapter" data-level="1.11" data-path="1-11-an-application.html"><a href="1-11-an-application.html"><i class="fa fa-check"></i><b>1.11</b> An application</a></li>
-<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
-<li class="chapter" data-level="1.13" data-path="1-13-review-questions.html"><a href="1-13-review-questions.html"><i class="fa fa-check"></i><b>1.13</b> Review questions</a></li>
+<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-1-the-likelihood-function.html"><a href="1-1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
+<li class="chapter" data-level="1.2" data-path="1-2-maximum-likelihood-estimation.html"><a href="1-2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="1.3" data-path="1-3-hypothesis-testing.html"><a href="1-3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
+<li class="chapter" data-level="1.4" data-path="1-4-likelihood-ratio-test.html"><a href="1-4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
+<li class="chapter" data-level="1.5" data-path="1-5-mathematical-aside-taylor-expansion.html"><a href="1-5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
+<li class="chapter" data-level="1.6" data-path="1-6-asymptotic-distribution-of-the-mle.html"><a href="1-6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
+<li class="chapter" data-level="1.7" data-path="1-7-the-delta-method.html"><a href="1-7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
+<li class="chapter" data-level="1.8" data-path="1-8-wilks-test.html"><a href="1-8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
+<li class="chapter" data-level="1.9" data-path="1-9-walds-test.html"><a href="1-9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
+<li class="chapter" data-level="1.10" data-path="1-10-score-test.html"><a href="1-10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
+<li class="chapter" data-level="1.11" data-path="1-11-confidence-intervals.html"><a href="1-11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-an-application.html"><a href="1-12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
+<li class="chapter" data-level="1.13" data-path="1-13-summary.html"><a href="1-13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
+<li class="chapter" data-level="1.14" data-path="1-14-review-questions.html"><a href="1-14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a><ul>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="2-1-some-basic-decision-theory.html"><a href="2-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
 <li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics-1.html"><a href="2-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="2.3" data-path="2-3-choosing-prior.html"><a href="2-3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
@@ -160,7 +166,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.7" data-path="2-7-summary-1.html"><a href="2-7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
 <li class="chapter" data-level="2.8" data-path="2-8-review-questions-1.html"><a href="2-8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a><ul>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="3-1-parametric-vs-non-parametric.html"><a href="3-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
 <li class="chapter" data-level="3.2" data-path="3-2-non-parametric-estimation.html"><a href="3-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-bootstrap.html"><a href="3-3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
@@ -169,7 +176,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,7 +191,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
@@ -211,7 +220,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="some-basic-decision-theory" class="section level2">
+<div id="some-basic-decision-theory" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Some basic decision theory</h2>
 <p>In this section we introduce <em>statistical decision theory</em>, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.</p>
 <p>
@@ -237,9 +246,8 @@ The risk is defined as
 R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
 \]</span>
 </div>
-
 <p>Here the expectation is taken of a random sample <span class="math inline">\(X\)</span>, while <span class="math inline">\(\theta\)</span> is held fixed. Still the comparison of different <span class="math inline">\(\delta\)</span> is not trivial. It may be that for <span class="math inline">\(\delta_1\)</span> the risk is lower than the risk of <span class="math inline">\(\delta_2\)</span> for some values of <span class="math inline">\(\theta\)</span>, while for some other <span class="math inline">\(\theta\)</span>, the risk is higher. As a trivial example, say that we have the squared loss and <span class="math inline">\(\delta(x) \equiv 0\)</span>. Then, if the the true <span class="math inline">\(\theta\)</span> is 0, clearly this is a good decision. But if the true <span class="math inline">\(\theta\)</span> is something else, it is a bad decision.</p>
-<p>Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample <span class="math inline">\(X\)</span>. This is known as <em>frequentist statistics</em>. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e. for most data <span class="math inline">\(x\)</span>. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue, it does not make sense to consider any other data set.</p>
+<p>Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample <span class="math inline">\(X\)</span>. This is known as <em>frequentist statistics</em>. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e. for most data <span class="math inline">\(x\)</span>. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue that, it does not make sense to consider any other data set.</p>
 <p>The Bayesian way is to instead consider <span class="math inline">\(\theta\)</span> as random, with a distribution <span class="math inline">\(p(\theta)\)</span>. Even if we consider <span class="math inline">\(\theta\)</span> to have a fixed unknown value it could make sense to consider it having a distribution. For example, if we let <span class="math inline">\(\theta\)</span> be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, clearly this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative.</p>
 <p>
 The Bayesian statistician would call <span class="math inline">\(p(\theta)\)</span> the <em>prior distribution</em> on <span class="math inline">\(\theta\)</span>. Then, after observing the data <span class="math inline">\(x\)</span>, calculate the <em>posterior distribution</em>, using Bayes’ formula,
@@ -260,7 +268,6 @@ The <em>posterior risk</em> is then defined as
 \rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x)) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
 \]</span>
 </div>
-
 <p>Here the random quantity is <span class="math inline">\(\theta\)</span> while the data <span class="math inline">\(x\)</span> is held constant. The <em>Bayes action</em> <span class="math inline">\(\delta^\star\)</span> is the decision <span class="math inline">\(\delta\)</span> that minimizes the posterior risk. For example, if the decision is a point estimate of <span class="math inline">\(\theta\)</span> and <span class="math inline">\(l(\theta,\delta) = (\theta - \delta)^2\)</span>. Then
 <span class="math display">\[\begin{align}
 \rho(p(\theta),\delta) &amp;= \int (\theta - \delta)^2 p(\theta\mid x)d\theta\\
@@ -276,7 +283,6 @@ A hybrid between the frequentist and the Bayesian approach is the <em>average ri
 r(p(\theta),\delta) = \int R(\theta,\delta)p(\theta)d\theta.
 \]</span>
 </div>
-
 <p>The <em>Bayes risk</em> is the minimum of the average risk, taken over all <span class="math inline">\(\delta\)</span> and the decision <span class="math inline">\(\delta(x)\)</span> that achieves the minimum is called the <em>Bayes rule</em>. Since the risk here is the frequentist risk, this is fundamentally a frequentist quantity. However, we can write
 <span class="math display">\[\begin{align}
 r(p(\theta),\delta) &amp;= \int \int l(\theta,\delta(x))p(x\mid\theta)dxp(\theta)d\theta\\
@@ -314,6 +320,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
