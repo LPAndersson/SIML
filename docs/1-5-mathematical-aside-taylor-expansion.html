@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.5 Mathematical aside: Taylor expansion | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.5 Mathematical aside: Taylor expansion | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.5 Mathematical aside: Taylor expansion | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1-1-the-likelihood-function.html"/>
+<link rel="prev" href="1-4-likelihood-ratio-test.html"/>
+<link rel="next" href="1-6-asymptotic-distribution-of-the-mle.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,25 +220,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-likelihood" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Likelihood-based methods</h1>
-<p>This chapter is about methods for statistical inference based on the likelihood function.</p>
-<p>We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.</p>
-<p>We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.</p>
-<p>It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.</p>
-<p>Finally we will see how this can be applied to the binary regression model.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 6</p>
-<p>AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9</p>
-<p>AOS 10.0-3, 10.6</p>
+<div id="mathematical-aside-taylor-expansion" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Mathematical aside: Taylor expansion</h2>
+<p>In this section we see how to approximate functions by polynomials. This will be useful when we search for the asymptotic distribution of the MLE.</p>
+<p>We would like to approximate a function <span class="math inline">\(f(x)\)</span> by a polynomial <span class="math inline">\(p(x)\)</span> of degree <span class="math inline">\(n\)</span>, around a point <span class="math inline">\(x_0\)</span>. That is, if <span class="math inline">\(x\approx x_0\)</span> we would like <span class="math inline">\(f(x)\approx p(x)\)</span>. How should we choose <span class="math inline">\(p(x)\)</span>?</p>
+<p>Let us write
+<span class="math display">\[
+p(x) = c_0 + c_1(x-x_0) + c_2(x-x_0)^2 + \cdots + c_n(x-x_0)^n.
+\]</span>
+To ensure that <span class="math inline">\(f(x)\approx p(x)\)</span> close to <span class="math inline">\(x_0\)</span>, we first require that
+<span class="math display">\[
+f(x_0)=p(x_0)=c_0,
+\]</span>
+so that we have found the first parameter. To make the approximation better, we further require that the first derivatives are the same at <span class="math inline">\(x_0\)</span>,
+<span class="math display">\[
+f&#39;(x_0) = p&#39;(x_0) = c_1 + 2c_2(x-x_0) + 3c_3(x-x_0)^2+\cdots + nc_n(x-x_0)^{n-1}|_{x=x_0} = c_1,
+\]</span>
+and so the second parameter of <span class="math inline">\(p(x)\)</span> has been determined.</p>
+<p>Continuing, we want
+<span class="math display">\[
+f&#39;&#39;(x_0) = p&#39;&#39;(x_0) = 2c_2 + 2\cdot 3c_3(x-x_0) + 3\cdot 4c_4(x-x_0)^2 + \cdot (n-1)nc_n(x-x_0)^{n-2}|_{x=x_0} = 2c_2,
+\]</span>
+so that <span class="math inline">\(c_2 = f&#39;&#39;(x_0)/2\)</span>. For the <span class="math inline">\(k\)</span>th derivative,
+<span class="math display">\[
+f^{(k)}(x_0) = p^{(k)}(x_0) = 2\cdot 3\cdots kc_k = k!c_k,
+\]</span>
+so that <span class="math inline">\(c_k = f^{(k)}(x_0)/k!\)</span>.</p>
+<p>To summarize, the order <span class="math inline">\(n\)</span> polynomial approximation of <span class="math inline">\(f(x)\)</span> close to <span class="math inline">\(x_0\)</span> is
+<span class="math display">\[
+f(x) \approx f(x_0) + f&#39;(x_0)(x-x_0) + \frac{f&#39;&#39;(x_0)}{2!}(x-x_0)^2 + \cdots \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n.
+\]</span>
+This is known as a Taylor series.</p>
+In fact, we can do even better by giving a formula for the error. Taylor’s theorem says that
+
+<div class="note">
+If <span class="math inline">\(p(x)\)</span> is the order <span class="math inline">\(n\)</span> polynomial approximation of <span class="math inline">\(f(x)\)</span> as given above, then the approximation error is
+<span class="math display">\[
+f(x) -p(x) =  \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1},
+\]</span>
+where <span class="math inline">\(\xi\)</span> is some number between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_0\)</span>.
+</div>
+<p>As an example, let us consider the approximation of <span class="math inline">\(\ln x\)</span> around 1. We begin by calculating the derivatives,</p>
+<p><span class="math display">\[\begin{align}
+\ln 1 &amp;= 0 ,\\
+\partial_x\ln x|_{x=1} &amp;= \frac{1}{x}|_{x=1} = 1 \\
+\partial_x^2 \ln x|_{x=1} &amp;= -\frac{1}{x^2}|_{x=1} = -1,\\
+\partial_x^3 \ln x|_{x=1} &amp;= \frac{2}{x^3}|_{x=1} = 2.
+\end{align}\]</span></p>
+<p>Therefore the 3rd order polynomial approximation of <span class="math inline">\(\ln x\)</span> is
+<span class="math display">\[
+\ln x \approx (x-1) - \frac{1}{2}(x-1)^2 + \frac{1}{3}(x-1)^3.
+\]</span></p>
+<div class="figure" style="text-align: center"><span id="fig:taylor-series"></span>
+<img src="01-likelihood_files/figure-html/taylor-series-1.png" alt="Taylor series approximation of ln x" width="80%" />
+<p class="caption">
+Figure 1.6: Taylor series approximation of ln x
+</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1-4-likelihood-ratio-test.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1-6-asymptotic-distribution-of-the-mle.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

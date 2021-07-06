@@ -2,11 +2,11 @@
 
 This chapter is about methods for statistical inference based on the likelihood function.
 
-We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval of doing a hypothesis test.
+We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.
 
 We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.
 
-It turns out that maximum likelhood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelhood function. Based in this we find three different types of asymptotic hypothesis tests.
+It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.
 
 Finally we will see how this can be applied to the binary regression model.
 
@@ -18,16 +18,65 @@ AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9
 
 AOS 10.0-3, 10.6
 
+## The likelihood function
+
+In this section we introduce the *likelihood function*, the tool we will use in this chapter for doing inference. Let us begin with a simple example.
+
+Imagine that we toss a coin with an unknown probability $p$ of landing on heads. Each time the coin lands on heads we record a 1 and each time it lands on tails a 0. We repeat the experiment 10 times and observe the sequence:
+
+
+
+
+
+```
+##  [1] 0 0 1 0 0 1 0 1 0 0
+```
+
+We can calculate the probability of observing this exact sequence. The probability of observing 1 is $p$ and of observing 0 is $1-p$. Since the observations are independent, the total probability will be the product of each probability and so the probability is
+$$
+p^3(1-p)^7.
+$$
+
+We can think of this as a function of $p$ that tells us the probability of observing what we actually observed. For example, if $p=0.4$ the probability is $1.79 \cdot 10^{-3}$, or if $p=0.5$ the probability is $9.77 \cdot 10^{-4}$.
+
+The principle that we will follow to estimate parameters is that since $p=0.4$ gives a higher probability to our observation than $p=0.5$ we will prefer $0.4$ over $0.5$ as an estimate of $p$.
+
+We call this function the *likelihood function* and denote it $L$. That is
+$$
+L(p) := p^3(1-p)^7.
+$$
+<div class="figure" style="text-align: center">
+<img src="01-likelihood_files/figure-html/likelihood-1.png" alt="Likelihood of the sample" width="80%" />
+<p class="caption">(\#fig:likelihood)Likelihood of the sample</p>
+</div>
+In the picture we see that the likelihood function attains its highest value at $p=0.3$. Using the above principle, we therefore prefer $0.3$ as an estimate of $p$ over any other value. This is the *maximum likelihood estimate* (MLE) of $p$.
+
+Let us define the likelihood function in general. We have a parametric model of our observations, that is we assume that we observe random variables that are independent identically distributed, with a probability function (or density) $p_\theta(x)$. Here $\theta$ is an unknown parameter. For a random sample $x_1,\ldots , x_n$ of size $n$ the likelihood function is
+\BeginKnitrBlock{note}<div class="note">$$
+L_n(\theta) = \prod_{i=1}^n p_\theta(x_i).
+$$</div>\EndKnitrBlock{note}
+
+That is, the likelihood is the probability (or density) of our observation, as a function of the unknown parameter.
+
+As a second example, say that we observe random variables $X_i$ that are iid $\mathsf N(\mu,\sigma^2)$, where $\mu$ and $\sigma^2$ are unknown parameters. In other words, the joint density of an iid sample is
+$$
+p(x_1,\ldots, x_n) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x_i-\mu)^2}.
+$$
+The likelihood function is then
+$$
+L_n(\mu,\sigma^2) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x_i-\mu)^2}.
+$$
+That is, the density and the likelihood function are written using the same formulas, but the density is a function of $x_i$, while the likelihood is a function of the unknown parameters $\mu$ and $\sigma^2$.
+
+
 
 ## Maximum likelihood estimation
 
-We start by reminding ourselves of the basics of likelihood-based inference.
+In this section we discuss how to find the maximum likelihood estimate. As in the previous section we consider an example:
 
-Consider the following example:
-
-The time until something happens is assumed to be exponentially distributed with parameter $\lambda$. Therefore the probability density of observing $T=t$ is
+We will assume that time until something happens is exponentially distributed with parameter $\lambda$. Therefore the probability density of observing $T=t$ is
 $$
-f_T(t) = \lambda e^{-\lambda t}.
+p_T(t) = \lambda e^{-\lambda t}.
 $$
 On the other hand, we can also think of this as the likelihood function of the parameter $\lambda$,
 $$
@@ -38,7 +87,7 @@ $$
 L_n(\lambda) = \prod_{i=1}^n \lambda e^{-\lambda t_i}.
 $$
 
-Many times it is advantageous to instead consider the logarithm of the likelihood, the log-likelihood,
+Many times it is easier to instead consider the logarithm of the likelihood, the *log-likelihood*,
 $$
 l_n(\lambda):=\ln L_n(\lambda) = \sum_{i=1}^n( \ln \lambda - \lambda t_i  ) = n\ln\lambda - \lambda\sum_{i=1}^n t_i= n(\ln\lambda - \lambda \bar t) ,
 $$
@@ -53,61 +102,26 @@ Let us say we observe a sample of size 100.
 We define a function in R that calculates the log-likelihood
 
 ```r
-logLn <- function(lambda){
-  n <- length(t)
-  tbar <- mean(t)
+logLn <- function(param, sample){
+  n <- length(sample)
+  tbar <- mean(sample)
   
-  n*(log(lambda) - lambda*tbar)
+  n*(log(param) - param*tbar)
 }
 ```
 
 Then we may calculate the log-likelihood of, for example, $\lambda = 0.1$,
 
 ```r
-logLn(0.1)
+logLn(0.1, t)
 ```
 
 ```
 ## [1] -316.1482
 ```
-However, now the function `logLn` depends on the variable `t` which is in the Global environment. For example
+Here the variable `t` is a vector that contains the observations.
 
-```r
-t <- c(1,2,3)
-logLn(0.1)
-```
-
-```
-## [1] -7.507755
-```
-Instead we wrap the log-likelihood function in a **closure** and get a function that only depends on $\lambda$
-
-```r
-logLFcns <- function(observations){
-  function(lambda){
-    n <- length(observations)
-    tbar <- mean(observations)
-    
-    n * (log(lambda) - lambda*tbar)
-  }
-}
-
-set.seed(1)
-t = rexp(numObs,actualRate)
-
-logLn <- logLFcns(t)
-```
-Now we can again safely calculate the log likelihood
-
-```r
-logLn(0.1)
-```
-
-```
-## [1] -316.1482
-```
-
-<p>In fact, let us plot the log-likelihood for a range of $\lambda$-values.</p>
+<p>Let us plot the log-likelihood for a range of $\lambda$-values.</p>
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/log-likelihood-1.png" alt="Log likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:log-likelihood)Log likelihood of the sample</p>
@@ -135,7 +149,7 @@ We may also find the estimate using numerical optimization.
 
 ```r
 optimResult <- optim(1.0, 
-            logLn,
+            function(lambda){ logLn(lambda,t)},
             method = "Brent", 
             lower = 0.01, 
             upper = 10.0,
@@ -155,23 +169,23 @@ In the previous section we saw how to estimate unknown parameters using maximum 
 </div>
 There we have an estimate of $\theta$ which is $\hat\theta = 0.9$. We would like to test $H_0: \theta=\theta_0 = 1$ against $\theta \neq \theta_0$.
 
-This should be based on how far away, in some sense, the maximum likelihood estimate is from $\theta_0$. Looking at the figure, we can see three different ways of measuring how close $\hat\theta$ and $\theta_0$ are from each other. One way would be to measure the vertical distance between the log-likelihood function in $\hat\theta$ and $\theta_0$. I.e.\ we would calculate:
+This should be based on how far away, in some sense, the maximum likelihood estimate is from $\theta_0$. Looking at the figure, we can see three different ways of measuring how far away $\hat\theta$ and $\theta_0$ are from each other. One way would be to measure the vertical distance between the log-likelihood function in $\hat\theta$ and $\theta_0$. I.e.\ we would calculate:
 $$
 l(\hat\theta) - l(\theta_0).
 $$
-This is know as the likelihood ratio test.
+This is know as the *likelihood ratio test*.
 
 Another option is to calculate the horizontal distance between $\hat\theta$ and $\theta_0$. I.e. to calculate the distance
 $$
 |\hat\theta - \theta_0|.
 $$
-This is know has the Wald test.
+This is known as the *Wald test*.
 
 Lastly we know that $\partial_\theta l(\theta)|_{\theta=\hat\theta} = 0$. So we could calculate
 $$
 |\partial_\theta l(\theta)|_{\theta=\theta_0}|,
 $$
-and see how close it is to 0. This is known as the Score test. In the following sections we examine each test in detail.
+and see how close it is to 0. This is known as the *Score test*. In the following sections we examine each test in detail.
 
 ## Likelihood ratio test
 
@@ -278,6 +292,8 @@ Again we see that we would not reject $H_0$ on the 5\%-level.
 
 ## Mathematical aside: Taylor expansion
 
+In this section we see how to approximate functions by polynomials. This will be useful when we search for the asymptotic distribution of the MLE.
+
 We would like to approximate a function $f(x)$ by a polynomial $p(x)$ of degree $n$, around a point $x_0$. That is, if $x\approx x_0$ we would like $f(x)\approx p(x)$. How should we choose $p(x)$?
 
 Let us write
@@ -290,8 +306,10 @@ f(x_0)=p(x_0)=c_0,
 $$
 so that we have found the first parameter. To make the approximation better, we further require that the first derivatives are the same at $x_0$,
 $$
-f'(x_0) = p'(x_0) = c_1 + 2c_2(x-x_0) + 3c_3(x-x_0)^2+\cdots + nc_n(x-x_0)^{n-1}|_{x=x_0} = c_1.
+f'(x_0) = p'(x_0) = c_1 + 2c_2(x-x_0) + 3c_3(x-x_0)^2+\cdots + nc_n(x-x_0)^{n-1}|_{x=x_0} = c_1,
 $$
+and so the second parameter of $p(x)$ has been determined.
+
 Continuing, we want
 $$
 f''(x_0) = p''(x_0) = 2c_2 + 2\cdot 3c_3(x-x_0) + 3\cdot 4c_4(x-x_0)^2 + \cdot (n-1)nc_n(x-x_0)^{n-2}|_{x=x_0} = 2c_2,
@@ -309,8 +327,9 @@ $$
 This is known as a Taylor series.
 
 In fact, we can do even better by giving a formula for the error. Taylor's theorem says that
-\BeginKnitrBlock{note}<div class="note">$$
-f(x) = f(x_0) + f'(x_0)(x-x_0)  + \cdots \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n + \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1},
+\BeginKnitrBlock{note}<div class="note">If $p(x)$ is the order $n$ polynomial approximation of $f(x)$ as given above, then the approximation error is
+$$
+f(x) -p(x) =  \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1},
 $$
 where $\xi$ is some number between $x$ and $x_0$.</div>\EndKnitrBlock{note}
 As an example, let us consider the approximation of $\ln x$ around 1. We begin by calculating the derivatives,
@@ -382,11 +401,11 @@ Var(l'_n(\theta)) &= Var(\partial_\theta \sum_{i=1}^n l_{X_i}(\theta)) =  \sum_{
 <p>Let us now recall the *law of large numbers* and the *central limit theorem*. They state that if $X_1,\ldots X_n$ are iid random variables with mean $\mu$ and finite variance $\sigma^2$, then for large $n$</p>
 \BeginKnitrBlock{note}<div class="note">\begin{align*}
 \frac{1}{n}\sum_{i=1}^n X_i& \overset{asym.}{\sim} \mu,\\
-\frac{1}{\sqrt{n}}(\sum_{i=1}^n X_i-\mu)& \overset{asym.}{\sim} \mathsf N(0,\sigma^2).
+\frac{1}{\sqrt{n}}\Big(\sum_{i=1}^n X_i-\mu\Big)& \overset{asym.}{\sim} \mathsf N(0,\sigma^2).
 \end{align*}</div>\EndKnitrBlock{note}
 These asymptotic results in practice mean that we approximate the distribution of the left side with the right side if $n$ is large. For example
 $$
-P\left(\frac{1}{\sqrt{n}}(\sum_{i=1}^n X_i-\mu) \leq x \right) \approx  P\left(\sigma Z\leq x \right),
+P\left(\frac{1}{\sqrt{n}}\Big(\sum_{i=1}^n X_i-\mu\Big) \leq x \right) \approx  P\left(\sigma Z\leq x \right),
 $$
 with $Z\sim \mathsf N(0,1)$.
 
@@ -461,7 +480,7 @@ Rearranging gives,
 $$
 n(f(\hat\theta_n)  - f(\theta)) \approx \frac{f''(\theta)}{2}(\sqrt{n}(\hat\theta_n-\theta))^2.
 $$
-<p>We assumed that $\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} N(0,\sigma^2)$. The continuous mapping theorem (not covered here) states that if $f$ is a continuous function and if $X_n \overset{asym.}{\sim} X$, then $f(X_N) \overset{asym.}{\sim} f(X)$. Therefore, if we let $Z\sim N(0,1),$ we can write our assumption as $\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} \sigma Z$ and thus, recalling that the square of a standard normal random variable has a $\chi^2_1$-distribution,</p>
+<p>We assumed that $\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} N(0,\sigma^2)$. The continuous mapping theorem (not covered here) states that if $f$ is a continuous function and if $X_n \overset{asym.}{\sim} X$, then $f(X_n) \overset{asym.}{\sim} f(X)$. Therefore, if we let $Z\sim N(0,1),$ we can write our assumption as $\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} \sigma Z$ and thus, recalling that the square of a standard normal random variable has a $\chi^2_1$-distribution,</p>
 $$
 (\sqrt{n}(\hat\theta_n-\theta))^2 \overset{asym.}{\sim} \sigma^2Z^2 \overset{d}{=} \sigma^2 \chi^2_1.
 $$
@@ -518,7 +537,7 @@ Which is Wilks' theorem.
 Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:
 
 ```r
-lrStatistic <- 2*(logLn(optimResult$par) - logLn(0.1))
+lrStatistic <- 2*(logLn(optimResult$par, t) - logLn(0.1, t))
 lrStatistic
 ```
 
@@ -658,9 +677,9 @@ If we replace $\theta_0$ with $\theta$ we obtain the CI above. Therefore we may 
 
 <p>The same principle can be applied to convert any hypothesis test to a corresponding CI. For example the score test accepts $H_0$ if</p>
 $$
- \frac{\left| l'_n(\theta)\right |}{\sqrt{I_n(\theta)}}< z_{\alpha/2},
+ \frac{\left| l'_n(\theta_0)\right |}{\sqrt{I_n(\theta_0)}}< z_{\alpha/2},
 $$
-<p>and so solving this for $\theta$ gives a CI. However, in most cases it is not possible to obtain a closed form solution and we have solve it numerically. Let us as an example do it for the exponential distribution:</p>
+<p>and so solving this for $\theta_0$ gives a CI. However, in most cases it is not possible to obtain a closed form solution and we have solve it numerically. Let us as an example do it for the exponential distribution:</p>
 \begin{align}
 l'_n(\lambda) &= n\left( \frac{1}{\lambda} - \frac{1}{\hat\lambda} \right),\\
 I_n(\lambda) &= - l''_n(\lambda) = \frac{n}{\lambda^2}.
@@ -771,17 +790,14 @@ s <- function(x) {
   exp(x) / (exp(x) + 1)
 }
 
-logLFcns <- function(data){
-  function(beta){
-    x <- data$x
-    y <- data$y
-    s <- s(data$x * beta)
-    
-    sum(y * log(s) + (1 - y) * log(1 - s))
-  }
+logLn <- function(beta){
+  x <- data.df$x
+  y <- data.df$y
+  
+  s <- s(x * beta)
+  
+  sum(y * log(s) + (1 - y) * log(1 - s))
 }
-
-logLn <- Vectorize(logLFcns(data.df))
 ```
 To maximize the likelihood there are now two options. Either we ask the computer to solve
 $$
@@ -790,12 +806,14 @@ $$
 or we calculate and solve $l'(\beta)=0$. For practice we do both ways here.
 
 ```r
-optimResult <- optim(1.0, 
-            logLn,
-            method = "Brent", 
-            lower = 0.0, 
-            upper = 3.0,
-            control = list(fnscale = -1.0))
+optimResult <- optim(
+  1.0, 
+  logLn,
+  method = "Brent", 
+  lower = 0.0, 
+  upper = 3.0,
+  control = list(fnscale = -1.0)
+)
 
 betahat <- optimResult$par
 betahat
@@ -814,18 +832,20 @@ In R:
 ```r
 sp <- function(x){ exp(x)/(1+exp(x))^2 }
 
-logLpFcns <- function(data){
-  function(beta){
-    s <- s(data$x * beta)
-    sp <- sp(data$x * beta)
-    
-    sum( -data$x * (1-data$y) * sp / (1-s) + data$x * data$y * sp / s )
-  }
+logLp <- function(beta){
+  x <- data.df$x
+  y <- data.df$y
+  
+  s <- s(x * beta)
+  sp <- sp(x * beta)
+  
+  sum( -x * (1-y) * sp / (1-s) + x * y * sp / s )
 }
 
-logLp <- Vectorize( logLpFcns( data.df ) )
-
-rootResults <- uniroot(logLp, interval = c(0,3))
+rootResults <- uniroot(
+  logLp,
+  interval = c(0,3)
+)
 rootResults$root
 ```
 
@@ -871,7 +891,7 @@ Next we do a Wald's test. For this we need an estimate of the standard deviation
 
 ```r
 observedFisherInfo <- function(beta){
-  drop(-pracma::hessian(logLn,beta))
+  drop(-pracma::hessian(logLn, beta))
 }
 observedFisherInfo(betahat)
 ```
@@ -888,20 +908,16 @@ Implemented in R:
 ```r
 spp <- function(x){ -exp(x)*(exp(x)-1)/(exp(x)+1)^3 }
 
-logLppFcns <- function(data){
-  function(beta){
-    x <- data$x
-    y <- data$y
+logLpp <- function(beta){
+    x <- data.df$x
+    y <- data.df$y
     
     s <- s(x*beta)
     sp <- sp(x*beta)
     spp <- spp(x*beta)
 
     sum( (1-y)*(-x^2*sp^2/(1-s)^2 - x^2*spp/(1-s))+y*(-x^2*sp^2/s^2 + x^2*spp/s) )
-  }
 }
-
-logLpp <- Vectorize( logLppFcns(data.df))
 
 observedFisherInfo <- function(beta){
   -logLpp(beta)
@@ -1019,7 +1035,7 @@ $$
 $$
 This we used to construct what we called the large sample test. That is, we should accept $\mu=\mu_0$ as opposed to $\mu\neq \mu_0$ if
 $$
-\frac{|\bar X-\mu|}{\sigma/\sqrt{n}}<z_{\alpha/2}.
+\frac{|\bar X-\mu_0|}{\sigma/\sqrt{n}}<z_{\alpha/2}.
 $$
 
 In this chapter we have seen that this is true in more generallity, whenever we have an MLE. That is
@@ -1033,7 +1049,7 @@ $$
 
 So we can again use this for hypothesis testing or CI, the only remaining challenge is finding $\sigma_{\hat\theta}$. We have a couple of different tools to do this.
 
-Let us consider an example. We have a sample of size $n$ from $\mathsf{Be}(p)$. We could also say that we have a sample of size 1 from $\mathsf{Bin}(n,p)$, the analysis will be the same. But let us stick with $\mathsf{Be}(p)$. We want to do inference on $p$.
+Let us consider yet another example. We have a sample of size $n$ from $\mathsf{Be}(p)$. We could also say that we have a sample of size 1 from $\mathsf{Bin}(n,p)$, the analysis will be the same. But let us stick with $\mathsf{Be}(p)$. We want to do inference on $p$.
 
 The MLE of $p$ is $\hat p = \bar x$ and we know that
 $$
@@ -1062,7 +1078,7 @@ $$
 $$
 which can be used for constructing the Wald test.
 
-What this then means is that, if $n$ is large, and we where to estimate $p$ with $\hat p$ for many different samples, the distribution of the esimates would be approximately distributed as $\mathsf N(0,1)$. Let us verify this with a simulation.
+What this then means is that, if $n$ is large, and we where to estimate $p$ with $\hat p$ for many different samples, the distribution of the estimates would be approximately distributed as $\mathsf N(0,1)$. Let us verify this with a simulation.
 
 
 ```r
@@ -1085,8 +1101,8 @@ wald <- (p.hats - p0)/sqrt(p.hats*(1-p.hats)/n)
 
 
 <div class="figure" style="text-align: center">
-<img src="01-likelihood_files/figure-html/waldStatisticExampleFigure-1.png" alt="Simulated density of the wald statistic and the standard normal density" width="80%" />
-<p class="caption">(\#fig:waldStatisticExampleFigure)Simulated density of the wald statistic and the standard normal density</p>
+<img src="01-likelihood_files/figure-html/waldStatisticExampleFigure-1.png" alt="Simulated density of the Wald statistic and the standard normal density" width="80%" />
+<p class="caption">(\#fig:waldStatisticExampleFigure)Simulated density of the Wald statistic and the standard normal density</p>
 </div>
 
 

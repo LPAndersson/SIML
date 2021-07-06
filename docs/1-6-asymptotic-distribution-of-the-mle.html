@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.6 Asymptotic distribution of the MLE | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.6 Asymptotic distribution of the MLE | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.6 Asymptotic distribution of the MLE | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1-1-the-likelihood-function.html"/>
+<link rel="prev" href="1-5-mathematical-aside-taylor-expansion.html"/>
+<link rel="next" href="1-7-the-delta-method.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,25 +220,140 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-likelihood" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Likelihood-based methods</h1>
-<p>This chapter is about methods for statistical inference based on the likelihood function.</p>
-<p>We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.</p>
-<p>We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.</p>
-<p>It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.</p>
-<p>Finally we will see how this can be applied to the binary regression model.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 6</p>
-<p>AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9</p>
-<p>AOS 10.0-3, 10.6</p>
+<div id="asymptotic-distribution-of-the-mle" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Asymptotic distribution of the MLE</h2>
+<p>Here we examine the asymptotic properties of maximum likelihood estimators. But first let us recall some properties of the normal distribution, that will be used repeatedly in this chapter.</p>
+<p>If <span class="math inline">\(X\sim \mathsf N(\mu,\sigma^2)\)</span> then <span class="math inline">\(a+bX\)</span> also has a normal distribution and
+<span class="math display">\[\begin{align*}
+E[a+bX] &amp;= a+bE[X] = a+b\mu,\\
+\operatorname{Var}(a+bX) &amp;= b^2\operatorname{Var}(X) = b^2\sigma^2.
+\end{align*}\]</span>
+That is <span class="math inline">\(a+bX\sim \mathsf N(a+b\mu,b^2\sigma^2)\)</span>. In particular,
+<span class="math display">\[
+\frac{X-\mu}{\sigma} \sim \mathsf N(0,1).
+\]</span>
+Now let us turn to the maximum likelhood estimators. To start, we imagine that we observe a random variable <span class="math inline">\(X\)</span>, from a parameterized distribution with density <span class="math inline">\(p_\theta\)</span>. Our discussion will also be valid if we have a discrete random variable with a probability function <span class="math inline">\(p_\theta\)</span>. Then we have a log-likelihood <span class="math inline">\(l_x(\theta):=\ln p_\theta(x)\)</span>. Here we will calculate the expected value and variance of the random variable <span class="math inline">\(l_X&#39;(\theta):=\partial_\theta \ln p_\theta(X)\)</span>.</p>
+First note that since
+<span class="math display">\[
+\int p_\theta(x)\mathrm{d} x = 1,
+\]</span>
+therefore
+<span class="math display">\[
+0 = \partial_\theta \int p_\theta(x)\mathrm{d} x = \int \partial_\theta p_\theta(x)\mathrm{d} x = \int \partial_\theta (\ln p_\theta(x))p_\theta(x)\mathrm{d} x =  \int l&#39;_x(\theta) p_\theta(x)\mathrm{d} x = E[l_X&#39;(\theta)].
+\]</span>
+This means,
+
+<div class="note">
+<span class="math display">\[
+ E[l_X&#39;(\theta)] =0.
+\]</span>
+</div>
+<p>To find the variance, we instead consider,
+<span class="math display">\[\begin{align*}
+0 &amp;= \partial^2_\theta \int p_\theta(x)\mathrm{d} x =  \int \partial_\theta(l&#39;_x(\theta) p_\theta(x))\mathrm{d} x =\int (l&#39;&#39;_x(\theta) p_\theta(x) + (l&#39;_x(\theta) )^2p_\theta(x))\mathrm{d} x \\
+&amp;=  E[l&#39;&#39;_X(\theta)] + E[(l&#39;_X(\theta))^2].
+\end{align*}\]</span></p>
+Therefore,
+
+<div class="note">
+<span class="math display">\[
+\operatorname{Var}(l&#39;_X(\theta)) = E[(l&#39;_X(\theta))^2] = -E[l&#39;&#39;_X(\theta)] =: I(\theta).
+\]</span>
+</div>
+<p>Here, <span class="math inline">\(I(\theta)\)</span> is called the Fisher information. This calculation was for a sample <span class="math inline">\(X\)</span> of size 1. If we have an independent sample of size <span class="math inline">\(n\)</span>, we define the log-likelihood as
+<span class="math display">\[
+l_n(\theta) = \sum_{i=1}^n l_{X_i}(\theta).
+\]</span>
+Then we can also calculate
+<span class="math display">\[\begin{align*}
+E[l&#39;_n(\theta)] &amp;= E[\partial_\theta \sum_{i=1}^n l_{X_i}(\theta)] =\sum_{i=1}^n  E[\partial_\theta l_{X_i}(\theta)] = 0,\\
+Var(l&#39;_n(\theta)) &amp;= Var(\partial_\theta \sum_{i=1}^n l_{X_i}(\theta)) =  \sum_{i=1}^n Var(l_{X_i}&#39;(\theta)) = n I(\theta) =:I_n(\theta).
+\end{align*}\]</span></p>
+<p>
+Let us now recall the <em>law of large numbers</em> and the <em>central limit theorem</em>. They state that if <span class="math inline">\(X_1,\ldots X_n\)</span> are iid random variables with mean <span class="math inline">\(\mu\)</span> and finite variance <span class="math inline">\(\sigma^2\)</span>, then for large <span class="math inline">\(n\)</span>
+</p>
+
+<div class="note">
+<span class="math display">\[\begin{align*}
+\frac{1}{n}\sum_{i=1}^n X_i&amp; \overset{asym.}{\sim} \mu,\\
+\frac{1}{\sqrt{n}}\Big(\sum_{i=1}^n X_i-\mu\Big)&amp; \overset{asym.}{\sim} \mathsf N(0,\sigma^2).
+\end{align*}\]</span>
+</div>
+<p>These asymptotic results in practice mean that we approximate the distribution of the left side with the right side if <span class="math inline">\(n\)</span> is large. For example
+<span class="math display">\[
+P\left(\frac{1}{\sqrt{n}}\Big(\sum_{i=1}^n X_i-\mu\Big) \leq x \right) \approx  P\left(\sigma Z\leq x \right),
+\]</span>
+with <span class="math inline">\(Z\sim \mathsf N(0,1)\)</span>.</p>
+<p>
+Since <span class="math inline">\(l&#39;_n(\theta)\)</span> is a sum of random variables <span class="math inline">\(l_{X_i}&#39;(\theta)\)</span>, and we now know the expected value and variance, we can apply the law of large numbers and central limit theorem to get the following asymptotics:
+</p>
+
+<div class="note">
+<span class="math display">\[\begin{align*}
+\frac{1}{n}l&#39;_n(\theta) &amp;\overset{asym.}{\sim} 0, \\
+\frac{1}{\sqrt{n}}l&#39;_n(\theta) &amp;\overset{asym.}{\sim} \mathsf{N}(0,I(\theta)), \\
+-\frac{1}{n}l&#39;&#39;_n(\theta) &amp;\overset{asym.}{\sim} I(\theta).
+\end{align*}\]</span>
+</div>
+<p>
+Now we are ready to find the asymptotic distribution of <span class="math inline">\(\hat\theta_n\)</span>. We make a first-order Taylor expansion of <span class="math inline">\(l_n&#39;(\hat\theta_n)\)</span> around <span class="math inline">\(\theta\)</span>,
+</p>
+<span class="math display">\[
+l&#39;_n(\hat\theta_n) \approx l&#39;_n(\theta) + (\hat\theta_n-\theta)l&#39;&#39;_n(\theta).
+\]</span>
+<p>
+Then use that <span class="math inline">\(l&#39;_n(\hat\theta_n)=0\)</span> and rewrite as
+</p>
+<span class="math display">\[
+\sqrt{n} (\hat\theta_n-\theta) \approx -\frac{l&#39;_n(\theta)/\sqrt{n}}{l&#39;&#39;_n(\theta)/n}.
+\]</span>
+Now, using the above asymptotics we arrive at:
+
+<div class="note">
+<span class="math display">\[
+\sqrt{n} (\hat\theta_n-\theta) \overset{asym.}{\sim} \frac{\mathsf N(0,I(\theta))}{I(\theta)} \overset{d}{=} \mathsf N(0,I^{-1}(\theta)).
+\]</span>
+</div>
+<p>
+In particular, this implies that <span class="math inline">\(\hat\theta_n - \theta \overset{asym.}{\sim } 0\)</span>, or in other words that <span class="math inline">\(\hat\theta_n\)</span> is a consistent estimator of <span class="math inline">\(\theta\)</span>.
+One problem with the above is however that <span class="math inline">\(I(\theta)\)</span> is often difficult to calculate. However <span class="math inline">\(-l&#39;&#39;_n(\theta)/n=:\hat I(\theta)\)</span> is a consistent estimator of <span class="math inline">\(I(\theta)\)</span>. Then we may also write:
+</p>
+<span class="math display">\[
+\sqrt{n \hat I(\theta)}(\hat\theta_n - \theta) \overset{asym.}{\sim} \mathsf N(0,1).
+\]</span>
+<p>
+A further problem is that <span class="math inline">\(\theta\)</span> is in general unknown. But since <span class="math inline">\(\hat\theta_n\)</span> is consistent, we may simply replace <span class="math inline">\(\theta\)</span> by <span class="math inline">\(\hat\theta_n\)</span>,
+</p>
+
+<div class="note">
+<span class="math display">\[
+\sqrt{n \hat I(\hat\theta_n)}(\hat\theta_n - \theta) \overset{asym.}{\sim} \mathsf N(0,1).
+\]</span>
+</div>
+<p>This is an amazing result. Without knowing in detail how <span class="math inline">\(\hat\theta\)</span> is determined from the sample; perhaps from some numerical optimization, we can say what the large-sample distribution is. We can rewrite this as
+<span class="math display">\[
+\hat \theta_n \overset{asym.}{\sim} \mathsf N\left(\theta, \frac{1}{n \hat I(\hat\theta_n)}\right).
+\]</span>
+Now let us apply this to the example of the exponential distribution. We had that <span class="math inline">\(\hat\lambda_n = 1/\bar t\)</span>. Further
+<span class="math display">\[
+l&#39;&#39;(\lambda) = -\frac{1}{\lambda^2}.
+\]</span>
+Thus, the Fisher information is simply
+<span class="math display">\[
+I(\lambda) = -E[l&#39;&#39;_T(\lambda)] = \frac{1}{\lambda^2}.
+\]</span>
+The asymptotic distribution of <span class="math inline">\(\hat \lambda_n\)</span> is therefore:
+<span class="math display">\[
+\hat\lambda_n \approx \mathsf N\left(\lambda, \frac{\hat\lambda_n^2}{n} \right).
+\]</span></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1-5-mathematical-aside-taylor-expansion.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1-7-the-delta-method.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

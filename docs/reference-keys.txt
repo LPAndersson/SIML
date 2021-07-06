@@ -107,3 +107,5 @@ neural-networks
 stochastic-gradient-descent
 an-application-3
 review-questions-4
+the-likelihood-function
+fig:likelihood

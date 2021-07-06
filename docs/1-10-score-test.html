@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.10 Score test | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.10 Score test | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.10 Score test | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1-1-the-likelihood-function.html"/>
+<link rel="prev" href="1-9-walds-test.html"/>
+<link rel="next" href="1-11-confidence-intervals.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,25 +220,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-likelihood" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Likelihood-based methods</h1>
-<p>This chapter is about methods for statistical inference based on the likelihood function.</p>
-<p>We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.</p>
-<p>We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.</p>
-<p>It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.</p>
-<p>Finally we will see how this can be applied to the binary regression model.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 6</p>
-<p>AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9</p>
-<p>AOS 10.0-3, 10.6</p>
+<div id="score-test" class="section level2" number="1.10">
+<h2><span class="header-section-number">1.10</span> Score test</h2>
+<p>In this section we discuss the score test, sometimes called the Rao test or the Lagrange multiplier (LM) test.</p>
+<p>If <span class="math inline">\(\hat\theta\)</span> is close to <span class="math inline">\(\theta_0\)</span> then we should have that <span class="math inline">\(l&#39;(\theta_0)\approx 0\)</span>. The score test is therefore that we reject <span class="math inline">\(H_0\)</span> if <span class="math inline">\(\left| l&#39;(\theta_0)\right|&gt;k\)</span>, for some <span class="math inline">\(k\)</span> chosen depending on the size of the test.</p>
+We can use the asymptotics we already calculated, that is
+
+<div class="note">
+<span class="math display">\[
+\frac{l_n&#39;(\theta_0)}{\sqrt{I_n(\theta_0)}} \overset{asym.}{\sim} \mathsf N(0,1).
+\]</span>
+</div>
+<p>So the score test of size <span class="math inline">\(\alpha\)</span> is to reject <span class="math inline">\(H_0\)</span> if
+<span class="math display">\[
+\frac{\left|l_n&#39;(\theta_0)\right|}{\sqrt{I_n(\theta_0)}}&gt;z_{\alpha/2}.
+\]</span></p>
+<p>Note that this test statistic does not require us to calculate the MLE <span class="math inline">\(\hat\theta\)</span>. By squaring the test statistic we get, as in the previous section, a test statistic that is <span class="math inline">\(\chi^2_1\)</span>-distributed, similar to Wilks’ test.</p>
+<p>We apply this to the exponential distribution. We have already calculated everything we need so it is just a matter of putting it together:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="1-10-score-test.html#cb23-1" aria-hidden="true" tabindex="-1"></a>lp <span class="ot">&lt;-</span> n<span class="sc">*</span>( <span class="dv">1</span><span class="sc">/</span>lambda0 <span class="sc">-</span> <span class="fu">mean</span>(t) )</span>
+<span id="cb23-2"><a href="1-10-score-test.html#cb23-2" aria-hidden="true" tabindex="-1"></a>fisherInfo <span class="ot">&lt;-</span> n<span class="sc">/</span>lambda0<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb23-3"><a href="1-10-score-test.html#cb23-3" aria-hidden="true" tabindex="-1"></a>scoreStatistic <span class="ot">&lt;-</span> lp <span class="sc">/</span> <span class="fu">sqrt</span>(fisherInfo)</span>
+<span id="cb23-4"><a href="1-10-score-test.html#cb23-4" aria-hidden="true" tabindex="-1"></a>scoreStatistic</span></code></pre></div>
+<pre><code>## [1] 1.41103</code></pre>
+<p>With p-value:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="1-10-score-test.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(scoreStatistic))</span></code></pre></div>
+<pre><code>## [1] 0.1582359</code></pre>
+<p>In this particular case the score test and the Wald test are exactly the same. This is not true in general.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1-9-walds-test.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1-11-confidence-intervals.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

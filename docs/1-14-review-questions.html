@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.14 Review questions | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.14 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.14 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1-1-the-likelihood-function.html"/>
+<link rel="prev" href="1-13-summary.html"/>
+<link rel="next" href="2-bayesian-statistics.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,25 +220,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-likelihood" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Likelihood-based methods</h1>
-<p>This chapter is about methods for statistical inference based on the likelihood function.</p>
-<p>We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.</p>
-<p>We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.</p>
-<p>It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.</p>
-<p>Finally we will see how this can be applied to the binary regression model.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 6</p>
-<p>AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9</p>
-<p>AOS 10.0-3, 10.6</p>
+<div id="review-questions" class="section level2" number="1.14">
+<h2><span class="header-section-number">1.14</span> Review questions</h2>
+<ol style="list-style-type: decimal">
+<li>What is the likelihood function?</li>
+<li>How is the maximum likelihood estimate calculated?</li>
+<li>How can one use numerical optimisation to calculate the maximum likelihood estimate?</li>
+<li>What is the likelihood ratio?</li>
+<li>What is the likelihood ratio test?</li>
+<li>How is the Taylor expansion calculated?</li>
+<li>What is the Fisher information?</li>
+<li>What is the asymptotic distribution of the MLE?</li>
+<li>What is the delta method?</li>
+<li>What is the difference between the first and second order delta methods?</li>
+<li>What is Wilk’s test?</li>
+<li>What is Wald’s test?</li>
+<li>What is the score test?</li>
+<li>How does one construct a confidence interval based on the Wald test?</li>
+</ol>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1-13-summary.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2-bayesian-statistics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.4 Likelihood ratio test | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.4 Likelihood ratio test | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.4 Likelihood ratio test | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1-1-the-likelihood-function.html"/>
+<link rel="prev" href="1-3-hypothesis-testing.html"/>
+<link rel="next" href="1-5-mathematical-aside-taylor-expansion.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,25 +220,106 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-likelihood" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Likelihood-based methods</h1>
-<p>This chapter is about methods for statistical inference based on the likelihood function.</p>
-<p>We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.</p>
-<p>We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.</p>
-<p>It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.</p>
-<p>Finally we will see how this can be applied to the binary regression model.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 6</p>
-<p>AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9</p>
-<p>AOS 10.0-3, 10.6</p>
+<div id="likelihood-ratio-test" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Likelihood ratio test</h2>
+We are interested in testing the following hypotheses
+<span class="math display">\[
+H_0:\theta \in \Theta_0\text{ vs. } H_1:\theta \in \Theta_0^\complement.
+\]</span>
+<p>
+Here <span class="math inline">\(\Theta_0\)</span> is some set of parameter values. It could for example be that <span class="math inline">\(\Theta_0 = (-\infty,\theta_0)\)</span> or simply <span class="math inline">\(\Theta_0 = \theta_0\)</span>.
+</p>
+
+<div class="note">
+We define the likelihood ratio as
+<span class="math display">\[
+\lambda_{\text{LR}} := 2(l(\hat\theta) - l(\hat\theta_0)),
+\]</span>
+</div>
+<p>where
+<span class="math display">\[
+l(\hat\theta_0) = \sup_{\theta\in\Theta_0}l(\theta)
+\]</span>
+and
+<span class="math display">\[
+l(\hat\theta) = \sup_{\theta\in\Theta}l(\theta).
+\]</span>
+Since <span class="math inline">\(l(\hat\theta)\geq l(\hat\theta_0)\)</span>, we have that <span class="math inline">\(\lambda_{\text{LR}} \geq 0\)</span> and data agrees well with <span class="math inline">\(H_0\)</span> if <span class="math inline">\(\lambda_{\text{LR}}\)</span> is small. Therefore the rejection region will be of the form <span class="math inline">\(\lambda_{\text{LR}} &gt; k\)</span>, where <span class="math inline">\(k\)</span> is determined to get the correct size of the test. We can not say more in general, the continuation depends on the particular problem and tends to become complicated for anything but simple models.</p>
+<p>As before let us say that we have an iid sample from an exponential distribution and wish to test <span class="math inline">\(H_0:~\lambda = \lambda_0\)</span> against <span class="math inline">\(H_1:~\lambda \neq \lambda_0\)</span>, with <span class="math inline">\(\lambda_0=0.1\)</span>.</p>
+We have already seen that
+<span class="math display">\[
+l(\lambda) = n(\ln \lambda - \lambda \bar t)
+\]</span>
+<p>
+and that <span class="math inline">\(\hat\lambda = 1/\bar t\)</span>. Therefore
+</p>
+<span class="math display">\[
+l(\lambda) = n \left( \ln\lambda - \frac{\lambda}{\hat\lambda} \right).
+\]</span>
+<p>
+Now, we can write <span class="math inline">\(l(\hat\lambda) = n\left(\ln\hat\lambda - 1\right)\)</span>. The likelihood ratio is then:
+</p>
+<span class="math display">\[
+\lambda_{\text{LR}} = 2(l(\hat\lambda) - l(\lambda_0)) = 2n\left( \ln\hat\lambda - 1 - \ln \lambda_0 + \frac{\lambda_0}{\hat\lambda}  \right) = 2n\left(\ln \frac{\hat\lambda}{\lambda_0} + \frac{\lambda_0-\hat\lambda}{\hat\lambda}\right).
+\]</span>
+<p>
+Recall that we should reject <span class="math inline">\(H_0\)</span> if <span class="math inline">\(\lambda_{\text{LR}}&gt;k\)</span>, and that <span class="math inline">\(k\)</span> is set to get the correct size. But to do this we need to know the distribution of <span class="math inline">\(\lambda_{\text{LR}}\)</span> and looking at the formula above, this seems difficult. Instead we search for something which is equivalent to <span class="math inline">\(\lambda_{\text{LR}}&gt;k\)</span>, but with a known distribution. Towards this we plot <span class="math inline">\(\lambda_{LR}(\hat\lambda)\)</span>:
+</p>
+<div class="figure" style="text-align: center"><span id="fig:LR-testExp"></span>
+<img src="01-likelihood_files/figure-html/LR-testExp-1.png" alt="Illustration of the likelihood ratio" width="80%" />
+<p class="caption">
+Figure 1.5: Illustration of the likelihood ratio
+</p>
+</div>
+<p>We see that <span class="math inline">\(\lambda_{LR}\)</span> is decreasing for <span class="math inline">\(\hat\lambda &lt; \lambda_0\)</span> and increasing for <span class="math inline">\(\hat\lambda &gt; \lambda_0\)</span> with minimum at <span class="math inline">\(\hat\lambda = \lambda_0\)</span>. Therefore <span class="math inline">\(\lambda_{LR}&gt;k\)</span> is equivalent to <span class="math inline">\(\hat\lambda &lt; k_L\)</span> or <span class="math inline">\(\hat\lambda &gt; k_U\)</span>, for some choices of <span class="math inline">\(k_L\)</span> and <span class="math inline">\(k_U\)</span>. These should be determined so that the test gets the correct size.</p>
+<p>The size of the test is
+<span class="math display">\[\begin{align}
+&amp;1- P_{\lambda_0} \left(k_L&lt; \hat\lambda &lt; k_U \right) = 1- P_{\lambda_0} \left(k_L&lt; \frac{1}{\bar t} &lt; k_U \right) = 1-  P_{\lambda_0} \left(1/k_U&lt; \bar t &lt; 1/k_L \right)\\
+=&amp; 1-  P_{\lambda_0} \left(\tilde k_L&lt; \sum_{i=1}^n T_i&lt; \tilde k_U \right),
+\end{align}\]</span>
+with <span class="math inline">\(\tilde k_L := n/k_U\)</span> and similarly for <span class="math inline">\(\tilde k_U\)</span>. This probability can be calculated since we know that <span class="math inline">\(\sum_{i=1}^n T_i \sim \Gamma(n,\lambda)\)</span>. If we let <span class="math inline">\(\Gamma_{\alpha}(n,\lambda)\)</span> be the <span class="math inline">\(\alpha\)</span>-quantile of the gamma distribution, i.e. the number such that
+<span class="math display">\[
+\alpha = P\left( \Gamma(n,\lambda )&gt; \Gamma_\alpha(n,\lambda) \right),
+\]</span>
+we see that the rejection region for a size <span class="math inline">\(\alpha\)</span> test is
+<span class="math display">\[
+\left\{ T_i\mid \sum_{i=1}^n T_i &gt; \Gamma_{\alpha/2}(n,\lambda_0) \text{ or } \sum_{i=1}^n T_i &lt; \Gamma_{1-\alpha/2}(n,\lambda_0)  \right\}.
+\]</span>
+or equivalently
+<span class="math display">\[
+\left\{ \hat \lambda \mid \hat\lambda &lt; \frac{n}{\Gamma_{\alpha/2}(n,\lambda_0)} \text{ or } \hat\lambda &gt; \frac{n}{\Gamma_{1-\alpha/2}(n,\lambda_0)}  \right\}.
+\]</span></p>
+<p>Let us implement this:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="1-4-likelihood-ratio-test.html#cb9-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb9-2"><a href="1-4-likelihood-ratio-test.html#cb9-2" aria-hidden="true" tabindex="-1"></a>lambda0 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb9-3"><a href="1-4-likelihood-ratio-test.html#cb9-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb9-4"><a href="1-4-likelihood-ratio-test.html#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="1-4-likelihood-ratio-test.html#cb9-5" aria-hidden="true" tabindex="-1"></a>upperCriticalValue <span class="ot">&lt;-</span> n <span class="sc">/</span> <span class="fu">qgamma</span>(alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span>
+<span id="cb9-6"><a href="1-4-likelihood-ratio-test.html#cb9-6" aria-hidden="true" tabindex="-1"></a>lowerCriticalValue <span class="ot">&lt;-</span> n <span class="sc">/</span> <span class="fu">qgamma</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span>
+<span id="cb9-7"><a href="1-4-likelihood-ratio-test.html#cb9-7" aria-hidden="true" tabindex="-1"></a>upperCriticalValue</span></code></pre></div>
+<pre><code>## [1] 0.1229045</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="1-4-likelihood-ratio-test.html#cb11-1" aria-hidden="true" tabindex="-1"></a>lowerCriticalValue</span></code></pre></div>
+<pre><code>## [1] 0.08296762</code></pre>
+<p>In this case we had <span class="math inline">\(\hat\lambda =\)</span> 0.1164 and so we would not reject <span class="math inline">\(\lambda \neq 0.1\)</span>.</p>
+<p>Another option is to calculate the p-value. Recall that the p-value is the smallest level for which <span class="math inline">\(H_0\)</span> is rejected. That is, it is the <span class="math inline">\(\alpha\)</span> that solves <span class="math inline">\(\Gamma_{1-\alpha/2}(n,\lambda_0) = n/\hat\lambda\)</span>. But, by definition
+<span class="math display">\[
+\alpha = 2 P \left( \Gamma(n,\lambda_0) &lt; \Gamma_{1-\alpha/2}) \right)
+\]</span>
+and therefore the p-value is
+<span class="math display">\[
+2P\left( \Gamma(n,\lambda_0) &lt; \frac{n}{\hat\lambda} \right).
+\]</span></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="1-4-likelihood-ratio-test.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span> <span class="fu">pgamma</span>(n<span class="sc">/</span>lambdaHat, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span></code></pre></div>
+<pre><code>## [1] 0.1471398</code></pre>
+<p>Again we see that we would not reject <span class="math inline">\(H_0\)</span> on the 5%-level.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1-3-hypothesis-testing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1-5-mathematical-aside-taylor-expansion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

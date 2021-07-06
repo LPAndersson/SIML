@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.9 Wald’s test | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.9 Wald’s test | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.9 Wald’s test | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1-1-the-likelihood-function.html"/>
+<link rel="prev" href="1-8-wilks-test.html"/>
+<link rel="next" href="1-10-score-test.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,25 +220,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-likelihood" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Likelihood-based methods</h1>
-<p>This chapter is about methods for statistical inference based on the likelihood function.</p>
-<p>We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.</p>
-<p>We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.</p>
-<p>It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.</p>
-<p>Finally we will see how this can be applied to the binary regression model.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 6</p>
-<p>AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9</p>
-<p>AOS 10.0-3, 10.6</p>
+<div id="walds-test" class="section level2" number="1.9">
+<h2><span class="header-section-number">1.9</span> Wald’s test</h2>
+<p>
+Another way to measure if <span class="math inline">\(\hat\theta\)</span> agrees with the null hypothesis is to calculate <span class="math inline">\(\hat\theta - \theta_0\)</span>. If this is large, in absolute value, the test should reject the null hypothesis. We have already seen that, under the assumption of <span class="math inline">\(H_0\)</span>
+</p>
+
+<div class="note">
+<span class="math display">\[
+\frac{\hat\theta- \theta_0}{\textrm{Sd}(\hat\theta)} \overset{asym.}{\sim} \mathsf{N}(0,1),
+\]</span>
+</div>
+<p>where the standard deviation can be calculated as
+<span class="math display">\[
+Sd(\hat\theta) = (n\hat I(\hat\theta))^{-1/2}.
+\]</span>
+Therefore the test can be done by comparing the left hand-side with the appropriate quantile of the Normal distribution. Note that this implies also that
+<span class="math display">\[
+\frac{(\hat \theta - \theta_0)^2}{Var(\hat\theta)} \overset{asym.}{\sim} \chi^2_1,
+\]</span>
+which is similar to Wilks’ test.</p>
+<p>Let us apply this again to the exponential distribution. We have already seen that <span class="math inline">\(I(\lambda) = 1/\lambda^2\)</span> and so the standard deviation is:
+<span class="math display">\[
+Sd(\hat \lambda) = \frac{\hat\lambda}{\sqrt n}.
+\]</span>
+Since we have a two-sided test, the test statistic is:
+<span class="math display">\[
+\frac{\left| \hat\lambda - \lambda_0  \right|}{\hat\lambda / \sqrt n }.
+\]</span></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="1-9-walds-test.html#cb19-1" aria-hidden="true" tabindex="-1"></a>waldStatistics <span class="ot">&lt;-</span> <span class="fu">abs</span>(lambdaHat <span class="sc">-</span> lambda0)<span class="sc">/</span>(lambdaHat<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
+<span id="cb19-2"><a href="1-9-walds-test.html#cb19-2" aria-hidden="true" tabindex="-1"></a>waldStatistics</span></code></pre></div>
+<pre><code>## [1] 1.41103</code></pre>
+<p>This is now compared to <span class="math inline">\(z_{\alpha/2}=\)</span> 1.96 if <span class="math inline">\(\alpha = 0.05\)</span> and so we do not reject <span class="math inline">\(H_0\)</span>. The p-value is:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="1-9-walds-test.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pnorm</span>(waldStatistics))</span></code></pre></div>
+<pre><code>## [1] 0.1582359</code></pre>
+<p>Here we found the standard deviation of <span class="math inline">\(\hat \lambda\)</span> by knowing the asymptotic distribution of the MLE. It is also possible to calculate this directly from the delta method. That is, we know that
+<span class="math display">\[\begin{align}
+E\left[ T\right] &amp;= \frac{1}{\lambda},\\
+Var\left( T \right) &amp;= \frac{1}{\lambda^2}.
+\end{align}\]</span>
+So by the central limit theorem (<span class="math inline">\(\bar t\)</span> is a sum of random variables):
+<span class="math display">\[
+\sqrt n (\bar t - 1/\lambda) \overset{asym.}{\sim} N(0,1/\lambda^2).
+\]</span>
+If <span class="math inline">\(f(x)=1/x\)</span>, then <span class="math inline">\(\hat\lambda = f(\bar t) = 1/\bar t\)</span> and applying the delta method gives,
+<span class="math display">\[
+\sqrt n (\hat\lambda - \lambda) \overset{asym.}{\sim} N(0,f&#39;(\bar t)^2/\lambda^2) = N(0,f&#39;(1/\lambda)^2/\lambda^2) = N(0,\lambda^2).
+\]</span>
+This agrees with what we obtained previously.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1-8-wilks-test.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1-10-score-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

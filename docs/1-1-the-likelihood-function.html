@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.1 The likelihood function | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.1 The likelihood function | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Likelihood-based methods | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.1 The likelihood function | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1-1-the-likelihood-function.html"/>
+<link rel="prev" href="1-ch-likelihood.html"/>
+<link rel="next" href="1-2-maximum-likelihood-estimation.html"/>
 <script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,25 +220,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-likelihood" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Likelihood-based methods</h1>
-<p>This chapter is about methods for statistical inference based on the likelihood function.</p>
-<p>We start by discussing how we can find a point estimate of a parameter by using the maximum likelihood estimate. Once we have a point estimate we want to know how certain or uncertain this estimate is. This can be done by either simply calculating the standard deviation of the estimate or by calculating a confidence interval or by doing a hypothesis test.</p>
-<p>We then discuss the likelihood ratio test which is a general way of testing hypothesis based on the likelihood function. However, in many situations the distribution of the likelihood ratio under the null hypothesis is difficult to find, so we turn to asymptotic results. I.e. results that are valid when the sample size is large.</p>
-<p>It turns out that maximum likelihood estimates in general have an asymptotic normal distribution, with the true parameter value as expected value and variance given by the Fisher information, which can be calculated from the log-likelihood function. Based in this we find three different types of asymptotic hypothesis tests.</p>
-<p>Finally we will see how this can be applied to the binary regression model.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 6</p>
-<p>AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9</p>
-<p>AOS 10.0-3, 10.6</p>
+<div id="the-likelihood-function" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> The likelihood function</h2>
+<p>In this section we introduce the <em>likelihood function</em>, the tool we will use in this chapter for doing inference. Let us begin with a simple example.</p>
+<p>Imagine that we toss a coin with an unknown probability <span class="math inline">\(p\)</span> of landing on heads. Each time the coin lands on heads we record a 1 and each time it lands on tails a 0. We repeat the experiment 10 times and observe the sequence:</p>
+<pre><code>##  [1] 0 0 1 0 0 1 0 1 0 0</code></pre>
+<p>We can calculate the probability of observing this exact sequence. The probability of observing 1 is <span class="math inline">\(p\)</span> and of observing 0 is <span class="math inline">\(1-p\)</span>. Since the observations are independent, the total probability will be the product of each probability and so the probability is
+<span class="math display">\[
+p^3(1-p)^7.
+\]</span></p>
+<p>We can think of this as a function of <span class="math inline">\(p\)</span> that tells us the probability of observing what we actually observed. For example, if <span class="math inline">\(p=0.4\)</span> the probability is <span class="math inline">\(1.79 \cdot 10^{-3}\)</span>, or if <span class="math inline">\(p=0.5\)</span> the probability is <span class="math inline">\(9.77 \cdot 10^{-4}\)</span>.</p>
+<p>The principle that we will follow to estimate parameters is that since <span class="math inline">\(p=0.4\)</span> gives a higher probability to our observation than <span class="math inline">\(p=0.5\)</span> we will prefer <span class="math inline">\(0.4\)</span> over <span class="math inline">\(0.5\)</span> as an estimate of <span class="math inline">\(p\)</span>.</p>
+We call this function the <em>likelihood function</em> and denote it <span class="math inline">\(L\)</span>. That is
+<span class="math display">\[
+L(p) := p^3(1-p)^7.
+\]</span>
+<div class="figure" style="text-align: center"><span id="fig:likelihood"></span>
+<img src="01-likelihood_files/figure-html/likelihood-1.png" alt="Likelihood of the sample" width="80%" />
+<p class="caption">
+Figure 1.1: Likelihood of the sample
+</p>
+</div>
+<p>In the picture we see that the likelihood function attains its highest value at <span class="math inline">\(p=0.3\)</span>. Using the above principle, we therefore prefer <span class="math inline">\(0.3\)</span> as an estimate of <span class="math inline">\(p\)</span> over any other value. This is the <em>maximum likelihood estimate</em> (MLE) of <span class="math inline">\(p\)</span>.</p>
+Let us define the likelihood function in general. We have a parametric model of our observations, that is we assume that we observe random variables that are independent identically distributed, with a probability function (or density) <span class="math inline">\(p_\theta(x)\)</span>. Here <span class="math inline">\(\theta\)</span> is an unknown parameter. For a random sample <span class="math inline">\(x_1,\ldots , x_n\)</span> of size <span class="math inline">\(n\)</span> the likelihood function is
+
+<div class="note">
+<span class="math display">\[
+L_n(\theta) = \prod_{i=1}^n p_\theta(x_i).
+\]</span>
+</div>
+<p>That is, the likelihood is the probability (or density) of our observation, as a function of the unknown parameter.</p>
+<p>As a second example, say that we observe random variables <span class="math inline">\(X_i\)</span> that are iid <span class="math inline">\(\mathsf N(\mu,\sigma^2)\)</span>, where <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma^2\)</span> are unknown parameters. In other words, the joint density of an iid sample is
+<span class="math display">\[
+p(x_1,\ldots, x_n) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x_i-\mu)^2}.
+\]</span>
+The likelihood function is then
+<span class="math display">\[
+L_n(\mu,\sigma^2) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x_i-\mu)^2}.
+\]</span>
+That is, the density and the likelihood function are written using the same formulas, but the density is a function of <span class="math inline">\(x_i\)</span>, while the likelihood is a function of the unknown parameters <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma^2\)</span>.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1-ch-likelihood.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1-2-maximum-likelihood-estimation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
