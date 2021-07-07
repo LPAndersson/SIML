@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.2 Support vector machines I | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.2 Support vector machines I | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -33,6 +33,7 @@
   
 <link rel="prev" href="4-1-classification.html"/>
 <link rel="next" href="4-3-hoeffdings-inequality.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,22 +51,23 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,7 +87,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -118,6 +120,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -135,22 +160,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a><ul>
-<li class="chapter" data-level="1.1" data-path="1-1-maximum-likelihood-estimation.html"><a href="1-1-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.1</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="1.2" data-path="1-2-hypothesis-testing.html"><a href="1-2-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.2</b> Hypothesis testing</a></li>
-<li class="chapter" data-level="1.3" data-path="1-3-likelihood-ratio-test.html"><a href="1-3-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.3</b> Likelihood ratio test</a></li>
-<li class="chapter" data-level="1.4" data-path="1-4-mathematical-aside-taylor-expansion.html"><a href="1-4-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.4</b> Mathematical aside: Taylor expansion</a></li>
-<li class="chapter" data-level="1.5" data-path="1-5-asymptotic-distribution-of-the-mle.html"><a href="1-5-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.5</b> Asymptotic distribution of the MLE</a></li>
-<li class="chapter" data-level="1.6" data-path="1-6-the-delta-method.html"><a href="1-6-the-delta-method.html"><i class="fa fa-check"></i><b>1.6</b> The delta method</a></li>
-<li class="chapter" data-level="1.7" data-path="1-7-wilks-test.html"><a href="1-7-wilks-test.html"><i class="fa fa-check"></i><b>1.7</b> Wilks’ test</a></li>
-<li class="chapter" data-level="1.8" data-path="1-8-walds-test.html"><a href="1-8-walds-test.html"><i class="fa fa-check"></i><b>1.8</b> Wald’s test</a></li>
-<li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
-<li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
-<li class="chapter" data-level="1.11" data-path="1-11-an-application.html"><a href="1-11-an-application.html"><i class="fa fa-check"></i><b>1.11</b> An application</a></li>
-<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
-<li class="chapter" data-level="1.13" data-path="1-13-review-questions.html"><a href="1-13-review-questions.html"><i class="fa fa-check"></i><b>1.13</b> Review questions</a></li>
+<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-1-the-likelihood-function.html"><a href="1-1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
+<li class="chapter" data-level="1.2" data-path="1-2-maximum-likelihood-estimation.html"><a href="1-2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="1.3" data-path="1-3-hypothesis-testing.html"><a href="1-3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
+<li class="chapter" data-level="1.4" data-path="1-4-likelihood-ratio-test.html"><a href="1-4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
+<li class="chapter" data-level="1.5" data-path="1-5-mathematical-aside-taylor-expansion.html"><a href="1-5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
+<li class="chapter" data-level="1.6" data-path="1-6-asymptotic-distribution-of-the-mle.html"><a href="1-6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
+<li class="chapter" data-level="1.7" data-path="1-7-the-delta-method.html"><a href="1-7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
+<li class="chapter" data-level="1.8" data-path="1-8-wilks-test.html"><a href="1-8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
+<li class="chapter" data-level="1.9" data-path="1-9-walds-test.html"><a href="1-9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
+<li class="chapter" data-level="1.10" data-path="1-10-score-test.html"><a href="1-10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
+<li class="chapter" data-level="1.11" data-path="1-11-confidence-intervals.html"><a href="1-11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-an-application.html"><a href="1-12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
+<li class="chapter" data-level="1.13" data-path="1-13-summary.html"><a href="1-13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
+<li class="chapter" data-level="1.14" data-path="1-14-review-questions.html"><a href="1-14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a><ul>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="2-1-some-basic-decision-theory.html"><a href="2-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
 <li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics-1.html"><a href="2-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="2.3" data-path="2-3-choosing-prior.html"><a href="2-3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
@@ -160,7 +188,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.7" data-path="2-7-summary-1.html"><a href="2-7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
 <li class="chapter" data-level="2.8" data-path="2-8-review-questions-1.html"><a href="2-8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a><ul>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="3-1-parametric-vs-non-parametric.html"><a href="3-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
 <li class="chapter" data-level="3.2" data-path="3-2-non-parametric-estimation.html"><a href="3-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-bootstrap.html"><a href="3-3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
@@ -169,7 +198,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,7 +213,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
@@ -211,60 +242,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="support-vector-machines-i" class="section level2">
+<div id="support-vector-machines-i" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Support vector machines I</h2>
 <p>In this section will discuss binary classification and in particular <em>support vector machines</em> (SVM). The approach taken here is different from the one in ISL. Our approach is easier to explain, generalizes to other method and perhaps also more modern. The approach in ISL however provides a different intuition and is also relevant when implementing the algorithms.</p>
 <p>
-<p>We are given training examples <span class="math inline">\((x_i,y_i)\)</span>, where <span class="math inline">\(x_i\in \mathbb R^p\)</span> and <span class="math inline">\(y_i\in \left\{-1,1\right\}\)</span>. The equation <span class="math display">\[
-f(x):=x^T\beta + \beta_0 = 0,
-\]</span>
-defines hyperplane (e.g. a line in <span class="math inline">\(\mathbb R^2\)</span>, a plane in <span class="math inline">\(\mathbb R^3\)</span>). We are going to classify as +1 if the point is on one side of the hyperplane, <span class="math inline">\(x^T\beta + \beta_0&gt;0\)</span>, and -1 if it is on the other side, <span class="math inline">\(x^T\beta + \beta_0&lt;0\)</span>. In other words, the classification rule is
+<p>We are given training examples <span class="math inline">\((x_i,y_i)\)</span>, where <span class="math inline">\(x_i = (x_i^1,x_i^2,\ldots,x_i^p) \in \mathbb R^p\)</span> and <span class="math inline">\(y_i\in \left\{-1,1\right\}\)</span>. The equation
 <span class="math display">\[
-h(x) = \text{sign}(x^T\beta + \beta_0).
+f(x):=\beta_0 + x^1\beta + \ldots + x^p\beta_p = 0,
+\]</span>
+defines a hyperplane (e.g. a line in <span class="math inline">\(\mathbb R^2\)</span>, a plane in <span class="math inline">\(\mathbb R^3\)</span>). We are going to classify as +1 if the point is on one side of the hyperplane, <span class="math inline">\(\beta_0 + x^1\beta + \ldots + x^p\beta_p&gt;0\)</span>, and -1 if it is on the other side, <span class="math inline">\(\beta_0 + x^1\beta + \ldots + x^p\beta_p&lt;0\)</span>. In other words, the classification rule is
+<span class="math display">\[
+h(x) = \text{sign}(\beta_0 + x^1\beta + \ldots + x^p\beta_p).
 \]</span>
 The value of <span class="math inline">\(f(x_i)\)</span> tells us how far away from the hyperplane the point is and if <span class="math inline">\(y_if(x_i)&gt;0\)</span> the point is classified correctly. That is, if <span class="math inline">\(y_if(x_i)\)</span> is large and positive, the point <span class="math inline">\(x_i\)</span> is classified correctly and with a safe margin. If <span class="math inline">\(y_if(x_i)\)</span> is large and negative, the point is classified incorrectly and is far away from being correctly classified. We will consider the hinge loss
 <span class="math display">\[
 l(y,f) = (1-yf)_+ ,
 \]</span>
-here <span class="math inline">\((\cdot)_+\)</span> indicates the positive part. We will minimize the in-sample error
+here <span class="math inline">\((\cdot)_+\)</span> indicates the positive part and we will minimize the in-sample error
 <span class="math display">\[
 \underset{\beta_0,\beta}{\text{minimize}}\quad \frac{1}{n}\sum_{i=1}^n (1-y_if(x_i))_+.
 \]</span></p>
 <p>As an example, we generate some training data from a mixture of normal distributions.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="4-2-support-vector-machines-i.html#cb118-1"></a><span class="kw">library</span>(mvtnorm)</span>
-<span id="cb118-2"><a href="4-2-support-vector-machines-i.html#cb118-2"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb118-3"><a href="4-2-support-vector-machines-i.html#cb118-3"></a></span>
-<span id="cb118-4"><a href="4-2-support-vector-machines-i.html#cb118-4"></a>mu.p &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">10</span>,<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>))</span>
-<span id="cb118-5"><a href="4-2-support-vector-machines-i.html#cb118-5"></a>mu.n &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">10</span>,<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>))</span>
-<span id="cb118-6"><a href="4-2-support-vector-machines-i.html#cb118-6"></a></span>
-<span id="cb118-7"><a href="4-2-support-vector-machines-i.html#cb118-7"></a>n.samples &lt;-<span class="st"> </span><span class="dv">100</span></span>
-<span id="cb118-8"><a href="4-2-support-vector-machines-i.html#cb118-8"></a></span>
-<span id="cb118-9"><a href="4-2-support-vector-machines-i.html#cb118-9"></a>data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">2</span><span class="op">*</span>n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb118-10"><a href="4-2-support-vector-machines-i.html#cb118-10"></a></span>
-<span id="cb118-11"><a href="4-2-support-vector-machines-i.html#cb118-11"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</span>
-<span id="cb118-12"><a href="4-2-support-vector-machines-i.html#cb118-12"></a>  mu =<span class="st"> </span>mu.p[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.p), <span class="dt">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb118-13"><a href="4-2-support-vector-machines-i.html#cb118-13"></a>  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</span>
-<span id="cb118-14"><a href="4-2-support-vector-machines-i.html#cb118-14"></a></span>
-<span id="cb118-15"><a href="4-2-support-vector-machines-i.html#cb118-15"></a>  data.matrix[<span class="dv">2</span><span class="op">*</span>i<span class="dv">-1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</span>
-<span id="cb118-16"><a href="4-2-support-vector-machines-i.html#cb118-16"></a></span>
-<span id="cb118-17"><a href="4-2-support-vector-machines-i.html#cb118-17"></a>  mu =<span class="st"> </span>mu.n[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.n), <span class="dt">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb118-18"><a href="4-2-support-vector-machines-i.html#cb118-18"></a>  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</span>
-<span id="cb118-19"><a href="4-2-support-vector-machines-i.html#cb118-19"></a>  data.matrix[<span class="dv">2</span><span class="op">*</span>i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</span>
-<span id="cb118-20"><a href="4-2-support-vector-machines-i.html#cb118-20"></a>}</span>
-<span id="cb118-21"><a href="4-2-support-vector-machines-i.html#cb118-21"></a></span>
-<span id="cb118-22"><a href="4-2-support-vector-machines-i.html#cb118-22"></a>data.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</span>
-<span id="cb118-23"><a href="4-2-support-vector-machines-i.html#cb118-23"></a><span class="kw">colnames</span>(data.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
-<span id="cb118-24"><a href="4-2-support-vector-machines-i.html#cb118-24"></a>data.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.df<span class="op">$</span>y)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="4-2-support-vector-machines-i.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb1-2"><a href="4-2-support-vector-machines-i.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-3"><a href="4-2-support-vector-machines-i.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="4-2-support-vector-machines-i.html#cb1-4" aria-hidden="true" tabindex="-1"></a>mu.p <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">10</span>,<span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>))</span>
+<span id="cb1-5"><a href="4-2-support-vector-machines-i.html#cb1-5" aria-hidden="true" tabindex="-1"></a>mu.n <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">10</span>,<span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>))</span>
+<span id="cb1-6"><a href="4-2-support-vector-machines-i.html#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="4-2-support-vector-machines-i.html#cb1-7" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-8"><a href="4-2-support-vector-machines-i.html#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="4-2-support-vector-machines-i.html#cb1-9" aria-hidden="true" tabindex="-1"></a>data.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">2</span><span class="sc">*</span>n.samples, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb1-10"><a href="4-2-support-vector-machines-i.html#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="4-2-support-vector-machines-i.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.samples)) {</span>
+<span id="cb1-12"><a href="4-2-support-vector-machines-i.html#cb1-12" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.p[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.p), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb1-13"><a href="4-2-support-vector-machines-i.html#cb1-13" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb1-14"><a href="4-2-support-vector-machines-i.html#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="4-2-support-vector-machines-i.html#cb1-15" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i<span class="dv">-1</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="dv">1</span>)</span>
+<span id="cb1-16"><a href="4-2-support-vector-machines-i.html#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="4-2-support-vector-machines-i.html#cb1-17" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.n[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.n), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb1-18"><a href="4-2-support-vector-machines-i.html#cb1-18" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb1-19"><a href="4-2-support-vector-machines-i.html#cb1-19" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb1-20"><a href="4-2-support-vector-machines-i.html#cb1-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-21"><a href="4-2-support-vector-machines-i.html#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="4-2-support-vector-machines-i.html#cb1-22" aria-hidden="true" tabindex="-1"></a>data.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data.matrix)</span>
+<span id="cb1-23"><a href="4-2-support-vector-machines-i.html#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
+<span id="cb1-24"><a href="4-2-support-vector-machines-i.html#cb1-24" aria-hidden="true" tabindex="-1"></a>data.df<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data.df<span class="sc">$</span>y)</span></code></pre></div>
 <p>Then use R to calculate the hyperplane that minimizes the in-sample error.</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="4-2-support-vector-machines-i.html#cb119-1"></a><span class="kw">library</span>(kernlab)</span>
-<span id="cb119-2"><a href="4-2-support-vector-machines-i.html#cb119-2"></a></span>
-<span id="cb119-3"><a href="4-2-support-vector-machines-i.html#cb119-3"></a>svm.model &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y<span class="op">~</span>x1<span class="op">+</span>x2, <span class="dt">data =</span> data.df,</span>
-<span id="cb119-4"><a href="4-2-support-vector-machines-i.html#cb119-4"></a>                  <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
-<span id="cb119-5"><a href="4-2-support-vector-machines-i.html#cb119-5"></a>                  <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
-<span id="cb119-6"><a href="4-2-support-vector-machines-i.html#cb119-6"></a>                  <span class="dt">C =</span> <span class="dv">1000</span>)</span>
-<span id="cb119-7"><a href="4-2-support-vector-machines-i.html#cb119-7"></a></span>
-<span id="cb119-8"><a href="4-2-support-vector-machines-i.html#cb119-8"></a>grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>))</span>
-<span id="cb119-9"><a href="4-2-support-vector-machines-i.html#cb119-9"></a>grid<span class="op">$</span>predicted &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">predict</span>(svm.model, grid))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="4-2-support-vector-machines-i.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb2-2"><a href="4-2-support-vector-machines-i.html#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="4-2-support-vector-machines-i.html#cb2-3" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2, <span class="at">data =</span> data.df,</span>
+<span id="cb2-4"><a href="4-2-support-vector-machines-i.html#cb2-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
+<span id="cb2-5"><a href="4-2-support-vector-machines-i.html#cb2-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
+<span id="cb2-6"><a href="4-2-support-vector-machines-i.html#cb2-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">C =</span> <span class="dv">1000</span>)</span>
+<span id="cb2-7"><a href="4-2-support-vector-machines-i.html#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="4-2-support-vector-machines-i.html#cb2-8" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x1 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>), <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>))</span>
+<span id="cb2-9"><a href="4-2-support-vector-machines-i.html#cb2-9" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">predict</span>(svm.model, grid))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:SVMlinear"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMlinear-1.png" alt="Training data and linear classification with hinge loss" width="80%" />
 <p class="caption">
@@ -272,17 +304,17 @@ Figure 4.3: Training data and linear classification with hinge loss
 </p>
 </div>
 <p>We can also calculate the in-sample error</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="4-2-support-vector-machines-i.html#cb120-1"></a><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model, data.df))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="4-2-support-vector-machines-i.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model, data.df))</span></code></pre></div>
 <pre><code>## [1] 0.285</code></pre>
-<p>Not so bad, but let us try to improve it. We select some basis functions, <span class="math inline">\(\varphi_m(x)\)</span>, <span class="math inline">\(m=1,\ldots, M\)</span> and use the same classifier but with input features <span class="math inline">\(\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m))\)</span>. We can for example choose <span class="math inline">\(\varphi_m\)</span> to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="4-2-support-vector-machines-i.html#cb122-1"></a><span class="kw">library</span>(kernlab)</span>
-<span id="cb122-2"><a href="4-2-support-vector-machines-i.html#cb122-2"></a></span>
-<span id="cb122-3"><a href="4-2-support-vector-machines-i.html#cb122-3"></a>svm.model &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y<span class="op">~</span><span class="kw">poly</span>(x1, x2, <span class="dt">degree =</span> <span class="dv">2</span>), <span class="dt">data =</span> data.df,</span>
-<span id="cb122-4"><a href="4-2-support-vector-machines-i.html#cb122-4"></a>                  <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
-<span id="cb122-5"><a href="4-2-support-vector-machines-i.html#cb122-5"></a>                  <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
-<span id="cb122-6"><a href="4-2-support-vector-machines-i.html#cb122-6"></a>                  <span class="dt">C =</span> <span class="dv">1000</span>)</span>
-<span id="cb122-7"><a href="4-2-support-vector-machines-i.html#cb122-7"></a>grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="dt">length =</span> <span class="dv">500</span>))</span>
-<span id="cb122-8"><a href="4-2-support-vector-machines-i.html#cb122-8"></a>grid<span class="op">$</span>predicted &lt;-<span class="st"> </span><span class="kw">as.factor</span>(<span class="kw">predict</span>(svm.model, grid))</span></code></pre></div>
+<p>Not so bad, but let us try to improve it. We select some basis functions, <span class="math inline">\(\varphi_m(x)\)</span>, <span class="math inline">\(m=1,\ldots, M\)</span> and use the same classifier but with input features <span class="math inline">\(\varphi(x) = (\varphi_1(x),\ldots, \varphi_M(x))\)</span>. We can for example choose <span class="math inline">\(\varphi_m\)</span> to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="4-2-support-vector-machines-i.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb5-2"><a href="4-2-support-vector-machines-i.html#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="4-2-support-vector-machines-i.html#cb5-3" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y<span class="sc">~</span><span class="fu">poly</span>(x1, x2, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> data.df,</span>
+<span id="cb5-4"><a href="4-2-support-vector-machines-i.html#cb5-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
+<span id="cb5-5"><a href="4-2-support-vector-machines-i.html#cb5-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
+<span id="cb5-6"><a href="4-2-support-vector-machines-i.html#cb5-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">C =</span> <span class="dv">1000</span>)</span>
+<span id="cb5-7"><a href="4-2-support-vector-machines-i.html#cb5-7" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x1 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>), <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>))</span>
+<span id="cb5-8"><a href="4-2-support-vector-machines-i.html#cb5-8" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">predict</span>(svm.model, grid))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:SVMpolynomial"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMpolynomial-1.png" alt="Training data and quadratic classification with hinge loss" width="80%" />
 <p class="caption">
@@ -290,23 +322,23 @@ Figure 4.4: Training data and quadratic classification with hinge loss
 </p>
 </div>
 <p>This time the in-sample error is</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="4-2-support-vector-machines-i.html#cb123-1"></a><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">fitted</span>(svm.model))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="4-2-support-vector-machines-i.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">fitted</span>(svm.model))</span></code></pre></div>
 <pre><code>## [1] 0.275</code></pre>
 <p>Better. Let us continue with increasing order polynomials, and calculate the error.</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="4-2-support-vector-machines-i.html#cb125-1"></a><span class="kw">library</span>(kernlab)</span>
-<span id="cb125-2"><a href="4-2-support-vector-machines-i.html#cb125-2"></a></span>
-<span id="cb125-3"><a href="4-2-support-vector-machines-i.html#cb125-3"></a>maxDegree &lt;-<span class="st"> </span><span class="dv">20</span></span>
-<span id="cb125-4"><a href="4-2-support-vector-machines-i.html#cb125-4"></a>error.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;degree&quot;</span> =<span class="st"> </span><span class="dv">1</span><span class="op">:</span>maxDegree, <span class="dt">inError =</span> <span class="ot">NA</span>, <span class="dt">outError =</span> <span class="ot">NA</span>)</span>
-<span id="cb125-5"><a href="4-2-support-vector-machines-i.html#cb125-5"></a></span>
-<span id="cb125-6"><a href="4-2-support-vector-machines-i.html#cb125-6"></a>svm.model.list &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">mode =</span> <span class="st">&quot;list&quot;</span>, <span class="dt">length =</span> maxDegree)</span>
-<span id="cb125-7"><a href="4-2-support-vector-machines-i.html#cb125-7"></a></span>
-<span id="cb125-8"><a href="4-2-support-vector-machines-i.html#cb125-8"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="kw">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
-<span id="cb125-9"><a href="4-2-support-vector-machines-i.html#cb125-9"></a>  svm.model.list[degree] &lt;-<span class="st"> </span><span class="kw">ksvm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x1, x2, <span class="dt">degree =</span> degree), <span class="dt">data =</span> data.df,</span>
-<span id="cb125-10"><a href="4-2-support-vector-machines-i.html#cb125-10"></a>                                 <span class="dt">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
-<span id="cb125-11"><a href="4-2-support-vector-machines-i.html#cb125-11"></a>                                 <span class="dt">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
-<span id="cb125-12"><a href="4-2-support-vector-machines-i.html#cb125-12"></a>                                 <span class="dt">C =</span> <span class="dv">1000</span>)</span>
-<span id="cb125-13"><a href="4-2-support-vector-machines-i.html#cb125-13"></a>  error.df<span class="op">$</span>inError[degree] &lt;-<span class="st"> </span><span class="kw">mean</span>(data.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model.list[[degree]], data.df))</span>
-<span id="cb125-14"><a href="4-2-support-vector-machines-i.html#cb125-14"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="4-2-support-vector-machines-i.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb8-2"><a href="4-2-support-vector-machines-i.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="4-2-support-vector-machines-i.html#cb8-3" aria-hidden="true" tabindex="-1"></a>maxDegree <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb8-4"><a href="4-2-support-vector-machines-i.html#cb8-4" aria-hidden="true" tabindex="-1"></a>error.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;degree&quot;</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span>maxDegree, <span class="at">inError =</span> <span class="cn">NA</span>, <span class="at">outError =</span> <span class="cn">NA</span>)</span>
+<span id="cb8-5"><a href="4-2-support-vector-machines-i.html#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="4-2-support-vector-machines-i.html#cb8-6" aria-hidden="true" tabindex="-1"></a>svm.model.list <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">&quot;list&quot;</span>, <span class="at">length =</span> maxDegree)</span>
+<span id="cb8-7"><a href="4-2-support-vector-machines-i.html#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="4-2-support-vector-machines-i.html#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
+<span id="cb8-9"><a href="4-2-support-vector-machines-i.html#cb8-9" aria-hidden="true" tabindex="-1"></a>  svm.model.list[degree] <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x1, x2, <span class="at">degree =</span> degree), <span class="at">data =</span> data.df,</span>
+<span id="cb8-10"><a href="4-2-support-vector-machines-i.html#cb8-10" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
+<span id="cb8-11"><a href="4-2-support-vector-machines-i.html#cb8-11" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
+<span id="cb8-12"><a href="4-2-support-vector-machines-i.html#cb8-12" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">C =</span> <span class="dv">1000</span>)</span>
+<span id="cb8-13"><a href="4-2-support-vector-machines-i.html#cb8-13" aria-hidden="true" tabindex="-1"></a>  error.df<span class="sc">$</span>inError[degree] <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model.list[[degree]], data.df))</span>
+<span id="cb8-14"><a href="4-2-support-vector-machines-i.html#cb8-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:errorPlot"></span>
 <img src="04-statisticalLearning_files/figure-html/errorPlot-1.png" alt="In sample error vs. degree of polynomial, using hinge loss" width="80%" />
 <p class="caption">
@@ -314,7 +346,7 @@ Figure 4.5: In sample error vs. degree of polynomial, using hinge loss
 </p>
 </div>
 <p>In-sample error gets smaller as we increase the order of the polynomial. For degree 20, the in-sample error is</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="4-2-support-vector-machines-i.html#cb126-1"></a>error.df<span class="op">$</span>inError[<span class="dv">20</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="4-2-support-vector-machines-i.html#cb9-1" aria-hidden="true" tabindex="-1"></a>error.df<span class="sc">$</span>inError[<span class="dv">20</span>]</span></code></pre></div>
 <pre><code>## [1] 0.03</code></pre>
 The classifier looks complex.
 <div class="figure" style="text-align: center"><span id="fig:SVMpolynomial20"></span>
@@ -324,32 +356,32 @@ Figure 4.6: Training data and degree 20 polynomial classification
 </p>
 </div>
 <p>Since we know the data generating distribution, we can approximate the out-of-sample error for each classifier, by simulation.</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="4-2-support-vector-machines-i.html#cb128-1"></a><span class="kw">library</span>(mvtnorm)</span>
-<span id="cb128-2"><a href="4-2-support-vector-machines-i.html#cb128-2"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb128-3"><a href="4-2-support-vector-machines-i.html#cb128-3"></a></span>
-<span id="cb128-4"><a href="4-2-support-vector-machines-i.html#cb128-4"></a>n.samples &lt;-<span class="st"> </span><span class="fl">1e4</span></span>
-<span id="cb128-5"><a href="4-2-support-vector-machines-i.html#cb128-5"></a></span>
-<span id="cb128-6"><a href="4-2-support-vector-machines-i.html#cb128-6"></a>data.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dt">nrow =</span> <span class="dv">2</span><span class="op">*</span>n.samples, <span class="dt">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb128-7"><a href="4-2-support-vector-machines-i.html#cb128-7"></a></span>
-<span id="cb128-8"><a href="4-2-support-vector-machines-i.html#cb128-8"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n.samples)) {</span>
-<span id="cb128-9"><a href="4-2-support-vector-machines-i.html#cb128-9"></a>  mu =<span class="st"> </span>mu.p[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.p), <span class="dt">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb128-10"><a href="4-2-support-vector-machines-i.html#cb128-10"></a>  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</span>
-<span id="cb128-11"><a href="4-2-support-vector-machines-i.html#cb128-11"></a></span>
-<span id="cb128-12"><a href="4-2-support-vector-machines-i.html#cb128-12"></a>  data.matrix[<span class="dv">2</span><span class="op">*</span>i<span class="dv">-1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">1</span>)</span>
-<span id="cb128-13"><a href="4-2-support-vector-machines-i.html#cb128-13"></a></span>
-<span id="cb128-14"><a href="4-2-support-vector-machines-i.html#cb128-14"></a>  mu =<span class="st"> </span>mu.n[<span class="kw">sample</span>(<span class="dt">x=</span> <span class="kw">nrow</span>(mu.n), <span class="dt">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb128-15"><a href="4-2-support-vector-machines-i.html#cb128-15"></a>  sample &lt;-<span class="st"> </span><span class="kw">rmvnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> mu, <span class="dt">sigma =</span> <span class="kw">diag</span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">5</span>)</span>
-<span id="cb128-16"><a href="4-2-support-vector-machines-i.html#cb128-16"></a>  data.matrix[<span class="dv">2</span><span class="op">*</span>i,] &lt;-<span class="st"> </span><span class="kw">c</span>(sample, <span class="dv">-1</span>)</span>
-<span id="cb128-17"><a href="4-2-support-vector-machines-i.html#cb128-17"></a>}</span>
-<span id="cb128-18"><a href="4-2-support-vector-machines-i.html#cb128-18"></a></span>
-<span id="cb128-19"><a href="4-2-support-vector-machines-i.html#cb128-19"></a>data.test.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(data.matrix)</span>
-<span id="cb128-20"><a href="4-2-support-vector-machines-i.html#cb128-20"></a><span class="kw">colnames</span>(data.test.df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
-<span id="cb128-21"><a href="4-2-support-vector-machines-i.html#cb128-21"></a>data.test.df<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">as.factor</span>(data.test.df<span class="op">$</span>y)</span>
-<span id="cb128-22"><a href="4-2-support-vector-machines-i.html#cb128-22"></a></span>
-<span id="cb128-23"><a href="4-2-support-vector-machines-i.html#cb128-23"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="kw">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
-<span id="cb128-24"><a href="4-2-support-vector-machines-i.html#cb128-24"></a>  error.df<span class="op">$</span>outError[degree] &lt;-<span class="st"> </span><span class="kw">mean</span>(data.test.df<span class="op">$</span>y <span class="op">!=</span><span class="st"> </span><span class="kw">predict</span>(svm.model.list[[degree]],</span>
-<span id="cb128-25"><a href="4-2-support-vector-machines-i.html#cb128-25"></a>                                                              data.test.df))</span>
-<span id="cb128-26"><a href="4-2-support-vector-machines-i.html#cb128-26"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="4-2-support-vector-machines-i.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb11-2"><a href="4-2-support-vector-machines-i.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb11-3"><a href="4-2-support-vector-machines-i.html#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="4-2-support-vector-machines-i.html#cb11-4" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb11-5"><a href="4-2-support-vector-machines-i.html#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="4-2-support-vector-machines-i.html#cb11-6" aria-hidden="true" tabindex="-1"></a>data.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">2</span><span class="sc">*</span>n.samples, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb11-7"><a href="4-2-support-vector-machines-i.html#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="4-2-support-vector-machines-i.html#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.samples)) {</span>
+<span id="cb11-9"><a href="4-2-support-vector-machines-i.html#cb11-9" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.p[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.p), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb11-10"><a href="4-2-support-vector-machines-i.html#cb11-10" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb11-11"><a href="4-2-support-vector-machines-i.html#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="4-2-support-vector-machines-i.html#cb11-12" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i<span class="dv">-1</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="dv">1</span>)</span>
+<span id="cb11-13"><a href="4-2-support-vector-machines-i.html#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="4-2-support-vector-machines-i.html#cb11-14" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.n[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.n), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb11-15"><a href="4-2-support-vector-machines-i.html#cb11-15" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb11-16"><a href="4-2-support-vector-machines-i.html#cb11-16" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb11-17"><a href="4-2-support-vector-machines-i.html#cb11-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-18"><a href="4-2-support-vector-machines-i.html#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="4-2-support-vector-machines-i.html#cb11-19" aria-hidden="true" tabindex="-1"></a>data.test.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data.matrix)</span>
+<span id="cb11-20"><a href="4-2-support-vector-machines-i.html#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.test.df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
+<span id="cb11-21"><a href="4-2-support-vector-machines-i.html#cb11-21" aria-hidden="true" tabindex="-1"></a>data.test.df<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data.test.df<span class="sc">$</span>y)</span>
+<span id="cb11-22"><a href="4-2-support-vector-machines-i.html#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="4-2-support-vector-machines-i.html#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
+<span id="cb11-24"><a href="4-2-support-vector-machines-i.html#cb11-24" aria-hidden="true" tabindex="-1"></a>  error.df<span class="sc">$</span>outError[degree] <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.test.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model.list[[degree]],</span>
+<span id="cb11-25"><a href="4-2-support-vector-machines-i.html#cb11-25" aria-hidden="true" tabindex="-1"></a>                                                              data.test.df))</span>
+<span id="cb11-26"><a href="4-2-support-vector-machines-i.html#cb11-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:inOutSampleError"></span>
 <img src="04-statisticalLearning_files/figure-html/inOutSampleError-1.png" alt="Out-of-sample error vs. degree of polynomial." width="80%" />
 <p class="caption">
@@ -388,6 +420,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

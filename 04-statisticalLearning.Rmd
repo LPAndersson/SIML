@@ -26,11 +26,17 @@ This tells us how the function $h$ performs on average, on random observation fr
 
 Methods in statistical learning can be partitioned in various ways. The two main ways is in *supervised* and *unsupervised* learning. In supervised learning we are given a set of $n$ examples $(x_1,y_1),\ldots,(x_n,y_n)$ and the task is to predict $y$ for a previously unseen point $x$. In unsupervised learning we are only given $x_1,\ldots, x_n$ and the goal is to describe the associations and patterns among a set of input measures. A third scenario is [*reinforcement learning*](https://en.wikipedia.org/wiki/Reinforcement_learning), that we will not cover in this course.
 
-In supervised learning the two main tasks are *classification* and *regression*. In classification the task is to assign a class to each item. If it is binary classification then, in the terms defined above, $\mathcal Y = \{-1,1\}$. Many times the loss is taken to be the 0-1 loss, $l(y_1,y_2)=1_{y_1\neq y_2}(y_1,y_2)$.
+In supervised learning the two main tasks are *classification* and *regression*. In classification the task is to assign a class to each item. If it is binary classification then, in the terms defined above, $\mathcal Y = \{-1,1\}$. Many times the loss is taken to be the 0-1 loss, 
+$$l(y_1,y_2)=1_{y_1\neq y_2}(y_1,y_2):=\begin{cases}
+0\text{ if } y_1=y_2,\\
+1\text{ otherwise }.
+\end{cases}
+$$
 
 In regression the task is to predict a real value for each item, $\mathcal Y = \mathbb R$. Many times in regression the squared error is used, $l(y_1,y_2)=(y_1-y_2)^2$.
 
 Readings for this chapter is:
+
 ISL 2
 
 ISL 4.1-2
@@ -47,7 +53,7 @@ The sections on Hoeffding's inequality, generalization error and VC-dimension is
 
 In this section we discuss the theory of classification, without going in to detail about any particular classification method.
 
-We are given *training data* $(x_i,y_i)\quad i=1,\ldots, n$ that we assume is a random sample from an unknown distribution $P_{X,Y}$. The goal is to find a *classifier*, that is a function $h:\mathcal X \mapsto \mathcal Y= \left\{-1,1\right\}$, based on the training data. There is a *loss function* $l:\mathcal Y\times \mathcal Y \mapsto \mathbb R$ and most commonly this is the 0-1 loss,
+We are given *training data* $(x_i,y_i)\quad i=1,\ldots, n$ that we assume are a random sample from an unknown distribution $P_{X,Y}$. The goal is to find a *classifier*, that is a function $h:\mathcal X \mapsto \mathcal Y= \left\{-1,1\right\}$, based on the training data. There is a *loss function* $l:\mathcal Y\times \mathcal Y \mapsto \mathbb R$ and most commonly this is the 0-1 loss,
 $$
 l(h(x),y) :=1_{h(x)\neq y}(x,y).
 $$
@@ -55,13 +61,14 @@ Then the out-of-sample error is
 $$
 E_{out}(h) = E_{X,Y}\left[ l(h(X),Y) \right] = P(h(X)\neq Y).
 $$
+That is, it is the probability of classifying a random observation $X$ incorrectly, when using the classifier $h$.
 
 To simplify notation we also define the *conditional class probability*,
 $$
 \eta(x):=P\left( Y=1\mid X=x \right).
 $$
 ```{block2, type='note'}
-In the imaginary case where we know the distribution of $X,Y$, the $h$ that minimizes this out-of-sample error is called the *Bayes classifier*. We claim that it is
+In the hypothetical case where we know the distribution of $X,Y$, the $h$ that minimizes this out-of-sample error is called the *Bayes classifier*. We claim that it is
 \begin{align*}
 h^\star(x) &= \begin{cases}
 1 & \text{if } \eta(x)\geq 1/2\\
@@ -115,13 +122,13 @@ Another option is to find a function $h$ that directly minimizes the in-sample e
 $$
 E_{in} = \frac{1}{n} \sum_{i=1}^n I(h(x_i)\neq y_i).
 $$
-It would be done by specifying a class of candidate classifiers $\mathcal H$ from which we pick the best $h$. For example we might consider all the *linear classifiers*,
+It would be done by specifying a class of candidate classifiers $\mathcal H$ from which we pick the best $h$. For example, let us assume that $x=(x^1,x^2,\ldots, x^p)\in \mathbb R^p$ and we might then consider all the *linear classifiers*,
 $$
-\mathcal H = \left\{ h(x) = \text{sign}(x^T\beta + \beta_0) \mid \beta \in \mathbb R^d, \beta_0\in\mathbb R \right\}.
+\mathcal H = \left\{ h(x) = \text{sign}(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p) \mid \beta \in \mathbb R^p, \beta_0\in\mathbb R \right\}.
 $$
-Note that if $y_i(x_i^T\beta + \beta_0)>0$, then $y_i$ is classified correctly and if $y_i(x_i^T\beta + \beta_0)<0$, then $y_i$ is misclassified. We can therefore think of $y_i(x_i^T\beta + \beta_0)$ as measuring how close $y_i$ is to being classified correctly or incorrectly. In fact, we can write the 0-1 loss as
+Note that if $y_i(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)>0$, then $y_i$ is classified correctly and if $y_i(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)<0$, then $y_i$ is misclassified. We can therefore think of $y_i(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)$ as measuring how close $y_i$ is to being classified correctly or incorrectly. In fact, we can write the 0-1 loss as
 $$
-l(h(x),y) = I(y(x^T\beta + \beta_0)\leq 0).
+l(h(x),y) = I_{y(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)\leq 0}(x,y).
 $$
 More generally we can consider a function $f(x)$, a classifier $h(x) = \text{sign}(f(x))$ and a loss function that depends on the *margin* $yf(x)$.
 
@@ -222,7 +229,7 @@ The hinge loss is
 $$
 l(f(x),y)=(1-yf(x))_+,
 $$
-where $(\cdot)_+$ indicates the positive part. This function takes care of our complaints about the 0-1 loss function. If a point $x_i$ is correctly classified, and it is far away from being misclassified, so that $y_if(x_i)$ is large and positive, the loss is 0. However if it is close to being misclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the *population minimizer* of the hinge loss is. The population minimizer for the 0-1 is the Bayes classifier, and for the hinge loss,
+where $(\cdot)_+$ indicates the positive part. This function takes care of our complaints about the 0-1 loss function. If a point $x_i$ is correctly classified, and it is far away from being misclassified, so that $y_if(x_i)$ is large and positive, the loss is 0. However if it is close to being misclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the *population minimizer* of the hinge loss is. The population minimizer for the 0-1 loss is the Bayes classifier, and for the hinge loss,
 $$
 f^\star_{hinge} := \underset{f}{\text{argmin}}~ E\left[(1-Yf(X))_+ \right].
 $$
@@ -269,18 +276,19 @@ Here we took base 2 logarithm since $\log_2(1+e^0)=1$ and then the loss function
 
 In this section will discuss binary classification and in particular *support vector machines* (SVM). The approach taken here is different from the one in ISL. Our approach is easier to explain, generalizes to other method and perhaps also more modern. The approach in ISL however provides a different intuition and is also relevant when implementing the algorithms.
 
-<p>We are given training examples $(x_i,y_i)$, where $x_i\in \mathbb R^p$ and $y_i\in \left\{-1,1\right\}$. The equation $$
-f(x):=x^T\beta + \beta_0 = 0,
+<p>We are given training examples $(x_i,y_i)$, where $x_i = (x_i^1,x_i^2,\ldots,x_i^p) \in \mathbb R^p$ and $y_i\in \left\{-1,1\right\}$. The equation 
 $$
-defines hyperplane (e.g. a line in $\mathbb R^2$, a plane in $\mathbb R^3$). We are going to classify as +1 if the point is on one side of the hyperplane, $x^T\beta + \beta_0>0$, and -1 if it is on the other side, $x^T\beta + \beta_0<0$. In other words, the classification rule is
+f(x):=\beta_0 + x^1\beta + \ldots + x^p\beta_p = 0,
 $$
-h(x) = \text{sign}(x^T\beta + \beta_0).
+defines a hyperplane (e.g. a line in $\mathbb R^2$, a plane in $\mathbb R^3$). We are going to classify as +1 if the point is on one side of the hyperplane, $\beta_0 + x^1\beta + \ldots + x^p\beta_p>0$, and -1 if it is on the other side, $\beta_0 + x^1\beta + \ldots + x^p\beta_p<0$. In other words, the classification rule is
+$$
+h(x) = \text{sign}(\beta_0 + x^1\beta + \ldots + x^p\beta_p).
 $$
 The value of $f(x_i)$ tells us how far away from the hyperplane the point is and if $y_if(x_i)>0$ the point is classified correctly. That is, if $y_if(x_i)$ is large and positive, the point $x_i$ is classified correctly and with a safe margin. If $y_if(x_i)$ is large and negative, the point is classified incorrectly and is far away from being correctly classified. We will consider the hinge loss
 $$
 l(y,f) = (1-yf)_+ ,
 $$
-here $(\cdot)_+$ indicates the positive part. We will minimize the in-sample error
+here $(\cdot)_+$ indicates the positive part and we will minimize the in-sample error
 $$
 \underset{\beta_0,\beta}{\text{minimize}}\quad \frac{1}{n}\sum_{i=1}^n (1-y_if(x_i))_+.
 $$
@@ -345,7 +353,7 @@ We can also calculate the in-sample error
 mean(data.df$y != predict(svm.model, data.df))
 ```
 
-Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x_i) = (\varphi_1(x_i),\ldots, \varphi(x_m))$. We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.
+Not so bad, but let us try to improve it. We select some basis functions, $\varphi_m(x)$, $m=1,\ldots, M$ and use the same classifier but with input features $\varphi(x) = (\varphi_1(x),\ldots, \varphi_M(x))$. We can for example choose $\varphi_m$ to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.
 ```{r, results="hide", cache = TRUE}
 library(kernlab)
 
@@ -490,11 +498,11 @@ $$
 P\left( \left| \bar Y_n - \mu \right|>\varepsilon \right) \leq 2e^{-2n\varepsilon^2/(b-a)^2}.
 $$
 ```
-However, we will only prove the special case that if $Y_i\overset{iid}{\sim}\mathsf{Be}(p)$, then
+The inequality is true for any random variable satisfying the conditions. However, we will only prove the special case that if $Y_i\overset{iid}{\sim}\mathsf{Be}(p)$, then
 $$
 P\left( \left| \bar Y_n - p \right|>\varepsilon \right) \leq 2e^{-2n\varepsilon^2}.
 $$
-We start by deriving *Markov's inequality*: Let $X$ be a non-negative random variable. Then for any $t>0$,
+We start by deriving *Markov's inequality*: Let $X$ be a non-negative random variable. For the sake of this calculation we assume $X$ is continuous with density $p(x)$, although the inequality holds also when this is not the case. Then for any $t>0$,
 \begin{align}
 E[X] &= \int_0^\infty xp(x)dx = \int_0^t xp(x)dx + \int_t^\infty xp(x)dx \\
 &\geq \int_t^\infty x p(x)dx \geq t \int_t^\infty p(x)dx = tP(X> t).
@@ -686,7 +694,7 @@ The proof of this is again an application of Hoeffding. Let $h_1,\ldots,h_{|\mat
 \end{align}
 Setting this equal to $\delta$ and solving for $\varepsilon$ gives the result.
 
-Now we can handle also the case with a finite number of $h$. But there is still not very useful. Most classifications methods will have an infinite $\mathcal H$. For example, in the example above, we would consider all different straight lines and no only $x_1 = 0$. The above argument will not work for infinite $\mathcal H$. There is however some hope. We used that, for two events $A$ and $B$,
+Now we can handle also the case with a finite number of $h$. But it is still not very useful. Most classifications methods will have an infinite $\mathcal H$. For example, in the example above, we would consider all different straight lines and no only $x_1 = 0$. The above argument will not work for infinite $\mathcal H$. There is however some hope. We used that, for two events $A$ and $B$,
 $$
 P(A\cup B) = P(A) + P(B) - P(A\cap B) \leq P(A) + P(B).
 $$
@@ -815,7 +823,7 @@ ggplot() +
 ```
 
 
-Next consider points on $\mathbb R^2$ and $\mathcal H$ being the set of straight lines, as in the example in the previous section. Clearly three points can be shattered by a straight line, as long as the points are not colinear. However four points can never be shattered. So the VC-dimension is $d_{VC}=3$. Similarly in $R^d$, if $\mathcal H$ are the hyperplanes, $d_{VC} = d+1$.
+Next consider points on $\mathbb R^2$ and $\mathcal H$ being the set of straight lines, as in the example in the previous section. Clearly three points can be shattered by a straight line, as long as the points are not colinear. However four points can never be shattered. So the VC-dimension is $d_{VC}=3$. Similarly in $R^p$, if $\mathcal H$ are the hyperplanes, $d_{VC} = p+1$.
 
 ```{r vcDim3, cache = TRUE, echo = FALSE, fig.cap='Three points can be shattered but not four', out.width='80%', fig.asp=.3, fig.align='center', warning=FALSE}
 #Dichotomy 1
@@ -1012,7 +1020,7 @@ Now instead of minimizing the in-sample error of our model, we add a term that r
 $$
 \min_{h\in\mathcal H}\left[ E_{in}(h) + c(h)\right],
 $$
-where $c$ is some function that increases with the complexity of the function $h$. SVMs are a special case of this. If we have a linear classifier $f(x) = \beta_0+\beta_1x_1 + \ldots \beta_p x_p$ the optimisation problem is
+where $c$ is some function that increases with the complexity of the function $h$. SVMs are a special case of this. If we have a linear classifier $f(x) = \beta_0+\beta_1x^1 + \ldots \beta_p x^p$ the optimisation problem is
 $$
 \min_{\beta_0,\beta_1,\ldots,\beta_p} \sum_{i=1}^n \left( 1-y_if(x_i) \right)_+ + \lambda \sum_{i=1}^p{\beta_j^2},
 $$
@@ -1115,13 +1123,13 @@ It turns out that the solution to the optimization problem of SVM can be written
 $$
 f(x) = \beta_0 + \sum_{i=1}^n\alpha_i\langle x,x_i  \rangle,
 $$
-where we define the inner product of two points $x$ and $\tilde x$ as,
+for some values $\alpha_i$, where we define the inner product of two points $x$ and $\tilde x$ as,
 $$
-\langle x,\tilde  x \rangle = \sum_{j=1}^p x_j\tilde x_j.
+\langle x,\tilde  x \rangle = \sum_{j=1}^p x^j\tilde x^j.
 $$
 If we now instead consider the input features $\varphi(x) = (\varphi_1(x),\ldots,\varphi_M(x))$ and functions of the form
 $$
-f(x) = \varphi(x)^T\beta + \beta_0,
+f(x) = \beta_0 + \varphi_1(x)\beta_1 + \ldots \varphi_M(x)\beta_M  ,
 $$
 in the same way as above, the SVM classifier is
 $$
@@ -1265,9 +1273,9 @@ Coming back slightly to reality, we do not know the distribution of $(X,Y)$ but 
 =& E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
  (\bar h(x) - f(x) )^2
 \end{align}
-The first term is the variance of $h^\mathcal D$ as the data set $\mathcal D$ is varied. The second term is the difference between the average function $\bar h$ and the true regression function $f(x)$ and is called the bias. This is the *Bias-variance decomposition*.
+The first term is the variance of $h^\mathcal D$ thinking of the data set $\mathcal D$ as random. The second term is the difference between the average function $\bar h$ and the true regression function $f(x)$ and is called the bias. This is the *Bias-variance decomposition*.
 
-If we choose a large class of function $\mathcal H$ from which we choose $h^\mathcal D$, it will be possible to closely approximate $f$, on average. In this case the bias will be small. However, many times if $\mathcal H$ is large, $h^\mathcal D$ will be sensitive to data, that is we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.
+If we choose a large class of functions $\mathcal H$ from which we choose $h^\mathcal D$, it will be possible to closely approximate $f$, on average. In this case the bias will be small. However, many times if $\mathcal H$ is large, $h^\mathcal D$ will be sensitive to data, that is we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.
 
 ```{r biasVarianceSketch, cache = TRUE, echo = FALSE, fig.cap='Sketch of the bias-variance decomposition', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
 cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -1296,12 +1304,10 @@ E_{out} = E\left[ (Y-h(X))^2 \right].
 $$
 In linear regression, the collection of functions $\mathcal H$ are the functions of the form
 $$
-h(x) = \beta_1x_1 + \cdots + \beta_p x_p,
+h(x) = \beta_1x^1+ \cdots + \beta_p x^p,
 $$
-and we are thus to choose the parameters $\beta_1,\ldots,\beta_p$ in a good way. We know from before that the choice that minimizes the in-sample error is
-$$
-\beta = (x^Tx)^{-1}x^Ty.
-$$
+and we are thus to choose the parameters $\beta_1,\ldots,\beta_p$ in a good way. The $\beta$ that minimises the in-sample error is the least squares estimate of $\beta_1,\ldots,\beta_p$ and can be calculated easily.
+
 As we have seen, we may specify some function $\varphi_i$ and use $\varphi_1(x),\ldots,\varphi_M(x)$ to predict $y$ and we are still in the case of linear regression. However we need to be careful not to overfit. Let us see a simple example were $\varphi$ are polynomials. First we construct the functions that will generate our data:
 ```{r, cache = TRUE}
 library(ggplot2)
@@ -1583,7 +1589,7 @@ $$
 CV_{(n)}= \frac{1}{n}\sum_{i=1}^n MSE_i.
 $$
 
-The advantage compared to the validation set approach is that it always yields the same results and that their is less bias. This is because the size of the training set, $n-1$, is almost the same as the full data set, $n$. Therefore the fit should be almost as good as using the full data set.
+The advantage compared to the validation set approach is that it always yields the same results and that there is less bias. This is because the size of the training set, $n-1$, is almost the same as the full data set, $n$. Therefore the fit should be almost as good as using the full data set.
 
 The main drawback of LOOCV is that if $n$ is large, it could be expensive to implement. An alternative is therefore *k-fold cross-calidation*. Here the data is divided randomly into $k$ groups. We take the first group as validation set and the others as training set. This gives an out-of-sample error, call it $MSE_1$. We continue by treating the second group as validation set, giving $MSE_2$, and so on. The k-fold CV estimate of the out-of-sample error is then
 $$

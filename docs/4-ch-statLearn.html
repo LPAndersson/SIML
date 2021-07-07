@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Statistical learning | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Statistical learning | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -33,6 +33,7 @@
   
 <link rel="prev" href="3-7-review-questions-2.html"/>
 <link rel="next" href="4-1-classification.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,22 +51,23 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,7 +87,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -118,6 +120,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -135,22 +160,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a><ul>
-<li class="chapter" data-level="1.1" data-path="1-1-maximum-likelihood-estimation.html"><a href="1-1-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.1</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="1.2" data-path="1-2-hypothesis-testing.html"><a href="1-2-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.2</b> Hypothesis testing</a></li>
-<li class="chapter" data-level="1.3" data-path="1-3-likelihood-ratio-test.html"><a href="1-3-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.3</b> Likelihood ratio test</a></li>
-<li class="chapter" data-level="1.4" data-path="1-4-mathematical-aside-taylor-expansion.html"><a href="1-4-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.4</b> Mathematical aside: Taylor expansion</a></li>
-<li class="chapter" data-level="1.5" data-path="1-5-asymptotic-distribution-of-the-mle.html"><a href="1-5-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.5</b> Asymptotic distribution of the MLE</a></li>
-<li class="chapter" data-level="1.6" data-path="1-6-the-delta-method.html"><a href="1-6-the-delta-method.html"><i class="fa fa-check"></i><b>1.6</b> The delta method</a></li>
-<li class="chapter" data-level="1.7" data-path="1-7-wilks-test.html"><a href="1-7-wilks-test.html"><i class="fa fa-check"></i><b>1.7</b> Wilks’ test</a></li>
-<li class="chapter" data-level="1.8" data-path="1-8-walds-test.html"><a href="1-8-walds-test.html"><i class="fa fa-check"></i><b>1.8</b> Wald’s test</a></li>
-<li class="chapter" data-level="1.9" data-path="1-9-score-test.html"><a href="1-9-score-test.html"><i class="fa fa-check"></i><b>1.9</b> Score test</a></li>
-<li class="chapter" data-level="1.10" data-path="1-10-confidence-intervals.html"><a href="1-10-confidence-intervals.html"><i class="fa fa-check"></i><b>1.10</b> Confidence intervals</a></li>
-<li class="chapter" data-level="1.11" data-path="1-11-an-application.html"><a href="1-11-an-application.html"><i class="fa fa-check"></i><b>1.11</b> An application</a></li>
-<li class="chapter" data-level="1.12" data-path="1-12-summary.html"><a href="1-12-summary.html"><i class="fa fa-check"></i><b>1.12</b> Summary</a></li>
-<li class="chapter" data-level="1.13" data-path="1-13-review-questions.html"><a href="1-13-review-questions.html"><i class="fa fa-check"></i><b>1.13</b> Review questions</a></li>
+<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-1-the-likelihood-function.html"><a href="1-1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
+<li class="chapter" data-level="1.2" data-path="1-2-maximum-likelihood-estimation.html"><a href="1-2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="1.3" data-path="1-3-hypothesis-testing.html"><a href="1-3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
+<li class="chapter" data-level="1.4" data-path="1-4-likelihood-ratio-test.html"><a href="1-4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
+<li class="chapter" data-level="1.5" data-path="1-5-mathematical-aside-taylor-expansion.html"><a href="1-5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
+<li class="chapter" data-level="1.6" data-path="1-6-asymptotic-distribution-of-the-mle.html"><a href="1-6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
+<li class="chapter" data-level="1.7" data-path="1-7-the-delta-method.html"><a href="1-7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
+<li class="chapter" data-level="1.8" data-path="1-8-wilks-test.html"><a href="1-8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
+<li class="chapter" data-level="1.9" data-path="1-9-walds-test.html"><a href="1-9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
+<li class="chapter" data-level="1.10" data-path="1-10-score-test.html"><a href="1-10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
+<li class="chapter" data-level="1.11" data-path="1-11-confidence-intervals.html"><a href="1-11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
+<li class="chapter" data-level="1.12" data-path="1-12-an-application.html"><a href="1-12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
+<li class="chapter" data-level="1.13" data-path="1-13-summary.html"><a href="1-13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
+<li class="chapter" data-level="1.14" data-path="1-14-review-questions.html"><a href="1-14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a><ul>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="2-1-some-basic-decision-theory.html"><a href="2-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
 <li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics-1.html"><a href="2-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
 <li class="chapter" data-level="2.3" data-path="2-3-choosing-prior.html"><a href="2-3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
@@ -160,7 +188,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.7" data-path="2-7-summary-1.html"><a href="2-7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
 <li class="chapter" data-level="2.8" data-path="2-8-review-questions-1.html"><a href="2-8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a><ul>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="3-1-parametric-vs-non-parametric.html"><a href="3-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
 <li class="chapter" data-level="3.2" data-path="3-2-non-parametric-estimation.html"><a href="3-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
 <li class="chapter" data-level="3.3" data-path="3-3-bootstrap.html"><a href="3-3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
@@ -169,7 +198,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
 <li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a><ul>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
@@ -183,7 +213,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a><ul>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
 <li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
 <li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
@@ -211,7 +242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ch-statLearn" class="section level1">
+<div id="ch-statLearn" class="section level1" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Statistical learning</h1>
 <p>In this chapter we will discuss <em>statistical learning</em> from a mostly theoretical perspective. That is, we will discuss when and why statistical learning can be expected to work.</p>
 <p>We begin by defining what we mean by statistical learning and the different types of statistical learning. Then we will display some examples that motivate our theoretical discussion and after that we will see two different theoretical perspectives on learning.</p>
@@ -234,13 +265,17 @@ The problem in statistical learning is to find a function <span class="math inli
 E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
 \]</span>
 </div>
-
 <p>This tells us how the function <span class="math inline">\(h\)</span> performs on average, on random observation from <span class="math inline">\(P_{X,Y}\)</span>. We would like to choose the function <span class="math inline">\(h\)</span> so that this error is as small as possible. The fundamental problem of learning is that the distribution of <span class="math inline">\(X,Y\)</span> is unknown and so direct minimization of <span class="math inline">\(E_{out}\)</span> is not possible.</p>
 <p>Methods in statistical learning can be partitioned in various ways. The two main ways is in <em>supervised</em> and <em>unsupervised</em> learning. In supervised learning we are given a set of <span class="math inline">\(n\)</span> examples <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span> and the task is to predict <span class="math inline">\(y\)</span> for a previously unseen point <span class="math inline">\(x\)</span>. In unsupervised learning we are only given <span class="math inline">\(x_1,\ldots, x_n\)</span> and the goal is to describe the associations and patterns among a set of input measures. A third scenario is <a href="https://en.wikipedia.org/wiki/Reinforcement_learning"><em>reinforcement learning</em></a>, that we will not cover in this course.</p>
-<p>In supervised learning the two main tasks are <em>classification</em> and <em>regression</em>. In classification the task is to assign a class to each item. If it is binary classification then, in the terms defined above, <span class="math inline">\(\mathcal Y = \{-1,1\}\)</span>. Many times the loss is taken to be the 0-1 loss, <span class="math inline">\(l(y_1,y_2)=1_{y_1\neq y_2}(y_1,y_2)\)</span>.</p>
+<p>In supervised learning the two main tasks are <em>classification</em> and <em>regression</em>. In classification the task is to assign a class to each item. If it is binary classification then, in the terms defined above, <span class="math inline">\(\mathcal Y = \{-1,1\}\)</span>. Many times the loss is taken to be the 0-1 loss,
+<span class="math display">\[l(y_1,y_2)=1_{y_1\neq y_2}(y_1,y_2):=\begin{cases}
+0\text{ if } y_1=y_2,\\
+1\text{ otherwise }.
+\end{cases}
+\]</span></p>
 <p>In regression the task is to predict a real value for each item, <span class="math inline">\(\mathcal Y = \mathbb R\)</span>. Many times in regression the squared error is used, <span class="math inline">\(l(y_1,y_2)=(y_1-y_2)^2\)</span>.</p>
-<p>Readings for this chapter is:
-ISL 2</p>
+<p>Readings for this chapter is:</p>
+<p>ISL 2</p>
 <p>ISL 4.1-2</p>
 <p>ISL 5</p>
 <p>ISL 6.1-2</p>
@@ -276,6 +311,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
