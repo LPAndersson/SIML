@@ -1,127 +1,14 @@
 # Beyond linearity
 
-In this chapter we discuss some non-linear models. The purpose is only to give a short introduction to each model, enough to be able to use it in practice.
+In this module we cover some state-of-the-art non-linear models. Decision trees, bagging, random forest and boosting is covered well in ISL, so we will no repeat it here. But it is part of the course.
+
 
 Readings for this chapter is:
-ISL 7.5, 7.7
+ISL 8
 
 This [video series](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) on neural networks
 
-## Smoothing splines
-
-For smoothing splines, the hypothesis set is the functions with two continuous derivatives, $C^2$. The optimization problem that it solves is
-$$
-\min_{h\in C^2} \sum_{i=1}^n\left( y_i - h(x_i) \right)^2 + \lambda \int h''(t)^2dt.
-$$
-The second term penalizes variability in $h$. Note that there are no parameters in this model and so it is a little surprising that the solutions can be easily characterized. It turns out that the optimal $h$ is a piecewise cubic polynomial with knots at $x_1,\ldots x_n$ and continuous first and second derivatives. The parameter $\lambda$ is usually determined by CV. Instead of $\lambda$, the penalty parameters is sometimes reparametrized as degrees of freedom, which has a similar interpretation as in linear regression.
-
-Let us apply this in an example. We wish to predict wage based on age. We first split the data into a training and test set and take a look at the data.
-```{r, warning=FALSE, cache = TRUE}
-library(caret)
-library(ISLR)
-
-data("Wage", package = "ISLR")
-Wage <- na.omit(Wage)
-
-set.seed(42)
-training.samples <- createDataPartition(Wage$wage, p = 0.7, list = FALSE)
-train.data  <- Wage[training.samples, ]
-test.data <- Wage[-training.samples, ]
-
-ggplot(train.data, aes(x = age, y = wage)) +
-  geom_point() +
-  theme_minimal()
-```
-<p>We see that the relationship appears non-linear. For lower ages, the wage increases with age and is then roughly constant. Let us fit a smoothing spline. To determine $\lambda$ by CV, the default in this package is leave-one-out CV.</p>
-```{r, warning=FALSE, cache = TRUE}
-
-model.smooth <- smooth.spline(train.data$age,train.data$wage, cv = TRUE)
-
-predictions.smooth <- predict(model.smooth, test.data$age)
-mean((predictions.smooth$y - test.data$wage)^2)
-```
-Let us compare this to a polynomial regression.
-```{r, warning=FALSE, cache = TRUE}
-
-model.linear <- lm(wage ~ poly(age,3), data = train.data)
-
-predictions.linear <- predict(model.linear, test.data)
-mean((predictions.linear - test.data$wage)^2)
-```
-
-We plot both models.
-```{r smoothingSpline, cache = TRUE, echo = FALSE, fig.cap='Smoothing spline fit to wage date', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE}
-
-age.seq <- seq(from = min(Wage$age), to = max(Wage$age), by = 1)
-
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggplot(Wage, aes(x = age, y = wage)) +
-  geom_point() +
-  geom_line(data = data.frame(age = age.seq,
-                              wage = predict(model.smooth, age.seq)$y),
-            aes(color = "smooth"),
-            size = 2) +
-    geom_line(data = data.frame(age = age.seq,
-                                wage = predict(model.linear, data.frame(age = age.seq))),
-              aes(color = "linear"),
-              size = 2) +
-    scale_colour_manual(name = "",
-                        values = c("smooth" = cbp1[2], "linear" = cbp1[3]),
-                        labels = c("Smoothing spline", "Polynomial regression")) +
-  theme_minimal()
-```
-
-## Generalized additive models
-
-If there is more than one predictor, a useful model is the Generalized additive models (GAM). They are defined by the hypothesis functions of the form
-$$
-h(x_i) = \beta_0 + \sum_{j=1}^p h_j(x_{ij}).
-$$
-Here $h_j$ can be in principle any function, for example smoothing splines. We now present a small example using the wage data from ISLR. First load the data, partition into training/test and plot.
-```{r wageDataPlot, cache = FALSE, echo = TRUE, fig.cap='Scatter plot matrix of wage data.', out.width='80%', fig.asp=.75, fig.align='center', warning=FALSE, messages = FALSE, results='hide'}
-library(caret)
-library(ISLR)
-library(gam)
-library(GGally)
-
-data("Wage", package = "ISLR")
-Wage <- na.omit(Wage)
-
-set.seed(42)
-training.samples <-
-  createDataPartition(Wage$wage, p = 0.7, list = FALSE)
-train.data  <- Wage[training.samples,]
-test.data <- Wage[-training.samples,]
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-ggpairs(train.data, columns=c("wage","year","age","education"),
-        upper=list(continuous=wrap("smooth_loess",alpha=0.1,color=cbp1[2])),
-        lower = list(combo = wrap(ggally_facethist, bins = 30))) +
-  theme_minimal()
-```
-Looking at first row, for the year variable it would probably be fine with a linear fit, while for the age variable, a linear fit seems doubtful. Let us fit two models, one which is linear in year and one with a smoothing spline in year. Both are smoothing splines in age.
-```{r cache = TRUE, echo = TRUE, warning=FALSE, messages = FALSE}
-gam.m1 <- gam(wage~ year + s(age , 4) + education , data = Wage)
-gam.m2 <- gam(wage~ s(year , 4) + s(age , 4) + education , data = Wage)
-
-anova(gam.m1, gam.m2)
-```
-The p-value indicates that the linear fit is satisfactory. Let us calculate the test error, also comparing to a linear model.
-```{r}
-ls <- lm(wage~ year + age + education , data = Wage)
-predictions <- predict(ls, test.data )
-mean((predictions - test.data$wage)^2)
-
-predictions <- predict(gam.m1, test.data )
-mean((predictions - test.data$wage)^2)
-
-predictions <- predict(gam.m2, test.data )
-mean((predictions - test.data$wage)^2)
-```
-The gam models outperform the linear model. The test error is smaller for the gam model with year as smoothed spline, although the difference is small.
+## Stochastic Gradient Boosting
 
 ## Neural networks
 
