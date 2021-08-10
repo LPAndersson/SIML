@@ -22,7 +22,7 @@ keras::install_keras()
 ```
 If you get a prompt asking to install miniconda, you should choose "Yes".
 
-If this installation fails another option is to follow the instructions at the book's webpage[I'm an inline-style link](https://web.stanford.edu/~hastie/ISLR2/keras-instructions.html)
+If this installation fails another option is to follow the instructions at the [ISLR webpage](https://web.stanford.edu/~hastie/ISLR2/keras-instructions.html)
 
 After that, it should be enough to
 
