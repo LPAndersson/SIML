@@ -4,7 +4,7 @@ In this module we cover some state-of-the-art non-linear models. Decision trees,
 
 The new version of ISLR also includes a chapter on deep learning. The first part of this chapter is also part of the course
 
-Readings for this chapter is therefore:
+Readings for this chapter is therefore
 
 ISLR 8
 
