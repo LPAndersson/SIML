@@ -16,6 +16,33 @@ description: "These are the lecture notes for the course Statistical Inference a
 knitr::opts_chunk$set(
   comment = "#>", echo = FALSE, cache = TRUE
 )
+
+packages <- c("latex2exp",
+"pracma",
+"tidyverse",
+"caret",
+"gridExtra",
+"mvtnorm",
+"kernlab",
+"e1071",
+"resample",
+"glmnet",
+"ISLR",
+"ISLR2",
+"mlbench",
+"doMC")
+
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
+
+
 ```
 
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-03-08" />
+<meta name="date" content="2021-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="4-1-classification.html"/>
 <link rel="next" href="4-3-hoeffdings-inequality.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -215,12 +215,8 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
-<li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
-<li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
-<li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
-<li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
-<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5-1-an-application-3.html"><a href="5-1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5-2-review-questions-4.html"><a href="5-2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -263,40 +259,40 @@ here <span class="math inline">\((\cdot)_+\)</span> indicates the positive part 
 \underset{\beta_0,\beta}{\text{minimize}}\quad \frac{1}{n}\sum_{i=1}^n (1-y_if(x_i))_+.
 \]</span></p>
 <p>As an example, we generate some training data from a mixture of normal distributions.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="4-2-support-vector-machines-i.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
-<span id="cb1-2"><a href="4-2-support-vector-machines-i.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-3"><a href="4-2-support-vector-machines-i.html#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="4-2-support-vector-machines-i.html#cb1-4" aria-hidden="true" tabindex="-1"></a>mu.p <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">10</span>,<span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>))</span>
-<span id="cb1-5"><a href="4-2-support-vector-machines-i.html#cb1-5" aria-hidden="true" tabindex="-1"></a>mu.n <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">10</span>,<span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>))</span>
-<span id="cb1-6"><a href="4-2-support-vector-machines-i.html#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="4-2-support-vector-machines-i.html#cb1-7" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb1-8"><a href="4-2-support-vector-machines-i.html#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="4-2-support-vector-machines-i.html#cb1-9" aria-hidden="true" tabindex="-1"></a>data.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">2</span><span class="sc">*</span>n.samples, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb1-10"><a href="4-2-support-vector-machines-i.html#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="4-2-support-vector-machines-i.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.samples)) {</span>
-<span id="cb1-12"><a href="4-2-support-vector-machines-i.html#cb1-12" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.p[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.p), <span class="at">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb1-13"><a href="4-2-support-vector-machines-i.html#cb1-13" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
-<span id="cb1-14"><a href="4-2-support-vector-machines-i.html#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="4-2-support-vector-machines-i.html#cb1-15" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i<span class="dv">-1</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="dv">1</span>)</span>
-<span id="cb1-16"><a href="4-2-support-vector-machines-i.html#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="4-2-support-vector-machines-i.html#cb1-17" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.n[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.n), <span class="at">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb1-18"><a href="4-2-support-vector-machines-i.html#cb1-18" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
-<span id="cb1-19"><a href="4-2-support-vector-machines-i.html#cb1-19" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb1-20"><a href="4-2-support-vector-machines-i.html#cb1-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-21"><a href="4-2-support-vector-machines-i.html#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="4-2-support-vector-machines-i.html#cb1-22" aria-hidden="true" tabindex="-1"></a>data.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data.matrix)</span>
-<span id="cb1-23"><a href="4-2-support-vector-machines-i.html#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
-<span id="cb1-24"><a href="4-2-support-vector-machines-i.html#cb1-24" aria-hidden="true" tabindex="-1"></a>data.df<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data.df<span class="sc">$</span>y)</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="4-2-support-vector-machines-i.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb118-2"><a href="4-2-support-vector-machines-i.html#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb118-3"><a href="4-2-support-vector-machines-i.html#cb118-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-4"><a href="4-2-support-vector-machines-i.html#cb118-4" aria-hidden="true" tabindex="-1"></a>mu.p <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">10</span>,<span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>))</span>
+<span id="cb118-5"><a href="4-2-support-vector-machines-i.html#cb118-5" aria-hidden="true" tabindex="-1"></a>mu.n <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">10</span>,<span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>))</span>
+<span id="cb118-6"><a href="4-2-support-vector-machines-i.html#cb118-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-7"><a href="4-2-support-vector-machines-i.html#cb118-7" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb118-8"><a href="4-2-support-vector-machines-i.html#cb118-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-9"><a href="4-2-support-vector-machines-i.html#cb118-9" aria-hidden="true" tabindex="-1"></a>data.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">2</span><span class="sc">*</span>n.samples, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb118-10"><a href="4-2-support-vector-machines-i.html#cb118-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-11"><a href="4-2-support-vector-machines-i.html#cb118-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.samples)) {</span>
+<span id="cb118-12"><a href="4-2-support-vector-machines-i.html#cb118-12" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.p[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.p), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb118-13"><a href="4-2-support-vector-machines-i.html#cb118-13" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb118-14"><a href="4-2-support-vector-machines-i.html#cb118-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-15"><a href="4-2-support-vector-machines-i.html#cb118-15" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i<span class="dv">-1</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="dv">1</span>)</span>
+<span id="cb118-16"><a href="4-2-support-vector-machines-i.html#cb118-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-17"><a href="4-2-support-vector-machines-i.html#cb118-17" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.n[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.n), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb118-18"><a href="4-2-support-vector-machines-i.html#cb118-18" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb118-19"><a href="4-2-support-vector-machines-i.html#cb118-19" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb118-20"><a href="4-2-support-vector-machines-i.html#cb118-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb118-21"><a href="4-2-support-vector-machines-i.html#cb118-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-22"><a href="4-2-support-vector-machines-i.html#cb118-22" aria-hidden="true" tabindex="-1"></a>data.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data.matrix)</span>
+<span id="cb118-23"><a href="4-2-support-vector-machines-i.html#cb118-23" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
+<span id="cb118-24"><a href="4-2-support-vector-machines-i.html#cb118-24" aria-hidden="true" tabindex="-1"></a>data.df<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data.df<span class="sc">$</span>y)</span></code></pre></div>
 <p>Then use R to calculate the hyperplane that minimizes the in-sample error.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="4-2-support-vector-machines-i.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
-<span id="cb2-2"><a href="4-2-support-vector-machines-i.html#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="4-2-support-vector-machines-i.html#cb2-3" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2, <span class="at">data =</span> data.df,</span>
-<span id="cb2-4"><a href="4-2-support-vector-machines-i.html#cb2-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
-<span id="cb2-5"><a href="4-2-support-vector-machines-i.html#cb2-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
-<span id="cb2-6"><a href="4-2-support-vector-machines-i.html#cb2-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">C =</span> <span class="dv">1000</span>)</span>
-<span id="cb2-7"><a href="4-2-support-vector-machines-i.html#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="4-2-support-vector-machines-i.html#cb2-8" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x1 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>), <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>))</span>
-<span id="cb2-9"><a href="4-2-support-vector-machines-i.html#cb2-9" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">predict</span>(svm.model, grid))</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="4-2-support-vector-machines-i.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb119-2"><a href="4-2-support-vector-machines-i.html#cb119-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-3"><a href="4-2-support-vector-machines-i.html#cb119-3" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y<span class="sc">~</span>x1<span class="sc">+</span>x2, <span class="at">data =</span> data.df,</span>
+<span id="cb119-4"><a href="4-2-support-vector-machines-i.html#cb119-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
+<span id="cb119-5"><a href="4-2-support-vector-machines-i.html#cb119-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
+<span id="cb119-6"><a href="4-2-support-vector-machines-i.html#cb119-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">C =</span> <span class="dv">1000</span>)</span>
+<span id="cb119-7"><a href="4-2-support-vector-machines-i.html#cb119-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-8"><a href="4-2-support-vector-machines-i.html#cb119-8" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x1 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>), <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>))</span>
+<span id="cb119-9"><a href="4-2-support-vector-machines-i.html#cb119-9" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">predict</span>(svm.model, grid))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:SVMlinear"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMlinear-1.png" alt="Training data and linear classification with hinge loss" width="80%" />
 <p class="caption">
@@ -304,17 +300,17 @@ Figure 4.3: Training data and linear classification with hinge loss
 </p>
 </div>
 <p>We can also calculate the in-sample error</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="4-2-support-vector-machines-i.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model, data.df))</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="4-2-support-vector-machines-i.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model, data.df))</span></code></pre></div>
 <pre><code>## [1] 0.285</code></pre>
 <p>Not so bad, but let us try to improve it. We select some basis functions, <span class="math inline">\(\varphi_m(x)\)</span>, <span class="math inline">\(m=1,\ldots, M\)</span> and use the same classifier but with input features <span class="math inline">\(\varphi(x) = (\varphi_1(x),\ldots, \varphi_M(x))\)</span>. We can for example choose <span class="math inline">\(\varphi_m\)</span> to be polynomials of increasing order. For order 2, we get the classifier below, an ellipsoid.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="4-2-support-vector-machines-i.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
-<span id="cb5-2"><a href="4-2-support-vector-machines-i.html#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="4-2-support-vector-machines-i.html#cb5-3" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y<span class="sc">~</span><span class="fu">poly</span>(x1, x2, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> data.df,</span>
-<span id="cb5-4"><a href="4-2-support-vector-machines-i.html#cb5-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
-<span id="cb5-5"><a href="4-2-support-vector-machines-i.html#cb5-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
-<span id="cb5-6"><a href="4-2-support-vector-machines-i.html#cb5-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">C =</span> <span class="dv">1000</span>)</span>
-<span id="cb5-7"><a href="4-2-support-vector-machines-i.html#cb5-7" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x1 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>), <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>))</span>
-<span id="cb5-8"><a href="4-2-support-vector-machines-i.html#cb5-8" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">predict</span>(svm.model, grid))</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="4-2-support-vector-machines-i.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb122-2"><a href="4-2-support-vector-machines-i.html#cb122-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-3"><a href="4-2-support-vector-machines-i.html#cb122-3" aria-hidden="true" tabindex="-1"></a>svm.model <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y<span class="sc">~</span><span class="fu">poly</span>(x1, x2, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> data.df,</span>
+<span id="cb122-4"><a href="4-2-support-vector-machines-i.html#cb122-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
+<span id="cb122-5"><a href="4-2-support-vector-machines-i.html#cb122-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
+<span id="cb122-6"><a href="4-2-support-vector-machines-i.html#cb122-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">C =</span> <span class="dv">1000</span>)</span>
+<span id="cb122-7"><a href="4-2-support-vector-machines-i.html#cb122-7" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x1 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>), <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>, <span class="at">length =</span> <span class="dv">500</span>))</span>
+<span id="cb122-8"><a href="4-2-support-vector-machines-i.html#cb122-8" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">predict</span>(svm.model, grid))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:SVMpolynomial"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMpolynomial-1.png" alt="Training data and quadratic classification with hinge loss" width="80%" />
 <p class="caption">
@@ -322,23 +318,23 @@ Figure 4.4: Training data and quadratic classification with hinge loss
 </p>
 </div>
 <p>This time the in-sample error is</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="4-2-support-vector-machines-i.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">fitted</span>(svm.model))</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="4-2-support-vector-machines-i.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">fitted</span>(svm.model))</span></code></pre></div>
 <pre><code>## [1] 0.275</code></pre>
 <p>Better. Let us continue with increasing order polynomials, and calculate the error.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="4-2-support-vector-machines-i.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
-<span id="cb8-2"><a href="4-2-support-vector-machines-i.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="4-2-support-vector-machines-i.html#cb8-3" aria-hidden="true" tabindex="-1"></a>maxDegree <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb8-4"><a href="4-2-support-vector-machines-i.html#cb8-4" aria-hidden="true" tabindex="-1"></a>error.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;degree&quot;</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span>maxDegree, <span class="at">inError =</span> <span class="cn">NA</span>, <span class="at">outError =</span> <span class="cn">NA</span>)</span>
-<span id="cb8-5"><a href="4-2-support-vector-machines-i.html#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="4-2-support-vector-machines-i.html#cb8-6" aria-hidden="true" tabindex="-1"></a>svm.model.list <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">&quot;list&quot;</span>, <span class="at">length =</span> maxDegree)</span>
-<span id="cb8-7"><a href="4-2-support-vector-machines-i.html#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="4-2-support-vector-machines-i.html#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
-<span id="cb8-9"><a href="4-2-support-vector-machines-i.html#cb8-9" aria-hidden="true" tabindex="-1"></a>  svm.model.list[degree] <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x1, x2, <span class="at">degree =</span> degree), <span class="at">data =</span> data.df,</span>
-<span id="cb8-10"><a href="4-2-support-vector-machines-i.html#cb8-10" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
-<span id="cb8-11"><a href="4-2-support-vector-machines-i.html#cb8-11" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
-<span id="cb8-12"><a href="4-2-support-vector-machines-i.html#cb8-12" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">C =</span> <span class="dv">1000</span>)</span>
-<span id="cb8-13"><a href="4-2-support-vector-machines-i.html#cb8-13" aria-hidden="true" tabindex="-1"></a>  error.df<span class="sc">$</span>inError[degree] <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model.list[[degree]], data.df))</span>
-<span id="cb8-14"><a href="4-2-support-vector-machines-i.html#cb8-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="4-2-support-vector-machines-i.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab)</span>
+<span id="cb125-2"><a href="4-2-support-vector-machines-i.html#cb125-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-3"><a href="4-2-support-vector-machines-i.html#cb125-3" aria-hidden="true" tabindex="-1"></a>maxDegree <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb125-4"><a href="4-2-support-vector-machines-i.html#cb125-4" aria-hidden="true" tabindex="-1"></a>error.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;degree&quot;</span> <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span>maxDegree, <span class="at">inError =</span> <span class="cn">NA</span>, <span class="at">outError =</span> <span class="cn">NA</span>)</span>
+<span id="cb125-5"><a href="4-2-support-vector-machines-i.html#cb125-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-6"><a href="4-2-support-vector-machines-i.html#cb125-6" aria-hidden="true" tabindex="-1"></a>svm.model.list <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">&quot;list&quot;</span>, <span class="at">length =</span> maxDegree)</span>
+<span id="cb125-7"><a href="4-2-support-vector-machines-i.html#cb125-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-8"><a href="4-2-support-vector-machines-i.html#cb125-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
+<span id="cb125-9"><a href="4-2-support-vector-machines-i.html#cb125-9" aria-hidden="true" tabindex="-1"></a>  svm.model.list[degree] <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x1, x2, <span class="at">degree =</span> degree), <span class="at">data =</span> data.df,</span>
+<span id="cb125-10"><a href="4-2-support-vector-machines-i.html#cb125-10" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">type =</span> <span class="st">&quot;C-svc&quot;</span>,</span>
+<span id="cb125-11"><a href="4-2-support-vector-machines-i.html#cb125-11" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">kernel =</span> <span class="st">&quot;vanilladot&quot;</span>,</span>
+<span id="cb125-12"><a href="4-2-support-vector-machines-i.html#cb125-12" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">C =</span> <span class="dv">1000</span>)</span>
+<span id="cb125-13"><a href="4-2-support-vector-machines-i.html#cb125-13" aria-hidden="true" tabindex="-1"></a>  error.df<span class="sc">$</span>inError[degree] <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model.list[[degree]], data.df))</span>
+<span id="cb125-14"><a href="4-2-support-vector-machines-i.html#cb125-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:errorPlot"></span>
 <img src="04-statisticalLearning_files/figure-html/errorPlot-1.png" alt="In sample error vs. degree of polynomial, using hinge loss" width="80%" />
 <p class="caption">
@@ -346,7 +342,7 @@ Figure 4.5: In sample error vs. degree of polynomial, using hinge loss
 </p>
 </div>
 <p>In-sample error gets smaller as we increase the order of the polynomial. For degree 20, the in-sample error is</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="4-2-support-vector-machines-i.html#cb9-1" aria-hidden="true" tabindex="-1"></a>error.df<span class="sc">$</span>inError[<span class="dv">20</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="4-2-support-vector-machines-i.html#cb126-1" aria-hidden="true" tabindex="-1"></a>error.df<span class="sc">$</span>inError[<span class="dv">20</span>]</span></code></pre></div>
 <pre><code>## [1] 0.03</code></pre>
 The classifier looks complex.
 <div class="figure" style="text-align: center"><span id="fig:SVMpolynomial20"></span>
@@ -356,32 +352,32 @@ Figure 4.6: Training data and degree 20 polynomial classification
 </p>
 </div>
 <p>Since we know the data generating distribution, we can approximate the out-of-sample error for each classifier, by simulation.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="4-2-support-vector-machines-i.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
-<span id="cb11-2"><a href="4-2-support-vector-machines-i.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb11-3"><a href="4-2-support-vector-machines-i.html#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="4-2-support-vector-machines-i.html#cb11-4" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
-<span id="cb11-5"><a href="4-2-support-vector-machines-i.html#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="4-2-support-vector-machines-i.html#cb11-6" aria-hidden="true" tabindex="-1"></a>data.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">2</span><span class="sc">*</span>n.samples, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb11-7"><a href="4-2-support-vector-machines-i.html#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="4-2-support-vector-machines-i.html#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.samples)) {</span>
-<span id="cb11-9"><a href="4-2-support-vector-machines-i.html#cb11-9" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.p[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.p), <span class="at">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb11-10"><a href="4-2-support-vector-machines-i.html#cb11-10" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
-<span id="cb11-11"><a href="4-2-support-vector-machines-i.html#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="4-2-support-vector-machines-i.html#cb11-12" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i<span class="dv">-1</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="dv">1</span>)</span>
-<span id="cb11-13"><a href="4-2-support-vector-machines-i.html#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-14"><a href="4-2-support-vector-machines-i.html#cb11-14" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.n[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.n), <span class="at">size =</span> <span class="dv">1</span>),]</span>
-<span id="cb11-15"><a href="4-2-support-vector-machines-i.html#cb11-15" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
-<span id="cb11-16"><a href="4-2-support-vector-machines-i.html#cb11-16" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb11-17"><a href="4-2-support-vector-machines-i.html#cb11-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb11-18"><a href="4-2-support-vector-machines-i.html#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-19"><a href="4-2-support-vector-machines-i.html#cb11-19" aria-hidden="true" tabindex="-1"></a>data.test.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data.matrix)</span>
-<span id="cb11-20"><a href="4-2-support-vector-machines-i.html#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.test.df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
-<span id="cb11-21"><a href="4-2-support-vector-machines-i.html#cb11-21" aria-hidden="true" tabindex="-1"></a>data.test.df<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data.test.df<span class="sc">$</span>y)</span>
-<span id="cb11-22"><a href="4-2-support-vector-machines-i.html#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-23"><a href="4-2-support-vector-machines-i.html#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
-<span id="cb11-24"><a href="4-2-support-vector-machines-i.html#cb11-24" aria-hidden="true" tabindex="-1"></a>  error.df<span class="sc">$</span>outError[degree] <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.test.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model.list[[degree]],</span>
-<span id="cb11-25"><a href="4-2-support-vector-machines-i.html#cb11-25" aria-hidden="true" tabindex="-1"></a>                                                              data.test.df))</span>
-<span id="cb11-26"><a href="4-2-support-vector-machines-i.html#cb11-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="4-2-support-vector-machines-i.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb128-2"><a href="4-2-support-vector-machines-i.html#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb128-3"><a href="4-2-support-vector-machines-i.html#cb128-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-4"><a href="4-2-support-vector-machines-i.html#cb128-4" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb128-5"><a href="4-2-support-vector-machines-i.html#cb128-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-6"><a href="4-2-support-vector-machines-i.html#cb128-6" aria-hidden="true" tabindex="-1"></a>data.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">2</span><span class="sc">*</span>n.samples, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb128-7"><a href="4-2-support-vector-machines-i.html#cb128-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-8"><a href="4-2-support-vector-machines-i.html#cb128-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.samples)) {</span>
+<span id="cb128-9"><a href="4-2-support-vector-machines-i.html#cb128-9" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.p[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.p), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb128-10"><a href="4-2-support-vector-machines-i.html#cb128-10" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb128-11"><a href="4-2-support-vector-machines-i.html#cb128-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-12"><a href="4-2-support-vector-machines-i.html#cb128-12" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i<span class="dv">-1</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="dv">1</span>)</span>
+<span id="cb128-13"><a href="4-2-support-vector-machines-i.html#cb128-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-14"><a href="4-2-support-vector-machines-i.html#cb128-14" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">=</span> mu.n[<span class="fu">sample</span>(<span class="at">x=</span> <span class="fu">nrow</span>(mu.n), <span class="at">size =</span> <span class="dv">1</span>),]</span>
+<span id="cb128-15"><a href="4-2-support-vector-machines-i.html#cb128-15" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu, <span class="at">sigma =</span> <span class="fu">diag</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb128-16"><a href="4-2-support-vector-machines-i.html#cb128-16" aria-hidden="true" tabindex="-1"></a>  data.matrix[<span class="dv">2</span><span class="sc">*</span>i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb128-17"><a href="4-2-support-vector-machines-i.html#cb128-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb128-18"><a href="4-2-support-vector-machines-i.html#cb128-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-19"><a href="4-2-support-vector-machines-i.html#cb128-19" aria-hidden="true" tabindex="-1"></a>data.test.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data.matrix)</span>
+<span id="cb128-20"><a href="4-2-support-vector-machines-i.html#cb128-20" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.test.df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
+<span id="cb128-21"><a href="4-2-support-vector-machines-i.html#cb128-21" aria-hidden="true" tabindex="-1"></a>data.test.df<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data.test.df<span class="sc">$</span>y)</span>
+<span id="cb128-22"><a href="4-2-support-vector-machines-i.html#cb128-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-23"><a href="4-2-support-vector-machines-i.html#cb128-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (degree <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,maxDegree)) {</span>
+<span id="cb128-24"><a href="4-2-support-vector-machines-i.html#cb128-24" aria-hidden="true" tabindex="-1"></a>  error.df<span class="sc">$</span>outError[degree] <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.test.df<span class="sc">$</span>y <span class="sc">!=</span> <span class="fu">predict</span>(svm.model.list[[degree]],</span>
+<span id="cb128-25"><a href="4-2-support-vector-machines-i.html#cb128-25" aria-hidden="true" tabindex="-1"></a>                                                              data.test.df))</span>
+<span id="cb128-26"><a href="4-2-support-vector-machines-i.html#cb128-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:inOutSampleError"></span>
 <img src="04-statisticalLearning_files/figure-html/inOutSampleError-1.png" alt="Out-of-sample error vs. degree of polynomial." width="80%" />
 <p class="caption">

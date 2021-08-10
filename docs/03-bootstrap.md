@@ -74,6 +74,13 @@ set.seed(42)
 data.df <- data.frame( x = rnorm(100) )
 
 library(ggplot2)
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 4.1.1
+```
+
+```r
 cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
           "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
@@ -204,7 +211,7 @@ $$
 $$</div>\EndKnitrBlock{note}
 <p>To be clear, step 1 above, draw $X_1^\star,\ldots, X_n^\star \overset{iid}{\sim} \hat F_n$, simply means to draw one of the observations in the sample randomly and call it $X_1^\star$. Put the observation back in the sample and independently draw another observation, call it $X_2^\star$ and so on.</p>
 
-Let us implement this method to calculate the standard error of the median using the normaly distributed data set from the previous section:
+Let us implement this method to calculate the standard error of the median using the normally distributed data set from the previous section:
 
 ```r
 T <- median
@@ -246,7 +253,7 @@ boot(data = data.df,
 ##       original     bias    std. error
 ## t1* 0.08979677 0.03632407   0.1475442
 ```
-Note that the two bootstrap functions do not give exactly the same result. This is because of the Monte carlo error, i.e.\ the error in approximating the sample mean with the expected value as in Equation \@ref(eq:MCapproximation).
+Note that the two bootstrap functions do not give exactly the same result. This is because of the Monte Carlo error, i.e.\ the error in approximating the sample mean with the expected value as in Equation \@ref(eq:MCapproximation).
 
 Since here we know $F$ we can calculate the standard deviation by simulating from $F$, an alternative not available in practice.
 
@@ -382,7 +389,7 @@ boot.ci(boot.result, type = "bca")
 
 Here we discuss an alternative to the (non-parametric) bootstrap from the previous section.
 
-The main idea of the bootstrap was that the empirical distribution $\hat F$ is (hopefully) close to the actual distribution $F$. Another method of finding an approximation to $F$ is to take some family of distribution, parametrised by a parameter $\theta$, $F_\theta$, and find the $\theta$ that agrees the best with the observed sample. For example by choosing $\theta = \hat\theta_{ML}$.
+The main idea of the bootstrap was that the empirical distribution $\hat F$ is (hopefully) close to the actual distribution $F$. Another method of finding an approximation to $F$ is to take some family of distributions, parametrised by a parameter $\theta$, $F_\theta$, and find the $\theta$ that agrees the best with the observed sample. For example by choosing $\theta = \hat\theta_{ML}$.
 
 Then we proceed as before. We may now sample from $\hat F = F_{\hat\theta}$ and estimate variances and construct confidence intervals as before. 
 
@@ -504,9 +511,9 @@ $$
 \left[ \hat\theta - \sigma z_{\alpha/2}, \hat\theta + \sigma z_{\alpha/2}  \right].
 $$
 
-Let, as for the bootstrap confidence $H$ be the distribution function of $R$, that is
+Let, as for the bootstrap confidence, $H$ be the distribution function of $R$, that is
 $$
-H(z) = P(R\leq z) = P(\hat\theta - \theta \leq z) = P(\frac{\hat\theta - \theta}{\sigma}\leq \frac{z}{\sigma}) = \Phi(z/\sigma),
+H(z) = P(R\leq z) = P(\hat\theta - \theta \leq z) = P\Big(\frac{\hat\theta - \theta}{\sigma}\leq \frac{z}{\sigma}\Big) = \Phi(z/\sigma),
 $$
 where $\Phi$ denotes the distribution function of the standard normal distribution.
 

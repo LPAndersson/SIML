@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-03-08" />
+<meta name="date" content="2021-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="1-12-an-application.html"/>
 <link rel="next" href="1-14-review-questions.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -120,6 +120,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -193,12 +215,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
-<li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
-<li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
-<li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
-<li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
-<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5-1-an-application-3.html"><a href="5-1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5-2-review-questions-4.html"><a href="5-2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -280,21 +298,21 @@ Or,
 \]</span>
 which can be used for constructing the Wald test.</p>
 <p>What this then means is that, if <span class="math inline">\(n\)</span> is large, and we where to estimate <span class="math inline">\(p\)</span> with <span class="math inline">\(\hat p\)</span> for many different samples, the distribution of the estimates would be approximately distributed as <span class="math inline">\(\mathsf N(0,1)\)</span>. Let us verify this with a simulation.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="1-13-summary.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb60-2"><a href="1-13-summary.html#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="1-13-summary.html#cb60-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb60-4"><a href="1-13-summary.html#cb60-4" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb60-5"><a href="1-13-summary.html#cb60-5" aria-hidden="true" tabindex="-1"></a>replications <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb60-6"><a href="1-13-summary.html#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-7"><a href="1-13-summary.html#cb60-7" aria-hidden="true" tabindex="-1"></a>p.hats <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> replications)</span>
-<span id="cb60-8"><a href="1-13-summary.html#cb60-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-9"><a href="1-13-summary.html#cb60-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(replications)) {</span>
-<span id="cb60-10"><a href="1-13-summary.html#cb60-10" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb60-11"><a href="1-13-summary.html#cb60-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-12"><a href="1-13-summary.html#cb60-12" aria-hidden="true" tabindex="-1"></a>  p.hats[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
-<span id="cb60-13"><a href="1-13-summary.html#cb60-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb60-14"><a href="1-13-summary.html#cb60-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-15"><a href="1-13-summary.html#cb60-15" aria-hidden="true" tabindex="-1"></a>wald <span class="ot">&lt;-</span> (p.hats <span class="sc">-</span> p0)<span class="sc">/</span><span class="fu">sqrt</span>(p.hats<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>p.hats)<span class="sc">/</span>n)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="1-13-summary.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb61-2"><a href="1-13-summary.html#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="1-13-summary.html#cb61-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb61-4"><a href="1-13-summary.html#cb61-4" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb61-5"><a href="1-13-summary.html#cb61-5" aria-hidden="true" tabindex="-1"></a>replications <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb61-6"><a href="1-13-summary.html#cb61-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="1-13-summary.html#cb61-7" aria-hidden="true" tabindex="-1"></a>p.hats <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> replications)</span>
+<span id="cb61-8"><a href="1-13-summary.html#cb61-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-9"><a href="1-13-summary.html#cb61-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(replications)) {</span>
+<span id="cb61-10"><a href="1-13-summary.html#cb61-10" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb61-11"><a href="1-13-summary.html#cb61-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-12"><a href="1-13-summary.html#cb61-12" aria-hidden="true" tabindex="-1"></a>  p.hats[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb61-13"><a href="1-13-summary.html#cb61-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb61-14"><a href="1-13-summary.html#cb61-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-15"><a href="1-13-summary.html#cb61-15" aria-hidden="true" tabindex="-1"></a>wald <span class="ot">&lt;-</span> (p.hats <span class="sc">-</span> p0)<span class="sc">/</span><span class="fu">sqrt</span>(p.hats<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>p.hats)<span class="sc">/</span>n)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:waldStatisticExampleFigure"></span>
 <img src="01-likelihood_files/figure-html/waldStatisticExampleFigure-1.png" alt="Simulated density of the Wald statistic and the standard normal density" width="80%" />
 <p class="caption">

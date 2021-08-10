@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-03-08" />
+<meta name="date" content="2021-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="1-3-hypothesis-testing.html"/>
 <link rel="next" href="1-5-mathematical-aside-taylor-expansion.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -120,6 +120,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -193,12 +215,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
-<li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
-<li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
-<li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
-<li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
-<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5-1-an-application-3.html"><a href="5-1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5-2-review-questions-4.html"><a href="5-2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -290,15 +308,15 @@ or equivalently
 \left\{ \hat \lambda \mid \hat\lambda &lt; \frac{n}{\Gamma_{\alpha/2}(n,\lambda_0)} \text{ or } \hat\lambda &gt; \frac{n}{\Gamma_{1-\alpha/2}(n,\lambda_0)}  \right\}.
 \]</span></p>
 <p>Let us implement this:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="1-4-likelihood-ratio-test.html#cb9-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb9-2"><a href="1-4-likelihood-ratio-test.html#cb9-2" aria-hidden="true" tabindex="-1"></a>lambda0 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
-<span id="cb9-3"><a href="1-4-likelihood-ratio-test.html#cb9-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb9-4"><a href="1-4-likelihood-ratio-test.html#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="1-4-likelihood-ratio-test.html#cb9-5" aria-hidden="true" tabindex="-1"></a>upperCriticalValue <span class="ot">&lt;-</span> n <span class="sc">/</span> <span class="fu">qgamma</span>(alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span>
-<span id="cb9-6"><a href="1-4-likelihood-ratio-test.html#cb9-6" aria-hidden="true" tabindex="-1"></a>lowerCriticalValue <span class="ot">&lt;-</span> n <span class="sc">/</span> <span class="fu">qgamma</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span>
-<span id="cb9-7"><a href="1-4-likelihood-ratio-test.html#cb9-7" aria-hidden="true" tabindex="-1"></a>upperCriticalValue</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="1-4-likelihood-ratio-test.html#cb10-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb10-2"><a href="1-4-likelihood-ratio-test.html#cb10-2" aria-hidden="true" tabindex="-1"></a>lambda0 <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb10-3"><a href="1-4-likelihood-ratio-test.html#cb10-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb10-4"><a href="1-4-likelihood-ratio-test.html#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="1-4-likelihood-ratio-test.html#cb10-5" aria-hidden="true" tabindex="-1"></a>upperCriticalValue <span class="ot">&lt;-</span> n <span class="sc">/</span> <span class="fu">qgamma</span>(alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span>
+<span id="cb10-6"><a href="1-4-likelihood-ratio-test.html#cb10-6" aria-hidden="true" tabindex="-1"></a>lowerCriticalValue <span class="ot">&lt;-</span> n <span class="sc">/</span> <span class="fu">qgamma</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span>
+<span id="cb10-7"><a href="1-4-likelihood-ratio-test.html#cb10-7" aria-hidden="true" tabindex="-1"></a>upperCriticalValue</span></code></pre></div>
 <pre><code>## [1] 0.1229045</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="1-4-likelihood-ratio-test.html#cb11-1" aria-hidden="true" tabindex="-1"></a>lowerCriticalValue</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="1-4-likelihood-ratio-test.html#cb12-1" aria-hidden="true" tabindex="-1"></a>lowerCriticalValue</span></code></pre></div>
 <pre><code>## [1] 0.08296762</code></pre>
 <p>In this case we had <span class="math inline">\(\hat\lambda =\)</span> 0.1164 and so we would not reject <span class="math inline">\(\lambda \neq 0.1\)</span>.</p>
 <p>Another option is to calculate the p-value. Recall that the p-value is the smallest level for which <span class="math inline">\(H_0\)</span> is rejected. That is, it is the <span class="math inline">\(\alpha\)</span> that solves <span class="math inline">\(\Gamma_{1-\alpha/2}(n,\lambda_0) = n/\hat\lambda\)</span>. But, by definition
@@ -309,7 +327,7 @@ and therefore the p-value is
 <span class="math display">\[
 2P\left( \Gamma(n,\lambda_0) &lt; \frac{n}{\hat\lambda} \right).
 \]</span></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="1-4-likelihood-ratio-test.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span> <span class="fu">pgamma</span>(n<span class="sc">/</span>lambdaHat, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="1-4-likelihood-ratio-test.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span> <span class="fu">pgamma</span>(n<span class="sc">/</span>lambdaHat, <span class="at">shape =</span> n, <span class="at">rate =</span> lambda0)</span></code></pre></div>
 <pre><code>## [1] 0.1471398</code></pre>
 <p>Again we see that we would not reject <span class="math inline">\(H_0\)</span> on the 5%-level.</p>
 </div>

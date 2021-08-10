@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-03-08" />
+<meta name="date" content="2021-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="2-4-multiparameter-problems.html"/>
 <link rel="next" href="2-6-an-application-1.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -120,6 +120,28 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -193,12 +215,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
-<li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
-<li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
-<li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
-<li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
-<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5-1-an-application-3.html"><a href="5-1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5-2-review-questions-4.html"><a href="5-2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -269,61 +287,61 @@ p(x) = \lambda e^{-\lambda x}\propto e^{-\lambda x}.
 \]</span>
 Here we know that the normalizing constant is <span class="math inline">\(\lambda\)</span>, but the idea of MCMC is that we do not need to know it, so let us proceed as if we did not know it. Also note that here we see <span class="math inline">\(x\)</span> as random, in the typical Bayesian setting we would think of <span class="math inline">\(\lambda\)</span> as random, but is is just a matter of notation.</p>
 <p>First we implement the density. We do it on a log-scale. This is because we need to divide two densities in the algorithm. On a log-scale this becomes subtraction, which is numerically more stable.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="2-5-markov-chain-monte-carlo.html#cb2-1" aria-hidden="true" tabindex="-1"></a>logDensity <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb2-2"><a href="2-5-markov-chain-monte-carlo.html#cb2-2" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb2-3"><a href="2-5-markov-chain-monte-carlo.html#cb2-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-4"><a href="2-5-markov-chain-monte-carlo.html#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x <span class="sc">&gt;=</span> <span class="dv">0</span>) {</span>
-<span id="cb2-5"><a href="2-5-markov-chain-monte-carlo.html#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>lambda <span class="sc">*</span> x</span>
-<span id="cb2-6"><a href="2-5-markov-chain-monte-carlo.html#cb2-6" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-7"><a href="2-5-markov-chain-monte-carlo.html#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>{</span>
-<span id="cb2-8"><a href="2-5-markov-chain-monte-carlo.html#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="cn">Inf</span></span>
-<span id="cb2-9"><a href="2-5-markov-chain-monte-carlo.html#cb2-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-10"><a href="2-5-markov-chain-monte-carlo.html#cb2-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="2-5-markov-chain-monte-carlo.html#cb64-1" aria-hidden="true" tabindex="-1"></a>logDensity <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb64-2"><a href="2-5-markov-chain-monte-carlo.html#cb64-2" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb64-3"><a href="2-5-markov-chain-monte-carlo.html#cb64-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-4"><a href="2-5-markov-chain-monte-carlo.html#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x <span class="sc">&gt;=</span> <span class="dv">0</span>) {</span>
+<span id="cb64-5"><a href="2-5-markov-chain-monte-carlo.html#cb64-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>lambda <span class="sc">*</span> x</span>
+<span id="cb64-6"><a href="2-5-markov-chain-monte-carlo.html#cb64-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-7"><a href="2-5-markov-chain-monte-carlo.html#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>{</span>
+<span id="cb64-8"><a href="2-5-markov-chain-monte-carlo.html#cb64-8" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="cn">Inf</span></span>
+<span id="cb64-9"><a href="2-5-markov-chain-monte-carlo.html#cb64-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-10"><a href="2-5-markov-chain-monte-carlo.html#cb64-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Next implement the random-walk Metropolis-Hastings algorithm with normally distributed steps.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="2-5-markov-chain-monte-carlo.html#cb3-1" aria-hidden="true" tabindex="-1"></a>mcmc.iter <span class="ot">&lt;-</span> <span class="cf">function</span>(x, logDensity, sigma, n.iter){</span>
-<span id="cb3-2"><a href="2-5-markov-chain-monte-carlo.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Random walk Metropolis Hastings MCMC</span></span>
-<span id="cb3-3"><a href="2-5-markov-chain-monte-carlo.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-4"><a href="2-5-markov-chain-monte-carlo.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, n.iter<span class="sc">+</span><span class="dv">1</span>, <span class="fu">length</span>(x)) <span class="co">#Create empty matrix</span></span>
-<span id="cb3-5"><a href="2-5-markov-chain-monte-carlo.html#cb3-5" aria-hidden="true" tabindex="-1"></a>  res[<span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
-<span id="cb3-6"><a href="2-5-markov-chain-monte-carlo.html#cb3-6" aria-hidden="true" tabindex="-1"></a>  logD <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(x)</span>
-<span id="cb3-7"><a href="2-5-markov-chain-monte-carlo.html#cb3-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-8"><a href="2-5-markov-chain-monte-carlo.html#cb3-8" aria-hidden="true" tabindex="-1"></a>  accProb <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#keep track of the proportion of proposals that are accepted</span></span>
-<span id="cb3-9"><a href="2-5-markov-chain-monte-carlo.html#cb3-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-10"><a href="2-5-markov-chain-monte-carlo.html#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.iter)){</span>
-<span id="cb3-11"><a href="2-5-markov-chain-monte-carlo.html#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">#New proposal</span></span>
-<span id="cb3-12"><a href="2-5-markov-chain-monte-carlo.html#cb3-12" aria-hidden="true" tabindex="-1"></a>    xProp <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), <span class="dv">0</span>, sigma)</span>
-<span id="cb3-13"><a href="2-5-markov-chain-monte-carlo.html#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Log density of proposal</span></span>
-<span id="cb3-14"><a href="2-5-markov-chain-monte-carlo.html#cb3-14" aria-hidden="true" tabindex="-1"></a>    logDProp <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(xProp)</span>
-<span id="cb3-15"><a href="2-5-markov-chain-monte-carlo.html#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Acceptance probability</span></span>
-<span id="cb3-16"><a href="2-5-markov-chain-monte-carlo.html#cb3-16" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">min</span>( <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">exp</span>(logDProp <span class="sc">-</span> logD) ) )</span>
-<span id="cb3-17"><a href="2-5-markov-chain-monte-carlo.html#cb3-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-18"><a href="2-5-markov-chain-monte-carlo.html#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(r<span class="sc">&gt;</span><span class="fu">runif</span>(<span class="dv">1</span>)){ <span class="co">#Accept with probability r, else keep old x</span></span>
-<span id="cb3-19"><a href="2-5-markov-chain-monte-carlo.html#cb3-19" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> xProp</span>
-<span id="cb3-20"><a href="2-5-markov-chain-monte-carlo.html#cb3-20" aria-hidden="true" tabindex="-1"></a>      logD <span class="ot">&lt;-</span> logDProp</span>
-<span id="cb3-21"><a href="2-5-markov-chain-monte-carlo.html#cb3-21" aria-hidden="true" tabindex="-1"></a>      accProb <span class="ot">&lt;-</span> accProb <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb3-22"><a href="2-5-markov-chain-monte-carlo.html#cb3-22" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-23"><a href="2-5-markov-chain-monte-carlo.html#cb3-23" aria-hidden="true" tabindex="-1"></a>    res[i<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
-<span id="cb3-24"><a href="2-5-markov-chain-monte-carlo.html#cb3-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-25"><a href="2-5-markov-chain-monte-carlo.html#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">sample =</span> res, <span class="at">accProb =</span> accProb<span class="sc">/</span>n.iter)</span>
-<span id="cb3-26"><a href="2-5-markov-chain-monte-carlo.html#cb3-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="2-5-markov-chain-monte-carlo.html#cb65-1" aria-hidden="true" tabindex="-1"></a>mcmc.iter <span class="ot">&lt;-</span> <span class="cf">function</span>(x, logDensity, sigma, n.iter){</span>
+<span id="cb65-2"><a href="2-5-markov-chain-monte-carlo.html#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Random walk Metropolis Hastings MCMC</span></span>
+<span id="cb65-3"><a href="2-5-markov-chain-monte-carlo.html#cb65-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb65-4"><a href="2-5-markov-chain-monte-carlo.html#cb65-4" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, n.iter<span class="sc">+</span><span class="dv">1</span>, <span class="fu">length</span>(x)) <span class="co">#Create empty matrix</span></span>
+<span id="cb65-5"><a href="2-5-markov-chain-monte-carlo.html#cb65-5" aria-hidden="true" tabindex="-1"></a>  res[<span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
+<span id="cb65-6"><a href="2-5-markov-chain-monte-carlo.html#cb65-6" aria-hidden="true" tabindex="-1"></a>  logD <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(x)</span>
+<span id="cb65-7"><a href="2-5-markov-chain-monte-carlo.html#cb65-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb65-8"><a href="2-5-markov-chain-monte-carlo.html#cb65-8" aria-hidden="true" tabindex="-1"></a>  accProb <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#keep track of the proportion of proposals that are accepted</span></span>
+<span id="cb65-9"><a href="2-5-markov-chain-monte-carlo.html#cb65-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb65-10"><a href="2-5-markov-chain-monte-carlo.html#cb65-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.iter)){</span>
+<span id="cb65-11"><a href="2-5-markov-chain-monte-carlo.html#cb65-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">#New proposal</span></span>
+<span id="cb65-12"><a href="2-5-markov-chain-monte-carlo.html#cb65-12" aria-hidden="true" tabindex="-1"></a>    xProp <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), <span class="dv">0</span>, sigma)</span>
+<span id="cb65-13"><a href="2-5-markov-chain-monte-carlo.html#cb65-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Log density of proposal</span></span>
+<span id="cb65-14"><a href="2-5-markov-chain-monte-carlo.html#cb65-14" aria-hidden="true" tabindex="-1"></a>    logDProp <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(xProp)</span>
+<span id="cb65-15"><a href="2-5-markov-chain-monte-carlo.html#cb65-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Acceptance probability</span></span>
+<span id="cb65-16"><a href="2-5-markov-chain-monte-carlo.html#cb65-16" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">min</span>( <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">exp</span>(logDProp <span class="sc">-</span> logD) ) )</span>
+<span id="cb65-17"><a href="2-5-markov-chain-monte-carlo.html#cb65-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb65-18"><a href="2-5-markov-chain-monte-carlo.html#cb65-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(r<span class="sc">&gt;</span><span class="fu">runif</span>(<span class="dv">1</span>)){ <span class="co">#Accept with probability r, else keep old x</span></span>
+<span id="cb65-19"><a href="2-5-markov-chain-monte-carlo.html#cb65-19" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> xProp</span>
+<span id="cb65-20"><a href="2-5-markov-chain-monte-carlo.html#cb65-20" aria-hidden="true" tabindex="-1"></a>      logD <span class="ot">&lt;-</span> logDProp</span>
+<span id="cb65-21"><a href="2-5-markov-chain-monte-carlo.html#cb65-21" aria-hidden="true" tabindex="-1"></a>      accProb <span class="ot">&lt;-</span> accProb <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb65-22"><a href="2-5-markov-chain-monte-carlo.html#cb65-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb65-23"><a href="2-5-markov-chain-monte-carlo.html#cb65-23" aria-hidden="true" tabindex="-1"></a>    res[i<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
+<span id="cb65-24"><a href="2-5-markov-chain-monte-carlo.html#cb65-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb65-25"><a href="2-5-markov-chain-monte-carlo.html#cb65-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">sample =</span> res, <span class="at">accProb =</span> accProb<span class="sc">/</span>n.iter)</span>
+<span id="cb65-26"><a href="2-5-markov-chain-monte-carlo.html#cb65-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Now we can run the algorithm. First for 1000 step that we throw away. This is since the distribution of the samples are correct only when the number of steps are large. Then we run it for as many steps as we need samples.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="2-5-markov-chain-monte-carlo.html#cb4-1" aria-hidden="true" tabindex="-1"></a>x.init <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co">#Initial value</span></span>
-<span id="cb4-2"><a href="2-5-markov-chain-monte-carlo.html#cb4-2" aria-hidden="true" tabindex="-1"></a>nIter <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="co">#Number of MC steps</span></span>
-<span id="cb4-3"><a href="2-5-markov-chain-monte-carlo.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb4-4"><a href="2-5-markov-chain-monte-carlo.html#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="2-5-markov-chain-monte-carlo.html#cb4-5" aria-hidden="true" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(x.init,</span>
-<span id="cb4-6"><a href="2-5-markov-chain-monte-carlo.html#cb4-6" aria-hidden="true" tabindex="-1"></a>                       logDensity,</span>
-<span id="cb4-7"><a href="2-5-markov-chain-monte-carlo.html#cb4-7" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
-<span id="cb4-8"><a href="2-5-markov-chain-monte-carlo.html#cb4-8" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">1000</span>)</span>
-<span id="cb4-9"><a href="2-5-markov-chain-monte-carlo.html#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="2-5-markov-chain-monte-carlo.html#cb4-10" aria-hidden="true" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(exp.mcmc<span class="sc">$</span>sample[<span class="fu">nrow</span>(exp.mcmc<span class="sc">$</span>sample),],</span>
-<span id="cb4-11"><a href="2-5-markov-chain-monte-carlo.html#cb4-11" aria-hidden="true" tabindex="-1"></a>                       logDensity,</span>
-<span id="cb4-12"><a href="2-5-markov-chain-monte-carlo.html#cb4-12" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
-<span id="cb4-13"><a href="2-5-markov-chain-monte-carlo.html#cb4-13" aria-hidden="true" tabindex="-1"></a>                       nIter)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="2-5-markov-chain-monte-carlo.html#cb66-1" aria-hidden="true" tabindex="-1"></a>x.init <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co">#Initial value</span></span>
+<span id="cb66-2"><a href="2-5-markov-chain-monte-carlo.html#cb66-2" aria-hidden="true" tabindex="-1"></a>nIter <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="co">#Number of MC steps</span></span>
+<span id="cb66-3"><a href="2-5-markov-chain-monte-carlo.html#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb66-4"><a href="2-5-markov-chain-monte-carlo.html#cb66-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="2-5-markov-chain-monte-carlo.html#cb66-5" aria-hidden="true" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(x.init,</span>
+<span id="cb66-6"><a href="2-5-markov-chain-monte-carlo.html#cb66-6" aria-hidden="true" tabindex="-1"></a>                       logDensity,</span>
+<span id="cb66-7"><a href="2-5-markov-chain-monte-carlo.html#cb66-7" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
+<span id="cb66-8"><a href="2-5-markov-chain-monte-carlo.html#cb66-8" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">1000</span>)</span>
+<span id="cb66-9"><a href="2-5-markov-chain-monte-carlo.html#cb66-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-10"><a href="2-5-markov-chain-monte-carlo.html#cb66-10" aria-hidden="true" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(exp.mcmc<span class="sc">$</span>sample[<span class="fu">nrow</span>(exp.mcmc<span class="sc">$</span>sample),],</span>
+<span id="cb66-11"><a href="2-5-markov-chain-monte-carlo.html#cb66-11" aria-hidden="true" tabindex="-1"></a>                       logDensity,</span>
+<span id="cb66-12"><a href="2-5-markov-chain-monte-carlo.html#cb66-12" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
+<span id="cb66-13"><a href="2-5-markov-chain-monte-carlo.html#cb66-13" aria-hidden="true" tabindex="-1"></a>                       nIter)</span></code></pre></div>
 <p>We can check for example that the mean and standard deviation of the samples are as expected, i.e. in our case 1.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="2-5-markov-chain-monte-carlo.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="2-5-markov-chain-monte-carlo.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
 <pre><code>## [1] 1.072045</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="2-5-markov-chain-monte-carlo.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="2-5-markov-chain-monte-carlo.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
 <pre><code>## [1] 1.114397</code></pre>
 <p>We can plot the histogram of the samples against the density.</p>
 <p><img src="02-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" /></p>

@@ -37,15 +37,15 @@ In regression the task is to predict a real value for each item, $\mathcal Y = \
 
 Readings for this chapter is:
 
-ISL 2
+ISLR 2
 
-ISL 4.1-2
+ISLR 4.1-2
 
-ISL 5
+ISLR 5
 
-ISL 6.1-2
+ISLR 6.1-2
 
-ISL 9
+ISLR 9
 
 The sections on Hoeffding's inequality, generalization error and VC-dimension is not in the course literature. So it is enough to read these notes.
 

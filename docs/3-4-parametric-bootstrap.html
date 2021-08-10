@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-03-08" />
+<meta name="date" content="2021-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="3-3-bootstrap.html"/>
 <link rel="next" href="3-5-an-application-2.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -215,12 +215,8 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5-1-smoothing-splines.html"><a href="5-1-smoothing-splines.html"><i class="fa fa-check"></i><b>5.1</b> Smoothing splines</a></li>
-<li class="chapter" data-level="5.2" data-path="5-2-generalized-additive-models.html"><a href="5-2-generalized-additive-models.html"><i class="fa fa-check"></i><b>5.2</b> Generalized additive models</a></li>
-<li class="chapter" data-level="5.3" data-path="5-3-neural-networks.html"><a href="5-3-neural-networks.html"><i class="fa fa-check"></i><b>5.3</b> Neural networks</a></li>
-<li class="chapter" data-level="5.4" data-path="5-4-stochastic-gradient-descent.html"><a href="5-4-stochastic-gradient-descent.html"><i class="fa fa-check"></i><b>5.4</b> Stochastic gradient descent</a></li>
-<li class="chapter" data-level="5.5" data-path="5-5-an-application-3.html"><a href="5-5-an-application-3.html"><i class="fa fa-check"></i><b>5.5</b> An application</a></li>
-<li class="chapter" data-level="5.6" data-path="5-6-review-questions-4.html"><a href="5-6-review-questions-4.html"><i class="fa fa-check"></i><b>5.6</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5-1-an-application-3.html"><a href="5-1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5-2-review-questions-4.html"><a href="5-2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -245,23 +241,23 @@ div.csl-indent {
 <div id="parametric-bootstrap" class="section level2" number="3.4">
 <h2><span class="header-section-number">3.4</span> Parametric bootstrap</h2>
 <p>Here we discuss an alternative to the (non-parametric) bootstrap from the previous section.</p>
-<p>The main idea of the bootstrap was that the empirical distribution <span class="math inline">\(\hat F\)</span> is (hopefully) close to the actual distribution <span class="math inline">\(F\)</span>. Another method of finding an approximation to <span class="math inline">\(F\)</span> is to take some family of distribution, parametrised by a parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(F_\theta\)</span>, and find the <span class="math inline">\(\theta\)</span> that agrees the best with the observed sample. For example by choosing <span class="math inline">\(\theta = \hat\theta_{ML}\)</span>.</p>
+<p>The main idea of the bootstrap was that the empirical distribution <span class="math inline">\(\hat F\)</span> is (hopefully) close to the actual distribution <span class="math inline">\(F\)</span>. Another method of finding an approximation to <span class="math inline">\(F\)</span> is to take some family of distributions, parametrised by a parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(F_\theta\)</span>, and find the <span class="math inline">\(\theta\)</span> that agrees the best with the observed sample. For example by choosing <span class="math inline">\(\theta = \hat\theta_{ML}\)</span>.</p>
 <p>Then we proceed as before. We may now sample from <span class="math inline">\(\hat F = F_{\hat\theta}\)</span> and estimate variances and construct confidence intervals as before.</p>
 <p>As an example, let us say that we have a random sample from <span class="math inline">\(\mathsf N(\mu,\sigma^2)\)</span> and wish to estimate the variance of the median of the sample. We then estimate <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma^2\)</span> with the ML-estimates and let <span class="math inline">\(\hat F = \mathsf N(\hat \mu,\hat \sigma^2)\)</span>.</p>
 <p>Implementing this is not complicated.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="3-4-parametric-bootstrap.html#cb22-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
-<span id="cb22-2"><a href="3-4-parametric-bootstrap.html#cb22-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
-<span id="cb22-3"><a href="3-4-parametric-bootstrap.html#cb22-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb22-4"><a href="3-4-parametric-bootstrap.html#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="3-4-parametric-bootstrap.html#cb22-5" aria-hidden="true" tabindex="-1"></a>mu.hat <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>x)</span>
-<span id="cb22-6"><a href="3-4-parametric-bootstrap.html#cb22-6" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">sd</span>(data.df<span class="sc">$</span>x)</span>
-<span id="cb22-7"><a href="3-4-parametric-bootstrap.html#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-8"><a href="3-4-parametric-bootstrap.html#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
-<span id="cb22-9"><a href="3-4-parametric-bootstrap.html#cb22-9" aria-hidden="true" tabindex="-1"></a>  bootstrap.sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu.hat, <span class="at">sd =</span> sigma.hat)</span>
-<span id="cb22-10"><a href="3-4-parametric-bootstrap.html#cb22-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(bootstrap.sample)</span>
-<span id="cb22-11"><a href="3-4-parametric-bootstrap.html#cb22-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-12"><a href="3-4-parametric-bootstrap.html#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-13"><a href="3-4-parametric-bootstrap.html#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="3-4-parametric-bootstrap.html#cb109-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb109-2"><a href="3-4-parametric-bootstrap.html#cb109-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb109-3"><a href="3-4-parametric-bootstrap.html#cb109-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb109-4"><a href="3-4-parametric-bootstrap.html#cb109-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-5"><a href="3-4-parametric-bootstrap.html#cb109-5" aria-hidden="true" tabindex="-1"></a>mu.hat <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>x)</span>
+<span id="cb109-6"><a href="3-4-parametric-bootstrap.html#cb109-6" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">sd</span>(data.df<span class="sc">$</span>x)</span>
+<span id="cb109-7"><a href="3-4-parametric-bootstrap.html#cb109-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-8"><a href="3-4-parametric-bootstrap.html#cb109-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb109-9"><a href="3-4-parametric-bootstrap.html#cb109-9" aria-hidden="true" tabindex="-1"></a>  bootstrap.sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu.hat, <span class="at">sd =</span> sigma.hat)</span>
+<span id="cb109-10"><a href="3-4-parametric-bootstrap.html#cb109-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(bootstrap.sample)</span>
+<span id="cb109-11"><a href="3-4-parametric-bootstrap.html#cb109-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb109-12"><a href="3-4-parametric-bootstrap.html#cb109-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-13"><a href="3-4-parametric-bootstrap.html#cb109-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
 <pre><code>## [1] 0.1272958</code></pre>
 </div>
             </section>

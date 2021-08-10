@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.2 Maximum likelihood estimation | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>5.2 Review questions | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.2 Maximum likelihood estimation | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="5.2 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.2 Maximum likelihood estimation | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="5.2 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1-1-the-likelihood-function.html"/>
-<link rel="next" href="1-3-hypothesis-testing.html"/>
+<link rel="prev" href="5-1-an-application-3.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -120,28 +120,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -238,87 +216,30 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="maximum-likelihood-estimation" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Maximum likelihood estimation</h2>
-<p>In this section we discuss how to find the maximum likelihood estimate. As in the previous section we consider an example:</p>
-<p>We will assume that time until something happens is exponentially distributed with parameter <span class="math inline">\(\lambda\)</span>. Therefore the probability density of observing <span class="math inline">\(T=t\)</span> is
-<span class="math display">\[
-p_T(t) = \lambda e^{-\lambda t}.
-\]</span>
-On the other hand, we can also think of this as the likelihood function of the parameter <span class="math inline">\(\lambda\)</span>,
-<span class="math display">\[
-L(\lambda) = \lambda e^{-\lambda t}.
-\]</span>
-If we have <span class="math inline">\(n\)</span> independent observations, the joint density of these observations is the product of the marginal densities. Therefore the likelihood is also the product of the marginal likelihoods. That is, if we write <span class="math inline">\(L_n(\lambda)\)</span> for the likelihood of <span class="math inline">\(n\)</span> observations,
-<span class="math display">\[
-L_n(\lambda) = \prod_{i=1}^n \lambda e^{-\lambda t_i}.
-\]</span></p>
-<p>Many times it is easier to instead consider the logarithm of the likelihood, the <em>log-likelihood</em>,
-<span class="math display">\[
-l_n(\lambda):=\ln L_n(\lambda) = \sum_{i=1}^n( \ln \lambda - \lambda t_i  ) = n\ln\lambda - \lambda\sum_{i=1}^n t_i= n(\ln\lambda - \lambda \bar t) ,
-\]</span>
-where we as usual let <span class="math inline">\(\bar t = \frac{1}{n}\sum_{i=1}^n t_i\)</span>.</p>
-Let us say we observe a sample of size 100.
-<div class="figure" style="text-align: center"><span id="fig:exp-boxplot"></span>
-<img src="01-likelihood_files/figure-html/exp-boxplot-1.png" alt="Histogram of the sample" width="80%" />
-<p class="caption">
-Figure 1.2: Histogram of the sample
-</p>
-</div>
-<p>We define a function in R that calculates the log-likelihood</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="1-2-maximum-likelihood-estimation.html#cb3-1" aria-hidden="true" tabindex="-1"></a>logLn <span class="ot">&lt;-</span> <span class="cf">function</span>(param, sample){</span>
-<span id="cb3-2"><a href="1-2-maximum-likelihood-estimation.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(sample)</span>
-<span id="cb3-3"><a href="1-2-maximum-likelihood-estimation.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  tbar <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample)</span>
-<span id="cb3-4"><a href="1-2-maximum-likelihood-estimation.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-5"><a href="1-2-maximum-likelihood-estimation.html#cb3-5" aria-hidden="true" tabindex="-1"></a>  n<span class="sc">*</span>(<span class="fu">log</span>(param) <span class="sc">-</span> param<span class="sc">*</span>tbar)</span>
-<span id="cb3-6"><a href="1-2-maximum-likelihood-estimation.html#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>Then we may calculate the log-likelihood of, for example, <span class="math inline">\(\lambda = 0.1\)</span>,</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="1-2-maximum-likelihood-estimation.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLn</span>(<span class="fl">0.1</span>, t)</span></code></pre></div>
-<pre><code>## [1] -316.1482</code></pre>
-<p>Here the variable <code>t</code> is a vector that contains the observations.</p>
-<p>
-Let us plot the log-likelihood for a range of <span class="math inline">\(\lambda\)</span>-values.
-</p>
-<div class="figure" style="text-align: center"><span id="fig:log-likelihood"></span>
-<img src="01-likelihood_files/figure-html/log-likelihood-1.png" alt="Log likelihood of the sample" width="80%" />
-<p class="caption">
-Figure 1.3: Log likelihood of the sample
-</p>
-</div>
-<p>
-We can find the maximum likelihood estimate as the <span class="math inline">\(\lambda\)</span> that maximizes the likelihood (or log likelihood). That is:
-</p>
+<div id="review-questions-4" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Review questions</h2>
+<ol start="4" style="list-style-type: decimal">
+<li>What is an activation function?</li>
+<li>What is an ReLU?</li>
+<li>What is the softmax function?</li>
+<li>What is a layer?</li>
+<li>What is gradient descent?</li>
+<li>What is the trade-off in choosing the learning rate?</li>
+<li>What is a mini-batch?</li>
+<li>What is an epoch?</li>
+<li>What is backpropagation?</li>
+<li>How are NNs usually regularized?</li>
+</ol>
 
-<div class="note">
-<span class="math display">\[
-\hat\lambda = \operatorname*{argmax}_\lambda L_n(\lambda) = \operatorname*{argmax}_\lambda l_n(\lambda).
-\]</span>
 </div>
-<p>Since the likelihood is simple, we can find <span class="math inline">\(\hat \lambda\)</span> directly:
-<span class="math display">\[
-\partial_\lambda l_n(\lambda)\Big|_{\lambda = \hat\lambda} = n\left(\frac{1}{\hat \lambda} - \bar t\right) = 0.
-\]</span>
-With solution <span class="math inline">\(\hat\lambda =1/ \bar t\)</span>. For this sample:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="1-2-maximum-likelihood-estimation.html#cb6-1" aria-hidden="true" tabindex="-1"></a>lambdaHat <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">mean</span>(t)</span>
-<span id="cb6-2"><a href="1-2-maximum-likelihood-estimation.html#cb6-2" aria-hidden="true" tabindex="-1"></a>lambdaHat</span></code></pre></div>
-<pre><code>## [1] 0.1164284</code></pre>
-<p>We may also find the estimate using numerical optimization.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="1-2-maximum-likelihood-estimation.html#cb8-1" aria-hidden="true" tabindex="-1"></a>optimResult <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="fl">1.0</span>, </span>
-<span id="cb8-2"><a href="1-2-maximum-likelihood-estimation.html#cb8-2" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(lambda){ <span class="fu">logLn</span>(lambda,t)},</span>
-<span id="cb8-3"><a href="1-2-maximum-likelihood-estimation.html#cb8-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">method =</span> <span class="st">&quot;Brent&quot;</span>, </span>
-<span id="cb8-4"><a href="1-2-maximum-likelihood-estimation.html#cb8-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">lower =</span> <span class="fl">0.01</span>, </span>
-<span id="cb8-5"><a href="1-2-maximum-likelihood-estimation.html#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper =</span> <span class="fl">10.0</span>,</span>
-<span id="cb8-6"><a href="1-2-maximum-likelihood-estimation.html#cb8-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="fl">1.0</span>))</span>
-<span id="cb8-7"><a href="1-2-maximum-likelihood-estimation.html#cb8-7" aria-hidden="true" tabindex="-1"></a>optimResult<span class="sc">$</span>par</span></code></pre></div>
-<pre><code>## [1] 0.1164284</code></pre>
-</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="1-1-the-likelihood-function.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1-3-hypothesis-testing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5-1-an-application-3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
