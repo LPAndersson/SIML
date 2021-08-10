@@ -1,4 +1,4 @@
-# Beyond linearity
+# Beyond linearity (draft)
 
 In this module we cover some state-of-the-art non-linear models. Decision trees, bagging, random forest and boosting is covered well in ISLR, so we will no repeat it here. But it is part of the course.
 

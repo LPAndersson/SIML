@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5.1 An application | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>Chapter 5 Beyond linearity (draft) | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5.1 An application | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="Chapter 5 Beyond linearity (draft) | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5.1 An application | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="Chapter 5 Beyond linearity (draft) | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="5-beyond-linearity-draft.html"/>
-<link rel="next" href="5-2-review-questions-4.html"/>
+<link rel="prev" href="4-12-review-questions-3.html"/>
+<link rel="next" href="5-1-an-application-3.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -216,82 +216,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="an-application-3" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> An application</h2>
-<p>Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library <em>Tensorflow</em>. You may find the <a href="https://keras.rstudio.com">documentation</a> useful</p>
-<p>Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras. The first time you install Keras, you do.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="5-1-an-application-3.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;keras&quot;</span>)</span>
-<span id="cb1-2"><a href="5-1-an-application-3.html#cb1-2" aria-hidden="true" tabindex="-1"></a>keras<span class="sc">::</span><span class="fu">install_keras</span>()</span></code></pre></div>
-<p>If you get a prompt asking to install miniconda, you should choose “Yes.”</p>
-<p>If this installation fails another option is to follow the instructions at the book’s webpage<a href="https://web.stanford.edu/~hastie/ISLR2/keras-instructions.html">I’m an inline-style link</a></p>
-<p>After that, it should be enough to</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="5-1-an-application-3.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span></code></pre></div>
-<p>The MNIST database is already divided in a training and a test set</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="5-1-an-application-3.html#cb3-1" aria-hidden="true" tabindex="-1"></a>mnist <span class="ot">&lt;-</span> <span class="fu">dataset_mnist</span>()</span>
-<span id="cb3-2"><a href="5-1-an-application-3.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="5-1-an-application-3.html#cb3-3" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>x</span>
-<span id="cb3-4"><a href="5-1-an-application-3.html#cb3-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>y</span>
-<span id="cb3-5"><a href="5-1-an-application-3.html#cb3-5" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x</span>
-<span id="cb3-6"><a href="5-1-an-application-3.html#cb3-6" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>y</span></code></pre></div>
-Let us see what the pictures look like.
-<div class="figure" style="text-align: center"><span id="fig:mnist1"></span>
-<img src="05-beyondLinearity_files/figure-html/mnist1-1.png" alt="Examples from MNIST" width="80%" />
-<p class="caption">
-Figure 5.1: Examples from MNIST
-</p>
-</div>
-<p>Each image is represented as a 28x28 matrix of pixel values between 0 and 255. We reshape each matrix in to a vector and scale the pixel value so that it is between 0 and 1.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="5-1-an-application-3.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(x_train) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">nrow</span>(x_train), <span class="dv">784</span>)</span>
-<span id="cb4-2"><a href="5-1-an-application-3.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(x_test) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">nrow</span>(x_test), <span class="dv">784</span>)</span>
-<span id="cb4-3"><a href="5-1-an-application-3.html#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="5-1-an-application-3.html#cb4-4" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> x_train <span class="sc">/</span> <span class="dv">255</span></span>
-<span id="cb4-5"><a href="5-1-an-application-3.html#cb4-5" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> x_test <span class="sc">/</span> <span class="dv">255</span></span></code></pre></div>
-<p>The <span class="math inline">\(y\)</span> variables are given as an integer between 0 and 9. We transform it to a vector of dummy variables.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="5-1-an-application-3.html#cb5-1" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_train, <span class="dv">10</span>)</span>
-<span id="cb5-2"><a href="5-1-an-application-3.html#cb5-2" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_test, <span class="dv">10</span>)</span></code></pre></div>
-<p>Now we specify a 2-layer NN with Relu activation in the hidden layer and softmax in the last layer.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="5-1-an-application-3.html#cb6-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>()</span>
-<span id="cb6-2"><a href="5-1-an-application-3.html#cb6-2" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="5-1-an-application-3.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">50</span>, <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span>, <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="5-1-an-application-3.html#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">10</span>, <span class="at">activation =</span> <span class="st">&quot;softmax&quot;</span>)</span></code></pre></div>
-<p>We compile the model by specifying the loss and the optimization method.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="5-1-an-application-3.html#cb7-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">compile</span>(</span>
-<span id="cb7-2"><a href="5-1-an-application-3.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> <span class="st">&quot;categorical_crossentropy&quot;</span>,</span>
-<span id="cb7-3"><a href="5-1-an-application-3.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="fu">optimizer_rmsprop</span>(),</span>
-<span id="cb7-4"><a href="5-1-an-application-3.html#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">c</span>(<span class="st">&quot;accuracy&quot;</span>)</span>
-<span id="cb7-5"><a href="5-1-an-application-3.html#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p>Here, cross entropy loss is just the negative of a multinomial log likelihood. The optimizer, RMSprop, is a way of choosing the learning rate adaptively. Now we train the NN.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="5-1-an-application-3.html#cb8-1" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">fit</span>(</span>
-<span id="cb8-2"><a href="5-1-an-application-3.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  x_train, y_train,</span>
-<span id="cb8-3"><a href="5-1-an-application-3.html#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">10</span>, <span class="at">batch_size =</span> <span class="dv">128</span>,</span>
-<span id="cb8-4"><a href="5-1-an-application-3.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_split =</span> <span class="fl">0.2</span></span>
-<span id="cb8-5"><a href="5-1-an-application-3.html#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called <em>early stopping</em>.
-<div class="figure" style="text-align: center"><span id="fig:mnistHistory"></span>
-<img src="05-beyondLinearity_files/figure-html/mnistHistory-1.png" alt="Training and validation loss/accuracy for each epoch" width="80%" />
-<p class="caption">
-Figure 5.2: Training and validation loss/accuracy for each epoch
-</p>
-</div>
-<p>We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="5-1-an-application-3.html#cb9-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">evaluate</span>(x_test, y_test,<span class="at">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
-<pre><code>##      loss  accuracy 
-## 0.1103705 0.9698000</code></pre>
-The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
-<div class="figure" style="text-align: center"><span id="fig:mnist2"></span>
-<img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />
-<p class="caption">
-Figure 5.3: Predictions on the test set
-</p>
-</div>
+<div id="beyond-linearity-draft" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Beyond linearity (draft)</h1>
+<p>In this module we cover some state-of-the-art non-linear models. Decision trees, bagging, random forest and boosting is covered well in ISLR, so we will no repeat it here. But it is part of the course.</p>
+<p>The new version of ISLR also includes a chapter on deep learning. The first part of this chapter is also part of the course</p>
+<p>Readings for this chapter is therefore:</p>
+<p>ISLR 8</p>
+<p>ISLR 10.1-3 and 10.6-7</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="5-beyond-linearity-draft.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="5-2-review-questions-4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4-12-review-questions-3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5-1-an-application-3.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
