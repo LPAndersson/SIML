@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>3.6 Summary | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="3.6 Summary | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="3.6 Summary | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="3.5-an-application-2.html"/>
+<link rel="next" href="3.7-review-questions-2.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,43 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="summary-2" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> Summary</h2>
+<p>Perhaps the most complicated section in this chapter is the derivation of the form of the basic bootstrap interval. In this section we see that it is actually just a more general case of the normally distributed CIs that we have seen in previous courses.</p>
+<p>We wish to form a confidence interval for the parameter <span class="math inline">\(\theta\)</span> that we estimate by <span class="math inline">\(\hat \theta\)</span>. We will assume that <span class="math inline">\(R:= \hat \theta - \theta \sim \mathsf N(0,\sigma^2)\)</span>. Recall that the usual <span class="math inline">\(1-\alpha\)</span> confidence interval is
+<span class="math display">\[
+\left[ \hat\theta - \sigma z_{\alpha/2}, \hat\theta + \sigma z_{\alpha/2}  \right].
+\]</span></p>
+<p>Let, as for the bootstrap confidence, <span class="math inline">\(H\)</span> be the distribution function of <span class="math inline">\(R\)</span>, that is
+<span class="math display">\[
+H(z) = P(R\leq z) = P(\hat\theta - \theta \leq z) = P\Big(\frac{\hat\theta - \theta}{\sigma}\leq \frac{z}{\sigma}\Big) = \Phi(z/\sigma),
+\]</span>
+where <span class="math inline">\(\Phi\)</span> denotes the distribution function of the standard normal distribution.</p>
+<p>Now, if we choose <span class="math inline">\(z = H^{-1}(\alpha)\)</span>, then
+<span class="math display">\[
+\alpha = H(H^{-1}(\alpha)) = \Phi\left( \frac{H^{-1}(\alpha)}{\sigma} \right).
+\]</span>
+Now apply <span class="math inline">\(\Phi^{-1}\)</span> on both sides,
+<span class="math display">\[
+\Phi^{-1}(\alpha) = \frac{H^{-1}(\alpha)}{\sigma}.
+\]</span></p>
+<p>The number <span class="math inline">\(z_\alpha\)</span> is by definition the number such that <span class="math inline">\(\Phi(-z_\alpha) = \alpha\)</span>, or stated differently <span class="math inline">\(\Phi^{-1}(\alpha) = -z_\alpha\)</span>. Then we have that
+<span class="math display">\[
+\sigma z_{\alpha/2} = -\sigma\Phi^{-1}(\alpha/2) = -H^{-1}(\alpha/2).
+\]</span>
+Therefore the upper limit of the CI can be written
+<span class="math display">\[
+\hat \theta + \sigma z_{\alpha/2} = \hat \theta -H^{-1}(\alpha/2).
+\]</span></p>
+<p>We conclude that the basic bootstrap interval is of the same form as the usual normal CI. The lower limit can be obtained with similar calculations. In the bootstrap interval the next step was to replace the unknown <span class="math inline">\(H\)</span> with a bootstrap estimate.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.5-an-application-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.7-review-questions-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

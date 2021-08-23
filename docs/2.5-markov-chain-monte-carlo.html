@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.5 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning</title>
+  <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.5 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.5 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning" />
+  
+  <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
+  
+
+<meta name="author" content="Patrik Andersson" />
+
+
+<meta name="date" content="2021-08-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="2.4-multiparameter-problems.html"/>
+<link rel="next" href="2.6-an-application-1.html"/>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Inference and Machine Learning</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1.1-the-likelihood-function.html"><a href="1.1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
+<li class="chapter" data-level="1.2" data-path="1.2-maximum-likelihood-estimation.html"><a href="1.2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="1.3" data-path="1.3-hypothesis-testing.html"><a href="1.3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
+<li class="chapter" data-level="1.4" data-path="1.4-likelihood-ratio-test.html"><a href="1.4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
+<li class="chapter" data-level="1.5" data-path="1.5-mathematical-aside-taylor-expansion.html"><a href="1.5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
+<li class="chapter" data-level="1.6" data-path="1.6-asymptotic-distribution-of-the-mle.html"><a href="1.6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
+<li class="chapter" data-level="1.7" data-path="1.7-the-delta-method.html"><a href="1.7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
+<li class="chapter" data-level="1.8" data-path="1.8-wilks-test.html"><a href="1.8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
+<li class="chapter" data-level="1.9" data-path="1.9-walds-test.html"><a href="1.9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
+<li class="chapter" data-level="1.10" data-path="1.10-score-test.html"><a href="1.10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
+<li class="chapter" data-level="1.11" data-path="1.11-confidence-intervals.html"><a href="1.11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
+<li class="chapter" data-level="1.12" data-path="1.12-an-application.html"><a href="1.12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
+<li class="chapter" data-level="1.13" data-path="1.13-summary.html"><a href="1.13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
+<li class="chapter" data-level="1.14" data-path="1.14-review-questions.html"><a href="1.14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2.1-some-basic-decision-theory.html"><a href="2.1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
+<li class="chapter" data-level="2.2" data-path="2.2-bayesian-statistics-1.html"><a href="2.2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="2.3" data-path="2.3-choosing-prior.html"><a href="2.3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
+<li class="chapter" data-level="2.4" data-path="2.4-multiparameter-problems.html"><a href="2.4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
+<li class="chapter" data-level="2.5" data-path="2.5-markov-chain-monte-carlo.html"><a href="2.5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
+<li class="chapter" data-level="2.6" data-path="2.6-an-application-1.html"><a href="2.6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
+<li class="chapter" data-level="2.7" data-path="2.7-summary-1.html"><a href="2.7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
+<li class="chapter" data-level="2.8" data-path="2.8-review-questions-1.html"><a href="2.8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3.1-parametric-vs-non-parametric.html"><a href="3.1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
+<li class="chapter" data-level="3.2" data-path="3.2-non-parametric-estimation.html"><a href="3.2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
+<li class="chapter" data-level="3.3" data-path="3.3-bootstrap.html"><a href="3.3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
+<li class="chapter" data-level="3.4" data-path="3.4-parametric-bootstrap.html"><a href="3.4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>3.4</b> Parametric bootstrap</a></li>
+<li class="chapter" data-level="3.5" data-path="3.5-an-application-2.html"><a href="3.5-an-application-2.html"><i class="fa fa-check"></i><b>3.5</b> An application</a></li>
+<li class="chapter" data-level="3.6" data-path="3.6-summary-2.html"><a href="3.6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+<li class="chapter" data-level="3.7" data-path="3.7-review-questions-2.html"><a href="3.7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4.1-classification.html"><a href="4.1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
+<li class="chapter" data-level="4.2" data-path="4.2-support-vector-machines-i.html"><a href="4.2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
+<li class="chapter" data-level="4.3" data-path="4.3-hoeffdings-inequality.html"><a href="4.3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
+<li class="chapter" data-level="4.4" data-path="4.4-generalization-error.html"><a href="4.4-generalization-error.html"><i class="fa fa-check"></i><b>4.4</b> Generalization error</a></li>
+<li class="chapter" data-level="4.5" data-path="4.5-vc-dimension.html"><a href="4.5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
+<li class="chapter" data-level="4.6" data-path="4.6-support-vector-machines-ii.html"><a href="4.6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
+<li class="chapter" data-level="4.7" data-path="4.7-bias-variance-decomposition.html"><a href="4.7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
+<li class="chapter" data-level="4.8" data-path="4.8-regression-regularization.html"><a href="4.8-regression-regularization.html"><i class="fa fa-check"></i><b>4.8</b> Regression regularization</a></li>
+<li class="chapter" data-level="4.9" data-path="4.9-model-selection.html"><a href="4.9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
+<li class="chapter" data-level="4.10" data-path="4.10-an-application-i.html"><a href="4.10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
+<li class="chapter" data-level="4.11" data-path="4.11-an-application-ii.html"><a href="4.11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4.12-review-questions-3.html"><a href="4.12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5.1-an-application-3.html"><a href="5.1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5.2-review-questions-4.html"><a href="5.2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Lecture notes for Statistical Inference and Machine Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="markov-chain-monte-carlo" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Markov chain Monte Carlo</h2>
+<p>So far we have been using that the posterior distribution is proportional to the likelihood times the prior distribution. We were also careful to choose the prior as the conjugate distribution so that we could recognize the posterior distribution. In general we have to calculate the normalizing constant:
+<span class="math display">\[
+\int p(x\mid \theta)p(\theta)d\theta.
+\]</span>
+Many times, and in particular if <span class="math inline">\(\theta\)</span> is high dimensional, it is not possible to calculate this integral.</p>
+<p>In this section we will see how we can, instead of calculating it, generate samples from the posterior distribution. This is the method that is used in modern Bayesian statistics. Here we are only able to scratch the surface. Both in terms of theory, since explaining why the method works would require first learning about Markov chains, and in terms of complexity of the methods, since the methods that are used in practice are usually more advanced version of what we present here.</p>
+<p>We assume that we are able to write down the likelihood of our data generating model and the prior on our parameters. Therefore we are also able to write down the posterior distribution up to a multiplying constant.</p>
+<p>The method we will discuss is called the <em>Metropolis-Hastings algorithm</em> and it is an example of a <em>Markov chain Monte Carlo</em> (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte Carlo means that is is an algorithm that uses on random sampling.</p>
+<p>The Metropolis-Hastings algorithm is as follows: Suppose we want to sample from the posterior <span class="math inline">\(p(\theta\mid x).\)</span> Suppose also that this is not possible directly, but that we are able to generate samples from some other distribution <span class="math inline">\(q(\theta^\star \mid \theta).\)</span> Then do the following:</p>
+<p>Choose <span class="math inline">\(\theta_0\)</span> arbitrarily. For <span class="math inline">\(i\geq 1\)</span> do:</p>
+<ol style="list-style-type: decimal">
+<li>Generate a proposal <span class="math inline">\(\theta^\star\sim q(\theta^\star\mid \theta_{i-1})\)</span></li>
+<li>Calculate
+<span class="math display">\[
+r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1}\mid \theta^\star)}{q(\theta^\star\mid\theta_{i-1})}, 1 \right\}.
+\]</span></li>
+<li>Set
+<span class="math display">\[
+\theta_i = \begin{cases}
+\theta^\star\quad \text{with probability } r\\
+\theta_{i-1}\quad  \text{with probability } 1-r.
+\end{cases}
+\]</span></li>
+</ol>
+<p>Theory then tells us that as <span class="math inline">\(i\)</span> becomes large, the distribution of <span class="math inline">\(\theta_i\)</span> will be approximately that of <span class="math inline">\(p(\theta\mid x).\)</span></p>
+<p>Note that here the normalizing constant in <span class="math inline">\(p(\theta\mid x)\)</span> is cancelled since it appears both in the numerator and denominator.</p>
+<p>It remains to choose <span class="math inline">\(q(\theta^\star\mid x)\)</span>. One common choice is called <em>random walk Metropolis Hastings</em> and consists of letting
+<span class="math display">\[
+\theta^\star = \theta_{i-1} + \varepsilon_{i-1},
+\]</span>
+where <span class="math inline">\(\varepsilon_{i-1}\)</span> is and independent random variable. For example <span class="math inline">\(\varepsilon_{i-1}\overset{iid}{\sim} \mathsf N(0,b^2)\)</span> for some variance <span class="math inline">\(b^2\)</span>. In this case <span class="math inline">\(q(\theta_{i-1}\mid \theta^\star)=q(\theta^\star\mid \theta_{i-1})\)</span> and so the acceptance probability becomes
+<span class="math display">\[
+r=\min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)} ,1\right\}
+\]</span>
+Here it is important to choose <span class="math inline">\(b\)</span> such that the correlation between <span class="math inline">\(\theta_i\)</span> and <span class="math inline">\(\theta_{i-1}\)</span> is small. If <span class="math inline">\(b\)</span> is small, almost all proposals will be accepted, but since <span class="math inline">\(\varepsilon_i\)</span> also tends to be small, <span class="math inline">\(\theta_{i+1}\)</span> will be highly correlated with <span class="math inline">\(\theta_{i}\)</span>. On the other hand, if <span class="math inline">\(b\)</span> is large, the proposal will rarely be accepted, and <span class="math inline">\(\theta_i=\theta_{i-1}\)</span>. As a rule of thumb, <span class="math inline">\(b\)</span> should be set such that about <span class="math inline">\(50\%\)</span> of the proposals are accepted.</p>
+<p>Another class of proposal distributions is <span class="math inline">\(q(\theta^\star\mid \theta_{i-1})\equiv q(\theta^\star)\)</span>, that is <span class="math inline">\(\theta^\star\)</span> is independent of <span class="math inline">\(\theta_{i-1}\)</span>. The acceptance probability is then
+<span class="math display">\[
+r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1})}{q(\theta^\star)}, 1 \right\}.
+\]</span>
+This is known as <em>independence Metropolis Hastings</em>. Here, since each time the proposal is accepted <span class="math inline">\(\theta_i\)</span> will change, we aim for as high an acceptance probability as possible.</p>
+<p>As an example let us see how one can generate samples from the exponential distribution using Metropolis Hastings. To be clear, this is not the best way to generate exponentially distributed random numbers, it is just an example.</p>
+<p>The density is
+<span class="math display">\[
+p(x) = \lambda e^{-\lambda x}\propto e^{-\lambda x}.
+\]</span>
+Here we know that the normalizing constant is <span class="math inline">\(\lambda\)</span>, but the idea of MCMC is that we do not need to know it, so let us proceed as if we did not know it. Also note that here we see <span class="math inline">\(x\)</span> as random, in the typical Bayesian setting we would think of <span class="math inline">\(\lambda\)</span> as random, but is is just a matter of notation.</p>
+<p>First we implement the density. We do it on a log-scale. This is because we need to divide two densities in the algorithm. On a log-scale this becomes subtraction, which is numerically more stable.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="2.5-markov-chain-monte-carlo.html#cb63-1" aria-hidden="true" tabindex="-1"></a>logDensity <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb63-2"><a href="2.5-markov-chain-monte-carlo.html#cb63-2" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb63-3"><a href="2.5-markov-chain-monte-carlo.html#cb63-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-4"><a href="2.5-markov-chain-monte-carlo.html#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (x <span class="sc">&gt;=</span> <span class="dv">0</span>) {</span>
+<span id="cb63-5"><a href="2.5-markov-chain-monte-carlo.html#cb63-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>lambda <span class="sc">*</span> x</span>
+<span id="cb63-6"><a href="2.5-markov-chain-monte-carlo.html#cb63-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb63-7"><a href="2.5-markov-chain-monte-carlo.html#cb63-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>{</span>
+<span id="cb63-8"><a href="2.5-markov-chain-monte-carlo.html#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="cn">Inf</span></span>
+<span id="cb63-9"><a href="2.5-markov-chain-monte-carlo.html#cb63-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb63-10"><a href="2.5-markov-chain-monte-carlo.html#cb63-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Next implement the random-walk Metropolis-Hastings algorithm with normally distributed steps.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="2.5-markov-chain-monte-carlo.html#cb64-1" aria-hidden="true" tabindex="-1"></a>mcmc.iter <span class="ot">&lt;-</span> <span class="cf">function</span>(x, logDensity, sigma, n.iter){</span>
+<span id="cb64-2"><a href="2.5-markov-chain-monte-carlo.html#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Random walk Metropolis Hastings MCMC</span></span>
+<span id="cb64-3"><a href="2.5-markov-chain-monte-carlo.html#cb64-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-4"><a href="2.5-markov-chain-monte-carlo.html#cb64-4" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, n.iter<span class="sc">+</span><span class="dv">1</span>, <span class="fu">length</span>(x)) <span class="co">#Create empty matrix</span></span>
+<span id="cb64-5"><a href="2.5-markov-chain-monte-carlo.html#cb64-5" aria-hidden="true" tabindex="-1"></a>  res[<span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
+<span id="cb64-6"><a href="2.5-markov-chain-monte-carlo.html#cb64-6" aria-hidden="true" tabindex="-1"></a>  logD <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(x)</span>
+<span id="cb64-7"><a href="2.5-markov-chain-monte-carlo.html#cb64-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-8"><a href="2.5-markov-chain-monte-carlo.html#cb64-8" aria-hidden="true" tabindex="-1"></a>  accProb <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#keep track of the proportion of proposals that are accepted</span></span>
+<span id="cb64-9"><a href="2.5-markov-chain-monte-carlo.html#cb64-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-10"><a href="2.5-markov-chain-monte-carlo.html#cb64-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.iter)){</span>
+<span id="cb64-11"><a href="2.5-markov-chain-monte-carlo.html#cb64-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">#New proposal</span></span>
+<span id="cb64-12"><a href="2.5-markov-chain-monte-carlo.html#cb64-12" aria-hidden="true" tabindex="-1"></a>    xProp <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), <span class="dv">0</span>, sigma)</span>
+<span id="cb64-13"><a href="2.5-markov-chain-monte-carlo.html#cb64-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Log density of proposal</span></span>
+<span id="cb64-14"><a href="2.5-markov-chain-monte-carlo.html#cb64-14" aria-hidden="true" tabindex="-1"></a>    logDProp <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(xProp)</span>
+<span id="cb64-15"><a href="2.5-markov-chain-monte-carlo.html#cb64-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Acceptance probability</span></span>
+<span id="cb64-16"><a href="2.5-markov-chain-monte-carlo.html#cb64-16" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">min</span>( <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">exp</span>(logDProp <span class="sc">-</span> logD) ) )</span>
+<span id="cb64-17"><a href="2.5-markov-chain-monte-carlo.html#cb64-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb64-18"><a href="2.5-markov-chain-monte-carlo.html#cb64-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(r<span class="sc">&gt;</span><span class="fu">runif</span>(<span class="dv">1</span>)){ <span class="co">#Accept with probability r, else keep old x</span></span>
+<span id="cb64-19"><a href="2.5-markov-chain-monte-carlo.html#cb64-19" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> xProp</span>
+<span id="cb64-20"><a href="2.5-markov-chain-monte-carlo.html#cb64-20" aria-hidden="true" tabindex="-1"></a>      logD <span class="ot">&lt;-</span> logDProp</span>
+<span id="cb64-21"><a href="2.5-markov-chain-monte-carlo.html#cb64-21" aria-hidden="true" tabindex="-1"></a>      accProb <span class="ot">&lt;-</span> accProb <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb64-22"><a href="2.5-markov-chain-monte-carlo.html#cb64-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb64-23"><a href="2.5-markov-chain-monte-carlo.html#cb64-23" aria-hidden="true" tabindex="-1"></a>    res[i<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
+<span id="cb64-24"><a href="2.5-markov-chain-monte-carlo.html#cb64-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb64-25"><a href="2.5-markov-chain-monte-carlo.html#cb64-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">sample =</span> res, <span class="at">accProb =</span> accProb<span class="sc">/</span>n.iter)</span>
+<span id="cb64-26"><a href="2.5-markov-chain-monte-carlo.html#cb64-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Now we can run the algorithm. First for 1000 step that we throw away. This is since the distribution of the samples are correct only when the number of steps are large. Then we run it for as many steps as we need samples.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="2.5-markov-chain-monte-carlo.html#cb65-1" aria-hidden="true" tabindex="-1"></a>x.init <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co">#Initial value</span></span>
+<span id="cb65-2"><a href="2.5-markov-chain-monte-carlo.html#cb65-2" aria-hidden="true" tabindex="-1"></a>nIter <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="co">#Number of MC steps</span></span>
+<span id="cb65-3"><a href="2.5-markov-chain-monte-carlo.html#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb65-4"><a href="2.5-markov-chain-monte-carlo.html#cb65-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-5"><a href="2.5-markov-chain-monte-carlo.html#cb65-5" aria-hidden="true" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(x.init,</span>
+<span id="cb65-6"><a href="2.5-markov-chain-monte-carlo.html#cb65-6" aria-hidden="true" tabindex="-1"></a>                       logDensity,</span>
+<span id="cb65-7"><a href="2.5-markov-chain-monte-carlo.html#cb65-7" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
+<span id="cb65-8"><a href="2.5-markov-chain-monte-carlo.html#cb65-8" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">1000</span>)</span>
+<span id="cb65-9"><a href="2.5-markov-chain-monte-carlo.html#cb65-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-10"><a href="2.5-markov-chain-monte-carlo.html#cb65-10" aria-hidden="true" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(exp.mcmc<span class="sc">$</span>sample[<span class="fu">nrow</span>(exp.mcmc<span class="sc">$</span>sample),],</span>
+<span id="cb65-11"><a href="2.5-markov-chain-monte-carlo.html#cb65-11" aria-hidden="true" tabindex="-1"></a>                       logDensity,</span>
+<span id="cb65-12"><a href="2.5-markov-chain-monte-carlo.html#cb65-12" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
+<span id="cb65-13"><a href="2.5-markov-chain-monte-carlo.html#cb65-13" aria-hidden="true" tabindex="-1"></a>                       nIter)</span></code></pre></div>
+<p>We can check for example that the mean and standard deviation of the samples are as expected, i.e. in our case 1.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="2.5-markov-chain-monte-carlo.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
+<pre><code>## [1] 1.072045</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="2.5-markov-chain-monte-carlo.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
+<pre><code>## [1] 1.114397</code></pre>
+<p>We can plot the histogram of the samples against the density.</p>
+<p><img src="02-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="2.4-multiparameter-problems.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.6-an-application-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

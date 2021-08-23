@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.8 Wilks’ test | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.8 Wilks’ test | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.8 Wilks’ test | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="1.7-the-delta-method.html"/>
+<link rel="next" href="1.9-walds-test.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,47 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="wilks-test" class="section level2" number="1.8">
+<h2><span class="header-section-number">1.8</span> Wilks’ test</h2>
+<p>In the previous sections we found the asymptotic distribution of <span class="math inline">\(\hat\theta_n\)</span>. Here we seek the asymptotic distribution of the likelihood ratio <span class="math inline">\(-2(l_n(\theta_0) - l_n(\hat\theta_n)))\)</span>. The reason is that, as we have seen, finding the exact distribution is difficult. If we have the approximate, asymptotic, distribution, we can use that to do for example hypothesis testing. For ease of notation we suppress the <span class="math inline">\(n\)</span> and write <span class="math inline">\(l\)</span> and <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>We will use the following results, that we have seen before:
+<span class="math display">\[\begin{align*}
+l&#39;(\hat\theta) &amp;= 0,\\
+-\frac{1}{n}l&#39;&#39;(\hat\theta) &amp;\overset{asym.}{\sim} -\frac{1}{n}l&#39;&#39;(\theta) \overset{asym.}{\sim} I(\theta),\\
+\sqrt{n}(\hat\theta - \theta) &amp;\overset{asym.}{\sim} I^{-1/2}(\theta )Z,
+\end{align*}\]</span>
+with <span class="math inline">\(Z\sim \mathsf N(0,1)\)</span>.</p>
+<p>
+Just as in the delta method, we now do a Taylor expansion of <span class="math inline">\(l(\theta)\)</span> around <span class="math inline">\(\hat\theta\)</span>:
+</p>
+<span class="math display">\[\begin{align}
+l(\theta) \approx&amp; l(\hat \theta) + l&#39;(\hat\theta)(\theta-\hat\theta) + \frac{l&#39;&#39;(\hat\theta)}{2}(\theta-\hat\theta) ^2\\
+=&amp; l(\hat\theta) + \frac{l&#39;&#39;(\hat\theta)}{2}(\theta-\hat\theta) ^2 = l(\hat \theta) +\frac{1}{2} \frac{1}{n}l&#39;&#39;(\hat\theta)n(\theta-\hat\theta) ^2\\
+\overset{asym.}{\sim} &amp; l(\hat\theta) -\frac{1}{2} I(\theta)I^{-1}(\theta)Z^2 \overset{d}{=} l(\hat\theta) - \frac{1}{2}\chi_1^2.
+\end{align}\]</span>
+In other words, for a large sample,
+
+<div class="note">
+<span class="math display">\[
+\lambda_{LR} = 2( l_n(\hat\theta)-l_n(\theta_0))\overset{asym.}{\sim} \chi_1^2.
+\]</span>
+</div>
+<p>Which is Wilks’ theorem.</p>
+<p>Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="1.8-wilks-test.html#cb15-1" aria-hidden="true" tabindex="-1"></a>lrStatistic <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLn</span>(optimResult<span class="sc">$</span>par, t) <span class="sc">-</span> <span class="fu">logLn</span>(<span class="fl">0.1</span>, t))</span>
+<span id="cb15-2"><a href="1.8-wilks-test.html#cb15-2" aria-hidden="true" tabindex="-1"></a>lrStatistic</span></code></pre></div>
+<pre><code>## [1] 2.200653</code></pre>
+<p>Recall that we reject <span class="math inline">\(H_0\)</span> if <span class="math inline">\(\lambda_{LR}\)</span> is large. Therefore the p-value is</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="1.8-wilks-test.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(lrStatistic, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## [1] 0.1379523</code></pre>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1.7-the-delta-method.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.9-walds-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

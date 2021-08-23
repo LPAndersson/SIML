@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.11 Confidence intervals | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.11 Confidence intervals | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.11 Confidence intervals | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="1.10-score-test.html"/>
+<link rel="next" href="1.12-an-application.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,90 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="confidence-intervals" class="section level2" number="1.11">
+<h2><span class="header-section-number">1.11</span> Confidence intervals</h2>
+<p>We have derived a number of different tests. In principle all of them can be turned into confidence intervals since there is a correspondence between hypothesis tests and confidence intervals. Let us first examine how we can use the Wald test to construct confidence intervals.</p>
+<p>The Wald test is based on that for large <span class="math inline">\(n\)</span>:
+<span class="math display">\[
+\frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)} \overset{asym.}{\sim} \mathsf{N}(0,1),
+\]</span>
+Therefore we can write
+<span class="math display">\[
+1-\alpha = P\left( -z_{\alpha/2} &lt; \frac{\hat\theta- \theta}{\textrm{Sd}(\hat\theta)}
+\leq z_{\alpha/2}  \right) = P\left( \hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}\leq \theta \leq \hat\theta +  \textrm{Sd}(\hat\theta) z_{\alpha/2}\right).
+\]</span>
+Which means that <span class="math inline">\(\left[\hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}, \hat\theta +\textrm{Sd}(\hat\theta) z_{\alpha/2}\right]\)</span> is a <span class="math inline">\(1-\alpha\)</span> confidence interval for <span class="math inline">\(\theta\)</span>.</p>
+<p>Let us derive the same CI in a slightly different way. In the Wald test we would accept <span class="math inline">\(H_0: \theta=\theta_0\)</span> if <span class="math inline">\(\left| \hat\theta - \theta_0 \right|/Sd(\hat\theta)&lt;z_{\alpha/2}\)</span>. Solving this for <span class="math inline">\(\theta_0\)</span> gives
+<span class="math display">\[
+ \hat\theta -\textrm{Sd}(\hat\theta) z_{\alpha/2}\leq \theta_0 \leq \hat\theta +  \textrm{Sd}(\hat\theta) z_{\alpha/2}.
+\]</span>
+If we replace <span class="math inline">\(\theta_0\)</span> with <span class="math inline">\(\theta\)</span> we obtain the CI above. Therefore we may think of the CI as being the set of <span class="math inline">\(\theta_0\)</span> that we would accept in a hypothesis test.</p>
+<p>
+The same principle can be applied to convert any hypothesis test to a corresponding CI. For example the score test accepts <span class="math inline">\(H_0\)</span> if
+</p>
+<span class="math display">\[
+ \frac{\left| l&#39;_n(\theta_0)\right |}{\sqrt{I_n(\theta_0)}}&lt; z_{\alpha/2},
+\]</span>
+<p>
+and so solving this for <span class="math inline">\(\theta_0\)</span> gives a CI. However, in most cases it is not possible to obtain a closed form solution and we have solve it numerically. Let us as an example do it for the exponential distribution:
+</p>
+<span class="math display">\[\begin{align}
+l&#39;_n(\lambda) &amp;= n\left( \frac{1}{\lambda} - \frac{1}{\hat\lambda} \right),\\
+I_n(\lambda) &amp;= - l&#39;&#39;_n(\lambda) = \frac{n}{\lambda^2}.
+\end{align}\]</span>
+<p>
+We plot the score statistic as a function of <span class="math inline">\(\lambda\)</span>:
+</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:CI-plot"></span>
+<img src="01-likelihood_files/figure-html/CI-plot-1.png" alt="Score statistic and confidence intervall" width="80%" />
+<p class="caption">
+Figure 1.7: Score statistic and confidence intervall
+</p>
+</div>
+<p>To find the CI we need to solve
+<span class="math display">\[
+\frac{\left| l&#39;_n(\lambda)\right |}{\sqrt{I_n(\lambda)}} = z_{\alpha/2},
+\]</span>
+in terms of <span class="math inline">\(\lambda\)</span>. Looking at the figure, this has two solutions, one for <span class="math inline">\(\lambda &gt; \hat\lambda\)</span> and one for <span class="math inline">\(\lambda &lt; \hat\lambda\)</span>. These will be the left and right endpoints of the CI.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="1.11-confidence-intervals.html#cb27-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb27-2"><a href="1.11-confidence-intervals.html#cb27-2" aria-hidden="true" tabindex="-1"></a>scoreStatistic <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda){</span>
+<span id="cb27-3"><a href="1.11-confidence-intervals.html#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>( n<span class="sc">*</span>(<span class="dv">1</span><span class="sc">/</span>lambda <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span>lambdaHat) ) <span class="sc">/</span> <span class="fu">sqrt</span>( n<span class="sc">/</span>lambda<span class="sc">^</span><span class="dv">2</span> )</span>
+<span id="cb27-4"><a href="1.11-confidence-intervals.html#cb27-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-5"><a href="1.11-confidence-intervals.html#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="1.11-confidence-intervals.html#cb27-6" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda){</span>
+<span id="cb27-7"><a href="1.11-confidence-intervals.html#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scoreStatistic</span>(lambda) <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb27-8"><a href="1.11-confidence-intervals.html#cb27-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-9"><a href="1.11-confidence-intervals.html#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="1.11-confidence-intervals.html#cb27-10" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(lambdaHat<span class="fl">-0.05</span>,lambdaHat))</span>
+<span id="cb27-11"><a href="1.11-confidence-intervals.html#cb27-11" aria-hidden="true" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
+<span id="cb27-12"><a href="1.11-confidence-intervals.html#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="1.11-confidence-intervals.html#cb27-13" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(lambdaHat<span class="fl">+0.05</span>,lambdaHat))</span>
+<span id="cb27-14"><a href="1.11-confidence-intervals.html#cb27-14" aria-hidden="true" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
+<span id="cb27-15"><a href="1.11-confidence-intervals.html#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="1.11-confidence-intervals.html#cb27-16" aria-hidden="true" tabindex="-1"></a>leftCILimit</span></code></pre></div>
+<pre><code>## [1] 0.09360885</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="1.11-confidence-intervals.html#cb29-1" aria-hidden="true" tabindex="-1"></a>rightCILimit</span></code></pre></div>
+<pre><code>## [1] 0.1392479</code></pre>
+<p>We can compare this to the Wald based CI:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="1.11-confidence-intervals.html#cb31-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb31-2"><a href="1.11-confidence-intervals.html#cb31-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb31-3"><a href="1.11-confidence-intervals.html#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="1.11-confidence-intervals.html#cb31-4" aria-hidden="true" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> lambdaHat <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>lambdaHat<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb31-5"><a href="1.11-confidence-intervals.html#cb31-5" aria-hidden="true" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> lambdaHat <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span>lambdaHat<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb31-6"><a href="1.11-confidence-intervals.html#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="1.11-confidence-intervals.html#cb31-7" aria-hidden="true" tabindex="-1"></a>leftCILimit</span></code></pre></div>
+<pre><code>## [1] 0.09360885</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="1.11-confidence-intervals.html#cb33-1" aria-hidden="true" tabindex="-1"></a>rightCILimit</span></code></pre></div>
+<pre><code>## [1] 0.1392479</code></pre>
+<p>Again, in this particular example, the two intervals are the same.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1.10-score-test.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.12-an-application.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

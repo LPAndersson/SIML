@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.3 Hoeffding’s inequality | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.3 Hoeffding’s inequality | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.3 Hoeffding’s inequality | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="4.2-support-vector-machines-i.html"/>
+<link rel="next" href="4.4-generalization-error.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,85 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="hoeffdings-inequality" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Hoeffding’s inequality</h2>
+<p>One tool to understand the connection between the in-sample and out-of-sample error is <em>Hoeffding’s inequality</em>. This is a result from probability theory and so we will present it as such. That is, in this section we do not discuss any application to statistical learning.</p>
+
+<div class="note">
+Hoeffding’s inequality states that:
+Let <span class="math inline">\(Y_1,\ldots, Y_n\)</span> be iid with <span class="math inline">\(E[Y_i]=\mu\)</span> and <span class="math inline">\(a\leq Y_i \leq b\)</span>. Then for any <span class="math inline">\(\varepsilon&gt;0\)</span>,
+<span class="math display">\[
+P\left( \left| \bar Y_n - \mu \right|&gt;\varepsilon \right) \leq 2e^{-2n\varepsilon^2/(b-a)^2}.
+\]</span>
+</div>
+<p>The inequality is true for any random variable satisfying the conditions. However, we will only prove the special case that if <span class="math inline">\(Y_i\overset{iid}{\sim}\mathsf{Be}(p)\)</span>, then
+<span class="math display">\[
+P\left( \left| \bar Y_n - p \right|&gt;\varepsilon \right) \leq 2e^{-2n\varepsilon^2}.
+\]</span>
+We start by deriving <em>Markov’s inequality</em>: Let <span class="math inline">\(X\)</span> be a non-negative random variable. For the sake of this calculation we assume <span class="math inline">\(X\)</span> is continuous with density <span class="math inline">\(p(x)\)</span>, although the inequality holds also when this is not the case. Then for any <span class="math inline">\(t&gt;0\)</span>,
+<span class="math display">\[\begin{align}
+E[X] &amp;= \int_0^\infty xp(x)dx = \int_0^t xp(x)dx + \int_t^\infty xp(x)dx \\
+&amp;\geq \int_t^\infty x p(x)dx \geq t \int_t^\infty p(x)dx = tP(X&gt; t).
+\end{align}\]</span>
+We usually write this as <span class="math inline">\(P(X&gt;t)\leq E(X)/t\)</span>.</p>
+<p>Now we turn to Hoeffding’s inequality. Firstly,
+<span class="math display">\[
+P\left( \left| \bar Y_n  - p \right|\geq \varepsilon \right) = P\left( \bar Y_n \geq p+\varepsilon  \right) + P\left( \bar Y_n \leq p - \varepsilon  \right).
+\]</span>
+Then we use that <span class="math inline">\(\exp\)</span> is an increasing function, together with Markov’s inequality, for any <span class="math inline">\(t&gt;0\)</span>,
+<span class="math display">\[\begin{align*}
+P\left( \bar Y_n \geq p +  \varepsilon  \right) &amp;= P\left( t\sum_{i=1}^n Y_i \geq tn(p + \varepsilon)  \right) = P\left( e^{t\sum_{i=1}^n Y_i }\geq  e^{tn(p +\varepsilon) } \right) \\
+&amp;\overset{\text{Markov}}{\leq} e^{-tn(p+\varepsilon)}E\left[ e^{t\sum_{i=1}^n Y_i } \right] \overset{indep.}{=} e^{-tn(p+\varepsilon)}\prod_{n=1}^nE\left[ e^{t Y_i } \right] =  e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n.
+\end{align*}\]</span></p>
+<p>Now we need to bound the last expression. Since <span class="math inline">\(Y_i\)</span> is Bernoulli,
+<span class="math display">\[
+E\left[ e^{t Y_i } \right] = e^{t\cdot 1}P(Y_i=1) + e^{t\cdot 0}P(Y_i=0) = pe^t + (1-p).
+\]</span>
+We would like to show that <span class="math inline">\(pe^t+1-p\leq e^{tp+t^2/8}\)</span>. Since then,
+<span class="math display">\[
+P\left( \bar Y_n \geq p +  \varepsilon  \right) \leq e^{-tn(p+\varepsilon)}E\left[ e^{t Y_i } \right]^n \leq e^{-tn(p+\varepsilon)} e^{ntp+nt^2/8} = e^{-nt\varepsilon + nt^2/8} \leq e^{-2n\varepsilon^2},
+\]</span>
+which is what we want. In the last step we used that <span class="math inline">\(-nt\varepsilon + nt^2/8\)</span> has a maximum at <span class="math inline">\(t=4\varepsilon\)</span>, which is easy to check. A similar argument will give that <span class="math inline">\(P\left( \bar Y_n \leq p - \varepsilon \right)\)</span> can be bounded in the same way and then we arrive at Hoeffding’s inequality.</p>
+<p>So, we need to study <span class="math inline">\(pe^t+1-p\)</span> and <span class="math inline">\(e^{tp+t^2/8}\)</span>. First note that the inequality is true if and only if
+<span class="math display">\[
+f(t):=\ln (pe^t+1-p) \leq tp+t^2/8,
+\]</span>
+since <span class="math inline">\(\ln\)</span> is increasing. By Taylor’s theorem, we can write
+<span class="math display">\[
+f(t) = f(0) + f&#39;(0)t + f&#39;&#39;(\zeta)\frac{t^2}{2},
+\]</span>
+for some <span class="math inline">\(0\leq \zeta \leq t.\)</span> However <span class="math inline">\(f(0)=0\)</span> and <span class="math inline">\(f&#39;(0) = \frac{pe^0}{pe^0+1-p} = p\)</span> and
+<span class="math display">\[
+f&#39;&#39;(t) = \frac{pe^t}{pe^t+1-p} - \frac{(pe^t)^2}{(pe^t+1-p)^2} = \frac{pe^t}{pe^t+1-p}\left( 1-\frac{pe^t}{pe^t+1-p} \right) = \rho(1-\rho),
+\]</span>
+with <span class="math inline">\(\rho:= \frac{pe^t}{pe^t+1-p}.\)</span> Now, it is easy to see that <span class="math inline">\(0\leq\rho\leq 1\)</span> therefore that <span class="math inline">\(\rho(1-\rho)\leq 1/4\)</span> so that <span class="math inline">\(f&#39;&#39;(t)\leq 1/4.\)</span> All together,
+<span class="math display">\[
+f(t) = tp + f&#39;&#39;(\zeta)\frac{t^2}{2} \leq tp + \frac{t^2}{8},
+\]</span>
+and we are done.</p>
+If we choose
+<span class="math display">\[
+\varepsilon = \sqrt{\frac{1}{2n}\ln \frac{2}{\delta}},
+\]</span>
+we get
+<span class="math display">\[
+P\left( \left| \bar Y_n - p \right|\leq \sqrt{\frac{1}{2n}\ln \frac{2}{\delta}} \right) \geq 1-2\exp\left( -2n\frac{1}{2n}\ln \frac{2}{\delta} \right) =1-\delta.
+\]</span>
+
+<div class="note">
+Stated another way, with probability at least <span class="math inline">\(1-\delta\)</span>,
+<span class="math display">\[
+\left| \bar Y_n - p \right|\leq \sqrt{\frac{1}{2n}\ln \frac{2}{\delta}}.
+\]</span>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.2-support-vector-machines-i.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.4-generalization-error.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

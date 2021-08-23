@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3.3 Bootstrap | Lecture notes for Statistical Inference and Machine Learning</title>
+  <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3.3 Bootstrap | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3.3 Bootstrap | Lecture notes for Statistical Inference and Machine Learning" />
+  
+  <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
+  
+
+<meta name="author" content="Patrik Andersson" />
+
+
+<meta name="date" content="2021-08-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="3.2-non-parametric-estimation.html"/>
+<link rel="next" href="3.4-parametric-bootstrap.html"/>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Inference and Machine Learning</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1.1-the-likelihood-function.html"><a href="1.1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
+<li class="chapter" data-level="1.2" data-path="1.2-maximum-likelihood-estimation.html"><a href="1.2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="1.3" data-path="1.3-hypothesis-testing.html"><a href="1.3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
+<li class="chapter" data-level="1.4" data-path="1.4-likelihood-ratio-test.html"><a href="1.4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
+<li class="chapter" data-level="1.5" data-path="1.5-mathematical-aside-taylor-expansion.html"><a href="1.5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
+<li class="chapter" data-level="1.6" data-path="1.6-asymptotic-distribution-of-the-mle.html"><a href="1.6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
+<li class="chapter" data-level="1.7" data-path="1.7-the-delta-method.html"><a href="1.7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
+<li class="chapter" data-level="1.8" data-path="1.8-wilks-test.html"><a href="1.8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
+<li class="chapter" data-level="1.9" data-path="1.9-walds-test.html"><a href="1.9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
+<li class="chapter" data-level="1.10" data-path="1.10-score-test.html"><a href="1.10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
+<li class="chapter" data-level="1.11" data-path="1.11-confidence-intervals.html"><a href="1.11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
+<li class="chapter" data-level="1.12" data-path="1.12-an-application.html"><a href="1.12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
+<li class="chapter" data-level="1.13" data-path="1.13-summary.html"><a href="1.13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
+<li class="chapter" data-level="1.14" data-path="1.14-review-questions.html"><a href="1.14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2.1-some-basic-decision-theory.html"><a href="2.1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
+<li class="chapter" data-level="2.2" data-path="2.2-bayesian-statistics-1.html"><a href="2.2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="2.3" data-path="2.3-choosing-prior.html"><a href="2.3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
+<li class="chapter" data-level="2.4" data-path="2.4-multiparameter-problems.html"><a href="2.4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
+<li class="chapter" data-level="2.5" data-path="2.5-markov-chain-monte-carlo.html"><a href="2.5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
+<li class="chapter" data-level="2.6" data-path="2.6-an-application-1.html"><a href="2.6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
+<li class="chapter" data-level="2.7" data-path="2.7-summary-1.html"><a href="2.7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
+<li class="chapter" data-level="2.8" data-path="2.8-review-questions-1.html"><a href="2.8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3.1-parametric-vs-non-parametric.html"><a href="3.1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
+<li class="chapter" data-level="3.2" data-path="3.2-non-parametric-estimation.html"><a href="3.2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
+<li class="chapter" data-level="3.3" data-path="3.3-bootstrap.html"><a href="3.3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
+<li class="chapter" data-level="3.4" data-path="3.4-parametric-bootstrap.html"><a href="3.4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>3.4</b> Parametric bootstrap</a></li>
+<li class="chapter" data-level="3.5" data-path="3.5-an-application-2.html"><a href="3.5-an-application-2.html"><i class="fa fa-check"></i><b>3.5</b> An application</a></li>
+<li class="chapter" data-level="3.6" data-path="3.6-summary-2.html"><a href="3.6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+<li class="chapter" data-level="3.7" data-path="3.7-review-questions-2.html"><a href="3.7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4.1-classification.html"><a href="4.1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
+<li class="chapter" data-level="4.2" data-path="4.2-support-vector-machines-i.html"><a href="4.2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
+<li class="chapter" data-level="4.3" data-path="4.3-hoeffdings-inequality.html"><a href="4.3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
+<li class="chapter" data-level="4.4" data-path="4.4-generalization-error.html"><a href="4.4-generalization-error.html"><i class="fa fa-check"></i><b>4.4</b> Generalization error</a></li>
+<li class="chapter" data-level="4.5" data-path="4.5-vc-dimension.html"><a href="4.5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
+<li class="chapter" data-level="4.6" data-path="4.6-support-vector-machines-ii.html"><a href="4.6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
+<li class="chapter" data-level="4.7" data-path="4.7-bias-variance-decomposition.html"><a href="4.7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
+<li class="chapter" data-level="4.8" data-path="4.8-regression-regularization.html"><a href="4.8-regression-regularization.html"><i class="fa fa-check"></i><b>4.8</b> Regression regularization</a></li>
+<li class="chapter" data-level="4.9" data-path="4.9-model-selection.html"><a href="4.9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
+<li class="chapter" data-level="4.10" data-path="4.10-an-application-i.html"><a href="4.10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
+<li class="chapter" data-level="4.11" data-path="4.11-an-application-ii.html"><a href="4.11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4.12-review-questions-3.html"><a href="4.12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5.1-an-application-3.html"><a href="5.1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5.2-review-questions-4.html"><a href="5.2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Lecture notes for Statistical Inference and Machine Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="bootstrap" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Bootstrap</h2>
+<p>In this section we discuss how to calculate standard errors and confidence intervals for a statistic <span class="math inline">\(T(X_1,X_2,\ldots, X_n)\)</span>. But first let us take a step back and consider the basics of what we are doing.</p>
+<p>We are given a sample <span class="math inline">\((x_1,\ldots, x_n)\)</span>. We have some function, <span class="math inline">\(T\)</span>, that we apply to the sample and call a statistic. This may be a simple function like the sample mean, or some more complicated function like a parameter in a regression problem. We apply the function to the data and get a number <span class="math inline">\(t=T(x_1,\ldots,x_n)\)</span>. To do inference we also need to know the variability of that number if we were to repeat the same experiment. We therefore consider the random variable <span class="math inline">\(T_n := T(X_1,\ldots, X_n)\)</span>, where <span class="math inline">\(X_i\overset{iid}{\sim }F\)</span>. The distribution of this random variable is called the sampling distribution. In some cases, for a particular <span class="math inline">\(T\)</span> and <span class="math inline">\(F\)</span>, we may be able to find the sampling distribution either exactly or approximately. For example, we previously found the asymptotic sampling distribution of the maximum likelihood estimate. Once we have that, we can do hypothesis testing, construct confidence intervals or simply state the standard deviation. The procedure can be summarized as:
+<span class="math display">\[
+F\overset{sample}{\to} x \overset{T}{\to} t.
+\]</span></p>
+<p>However, in many cases the calculation of the sampling distribution is not possible and one way to instead approximate the distribution is through simulation. For now, let us assume that we know the distribution <span class="math inline">\(F\)</span>. Then it may be possible to draw <span class="math inline">\(n\)</span> iid copies of the random variable <span class="math inline">\(X_1^\star,\ldots X^\star_n \overset{iid}{\sim} F\)</span> using a computer. Then calculate <span class="math inline">\(t^\star = T(X_1^\star,\ldots X^\star_n)\)</span>. Repeat this <span class="math inline">\(B\)</span> times to obtain <span class="math inline">\(t_1^\star,\ldots, t_B^\star\)</span>.</p>
+<p>If we have <span class="math inline">\(B\)</span> such copies, by the large of large numbers, as <span class="math inline">\(B\to \infty\)</span>,
+<span class="math display" id="eq:MCapproximation">\[\begin{equation}
+\frac{1}{B}\sum_{i=1}^B f(t_i^\star)\overset{asym.}\sim  E\left[ f(T_n) \right]. \tag{3.1}
+\end{equation}\]</span>
+So that in practice, we would approximate the right hand side with the left hand side. The most important example is the variance:
+<span class="math display">\[
+Var\left( T_n \right) = E\left[T_n^2\right] - E\left[T_n\right]^2 \approx \frac{1}{B}\sum_{i=1}^B (t_i^\star)^2 - \left( \frac{1}{B}\sum_{i=1}^B t_i^\star \right)^2 = \frac{1}{B}\sum_{i=1}^B \left( t_i^\star - \bar{t^\star} \right)^2
+\]</span></p>
+<p>As an example, let us consider <span class="math inline">\(X_1,\ldots, X_{n}\overset{iid}\sim \mathsf{Exp}(1)\)</span>. We would like to know the distribution of the sample median and in particular the expected value and variance.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="3.3-bootstrap.html#cb90-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb90-2"><a href="3.3-bootstrap.html#cb90-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb90-3"><a href="3.3-bootstrap.html#cb90-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-4"><a href="3.3-bootstrap.html#cb90-4" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb90-5"><a href="3.3-bootstrap.html#cb90-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-6"><a href="3.3-bootstrap.html#cb90-6" aria-hidden="true" tabindex="-1"></a>tstar <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
+<span id="cb90-7"><a href="3.3-bootstrap.html#cb90-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-8"><a href="3.3-bootstrap.html#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(B)) {</span>
+<span id="cb90-9"><a href="3.3-bootstrap.html#cb90-9" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="dv">1</span>)</span>
+<span id="cb90-10"><a href="3.3-bootstrap.html#cb90-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(x)</span>
+<span id="cb90-11"><a href="3.3-bootstrap.html#cb90-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb90-12"><a href="3.3-bootstrap.html#cb90-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-13"><a href="3.3-bootstrap.html#cb90-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(tstar)</span></code></pre></div>
+<pre><code>## [1] 0.6964009</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="3.3-bootstrap.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(tstar)</span></code></pre></div>
+<pre><code>## [1] 0.01063886</code></pre>
+<p>In practice this is not helpful since we rarely know <span class="math inline">\(F\)</span>. What we have is <span class="math inline">\(\hat F_n\)</span>, so let us approximate <span class="math inline">\(F\approx \hat F_n\)</span> and therefore also <span class="math inline">\(Var_F(T_n) \approx Var_{\hat F_n}(T_n)\)</span>. The right hand side here is then the variance of <span class="math inline">\(T(X_1,\ldots , X_n)\)</span>, where <span class="math inline">\(X_i\)</span> is iid and distributed as <span class="math inline">\(\hat F_n\)</span>. Then we proceed as above: Draw <span class="math inline">\(n\)</span> iid copies of the random variable <span class="math inline">\(X^\star_1,\ldots X^\star_n \sim \hat F_n\)</span> using a computer. Then calculate <span class="math inline">\(t^\star = T(X_1^\star,\ldots X^\star_n)\)</span>. Repeat this <span class="math inline">\(B\)</span> times to obtain <span class="math inline">\(t_1^\star,\ldots, t_B^\star\)</span>. Here, since <span class="math inline">\(\hat F_n\)</span> is the empirical distribution, drawing from <span class="math inline">\(\hat F_n\)</span> means simply to draw an observation at random from the original data set. In contrast to the above, this method can be summarized as:
+<span class="math display">\[
+\hat F_n\overset{sample}{\to} x^\star \overset{T}{\to} t^\star.
+\]</span></p>
+<p>This method is called the bootstrap.</p>
+
+<div class="note">
+<p>Bootstrap variance estimation:
+Choose <span class="math inline">\(B\)</span> as a large number, then for <span class="math inline">\(b=1,\ldots, B\)</span></p>
+<ol style="list-style-type: decimal">
+<li>Draw <span class="math inline">\(X_1^\star,\ldots, X_n^\star \overset{iid}{\sim} \hat F_n\)</span>.</li>
+<li>Compute <span class="math inline">\(t_b^\star = T(X_1^\star,\ldots, X_n^\star)\)</span>.</li>
+<li>Approximate <span class="math inline">\(Var_F(T_n)\)</span> by
+<span class="math display">\[
+  v_{boot} = \frac{1}{B}\sum_{b=1}^B\left( t^\star_{b} - \frac{1}{B}\sum_{r=1}^B t^\star_{r} \right)^2
+\]</span>
+</div>
+<p>
+To be clear, step 1 above, draw <span class="math inline">\(X_1^\star,\ldots, X_n^\star \overset{iid}{\sim} \hat F_n\)</span>, simply means to draw one of the observations in the sample randomly and call it <span class="math inline">\(X_1^\star\)</span>. Put the observation back in the sample and independently draw another observation, call it <span class="math inline">\(X_2^\star\)</span> and so on.
+</p></li>
+</ol>
+<p>Let us implement this method to calculate the standard error of the median using the normally distributed data set from the previous section:</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="3.3-bootstrap.html#cb94-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb94-2"><a href="3.3-bootstrap.html#cb94-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb94-3"><a href="3.3-bootstrap.html#cb94-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb94-4"><a href="3.3-bootstrap.html#cb94-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-5"><a href="3.3-bootstrap.html#cb94-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb94-6"><a href="3.3-bootstrap.html#cb94-6" aria-hidden="true" tabindex="-1"></a>  indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(n), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb94-7"><a href="3.3-bootstrap.html#cb94-7" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(data.df<span class="sc">$</span>x[indices])</span>
+<span id="cb94-8"><a href="3.3-bootstrap.html#cb94-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb94-9"><a href="3.3-bootstrap.html#cb94-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-10"><a href="3.3-bootstrap.html#cb94-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
+<pre><code>## [1] 0.1564483</code></pre>
+<p>In practice we would rather use the boot library.</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="3.3-bootstrap.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb96-2"><a href="3.3-bootstrap.html#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
+<span id="cb96-3"><a href="3.3-bootstrap.html#cb96-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">statistic =</span> <span class="cf">function</span>(data, index){ <span class="fu">T</span>(data<span class="sc">$</span>x[index]) }, </span>
+<span id="cb96-4"><a href="3.3-bootstrap.html#cb96-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">R =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = data.df, statistic = function(data, index) {
+##     T(data$x[index])
+## }, R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+##       original     bias    std. error
+## t1* 0.08979677 0.03632407   0.1475442</code></pre>
+<p>Note that the two bootstrap functions do not give exactly the same result. This is because of the Monte Carlo error, i.e. the error in approximating the sample mean with the expected value as in Equation <a href="3.3-bootstrap.html#eq:MCapproximation">(3.1)</a>.</p>
+<p>Since here we know <span class="math inline">\(F\)</span> we can calculate the standard deviation by simulating from <span class="math inline">\(F\)</span>, an alternative not available in practice.</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="3.3-bootstrap.html#cb98-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb98-2"><a href="3.3-bootstrap.html#cb98-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb98-3"><a href="3.3-bootstrap.html#cb98-3" aria-hidden="true" tabindex="-1"></a>Tsim <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
+<span id="cb98-4"><a href="3.3-bootstrap.html#cb98-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-5"><a href="3.3-bootstrap.html#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb98-6"><a href="3.3-bootstrap.html#cb98-6" aria-hidden="true" tabindex="-1"></a>  simData.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">x =</span> <span class="fu">rnorm</span>(n) )</span>
+<span id="cb98-7"><a href="3.3-bootstrap.html#cb98-7" aria-hidden="true" tabindex="-1"></a>  Tsim[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(simData.df<span class="sc">$</span>x)</span>
+<span id="cb98-8"><a href="3.3-bootstrap.html#cb98-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb98-9"><a href="3.3-bootstrap.html#cb98-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-10"><a href="3.3-bootstrap.html#cb98-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(Tsim) <span class="co">#Standard error of median</span></span></code></pre></div>
+<pre><code>## [1] 0.1253581</code></pre>
+<p>It is also possible to construct confidence intervals using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals.</p>
+<p>Let us call <span class="math inline">\(T(F) = \theta\)</span> and <span class="math inline">\(T(\hat F_n )=\hat\theta_n\)</span> and define the pivot <span class="math inline">\(R_n = \hat\theta_n - \theta\)</span>. Write the distribution function of <span class="math inline">\(R_n\)</span> as:
+<span class="math display">\[
+H(r) := P(R_n\leq r).
+\]</span>
+Then,
+<span class="math display">\[\begin{align}
+&amp;P\left(\hat\theta_n - H^{-1}(1-\alpha/2)\leq \theta \leq \hat\theta_n - H^{-1}(\alpha/2)\right) \\
+=&amp; P\left( H^{-1}(\alpha/2) \leq \hat\theta_n - \theta \leq  H^{-1}(1-\alpha/2) \right)\\
+=&amp; P\left( H^{-1}(\alpha/2) \leq R_n \leq  H^{-1}(1-\alpha/2) \right)\\
+=&amp; H\left( H^{-1}(1-\alpha/2) \right) - H\left( H^{-1}(\alpha/2) \right)\\
+=&amp; 1-\frac{\alpha}{2}-\frac{\alpha}{2} = 1-\alpha,
+\end{align}\]</span>
+proving that
+<span class="math display">\[
+\left[\hat\theta_n - H^{-1}(1-\alpha/2) , \hat\theta_n - H^{-1}(\alpha/2) \right]
+\]</span>
+is a <span class="math inline">\(1-\alpha\)</span> CI for <span class="math inline">\(\theta\)</span>.</p>
+<p>Now, since <span class="math inline">\(H\)</span> is unknown this is not practical. We can however construct a bootstrap estimate of <span class="math inline">\(H\)</span> by drawing <span class="math inline">\(R^\star_{n,b} = \hat\theta^\star_{n,b}- \hat\theta_n\)</span> and defining:
+<span class="math display">\[
+\hat H(r) = \frac{1}{B}\sum_{b=1}^B I(R^\star_{n,b}\leq r).
+\]</span>
+The quantity <span class="math inline">\(H^{-1}(\alpha)\)</span> is the <span class="math inline">\(\alpha\)</span> quantile of <span class="math inline">\(H\)</span>. In the CI we replace <span class="math inline">\(H^{-1}\)</span> by <span class="math inline">\(\hat H^{-1}\)</span>, i.e. the <span class="math inline">\(\alpha\)</span> quantile of <span class="math inline">\(R^\star_{n,b}\)</span>. Since <span class="math inline">\(\hat \theta_n\)</span> is fixed in the bootstrap sample, the <span class="math inline">\(\alpha\)</span> quantile of <span class="math inline">\(R^\star_{n,b}\)</span> is simply <span class="math inline">\(\theta_\alpha^\star - \hat\theta_n\)</span>, where <span class="math inline">\(\theta_\alpha^\star\)</span> denotes the <span class="math inline">\(\alpha\)</span> quantile of <span class="math inline">\(\hat\theta^\star_{n,b}\)</span>.</p>
+<p>Finally we get that the <span class="math inline">\(1-\alpha\)</span> bootstrap pivotal CI is
+<span class="math display">\[
+C_n = \left[ \hat\theta_n - (\theta^\star_{1-\alpha/2} - \hat\theta_n) , \hat\theta_n - (\theta^\star_{\alpha/2} - \hat\theta_n) \right] = \left[ 2\hat\theta_n - \theta^\star_{1-\alpha/2} , 2\hat\theta_n -\theta^\star_{\alpha/2}  \right]
+\]</span>
+Let us implement this on the same data set as above.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="3.3-bootstrap.html#cb100-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb100-2"><a href="3.3-bootstrap.html#cb100-2" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb100-3"><a href="3.3-bootstrap.html#cb100-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb100-4"><a href="3.3-bootstrap.html#cb100-4" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb100-5"><a href="3.3-bootstrap.html#cb100-5" aria-hidden="true" tabindex="-1"></a>tstar <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
+<span id="cb100-6"><a href="3.3-bootstrap.html#cb100-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-7"><a href="3.3-bootstrap.html#cb100-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(B)) {</span>
+<span id="cb100-8"><a href="3.3-bootstrap.html#cb100-8" aria-hidden="true" tabindex="-1"></a>  indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span>n), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb100-9"><a href="3.3-bootstrap.html#cb100-9" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(data.df<span class="sc">$</span>x[indices])</span>
+<span id="cb100-10"><a href="3.3-bootstrap.html#cb100-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb100-11"><a href="3.3-bootstrap.html#cb100-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-12"><a href="3.3-bootstrap.html#cb100-12" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">unname</span>( <span class="fu">quantile</span>(tstar, <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, alpha<span class="sc">/</span><span class="dv">2</span>)) )</span>
+<span id="cb100-13"><a href="3.3-bootstrap.html#cb100-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-14"><a href="3.3-bootstrap.html#cb100-14" aria-hidden="true" tabindex="-1"></a>lowerCI <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">T</span>(data.df<span class="sc">$</span>x) <span class="sc">-</span> q[<span class="dv">1</span>]</span>
+<span id="cb100-15"><a href="3.3-bootstrap.html#cb100-15" aria-hidden="true" tabindex="-1"></a>lowerCI</span></code></pre></div>
+<pre><code>## [1] -0.2250317</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="3.3-bootstrap.html#cb102-1" aria-hidden="true" tabindex="-1"></a>upperCI <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">T</span>(data.df<span class="sc">$</span>x) <span class="sc">-</span> q[<span class="dv">2</span>]</span>
+<span id="cb102-2"><a href="3.3-bootstrap.html#cb102-2" aria-hidden="true" tabindex="-1"></a>upperCI</span></code></pre></div>
+<pre><code>## [1] 0.3515109</code></pre>
+<p>Even simpler is to use the boot library.</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="3.3-bootstrap.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb104-2"><a href="3.3-bootstrap.html#cb104-2" aria-hidden="true" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
+<span id="cb104-3"><a href="3.3-bootstrap.html#cb104-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">statistic =</span> <span class="cf">function</span>(data, index) <span class="fu">T</span>(data<span class="sc">$</span>x[index]), </span>
+<span id="cb104-4"><a href="3.3-bootstrap.html#cb104-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">R =</span> <span class="dv">1000</span>)</span>
+<span id="cb104-5"><a href="3.3-bootstrap.html#cb104-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-6"><a href="3.3-bootstrap.html#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;basic&quot;</span>)</span></code></pre></div>
+<pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = boot.result, type = &quot;basic&quot;)
+## 
+## Intervals : 
+## Level      Basic         
+## 95%   (-0.2389,  0.3129 )  
+## Calculations and Intervals on Original Scale</code></pre>
+<p>A better alternative which we do not cover in this course is the bias-corrected CI. It is however just as easy to use.</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="3.3-bootstrap.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb106-2"><a href="3.3-bootstrap.html#cb106-2" aria-hidden="true" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
+<span id="cb106-3"><a href="3.3-bootstrap.html#cb106-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">statistic =</span> <span class="cf">function</span>(data, index) <span class="fu">T</span>(data<span class="sc">$</span>x[index]), </span>
+<span id="cb106-4"><a href="3.3-bootstrap.html#cb106-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">R =</span> <span class="dv">1000</span>)</span>
+<span id="cb106-5"><a href="3.3-bootstrap.html#cb106-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-6"><a href="3.3-bootstrap.html#cb106-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>)</span></code></pre></div>
+<pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = boot.result, type = &quot;bca&quot;)
+## 
+## Intervals : 
+## Level       BCa          
+## 95%   (-0.1333,  0.3701 )  
+## Calculations and Intervals on Original Scale</code></pre>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="3.2-non-parametric-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.4-parametric-bootstrap.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

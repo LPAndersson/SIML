@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="4.8-regression-regularization.html"/>
+<link rel="next" href="4.10-an-application-i.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,28 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="model-selection" class="section level2" number="4.9">
+<h2><span class="header-section-number">4.9</span> Model selection</h2>
+<p>We have seen that in statistical learning a model that is too flexible will lead to overfitting and a model that is not flexible enough will lead to underfitting. We can control the flexibility of our model by either choosing the model class, e.g. the degree of a polynomial, or by introducing regularization. In either case this introduces a new parameter that we can not learn from the in-sample error. In this section we discuss how choose this parameter.</p>
+<p>One approach is to use a <em>validation set</em>. We would take the available observations and divide them (randomly) into a training set and a validation set. The training set is used only for fitting the model(s) and the validation set is used for estimating the out-of-sample error. We could then choose the model that achieves the smallest error on the validation set. However note that the error of the chosen model is not a good estimate of the out-of-sample error, since again we have used the validation set for choosing a model. The drawback of this method is that the division into training and validation set is random and so if we are unlucky, the division does not represent the underlying distribution well.</p>
+<p>An approach that tries to address this drawback is <em>leave-one-out cross-validation</em> (LOOCV). Here we again divide the observations into a training set and a validation set. The difference is that the validation set will only contain one observation, call this <span class="math inline">\((x_1,y_1)\)</span>. We fit the model on the <span class="math inline">\(n-1\)</span> observations in the training set and predict the observation in the validation set. We then calculate the prediction error and call this (in the regression case) <span class="math inline">\(MSE_1\)</span>. We now repeat this, instead keeping <span class="math inline">\((x_2,y_2)\)</span> in the validation set and all other in the training set. The LOOCV estimate of the out-of-sample error is then
+<span class="math display">\[
+CV_{(n)}= \frac{1}{n}\sum_{i=1}^n MSE_i.
+\]</span></p>
+<p>The advantage compared to the validation set approach is that it always yields the same results and that there is less bias. This is because the size of the training set, <span class="math inline">\(n-1\)</span>, is almost the same as the full data set, <span class="math inline">\(n\)</span>. Therefore the fit should be almost as good as using the full data set.</p>
+<p>The main drawback of LOOCV is that if <span class="math inline">\(n\)</span> is large, it could be expensive to implement. An alternative is therefore <em>k-fold cross-calidation</em>. Here the data is divided randomly into <span class="math inline">\(k\)</span> groups. We take the first group as validation set and the others as training set. This gives an out-of-sample error, call it <span class="math inline">\(MSE_1\)</span>. We continue by treating the second group as validation set, giving <span class="math inline">\(MSE_2\)</span>, and so on. The k-fold CV estimate of the out-of-sample error is then
+<span class="math display">\[
+CV_{(k)} = \frac{1}{k}\sum_{i=1}^k MSE_i.
+\]</span>
+In practice usually <span class="math inline">\(k=5\)</span> or <span class="math inline">\(k=10\)</span> is used.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.8-regression-regularization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.10-an-application-i.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

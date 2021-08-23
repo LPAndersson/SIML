@@ -45,11 +45,6 @@ We call this function the *likelihood function* and denote it $L$. That is
 $$
 L(p) := p^3(1-p)^7.
 $$
-
-```
-## Warning: package 'ggplot2' was built under R version 4.1.1
-```
-
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/likelihood-1.png" alt="Likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:likelihood)Likelihood of the sample</p>

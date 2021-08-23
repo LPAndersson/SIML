@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.7 Bias-Variance decomposition | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.7 Bias-Variance decomposition | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.7 Bias-Variance decomposition | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="4.6-support-vector-machines-ii.html"/>
+<link rel="next" href="4.8-regression-regularization.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,58 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="bias-variance-decomposition" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> Bias-Variance decomposition</h2>
+<p>In this section we will see another approach for understanding how model complexity affects statistical learning. Instead of bounding the difference between <span class="math inline">\(E_{out}\)</span> and <span class="math inline">\(E_{in}\)</span> we will decompose <span class="math inline">\(E_{out}\)</span> into two different error terms.</p>
+<p>We consider the regression problem and therefore we assume a quadratic loss function,
+<span class="math display">\[
+E_{out}(h) = E\left[ (Y- h(X))^2 \right].
+\]</span>
+If <span class="math inline">\(h^{\mathcal D}\)</span> is the final hypothesis that was learnt from the data <span class="math inline">\(\mathcal D\)</span>, we also define
+<span class="math display">\[
+\bar h(x) := E\left[h^{\mathcal D}(x))\right].
+\]</span>
+This is the average function that we would learn, averaged over all different datasets. It is just a theoretical tool and nothing that we would be able to calculate in practice.</p>
+<p>First note that we can always write
+<span class="math display">\[
+Y = f(X) + \varepsilon,
+\]</span>
+where <span class="math inline">\(E\left[ \varepsilon \right] = 0\)</span>. This is because if we take <span class="math inline">\(f(X) = E[Y\mid X]\)</span>,
+<span class="math display">\[
+E\left[\varepsilon\right] = E\left[ Y-f(X) \right] = E\left[ Y -  E\left[ Y\mid X \right] \right] = E\left[ Y\right]- E\left[ Y\right] = 0.
+\]</span>
+First let us see what the population minimizer of the error is. That is, assuming that we know the distribution of <span class="math inline">\(X,Y\)</span>, we would like to find the optimal choice of <span class="math inline">\(h\)</span>. We do this by conditioning on <span class="math inline">\(X\)</span> and decomposing the error into two parts:
+<span class="math display">\[\begin{align*}
+&amp;E\left[ (Y-h(X))^2 \mid X \right] = E\left[ (Y - E[Y\mid X] + E[Y\mid X] -h(X))^2 \mid X \right] \\
+=&amp;E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right] \\
+&amp;+ \underbrace{2E\left[ (Y- E[Y\mid X])( E[Y\mid X] - h(X)) \mid X \right]}_{=0}\\
+=&amp;E\left[ (Y- E[Y\mid X])^2 \mid X \right] + E\left[ ( E[Y\mid X] - h(X))^2 \mid X \right]
+\end{align*}\]</span>
+The first part does not depend on <span class="math inline">\(h\)</span> and the second part is minimized by choosing <span class="math inline">\(h(x) = E[Y\mid X=x]\)</span> for every <span class="math inline">\(x\)</span>, which therefore is the population minimizer of the error.</p>
+<p>Coming back slightly to reality, we do not know the distribution of <span class="math inline">\((X,Y)\)</span> but we have a training set <span class="math inline">\(\mathcal D\)</span>. So we now take the frequentist point of view and consider the squared difference between the function learnt from data, <span class="math inline">\(h^\mathcal D\)</span> and the true regression function <span class="math inline">\(f(x)\)</span>, averaged with respect to <span class="math inline">\(\mathcal D\)</span>.
+<span class="math display">\[\begin{align}
+&amp;E\left[ (h^{\mathcal D}(x) - f(x))^2\right]  = E\left[ (h^{\mathcal D}(x) - \bar h(x) + \bar h(x) - f(x) )^2\right] \\
+=&amp;  E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
+ E\left[ (\bar h(x) - f(x) )^2\right] +2(\bar h(x) - f(x)) E\left[ (h^{\mathcal D}(x) - \bar h(x) )\right]\\
+=&amp; E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
+ (\bar h(x) - f(x) )^2
+\end{align}\]</span>
+The first term is the variance of <span class="math inline">\(h^\mathcal D\)</span> thinking of the data set <span class="math inline">\(\mathcal D\)</span> as random. The second term is the difference between the average function <span class="math inline">\(\bar h\)</span> and the true regression function <span class="math inline">\(f(x)\)</span> and is called the bias. This is the <em>Bias-variance decomposition</em>.</p>
+<p>If we choose a large class of functions <span class="math inline">\(\mathcal H\)</span> from which we choose <span class="math inline">\(h^\mathcal D\)</span>, it will be possible to closely approximate <span class="math inline">\(f\)</span>, on average. In this case the bias will be small. However, many times if <span class="math inline">\(\mathcal H\)</span> is large, <span class="math inline">\(h^\mathcal D\)</span> will be sensitive to data, that is we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:biasVarianceSketch"></span>
+<img src="04-statisticalLearning_files/figure-html/biasVarianceSketch-1.png" alt="Sketch of the bias-variance decomposition" width="80%" />
+<p class="caption">
+Figure 4.16: Sketch of the bias-variance decomposition
+</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.6-support-vector-machines-ii.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.8-regression-regularization.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

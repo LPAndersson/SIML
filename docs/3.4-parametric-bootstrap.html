@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>3.4 Parametric bootstrap | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="3.4 Parametric bootstrap | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="3.4 Parametric bootstrap | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="3.3-bootstrap.html"/>
+<link rel="next" href="3.5-an-application-2.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,35 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="parametric-bootstrap" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Parametric bootstrap</h2>
+<p>Here we discuss an alternative to the (non-parametric) bootstrap from the previous section.</p>
+<p>The main idea of the bootstrap was that the empirical distribution <span class="math inline">\(\hat F\)</span> is (hopefully) close to the actual distribution <span class="math inline">\(F\)</span>. Another method of finding an approximation to <span class="math inline">\(F\)</span> is to take some family of distributions, parametrised by a parameter <span class="math inline">\(\theta\)</span>, <span class="math inline">\(F_\theta\)</span>, and find the <span class="math inline">\(\theta\)</span> that agrees the best with the observed sample. For example by choosing <span class="math inline">\(\theta = \hat\theta_{ML}\)</span>.</p>
+<p>Then we proceed as before. We may now sample from <span class="math inline">\(\hat F = F_{\hat\theta}\)</span> and estimate variances and construct confidence intervals as before.</p>
+<p>As an example, let us say that we have a random sample from <span class="math inline">\(\mathsf N(\mu,\sigma^2)\)</span> and wish to estimate the variance of the median of the sample. We then estimate <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma^2\)</span> with the ML-estimates and let <span class="math inline">\(\hat F = \mathsf N(\hat \mu,\hat \sigma^2)\)</span>.</p>
+<p>Implementing this is not complicated.</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="3.4-parametric-bootstrap.html#cb108-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb108-2"><a href="3.4-parametric-bootstrap.html#cb108-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb108-3"><a href="3.4-parametric-bootstrap.html#cb108-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb108-4"><a href="3.4-parametric-bootstrap.html#cb108-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-5"><a href="3.4-parametric-bootstrap.html#cb108-5" aria-hidden="true" tabindex="-1"></a>mu.hat <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>x)</span>
+<span id="cb108-6"><a href="3.4-parametric-bootstrap.html#cb108-6" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">sd</span>(data.df<span class="sc">$</span>x)</span>
+<span id="cb108-7"><a href="3.4-parametric-bootstrap.html#cb108-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-8"><a href="3.4-parametric-bootstrap.html#cb108-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb108-9"><a href="3.4-parametric-bootstrap.html#cb108-9" aria-hidden="true" tabindex="-1"></a>  bootstrap.sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu.hat, <span class="at">sd =</span> sigma.hat)</span>
+<span id="cb108-10"><a href="3.4-parametric-bootstrap.html#cb108-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(bootstrap.sample)</span>
+<span id="cb108-11"><a href="3.4-parametric-bootstrap.html#cb108-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb108-12"><a href="3.4-parametric-bootstrap.html#cb108-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-13"><a href="3.4-parametric-bootstrap.html#cb108-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
+<pre><code>## [1] 0.1272958</code></pre>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.3-bootstrap.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.5-an-application-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

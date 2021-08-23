@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.11 An application II | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.11 An application II | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.11 An application II | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="4.10-an-application-i.html"/>
+<link rel="next" href="4.12-review-questions-3.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,176 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="an-application-ii" class="section level2" number="4.11">
+<h2><span class="header-section-number">4.11</span> An application II</h2>
+<p>Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="4.11-an-application-ii.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb153-2"><a href="4.11-an-application-ii.html#cb153-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb153-3"><a href="4.11-an-application-ii.html#cb153-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
+<span id="cb153-4"><a href="4.11-an-application-ii.html#cb153-4" aria-hidden="true" tabindex="-1"></a>PimaIndiansDiabetes2 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(PimaIndiansDiabetes2)</span>
+<span id="cb153-5"><a href="4.11-an-application-ii.html#cb153-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-6"><a href="4.11-an-application-ii.html#cb153-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb153-7"><a href="4.11-an-application-ii.html#cb153-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(PimaIndiansDiabetes2), <span class="at">booktabs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb153-8"><a href="4.11-an-application-ii.html#cb153-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&#39;Diabetes data&#39;</span>)</span></code></pre></div>
+<table>
+<caption><span id="tab:unnamed-chunk-36">Table 4.1: </span>Diabetes data</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">pregnant</th>
+<th align="right">glucose</th>
+<th align="right">pressure</th>
+<th align="right">triceps</th>
+<th align="right">insulin</th>
+<th align="right">mass</th>
+<th align="right">pedigree</th>
+<th align="right">age</th>
+<th align="left">diabetes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">4</td>
+<td align="right">1</td>
+<td align="right">89</td>
+<td align="right">66</td>
+<td align="right">23</td>
+<td align="right">94</td>
+<td align="right">28.1</td>
+<td align="right">0.167</td>
+<td align="right">21</td>
+<td align="left">neg</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="right">0</td>
+<td align="right">137</td>
+<td align="right">40</td>
+<td align="right">35</td>
+<td align="right">168</td>
+<td align="right">43.1</td>
+<td align="right">2.288</td>
+<td align="right">33</td>
+<td align="left">pos</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="right">3</td>
+<td align="right">78</td>
+<td align="right">50</td>
+<td align="right">32</td>
+<td align="right">88</td>
+<td align="right">31.0</td>
+<td align="right">0.248</td>
+<td align="right">26</td>
+<td align="left">pos</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="right">2</td>
+<td align="right">197</td>
+<td align="right">70</td>
+<td align="right">45</td>
+<td align="right">543</td>
+<td align="right">30.5</td>
+<td align="right">0.158</td>
+<td align="right">53</td>
+<td align="left">pos</td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="right">1</td>
+<td align="right">189</td>
+<td align="right">60</td>
+<td align="right">23</td>
+<td align="right">846</td>
+<td align="right">30.1</td>
+<td align="right">0.398</td>
+<td align="right">59</td>
+<td align="left">pos</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
+<td align="right">5</td>
+<td align="right">166</td>
+<td align="right">72</td>
+<td align="right">19</td>
+<td align="right">175</td>
+<td align="right">25.8</td>
+<td align="right">0.587</td>
+<td align="right">51</td>
+<td align="left">pos</td>
+</tr>
+</tbody>
+</table>
+<p>Divide the data into a train and a test set.</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="4.11-an-application-ii.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb154-2"><a href="4.11-an-application-ii.html#cb154-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-3"><a href="4.11-an-application-ii.html#cb154-3" aria-hidden="true" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(PimaIndiansDiabetes2<span class="sc">$</span>diabetes, </span>
+<span id="cb154-4"><a href="4.11-an-application-ii.html#cb154-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">p =</span> <span class="fl">0.7</span>, </span>
+<span id="cb154-5"><a href="4.11-an-application-ii.html#cb154-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb154-6"><a href="4.11-an-application-ii.html#cb154-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-7"><a href="4.11-an-application-ii.html#cb154-7" aria-hidden="true" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> PimaIndiansDiabetes2[training.samples, ]</span>
+<span id="cb154-8"><a href="4.11-an-application-ii.html#cb154-8" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> PimaIndiansDiabetes2[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
+<p>Then use a SVM, where the parameter is estimated by 10-fold CV. If you have a computer with multiple cores, there may be a speed-up by using the library doMC.</p>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="4.11-an-application-ii.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doMC)</span>
+<span id="cb155-2"><a href="4.11-an-application-ii.html#cb155-2" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoMC</span>(<span class="at">cores=</span><span class="dv">8</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="4.11-an-application-ii.html#cb156-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb156-2"><a href="4.11-an-application-ii.html#cb156-2" aria-hidden="true" tabindex="-1"></a>  diabetes <span class="sc">~</span>., <span class="at">data =</span> train.data, <span class="at">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</span>
+<span id="cb156-3"><a href="4.11-an-application-ii.html#cb156-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>),</span>
+<span id="cb156-4"><a href="4.11-an-application-ii.html#cb156-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneLength =</span> <span class="dv">10</span>,</span>
+<span id="cb156-5"><a href="4.11-an-application-ii.html#cb156-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</span>
+<span id="cb156-6"><a href="4.11-an-application-ii.html#cb156-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>We may print a summary of the training of the model</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="4.11-an-application-ii.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model)</span></code></pre></div>
+<pre><code>## Support Vector Machines with Radial Basis Function Kernel 
+## 
+## 275 samples
+##   8 predictor
+##   2 classes: &#39;neg&#39;, &#39;pos&#39; 
+## 
+## Pre-processing: centered (8), scaled (8) 
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 248, 247, 248, 248, 247, 246, ... 
+## Resampling results across tuning parameters:
+## 
+##   C       Accuracy   Kappa    
+##     0.25  0.7602354  0.4003850
+##     0.50  0.7635605  0.4129658
+##     1.00  0.7671319  0.4258676
+##     2.00  0.7484902  0.3867206
+##     4.00  0.7561440  0.4115484
+##     8.00  0.7340540  0.3687010
+##    16.00  0.7230660  0.3528600
+##    32.00  0.7082604  0.3172943
+##    64.00  0.6942209  0.3047575
+##   128.00  0.7087803  0.3466723
+## 
+## Tuning parameter &#39;sigma&#39; was held constant at a value of 0.114713
+## Accuracy was used to select the optimal model using the largest value.
+## The final values used for the model were sigma = 0.114713 and C = 1.</code></pre>
+<p>We can also plot the cross-validated accuracy as a function of the regularization parameter</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="4.11-an-application-ii.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:SVMApplicationPlot"></span>
+<img src="04-statisticalLearning_files/figure-html/SVMApplicationPlot-1.png" alt="Cross-validated accuracy against the regularization parameter for the SVM" width="80%" />
+<p class="caption">
+Figure 4.24: Cross-validated accuracy against the regularization parameter for the SVM
+</p>
+</div>
+<p>
+The final results are
+</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="4.11-an-application-ii.html#cb160-1" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, test.data)</span>
+<span id="cb160-2"><a href="4.11-an-application-ii.html#cb160-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(predicted <span class="sc">==</span> test.data<span class="sc">$</span>diabetes)</span></code></pre></div>
+<pre><code>## [1] 0.7606838</code></pre>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.10-an-application-i.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.12-review-questions-3.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

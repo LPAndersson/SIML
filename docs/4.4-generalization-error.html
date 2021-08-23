@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.4 Generalization error | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.4 Generalization error | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.4 Generalization error | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="4.3-hoeffdings-inequality.html"/>
+<link rel="next" href="4.5-vc-dimension.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,109 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="generalization-error" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Generalization error</h2>
+<p>In this section we will study the <em>generalization error</em>, that is the difference between <span class="math inline">\(E_{out}(h)\)</span> and <span class="math inline">\(E_{in}(h)\)</span>.</p>
+<p>We will only consider binary classification and we will assume that there is a function <span class="math inline">\(h\)</span> such that <span class="math inline">\(Y=h(X)\)</span>. This is a simplification since it means that we only need to consider the distribution of <span class="math inline">\(X\)</span>. To make things concrete we study an example where <span class="math inline">\(\mathcal X = \mathbb R^2\)</span> and a linear classification, where observations are classified according to which side of a straight line they fall.</p>
+Before looking at the data, let us choose a classification algorithm completely willy-nilly. Let us choose:
+<span class="math display">\[
+h(x_1,x_2)=\begin{cases}
+1 \text{ if } x_1 &gt;0\\
+-1 \text{ otherwise}.
+\end{cases}
+\]</span>
+Now we generate some data:
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:genError"></span>
+<img src="04-statisticalLearning_files/figure-html/genError-1.png" alt="Training data and classification rule" width="80%" />
+<p class="caption">
+Figure 4.8: Training data and classification rule
+</p>
+</div>
+<p>We can now calculate the in-sample error:</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="4.4-generalization-error.html#cb128-1" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b){</span>
+<span id="cb128-2"><a href="4.4-generalization-error.html#cb128-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x1, x2){</span>
+<span id="cb128-3"><a href="4.4-generalization-error.html#cb128-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(a<span class="sc">*</span>x1 <span class="sc">+</span> b<span class="sc">*</span>x2 <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="st">&quot;1&quot;</span></span>
+<span id="cb128-4"><a href="4.4-generalization-error.html#cb128-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="st">&quot;-1&quot;</span></span>
+<span id="cb128-5"><a href="4.4-generalization-error.html#cb128-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb128-6"><a href="4.4-generalization-error.html#cb128-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb128-7"><a href="4.4-generalization-error.html#cb128-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-8"><a href="4.4-generalization-error.html#cb128-8" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">H</span>(<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb128-9"><a href="4.4-generalization-error.html#cb128-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-10"><a href="4.4-generalization-error.html#cb128-10" aria-hidden="true" tabindex="-1"></a>error <span class="ot">&lt;-</span> <span class="cf">function</span>(data, classifier){</span>
+<span id="cb128-11"><a href="4.4-generalization-error.html#cb128-11" aria-hidden="true" tabindex="-1"></a>  missClass <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb128-12"><a href="4.4-generalization-error.html#cb128-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(data))) {</span>
+<span id="cb128-13"><a href="4.4-generalization-error.html#cb128-13" aria-hidden="true" tabindex="-1"></a>    x1 <span class="ot">&lt;-</span> data[i,]<span class="sc">$</span>x1</span>
+<span id="cb128-14"><a href="4.4-generalization-error.html#cb128-14" aria-hidden="true" tabindex="-1"></a>    x2 <span class="ot">&lt;-</span> data[i,]<span class="sc">$</span>x2</span>
+<span id="cb128-15"><a href="4.4-generalization-error.html#cb128-15" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> data[i,]<span class="sc">$</span>y</span>
+<span id="cb128-16"><a href="4.4-generalization-error.html#cb128-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">classifier</span>(x1,x2) <span class="sc">!=</span> y )</span>
+<span id="cb128-17"><a href="4.4-generalization-error.html#cb128-17" aria-hidden="true" tabindex="-1"></a>      missClass <span class="ot">&lt;-</span> missClass <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb128-18"><a href="4.4-generalization-error.html#cb128-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb128-19"><a href="4.4-generalization-error.html#cb128-19" aria-hidden="true" tabindex="-1"></a>  missClass<span class="sc">/</span><span class="fu">nrow</span>(data)</span>
+<span id="cb128-20"><a href="4.4-generalization-error.html#cb128-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb128-21"><a href="4.4-generalization-error.html#cb128-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-22"><a href="4.4-generalization-error.html#cb128-22" aria-hidden="true" tabindex="-1"></a><span class="fu">error</span>(data.df, h)</span></code></pre></div>
+<pre><code>## [1] 0.32</code></pre>
+<p>In this case, <span class="math inline">\(h\)</span> is not a function of the training data so the in-sample error is an unbiased estimate of the out-of-sample error. Since we know the distribution of <span class="math inline">\(X,Y\)</span> we can calculate the out-of-sample error by simulation.</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="4.4-generalization-error.html#cb130-1" aria-hidden="true" tabindex="-1"></a>n.samples <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb130-2"><a href="4.4-generalization-error.html#cb130-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-3"><a href="4.4-generalization-error.html#cb130-3" aria-hidden="true" tabindex="-1"></a>data.matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> n.samples, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb130-4"><a href="4.4-generalization-error.html#cb130-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-5"><a href="4.4-generalization-error.html#cb130-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.samples)) {</span>
+<span id="cb130-6"><a href="4.4-generalization-error.html#cb130-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>)<span class="sc">&gt;</span><span class="fl">0.5</span>) {</span>
+<span id="cb130-7"><a href="4.4-generalization-error.html#cb130-7" aria-hidden="true" tabindex="-1"></a>    sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu.p, <span class="at">sigma =</span> <span class="fu">diag</span>(sd.p))</span>
+<span id="cb130-8"><a href="4.4-generalization-error.html#cb130-8" aria-hidden="true" tabindex="-1"></a>    data.matrix[i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="dv">1</span>)</span>
+<span id="cb130-9"><a href="4.4-generalization-error.html#cb130-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb130-10"><a href="4.4-generalization-error.html#cb130-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>{</span>
+<span id="cb130-11"><a href="4.4-generalization-error.html#cb130-11" aria-hidden="true" tabindex="-1"></a>    sample <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> mu.n, <span class="at">sigma =</span> <span class="fu">diag</span>(sd.n))</span>
+<span id="cb130-12"><a href="4.4-generalization-error.html#cb130-12" aria-hidden="true" tabindex="-1"></a>    data.matrix[i,] <span class="ot">&lt;-</span> <span class="fu">c</span>(sample, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb130-13"><a href="4.4-generalization-error.html#cb130-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb130-14"><a href="4.4-generalization-error.html#cb130-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb130-15"><a href="4.4-generalization-error.html#cb130-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-16"><a href="4.4-generalization-error.html#cb130-16" aria-hidden="true" tabindex="-1"></a>data.test.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(data.matrix)</span>
+<span id="cb130-17"><a href="4.4-generalization-error.html#cb130-17" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data.test.df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>,<span class="st">&quot;x2&quot;</span>,<span class="st">&quot;y&quot;</span>)</span>
+<span id="cb130-18"><a href="4.4-generalization-error.html#cb130-18" aria-hidden="true" tabindex="-1"></a>data.test.df<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data.test.df<span class="sc">$</span>y)</span>
+<span id="cb130-19"><a href="4.4-generalization-error.html#cb130-19" aria-hidden="true" tabindex="-1"></a><span class="fu">error</span>(data.test.df, h)</span></code></pre></div>
+<pre><code>## [1] 0.3548</code></pre>
+<p>Using Hoeffding’s inequality, we can give a guarantee of the difference between the in-sample and the out-of-sample error. Let us review: A pair <span class="math inline">\(X,Y\)</span> is drawn from some distribution. We then apply the function <span class="math inline">\(h\)</span> and with some probability we make an error on the classification, this probability is <span class="math inline">\(E_{out}(h)\)</span> and corresponds to the probability <span class="math inline">\(p\)</span> in Hoeffding. What we have is a sample of size <span class="math inline">\(n\)</span> and an estimate <span class="math inline">\(E_{in}(h)\)</span> of the probability of an error. This corresponds to <span class="math inline">\(\bar Y_n\)</span> in Hoeffding. Therefore this situation is exactly like the Bernoulli experiment from the previous section. We can say that with probability at least <span class="math inline">\(1-\delta\)</span>,
+<span class="math display">\[
+E_{out}(h) \leq  E_{in}(h) + \sqrt{\frac{\ln \frac{2}{\delta}}{2n}}.
+\]</span>
+Let us say we want to have confidence 95%, that is <span class="math inline">\(\delta = 0.05\)</span>, we then have the generalization bound</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="4.4-generalization-error.html#cb132-1" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb132-2"><a href="4.4-generalization-error.html#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">error</span>(data.df,h) <span class="sc">+</span> <span class="fu">sqrt</span>(<span class="fu">log</span>(<span class="dv">2</span><span class="sc">/</span>delta)<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span><span class="fu">nrow</span>(data.df)))</span></code></pre></div>
+<pre><code>## [1] 0.5120646</code></pre>
+<p>That is, with confidence 95%, the out-of-sample error is not larger than this.</p>
+<p>
+Above we picked an <span class="math inline">\(h\)</span> without looking at the data and so it can not really be considered statistical learning. Therefore, for the generalization bound to be useful, we need to handle the situation where <span class="math inline">\(h\)</span> is chosen from some collection <span class="math inline">\(\mathcal H\)</span>. Let us first consider the case where <span class="math inline">\(\mathcal H\)</span> is finite, that is there is a finite number of functions <span class="math inline">\(h\)</span> in the collection. Call this number <span class="math inline">\(|\mathcal H|\)</span>. The statement of the learning bound then becomes
+</p>
+
+<div class="note">
+Let <span class="math inline">\(\mathcal H\)</span> be finite. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>:
+<span class="math display">\[
+  \forall h\in\mathcal H,\quad E_{out}(h)\leq E_{in}(h) + \sqrt{\frac{ \ln\frac{2|\mathcal H|}{\delta}}{2n}}.
+\]</span>
+</div>
+<p>The proof of this is again an application of Hoeffding. Let <span class="math inline">\(h_1,\ldots,h_{|\mathcal H|}\)</span> be the elements of <span class="math inline">\(\mathcal H\)</span>. Then
+<span class="math display">\[\begin{align}
+&amp;P\left( \exists h\in\mathcal H : \left| E_{in}(h) - E_{out}(h)  \right|&gt;\varepsilon \right)\\
+=&amp; P\left( \left\{ \left| E_{in}(h_1) - E_{out}(h_1)  \right| &gt; \varepsilon \right\} \cup \ldots \cup \left\{ \left| E_{in}(h_{|\mathcal H |}) - E_{out}( (h_{| \mathcal H |})  \right| &gt; \varepsilon \right\} \right)\\
+\leq &amp; \sum_{i=1}^{|\mathcal H|} P\left(\left| E_{in}(h_i) - E_{out}(h_i)  \right|&gt;\varepsilon \right)\\
+\leq &amp; 2 |\mathcal H  | e^{-2n\varepsilon^2}.
+\end{align}\]</span>
+Setting this equal to <span class="math inline">\(\delta\)</span> and solving for <span class="math inline">\(\varepsilon\)</span> gives the result.</p>
+<p>Now we can handle also the case with a finite number of <span class="math inline">\(h\)</span>. But it is still not very useful. Most classifications methods will have an infinite <span class="math inline">\(\mathcal H\)</span>. For example, in the example above, we would consider all different straight lines and no only <span class="math inline">\(x_1 = 0\)</span>. The above argument will not work for infinite <span class="math inline">\(\mathcal H\)</span>. There is however some hope. We used that, for two events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>,
+<span class="math display">\[
+P(A\cup B) = P(A) + P(B) - P(A\cap B) \leq P(A) + P(B).
+\]</span>
+But this inequality is not very tight. When <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> tend to happen at the same time <span class="math inline">\(P(A \cup B)\approx P(A)\)</span> and so the right hand side will be roughly twice the left hand side. We can expect this to happen also for the generalization errors. That is, many <span class="math inline">\(h\)</span> in <span class="math inline">\(\mathcal H\)</span> are similar, so if <span class="math inline">\(\left| E_{in}(h_1) - E_{out}(h_1) \right|&gt;\varepsilon\)</span> it is likely that also <span class="math inline">\(\left| E_{in}(h_2) - E_{out}(h_2) \right|&gt;\varepsilon\)</span>.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.3-hoeffdings-inequality.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.5-vc-dimension.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

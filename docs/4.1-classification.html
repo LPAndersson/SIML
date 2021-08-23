@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.1 Classification | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.1 Classification | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.1 Classification | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="4-ch-statLearn.html"/>
+<link rel="next" href="4.2-support-vector-machines-i.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,149 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="classification" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Classification</h2>
+<p>In this section we discuss the theory of classification, without going in to detail about any particular classification method.</p>
+<p>We are given <em>training data</em> <span class="math inline">\((x_i,y_i)\quad i=1,\ldots, n\)</span> that we assume are a random sample from an unknown distribution <span class="math inline">\(P_{X,Y}\)</span>. The goal is to find a <em>classifier</em>, that is a function <span class="math inline">\(h:\mathcal X \mapsto \mathcal Y= \left\{-1,1\right\}\)</span>, based on the training data. There is a <em>loss function</em> <span class="math inline">\(l:\mathcal Y\times \mathcal Y \mapsto \mathbb R\)</span> and most commonly this is the 0-1 loss,
+<span class="math display">\[
+l(h(x),y) :=1_{h(x)\neq y}(x,y).
+\]</span>
+Then the out-of-sample error is
+<span class="math display">\[
+E_{out}(h) = E_{X,Y}\left[ l(h(X),Y) \right] = P(h(X)\neq Y).
+\]</span>
+That is, it is the probability of classifying a random observation <span class="math inline">\(X\)</span> incorrectly, when using the classifier <span class="math inline">\(h\)</span>.</p>
+To simplify notation we also define the <em>conditional class probability</em>,
+<span class="math display">\[
+\eta(x):=P\left( Y=1\mid X=x \right).
+\]</span>
+
+<div class="note">
+In the hypothetical case where we know the distribution of <span class="math inline">\(X,Y\)</span>, the <span class="math inline">\(h\)</span> that minimizes this out-of-sample error is called the <em>Bayes classifier</em>. We claim that it is
+<span class="math display">\[\begin{align*}
+h^\star(x) &amp;= \begin{cases}
+1 &amp; \text{if } \eta(x)\geq 1/2\\
+-1 &amp; \text{if } \eta(x)&lt; 1/2
+\end{cases}\\
+&amp;= \text{sign} (\eta(x) - 1/2).
+\end{align*}\]</span>
+</div>
+<p>That is, we should classify to the class that has the highest probability, conditioned on <span class="math inline">\(X\)</span>. The minimal out-of-sample error is called the <em>Bayes risk</em>.</p>
+<p>Let us prove this. The claim is that for any other classifier <span class="math inline">\(h(x)\)</span>, the out-of-sample error is at least as large, that is
+<span class="math display">\[
+E_{out}(h) = P\left( h(X)\neq Y \right) \geq P\left( h^\star(X)\neq Y \right) = E_{out}(h^\star).
+\]</span>
+Or, equivalently, <span class="math inline">\(P\left( h^\star(X)= Y \right)\geq P\left( h(X) = Y \right)\)</span>. First note that if we condition on <span class="math inline">\(X=x\)</span>, then either <span class="math inline">\(h(x)=-1\)</span> or <span class="math inline">\(h(x)=1\)</span>. Therefore,
+<span class="math display">\[\begin{align*}
+P\left( h(X) = Y  \mid X=x\right) &amp;= 1_{h(x) = 1}(x)P\left(Y=1 \mid X=x\right) + 1_{h(x) = -1}(x)P\left(Y=-1 \mid X=x\right)\\
+&amp;= 1_{ h(x) = 1}(x)\eta(x) + (1-1_{ h(x) = 1}(x))(1-\eta(x))\\
+&amp;= 1_{ h(x) = 1}(x)\left(  2\eta(x)-1 \right) +1-\eta(x).
+\end{align*}\]</span>
+and the same is true if we replace <span class="math inline">\(h\)</span> by <span class="math inline">\(h^\star\)</span>. Then,
+<span class="math display">\[
+P\left( h^\star(X) = Y  \mid X=x\right) -P\left( h = Y  \mid X=x\right)  =  \left(1_{ h^\star(x) = 1}(x) - 1_{ h(x) = 1}(x)\right)\left(  2\eta(x)-1 \right).
+\]</span>
+Now if <span class="math inline">\(x\)</span> is such that <span class="math inline">\(\eta(x)\geq 1/2\)</span>, then
+<span class="math display">\[
+\underbrace{\left(\underbrace{1_{ h^\star(x) = 1}(x)}_{=1} - \underbrace{1_{ h(x) = 1}(x)}_{= 0 \text{ or } 1}\right)}_{\geq 0}\underbrace{\left(  2\eta(x)-1 \right)}_{\geq 0}\geq 0.
+\]</span>
+On the other hand, if <span class="math inline">\(x\)</span> is such that <span class="math inline">\(\eta(x)&lt; 1/2\)</span>, then
+<span class="math display">\[
+\underbrace{\left(\underbrace{1_{ h^\star(x) = 1}(x)}_{=0} - \underbrace{1_{ h(x) = 1}(x)}_{= 0 \text{ or } 1}\right)}_{\leq 0}\underbrace{\left(  2\eta(x)-1 \right)}_{&lt; 0}\geq 0.
+\]</span>
+In any case, this implies that
+<span class="math display">\[
+P\left( h^\star(X) = Y  \mid X=x\right) -P\left( h = Y  \mid X=x\right) \geq 0.
+\]</span>
+Since this is true for any <span class="math inline">\(x\)</span>, it also holds that
+<span class="math display">\[
+P\left( h^\star(X) = Y  \right) -P\left( h(X) = Y  \right) \geq 0,
+\]</span>
+as we claimed.</p>
+<p>Since the Bayes classifier is not available in practice, one needs to take another approach. One is to estimate the function <span class="math inline">\(\eta(x)\)</span> and then construct a classifier by plugging in to the Bayes classifier. That is,
+<span class="math display">\[
+h(x) = \text{sign} (\hat\eta(x) - 1/2).
+\]</span>
+Logistic regression can be thought of as an example of this.</p>
+<p>Another option is to find a function <span class="math inline">\(h\)</span> that directly minimizes the in-sample error,
+<span class="math display">\[
+E_{in} = \frac{1}{n} \sum_{i=1}^n I(h(x_i)\neq y_i).
+\]</span>
+It would be done by specifying a class of candidate classifiers <span class="math inline">\(\mathcal H\)</span> from which we pick the best <span class="math inline">\(h\)</span>. For example, let us assume that <span class="math inline">\(x=(x^1,x^2,\ldots, x^p)\in \mathbb R^p\)</span> and we might then consider all the <em>linear classifiers</em>,
+<span class="math display">\[
+\mathcal H = \left\{ h(x) = \text{sign}(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p) \mid \beta \in \mathbb R^p, \beta_0\in\mathbb R \right\}.
+\]</span>
+Note that if <span class="math inline">\(y_i(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)&gt;0\)</span>, then <span class="math inline">\(y_i\)</span> is classified correctly and if <span class="math inline">\(y_i(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)&lt;0\)</span>, then <span class="math inline">\(y_i\)</span> is misclassified. We can therefore think of <span class="math inline">\(y_i(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)\)</span> as measuring how close <span class="math inline">\(y_i\)</span> is to being classified correctly or incorrectly. In fact, we can write the 0-1 loss as
+<span class="math display">\[
+l(h(x),y) = I_{y(\beta_0 + x^1\beta_1 + \ldots + x^p\beta_p)\leq 0}(x,y).
+\]</span>
+More generally we can consider a function <span class="math inline">\(f(x)\)</span>, a classifier <span class="math inline">\(h(x) = \text{sign}(f(x))\)</span> and a loss function that depends on the <em>margin</em> <span class="math inline">\(yf(x)\)</span>.</p>
+<p>It turns out that <span class="math inline">\(E_{in}\)</span>, as defined above, is difficult to use for training. The reason for this can be understood in different ways. Mathematically, the 0-1 loss is non-convex, and non-convex functions are in general difficult to optimize. In terms of classification, consider the picture below. Two points are misclassified, but we can see that by moving the classification boundary, we can find a classifier that only misclassifies one point. However, the training algorithm will try to move the boundary a very small step, and see if that gives an improvement. If we use the 0-1 loss, the in-sample error will be the same as long as the boundary is not moved far enough. Therefore it is better to use a loss function that also measures how far away each point is from being classified correctly/incorrectly.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:classicificationExample"></span>
+<img src="04-statisticalLearning_files/figure-html/classicificationExample-1.png" alt="Example of linear classification" width="80%" />
+<p class="caption">
+Figure 4.1: Example of linear classification
+</p>
+</div>
+Below we discuss two alternative loss functions that produce two much used methods for classification, the <em>hinge loss</em> and the <em>negative log-likelihood</em>. They are plotted in the picture below.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:lossFunctions"></span>
+<img src="04-statisticalLearning_files/figure-html/lossFunctions-1.png" alt="Loss functions for classification" width="80%" />
+<p class="caption">
+Figure 4.2: Loss functions for classification
+</p>
+</div>
+<p>The hinge loss is
+<span class="math display">\[
+l(f(x),y)=(1-yf(x))_+,
+\]</span>
+where <span class="math inline">\((\cdot)_+\)</span> indicates the positive part. This function takes care of our complaints about the 0-1 loss function. If a point <span class="math inline">\(x_i\)</span> is correctly classified, and it is far away from being misclassified, so that <span class="math inline">\(y_if(x_i)\)</span> is large and positive, the loss is 0. However if it is close to being misclassified it incurs a loss, even if it is correctly classified. It might however worry some that we are using a different function for training (e.g. the hinge loss) and evaluation (0-1). Let us therefore see what the <em>population minimizer</em> of the hinge loss is. The population minimizer for the 0-1 loss is the Bayes classifier, and for the hinge loss,
+<span class="math display">\[
+f^\star_{hinge} := \underset{f}{\text{argmin}}~ E\left[(1-Yf(X))_+ \right].
+\]</span>
+Let us fix an arbitrary <span class="math inline">\(x\)</span> and then we should find <span class="math inline">\(f(x)\)</span> that minimizes
+<span class="math display">\[
+E\left[(1-Yf(x))_+ \mid X=x\right] = (1-f(x))_+\eta(x) + (1+f(x))_+(1-\eta(x)).
+\]</span>
+We should always have <span class="math inline">\(-1\leq f(x)\leq 1\)</span>, because otherwise we could truncate <span class="math inline">\(f(x)\)</span> to get a smaller loss. So with that assumption,
+<span class="math display">\[
+E\left[(1-Yf(x))_+ \mid X=x\right] = (1-f(x))\eta(x) + (1+f(x))(1-\eta(x)) = 1+(1-2\eta(x))f(x).
+\]</span>
+Then we realize that depending on the sign of <span class="math inline">\(1-2\eta(x)\)</span> we should choose <span class="math inline">\(f(x)\)</span> to be as large positive or negative as possible, that is
+<span class="math display">\[
+f^\star_{hinge} = \begin{cases}
+1&amp;\text{if } \eta\geq 1/2\\
+-1&amp;\text{if } \eta&lt; 1/2,
+\end{cases}
+\]</span>
+which is exactly the Bayes classifier.</p>
+<p>The other loss function we will discuss is the loss function of logistic regression. In logistic regression we model the conditional probability as
+<span class="math display">\[
+\eta(x) = \frac{1}{1+e^{-f(x)}}.
+\]</span>
+The likelihood of the observation <span class="math inline">\((x,y)\)</span> is therefore,
+<span class="math display">\[
+L(x,y) = \begin{cases}
+\eta(x)&amp;\text{if } y=1\\
+1-\eta(x)&amp;\text{if } y=-1.
+\end{cases}
+\]</span>
+Then the negative log-likelihood (which should be minimized) is,
+<span class="math display">\[
+-\log_2(L(x,y)) = \begin{cases}
+\log_2\left(1+e^{-f(x)}\right)&amp;\text{if } y=1\\
+\log_2\left(1+e^{f(x)}\right)&amp;\text{if } y=-1
+\end{cases}
+= \log_2(1+e^{-yf(x)})=:l(f(x),y)
+\]</span>
+Here we took base 2 logarithm since <span class="math inline">\(\log_2(1+e^0)=1\)</span> and then the loss function is on the same scale as the hinge and 0-1. Also for logistic regression you can show that if you classify according to the class with highest probability, the population minimizer is again the Bayes classifier.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4-ch-statLearn.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.2-support-vector-machines-i.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

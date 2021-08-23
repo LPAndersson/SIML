@@ -58,7 +58,7 @@ We call this function the *likelihood function* and denote it $L$. That is
 $$
 L(p) := p^3(1-p)^7.
 $$
-```{r likelihood, cache = TRUE, echo = FALSE, fig.cap='Likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r likelihood, cache = FALSE, echo = FALSE, fig.cap='Likelihood of the sample', out.width='80%', fig.asp=.75, fig.align='center'}
 library(ggplot2)
 
 ggplot(data.frame(x = c(0.0, 1.0)), aes(x = x)) +

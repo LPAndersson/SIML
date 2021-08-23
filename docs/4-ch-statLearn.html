@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Statistical learning | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Statistical learning | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -24,17 +24,17 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-08-20" />
+<meta name="date" content="2021-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="3-7-review-questions-2.html"/>
-<link rel="next" href="4-1-classification.html"/>
+<link rel="prev" href="3.7-review-questions-2.html"/>
+<link rel="next" href="4.1-classification.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -162,61 +162,61 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="1" data-path="1-ch-likelihood.html"><a href="1-ch-likelihood.html"><i class="fa fa-check"></i><b>1</b> Likelihood-based methods</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="1-1-the-likelihood-function.html"><a href="1-1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
-<li class="chapter" data-level="1.2" data-path="1-2-maximum-likelihood-estimation.html"><a href="1-2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
-<li class="chapter" data-level="1.3" data-path="1-3-hypothesis-testing.html"><a href="1-3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
-<li class="chapter" data-level="1.4" data-path="1-4-likelihood-ratio-test.html"><a href="1-4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
-<li class="chapter" data-level="1.5" data-path="1-5-mathematical-aside-taylor-expansion.html"><a href="1-5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
-<li class="chapter" data-level="1.6" data-path="1-6-asymptotic-distribution-of-the-mle.html"><a href="1-6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
-<li class="chapter" data-level="1.7" data-path="1-7-the-delta-method.html"><a href="1-7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
-<li class="chapter" data-level="1.8" data-path="1-8-wilks-test.html"><a href="1-8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
-<li class="chapter" data-level="1.9" data-path="1-9-walds-test.html"><a href="1-9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
-<li class="chapter" data-level="1.10" data-path="1-10-score-test.html"><a href="1-10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
-<li class="chapter" data-level="1.11" data-path="1-11-confidence-intervals.html"><a href="1-11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
-<li class="chapter" data-level="1.12" data-path="1-12-an-application.html"><a href="1-12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
-<li class="chapter" data-level="1.13" data-path="1-13-summary.html"><a href="1-13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
-<li class="chapter" data-level="1.14" data-path="1-14-review-questions.html"><a href="1-14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
+<li class="chapter" data-level="1.1" data-path="1.1-the-likelihood-function.html"><a href="1.1-the-likelihood-function.html"><i class="fa fa-check"></i><b>1.1</b> The likelihood function</a></li>
+<li class="chapter" data-level="1.2" data-path="1.2-maximum-likelihood-estimation.html"><a href="1.2-maximum-likelihood-estimation.html"><i class="fa fa-check"></i><b>1.2</b> Maximum likelihood estimation</a></li>
+<li class="chapter" data-level="1.3" data-path="1.3-hypothesis-testing.html"><a href="1.3-hypothesis-testing.html"><i class="fa fa-check"></i><b>1.3</b> Hypothesis testing</a></li>
+<li class="chapter" data-level="1.4" data-path="1.4-likelihood-ratio-test.html"><a href="1.4-likelihood-ratio-test.html"><i class="fa fa-check"></i><b>1.4</b> Likelihood ratio test</a></li>
+<li class="chapter" data-level="1.5" data-path="1.5-mathematical-aside-taylor-expansion.html"><a href="1.5-mathematical-aside-taylor-expansion.html"><i class="fa fa-check"></i><b>1.5</b> Mathematical aside: Taylor expansion</a></li>
+<li class="chapter" data-level="1.6" data-path="1.6-asymptotic-distribution-of-the-mle.html"><a href="1.6-asymptotic-distribution-of-the-mle.html"><i class="fa fa-check"></i><b>1.6</b> Asymptotic distribution of the MLE</a></li>
+<li class="chapter" data-level="1.7" data-path="1.7-the-delta-method.html"><a href="1.7-the-delta-method.html"><i class="fa fa-check"></i><b>1.7</b> The delta method</a></li>
+<li class="chapter" data-level="1.8" data-path="1.8-wilks-test.html"><a href="1.8-wilks-test.html"><i class="fa fa-check"></i><b>1.8</b> Wilks’ test</a></li>
+<li class="chapter" data-level="1.9" data-path="1.9-walds-test.html"><a href="1.9-walds-test.html"><i class="fa fa-check"></i><b>1.9</b> Wald’s test</a></li>
+<li class="chapter" data-level="1.10" data-path="1.10-score-test.html"><a href="1.10-score-test.html"><i class="fa fa-check"></i><b>1.10</b> Score test</a></li>
+<li class="chapter" data-level="1.11" data-path="1.11-confidence-intervals.html"><a href="1.11-confidence-intervals.html"><i class="fa fa-check"></i><b>1.11</b> Confidence intervals</a></li>
+<li class="chapter" data-level="1.12" data-path="1.12-an-application.html"><a href="1.12-an-application.html"><i class="fa fa-check"></i><b>1.12</b> An application</a></li>
+<li class="chapter" data-level="1.13" data-path="1.13-summary.html"><a href="1.13-summary.html"><i class="fa fa-check"></i><b>1.13</b> Summary</a></li>
+<li class="chapter" data-level="1.14" data-path="1.14-review-questions.html"><a href="1.14-review-questions.html"><i class="fa fa-check"></i><b>1.14</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="2-1-some-basic-decision-theory.html"><a href="2-1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="2.2" data-path="2-2-bayesian-statistics-1.html"><a href="2-2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
-<li class="chapter" data-level="2.3" data-path="2-3-choosing-prior.html"><a href="2-3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
-<li class="chapter" data-level="2.4" data-path="2-4-multiparameter-problems.html"><a href="2-4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="2.5" data-path="2-5-markov-chain-monte-carlo.html"><a href="2-5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
-<li class="chapter" data-level="2.6" data-path="2-6-an-application-1.html"><a href="2-6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
-<li class="chapter" data-level="2.7" data-path="2-7-summary-1.html"><a href="2-7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
-<li class="chapter" data-level="2.8" data-path="2-8-review-questions-1.html"><a href="2-8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
+<li class="chapter" data-level="2.1" data-path="2.1-some-basic-decision-theory.html"><a href="2.1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
+<li class="chapter" data-level="2.2" data-path="2.2-bayesian-statistics-1.html"><a href="2.2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="2.3" data-path="2.3-choosing-prior.html"><a href="2.3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
+<li class="chapter" data-level="2.4" data-path="2.4-multiparameter-problems.html"><a href="2.4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
+<li class="chapter" data-level="2.5" data-path="2.5-markov-chain-monte-carlo.html"><a href="2.5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
+<li class="chapter" data-level="2.6" data-path="2.6-an-application-1.html"><a href="2.6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
+<li class="chapter" data-level="2.7" data-path="2.7-summary-1.html"><a href="2.7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
+<li class="chapter" data-level="2.8" data-path="2.8-review-questions-1.html"><a href="2.8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="3-1-parametric-vs-non-parametric.html"><a href="3-1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
-<li class="chapter" data-level="3.2" data-path="3-2-non-parametric-estimation.html"><a href="3-2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
-<li class="chapter" data-level="3.3" data-path="3-3-bootstrap.html"><a href="3-3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
-<li class="chapter" data-level="3.4" data-path="3-4-parametric-bootstrap.html"><a href="3-4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>3.4</b> Parametric bootstrap</a></li>
-<li class="chapter" data-level="3.5" data-path="3-5-an-application-2.html"><a href="3-5-an-application-2.html"><i class="fa fa-check"></i><b>3.5</b> An application</a></li>
-<li class="chapter" data-level="3.6" data-path="3-6-summary-2.html"><a href="3-6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
-<li class="chapter" data-level="3.7" data-path="3-7-review-questions-2.html"><a href="3-7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
+<li class="chapter" data-level="3.1" data-path="3.1-parametric-vs-non-parametric.html"><a href="3.1-parametric-vs-non-parametric.html"><i class="fa fa-check"></i><b>3.1</b> Parametric vs non-parametric</a></li>
+<li class="chapter" data-level="3.2" data-path="3.2-non-parametric-estimation.html"><a href="3.2-non-parametric-estimation.html"><i class="fa fa-check"></i><b>3.2</b> Non-parametric estimation</a></li>
+<li class="chapter" data-level="3.3" data-path="3.3-bootstrap.html"><a href="3.3-bootstrap.html"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a></li>
+<li class="chapter" data-level="3.4" data-path="3.4-parametric-bootstrap.html"><a href="3.4-parametric-bootstrap.html"><i class="fa fa-check"></i><b>3.4</b> Parametric bootstrap</a></li>
+<li class="chapter" data-level="3.5" data-path="3.5-an-application-2.html"><a href="3.5-an-application-2.html"><i class="fa fa-check"></i><b>3.5</b> An application</a></li>
+<li class="chapter" data-level="3.6" data-path="3.6-summary-2.html"><a href="3.6-summary-2.html"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+<li class="chapter" data-level="3.7" data-path="3.7-review-questions-2.html"><a href="3.7-review-questions-2.html"><i class="fa fa-check"></i><b>3.7</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="4-ch-statLearn.html"><a href="4-ch-statLearn.html"><i class="fa fa-check"></i><b>4</b> Statistical learning</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="4-1-classification.html"><a href="4-1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
-<li class="chapter" data-level="4.2" data-path="4-2-support-vector-machines-i.html"><a href="4-2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
-<li class="chapter" data-level="4.3" data-path="4-3-hoeffdings-inequality.html"><a href="4-3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
-<li class="chapter" data-level="4.4" data-path="4-4-generalization-error.html"><a href="4-4-generalization-error.html"><i class="fa fa-check"></i><b>4.4</b> Generalization error</a></li>
-<li class="chapter" data-level="4.5" data-path="4-5-vc-dimension.html"><a href="4-5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
-<li class="chapter" data-level="4.6" data-path="4-6-support-vector-machines-ii.html"><a href="4-6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
-<li class="chapter" data-level="4.7" data-path="4-7-bias-variance-decomposition.html"><a href="4-7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
-<li class="chapter" data-level="4.8" data-path="4-8-regression-regularization.html"><a href="4-8-regression-regularization.html"><i class="fa fa-check"></i><b>4.8</b> Regression regularization</a></li>
-<li class="chapter" data-level="4.9" data-path="4-9-model-selection.html"><a href="4-9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
-<li class="chapter" data-level="4.10" data-path="4-10-an-application-i.html"><a href="4-10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
-<li class="chapter" data-level="4.11" data-path="4-11-an-application-ii.html"><a href="4-11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
-<li class="chapter" data-level="4.12" data-path="4-12-review-questions-3.html"><a href="4-12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
+<li class="chapter" data-level="4.1" data-path="4.1-classification.html"><a href="4.1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
+<li class="chapter" data-level="4.2" data-path="4.2-support-vector-machines-i.html"><a href="4.2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
+<li class="chapter" data-level="4.3" data-path="4.3-hoeffdings-inequality.html"><a href="4.3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
+<li class="chapter" data-level="4.4" data-path="4.4-generalization-error.html"><a href="4.4-generalization-error.html"><i class="fa fa-check"></i><b>4.4</b> Generalization error</a></li>
+<li class="chapter" data-level="4.5" data-path="4.5-vc-dimension.html"><a href="4.5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
+<li class="chapter" data-level="4.6" data-path="4.6-support-vector-machines-ii.html"><a href="4.6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
+<li class="chapter" data-level="4.7" data-path="4.7-bias-variance-decomposition.html"><a href="4.7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
+<li class="chapter" data-level="4.8" data-path="4.8-regression-regularization.html"><a href="4.8-regression-regularization.html"><i class="fa fa-check"></i><b>4.8</b> Regression regularization</a></li>
+<li class="chapter" data-level="4.9" data-path="4.9-model-selection.html"><a href="4.9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
+<li class="chapter" data-level="4.10" data-path="4.10-an-application-i.html"><a href="4.10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
+<li class="chapter" data-level="4.11" data-path="4.11-an-application-ii.html"><a href="4.11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
+<li class="chapter" data-level="4.12" data-path="4.12-review-questions-3.html"><a href="4.12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5-1-an-application-3.html"><a href="5-1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
-<li class="chapter" data-level="5.2" data-path="5-2-review-questions-4.html"><a href="5-2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5.1-an-application-3.html"><a href="5.1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
+<li class="chapter" data-level="5.2" data-path="5.2-review-questions-4.html"><a href="5.2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -283,8 +283,8 @@ E_{out}(h) = E_{X,Y}\left[l(h(X),Y)\right].
           </div>
         </div>
       </div>
-<a href="3-7-review-questions-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4-1-classification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.7-review-questions-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.1-classification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -328,6 +328,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

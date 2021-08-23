@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.7 The delta method | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.7 The delta method | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.7 The delta method | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="1.6-asymptotic-distribution-of-the-mle.html"/>
+<link rel="next" href="1.8-wilks-test.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,82 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="the-delta-method" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> The delta method</h2>
+In this section we discuss how to find the asymptotic distribution of a function of the estimate. Let us assume that we already know that
+<span class="math display">\[
+\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} N(0,\sigma^2).
+\]</span>
+<p>
+This might be because <span class="math inline">\(\hat\theta_n\)</span> is the MLE and we have used the results from the previous section or we have applied some central limit theorem. We have a function <span class="math inline">\(f\)</span> and we would like to know the asymptotic distribution of <span class="math inline">\(f(\hat\theta_n)\)</span>. Let us again write a Taylor expansion
+</p>
+<span class="math display">\[
+f(\hat\theta_n) \approx f(\theta) + f&#39;(\theta)(\hat\theta_n - \theta).
+\]</span>
+<p>
+Rearranging and multiplying by <span class="math inline">\(\sqrt n\)</span> gives,
+</p>
+<p><span class="math display">\[
+\sqrt{n}(f(\hat\theta_n) - f(\theta)) \approx f&#39;(\theta)\sqrt{n}(\hat\theta_n - \theta).
+\]</span>
+The right side is asymptotically normal, by our assumption. We have then arrived at the <em>first order delta method</em>:</p>
+
+<div class="note">
+<span class="math display">\[
+\sqrt{n}(f(\hat\theta_n) - f(\theta)) \overset{asym.}{\sim} N(0,\sigma^2f&#39;(\theta)^2) .
+\]</span>
+</div>
+<p>
+For this to make sense we need that <span class="math inline">\(f&#39;(\theta)\neq 0\)</span>. If this is not the case we can instead do a second order Taylor expansion
+</p>
+<span class="math display">\[
+f(\hat\theta_n) \approx f(\theta) + f&#39;(\theta)(\hat\theta_n - \theta) + \frac{f&#39;&#39;(\theta)}{2}(\hat\theta_n - \theta)^2 = f(\theta) + \frac{f&#39;&#39;(\theta)}{2}(\hat\theta_n - \theta)^2.
+\]</span>
+Rearranging gives,
+<span class="math display">\[
+n(f(\hat\theta_n)  - f(\theta)) \approx \frac{f&#39;&#39;(\theta)}{2}(\sqrt{n}(\hat\theta_n-\theta))^2.
+\]</span>
+<p>
+We assumed that <span class="math inline">\(\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} N(0,\sigma^2)\)</span>. The continuous mapping theorem (not covered here) states that if <span class="math inline">\(f\)</span> is a continuous function and if <span class="math inline">\(X_n \overset{asym.}{\sim} X\)</span>, then <span class="math inline">\(f(X_n) \overset{asym.}{\sim} f(X)\)</span>. Therefore, if we let <span class="math inline">\(Z\sim N(0,1),\)</span> we can write our assumption as <span class="math inline">\(\sqrt{n} (\hat\theta_n - \theta) \overset{asym.}{\sim} \sigma Z\)</span> and thus, recalling that the square of a standard normal random variable has a <span class="math inline">\(\chi^2_1\)</span>-distribution,
+</p>
+<span class="math display">\[
+(\sqrt{n}(\hat\theta_n-\theta))^2 \overset{asym.}{\sim} \sigma^2Z^2 \overset{d}{=} \sigma^2 \chi^2_1.
+\]</span>
+With that we get the second order Delta method:
+
+<div class="note">
+<span class="math display">\[
+n(f(\hat\theta_n)  - f(\theta)) \overset{asym.}{\sim} \frac{f&#39;&#39;(\theta)}{2}\sigma^2\chi_1^2.
+\]</span>
+</div>
+<p>Now let us apply the delta method to the exponential distribution. We would like to estimate the probability that the time until the next event is larger than 10. That is the probability
+<span class="math display">\[
+p = P(T&gt;10) = e^{-10\lambda}.
+\]</span>
+The MLE follows from the invariance principle of maximum likelihood, i.e. <span class="math inline">\(\hat p = e^{-10\hat\lambda}\)</span>. The distribution of <span class="math inline">\(\hat p\)</span> can be found by the delta method if we let <span class="math inline">\(p=f(\lambda) = e^{-10\lambda}\)</span>. Then <span class="math inline">\(f&#39;(\lambda) = -10e^{-10\lambda} = -10p\)</span>. In this case <span class="math inline">\(f&#39;(\lambda)\neq 0\)</span>, so we may apply the first order delta method. Recall from the previous section that
+<span class="math display">\[
+\sqrt n\left( \hat\lambda_n - \lambda \right) \overset{asym.}{\sim} \mathsf N(0, \lambda^2),
+\]</span>
+that is, the <span class="math inline">\(\sigma^2\)</span> appearing in the delta method is <span class="math inline">\(\lambda^2\)</span>. Now, applying the delta method gives
+<span class="math display">\[
+\sqrt n(\hat p_n- p) \overset{asym.}{\sim} \mathsf N(0,100p^2\lambda^2).
+\]</span>
+As usual, we may replace unknown parameters with a consistent estimate, i.e. <span class="math inline">\(p\)</span> with <span class="math inline">\(\hat p\)</span> and <span class="math inline">\(\lambda\)</span> with <span class="math inline">\(\hat\lambda\)</span>. Therefore,
+<span class="math display">\[
+\sqrt n(\hat p_n- p) \overset{asym.}{\sim} \mathsf N(0,100\hat p^2\hat\lambda^2) = \mathsf N(0,0.132),
+\]</span>
+or
+<span class="math display">\[
+\hat p_n \overset{asym.}{\sim} \mathsf N(p,0.132/n).
+\]</span></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1.6-asymptotic-distribution-of-the-mle.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.8-wilks-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

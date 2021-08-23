@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="1.2-maximum-likelihood-estimation.html"/>
+<link rel="next" href="1.4-likelihood-ratio-test.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,39 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="hypothesis-testing" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Hypothesis testing</h2>
+In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure <a href="1.3-hypothesis-testing.html#fig:hypTestIllustration">1.4</a>.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hypTestIllustration"></span>
+<img src="01-likelihood_files/figure-html/hypTestIllustration-1.png" alt="Log likelihood of the sample" width="80%" />
+<p class="caption">
+Figure 1.4: Log likelihood of the sample
+</p>
+</div>
+<p>There we have an estimate of <span class="math inline">\(\theta\)</span> which is <span class="math inline">\(\hat\theta = 0.9\)</span>. We would like to test <span class="math inline">\(H_0: \theta=\theta_0 = 1\)</span> against <span class="math inline">\(\theta \neq \theta_0\)</span>.</p>
+<p>This should be based on how far away, in some sense, the maximum likelihood estimate is from <span class="math inline">\(\theta_0\)</span>. Looking at the figure, we can see three different ways of measuring how far away <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span> are from each other. One way would be to measure the vertical distance between the log-likelihood function in <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. we would calculate:
+<span class="math display">\[
+l(\hat\theta) - l(\theta_0).
+\]</span>
+This is know as the <em>likelihood ratio test</em>.</p>
+<p>Another option is to calculate the horizontal distance between <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. to calculate the distance
+<span class="math display">\[
+|\hat\theta - \theta_0|.
+\]</span>
+This is known as the <em>Wald test</em>.</p>
+<p>Lastly we know that <span class="math inline">\(\partial_\theta l(\theta)|_{\theta=\hat\theta} = 0\)</span>. So we could calculate
+<span class="math display">\[
+|\partial_\theta l(\theta)|_{\theta=\theta_0}|,
+\]</span>
+and see how close it is to 0. This is known as the <em>Score test</em>. In the following sections we examine each test in detail.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1.2-maximum-likelihood-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.4-likelihood-ratio-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

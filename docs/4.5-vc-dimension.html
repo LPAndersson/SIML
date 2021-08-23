@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>4.5 VC-dimension | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="4.5 VC-dimension | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Bayesian statistics | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="4.5 VC-dimension | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.14-review-questions.html"/>
-<link rel="next" href="2.1-some-basic-decision-theory.html"/>
+<link rel="prev" href="4.4-generalization-error.html"/>
+<link rel="next" href="4.6-support-vector-machines-ii.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -238,24 +238,75 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bayesian-statistics" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Bayesian statistics</h1>
-<p>In this chapter we introduce a different way of thinking about statistical inference, <em>Bayesian statistics</em>.</p>
-<p>The type of statistics that we have seen so far in this course, and also in previous courses, is called <em>frequentist statistics</em>. The idea is to analyse the properties of estimators, confidence intervals etc., thinking of the sample as random. For example, we say that an estimator is unbiased if the estimator applied to many different samples give the correct value of the parameter, on average. A possible critique of this is that we typically only have one sample and it is therefore not relevant to rely on the average behavior of an estimator.</p>
-<p>Bayesian statistics considers an alternative viewpoint. Here the sample is considered fixed and instead the unknown parameter is considered random. The distribution of the unknown parameter before making any observations is called the <em>prior distribution</em>. After making the observations, that distribution is updated, using Bayes’ formula, and we call the updated distribution the <em>posterior distribution</em>. The posterior distribution can theb be used to construct point estimates of the parameter, intervals etc.</p>
-<p>The aim of the chapter is to explain the basics, learn how to do Bayesian inference by hand in simple models and see how one can handle more complicated models with simulation methods.</p>
-<p>Readings for this chapter is:</p>
-<p>AOS 11.1, 2, 4, 6, 7, 9.</p>
-<p>AOS 12.1-3.</p>
-<p>AOS 24.1, 2, 4, 5 (not Gibbs).</p>
+<div id="vc-dimension" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> VC-dimension</h2>
+<p>In this section we discuss a measure of the complexity of a hypothesis set <span class="math inline">\(\mathcal H\)</span>, the <em>Vapnik–Chervonenkis</em> (VC) dimension.</p>
+<p>We call one possible way of labeling a set of points, <span class="math inline">\(S\)</span>, a <em>dichotomy</em> and we say that <span class="math inline">\(S\)</span> is <em>shattered</em> by <span class="math inline">\(\mathcal H\)</span> when <span class="math inline">\(\mathcal H\)</span> can generate all possible dichotomies of <span class="math inline">\(S\)</span>. The VC-dimension of <span class="math inline">\(\mathcal H\)</span> is the size of the largest set that can be shattered by <span class="math inline">\(\mathcal H\)</span>.</p>
+<p>First consider the example of the real line and <span class="math inline">\(\mathcal H\)</span> being the classifiers that classify to one class to the left of a point and to the other class to the right of the point. If <span class="math inline">\(S\)</span> consists of two points, all four dichotomies can be realized and so <span class="math inline">\(S\)</span> can be shattered by <span class="math inline">\(\mathcal H\)</span>. However if <span class="math inline">\(S\)</span> consists of three points, the dichotomy (1,0,1) cannot be realized and <span class="math inline">\(S\)</span> cannot be shattered. Therefore the VC-dimension of <span class="math inline">\(\mathcal H\)</span> is <span class="math inline">\(d_{VC}=2\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:vcDim1"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim1-1.png" alt="Two points can be shattered" width="80%" />
+<p class="caption">
+Figure 4.9: Two points can be shattered
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:vcDim2"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim2-1.png" alt="Three points that can not be shattered" width="80%" />
+<p class="caption">
+Figure 4.10: Three points that can not be shattered
+</p>
+</div>
+<p>Next consider points on <span class="math inline">\(\mathbb R^2\)</span> and <span class="math inline">\(\mathcal H\)</span> being the set of straight lines, as in the example in the previous section. Clearly three points can be shattered by a straight line, as long as the points are not colinear. However four points can never be shattered. So the VC-dimension is <span class="math inline">\(d_{VC}=3\)</span>. Similarly in <span class="math inline">\(R^p\)</span>, if <span class="math inline">\(\mathcal H\)</span> are the hyperplanes, <span class="math inline">\(d_{VC} = p+1\)</span>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:vcDim3"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim3-1.png" alt="Three points can be shattered but not four" width="80%" />
+<p class="caption">
+Figure 4.11: Three points can be shattered but not four
+</p>
+</div>
+<p>
+We see a pattern here, the VC-dimension is equal to the number of parameters of <span class="math inline">\(\mathcal H\)</span>. This is however not always true. As a counterexample, take the functions <span class="math inline">\(\left\{ x\mapsto sin(\omega x)\mid \omega\in \mathbb R \right\}\)</span>. Then label a point <span class="math inline">\(x\)</span> according to the sign of <span class="math inline">\(sin(\omega x)\)</span>. There is only one parameter, but any <span class="math inline">\(S\)</span> can be shattered and so <span class="math inline">\(d_{VC}=\infty\)</span>.
+</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:vcDim4"></span>
+<img src="04-statisticalLearning_files/figure-html/vcDim4-1.png" alt="A one parameter function can shatter any number of points" width="80%" />
+<p class="caption">
+Figure 4.12: A one parameter function can shatter any number of points
+</p>
+</div>
+The usefulness of the VC-dimension comes from the following result.
+
+<div class="note">
+Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span>. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span> <span class="citation">(<a href="#ref-mohri2018foundations" role="doc-biblioref">Mohri, Rostamizadeh, and Talwalkar 2018</a>)</span>:
+<span class="math display">\[
+  E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
+\]</span>
+</div>
+<p>The important quantity here is <span class="math inline">\(n/d_{VC}\)</span>. If the sample size <span class="math inline">\(n\)</span> is large in relation to the VC-dimension <span class="math inline">\(d_{VC}\)</span>, the out-of-sample error is guaranteed to be close to the in-sample error. The bound is loose, so the actual value is not useful in practice. Rather it provides a way of thinking about generalization from in-sample to out-of-sample error. In practice, it is usually the case that models with lower <span class="math inline">\(d_{VC}\)</span> generalizes better than models with higher <span class="math inline">\(d_{VC}\)</span>. A popular rule of thumb is that <span class="math inline">\(n\)</span> should be at least <span class="math inline">\(10\times d_{VC}\)</span>. However, there are also algorithms with <span class="math inline">\(d_{VC}=\infty\)</span> that work well in practice.</p>
+<p>A different way of thinking of this results is
+<span class="math display">\[
+E_{out}(h) = E_{in}(h) + \Omega(n,\mathcal H, \delta),
+\]</span>
+where <span class="math inline">\(\Omega\)</span> is a penalty for model complexity. As we choose a more complex <span class="math inline">\(\mathcal H\)</span> (with higher <span class="math inline">\(d_{VC}\)</span>) the in-sample error will become smaller. But, at the same time the penalty <span class="math inline">\(\Omega\)</span> gets larger. The penalty gets smaller when we have more samples. The optimal model, with smallest <span class="math inline">\(E_{out}\)</span>, is therefore a compromise that minimize the sum of the two terms.</p>
+<p>One commonly used way to estimate <span class="math inline">\(E_{out}\)</span> is to split the data into one <em>training set</em> and one <em>test set</em>. The test set is not used for training and so when we calculate <span class="math inline">\(E_{test}\)</span>, we do this for only one <span class="math inline">\(h\)</span>, the one with minimal in-sample error. Therefore Hoeffding’s inequality applies as a generalization bound, which is much tighter than the VC-bound.</p>
+<p>In the figure below we visualize the partition of the out-of-sample error into in-sample error and generalization error.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:errorPlotSketch"></span>
+<img src="04-statisticalLearning_files/figure-html/errorPlotSketch-1.png" alt="Sketch of the different components of the error" width="80%" />
+<p class="caption">
+Figure 4.13: Sketch of the different components of the error
+</p>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-mohri2018foundations" class="csl-entry">
+Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations of Machine Learning</em>. MIT press.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.14-review-questions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2.1-some-basic-decision-theory.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.4-generalization-error.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.6-support-vector-machines-ii.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
