@@ -120,28 +120,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -249,7 +227,9 @@ p^3(1-p)^7.
 \]</span></p>
 <p>We can think of this as a function of <span class="math inline">\(p\)</span> that tells us the probability of observing what we actually observed. For example, if <span class="math inline">\(p=0.4\)</span> the probability is <span class="math inline">\(1.79 \cdot 10^{-3}\)</span>, or if <span class="math inline">\(p=0.5\)</span> the probability is <span class="math inline">\(9.77 \cdot 10^{-4}\)</span>.</p>
 <p>The principle that we will follow to estimate parameters is that since <span class="math inline">\(p=0.4\)</span> gives a higher probability to our observation than <span class="math inline">\(p=0.5\)</span> we will prefer <span class="math inline">\(0.4\)</span> over <span class="math inline">\(0.5\)</span> as an estimate of <span class="math inline">\(p\)</span>.</p>
+<p>
 We call this function the <em>likelihood function</em> and denote it <span class="math inline">\(L\)</span>. That is
+</p>
 <span class="math display">\[
 L(p) := p^3(1-p)^7.
 \]</span>
@@ -260,7 +240,9 @@ Figure 1.1: Likelihood of the sample
 </p>
 </div>
 <p>In the picture we see that the likelihood function attains its highest value at <span class="math inline">\(p=0.3\)</span>. Using the above principle, we therefore prefer <span class="math inline">\(0.3\)</span> as an estimate of <span class="math inline">\(p\)</span> over any other value. This is the <em>maximum likelihood estimate</em> (MLE) of <span class="math inline">\(p\)</span>.</p>
+<p>
 Let us define the likelihood function in general. We have a parametric model of our observations, that is we assume that we observe random variables that are independent identically distributed, with a probability function (or density) <span class="math inline">\(p_\theta(x)\)</span>. Here <span class="math inline">\(\theta\)</span> is an unknown parameter. For a random sample <span class="math inline">\(x_1,\ldots , x_n\)</span> of size <span class="math inline">\(n\)</span> the likelihood function is
+</p>
 
 <div class="note">
 <span class="math display">\[

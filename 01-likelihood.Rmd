@@ -54,7 +54,7 @@ We can think of this as a function of $p$ that tells us the probability of obser
 
 The principle that we will follow to estimate parameters is that since $p=0.4$ gives a higher probability to our observation than $p=0.5$ we will prefer $0.4$ over $0.5$ as an estimate of $p$.
 
-We call this function the *likelihood function* and denote it $L$. That is
+<p>We call this function the *likelihood function* and denote it $L$. That is</p>
 $$
 L(p) := p^3(1-p)^7.
 $$
@@ -70,7 +70,7 @@ stat_function(fun = function(p) p^3*(1-p)^7, size = 1) +
 ```
 In the picture we see that the likelihood function attains its highest value at $p=0.3$. Using the above principle, we therefore prefer $0.3$ as an estimate of $p$ over any other value. This is the *maximum likelihood estimate* (MLE) of $p$.
 
-Let us define the likelihood function in general. We have a parametric model of our observations, that is we assume that we observe random variables that are independent identically distributed, with a probability function (or density) $p_\theta(x)$. Here $\theta$ is an unknown parameter. For a random sample $x_1,\ldots , x_n$ of size $n$ the likelihood function is
+<p>Let us define the likelihood function in general. We have a parametric model of our observations, that is we assume that we observe random variables that are independent identically distributed, with a probability function (or density) $p_\theta(x)$. Here $\theta$ is an unknown parameter. For a random sample $x_1,\ldots , x_n$ of size $n$ the likelihood function is</p>
 ```{block2, type='note'}
 $$
 L_n(\theta) = \prod_{i=1}^n p_\theta(x_i).
