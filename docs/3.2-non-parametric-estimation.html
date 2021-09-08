@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-08-23" />
+<meta name="date" content="2021-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -215,8 +215,9 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5.1-an-application-3.html"><a href="5.1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
-<li class="chapter" data-level="5.2" data-path="5.2-review-questions-4.html"><a href="5.2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5.1-an-application-i-1.html"><a href="5.1-an-application-i-1.html"><i class="fa fa-check"></i><b>5.1</b> An application I</a></li>
+<li class="chapter" data-level="5.2" data-path="5.2-an-application-ii-1.html"><a href="5.2-an-application-ii-1.html"><i class="fa fa-check"></i><b>5.2</b> An application II</a></li>
+<li class="chapter" data-level="5.3" data-path="5.3-review-questions-4.html"><a href="5.3-review-questions-4.html"><i class="fa fa-check"></i><b>5.3</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -257,19 +258,19 @@ I(x_i\leq x) =
 \]</span>
 </div>
 <p>In the example below, we draw a sample of size 100 from the <span class="math inline">\(\mathsf{N}(0,1)\)</span> distribution and plot the empirical distribution function of the sample. This can be done easily using gg-plot.</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="3.2-non-parametric-estimation.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb85-2"><a href="3.2-non-parametric-estimation.html#cb85-2" aria-hidden="true" tabindex="-1"></a>data.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>) )</span>
-<span id="cb85-3"><a href="3.2-non-parametric-estimation.html#cb85-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb85-4"><a href="3.2-non-parametric-estimation.html#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="3.2-non-parametric-estimation.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb84-2"><a href="3.2-non-parametric-estimation.html#cb84-2" aria-hidden="true" tabindex="-1"></a>data.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>) )</span>
+<span id="cb84-3"><a href="3.2-non-parametric-estimation.html#cb84-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-4"><a href="3.2-non-parametric-estimation.html#cb84-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
 <pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.1</code></pre>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="3.2-non-parametric-estimation.html#cb87-1" aria-hidden="true" tabindex="-1"></a>cbp1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
-<span id="cb87-2"><a href="3.2-non-parametric-estimation.html#cb87-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
-<span id="cb87-3"><a href="3.2-non-parametric-estimation.html#cb87-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb87-4"><a href="3.2-non-parametric-estimation.html#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data.df, <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
-<span id="cb87-5"><a href="3.2-non-parametric-estimation.html#cb87-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> pnorm, <span class="at">color =</span> cbp1[<span class="dv">2</span>], <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb87-6"><a href="3.2-non-parametric-estimation.html#cb87-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(<span class="at">geom =</span> <span class="st">&quot;step&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb87-7"><a href="3.2-non-parametric-estimation.html#cb87-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">y =</span> <span class="st">&quot;F(x)&quot;</span>, <span class="at">x =</span> <span class="st">&quot;x&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb87-8"><a href="3.2-non-parametric-estimation.html#cb87-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="3.2-non-parametric-estimation.html#cb86-1" aria-hidden="true" tabindex="-1"></a>cbp1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>, <span class="st">&quot;#009E73&quot;</span>,</span>
+<span id="cb86-2"><a href="3.2-non-parametric-estimation.html#cb86-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;#F0E442&quot;</span>, <span class="st">&quot;#0072B2&quot;</span>, <span class="st">&quot;#D55E00&quot;</span>, <span class="st">&quot;#CC79A7&quot;</span>)</span>
+<span id="cb86-3"><a href="3.2-non-parametric-estimation.html#cb86-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-4"><a href="3.2-non-parametric-estimation.html#cb86-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data.df, <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb86-5"><a href="3.2-non-parametric-estimation.html#cb86-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> pnorm, <span class="at">color =</span> cbp1[<span class="dv">2</span>], <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb86-6"><a href="3.2-non-parametric-estimation.html#cb86-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(<span class="at">geom =</span> <span class="st">&quot;step&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb86-7"><a href="3.2-non-parametric-estimation.html#cb86-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>( <span class="at">y =</span> <span class="st">&quot;F(x)&quot;</span>, <span class="at">x =</span> <span class="st">&quot;x&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb86-8"><a href="3.2-non-parametric-estimation.html#cb86-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:empiricalDistrFcnExample"></span>
 <img src="03-bootstrap_files/figure-html/empiricalDistrFcnExample-1.png" alt="Empirical and true distribution function" width="80%" />
 <p class="caption">
@@ -316,7 +317,7 @@ The plug-in estimates of such functionals is therefore simple to calculate. For 
 \hat F_n^{-1}(p) =  \inf \left\{ x \mid \hat F_n(x)\geq p \right\}.
 \]</span>
 That is, it is the smallest <span class="math inline">\(x\)</span> such that <span class="math inline">\(\hat F_n(x)\geq p\)</span>. Looking at the picture it seems as in our sample, for example, <span class="math inline">\(\hat F_n^{-1}(0.75)\approx 0.7\)</span>. Calculating precisely:</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="3.2-non-parametric-estimation.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(data.df<span class="sc">$</span>x, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.75</span>), <span class="at">type =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="3.2-non-parametric-estimation.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(data.df<span class="sc">$</span>x, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.75</span>), <span class="at">type =</span> <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>##       75% 
 ## 0.6556479</code></pre>
 </div>

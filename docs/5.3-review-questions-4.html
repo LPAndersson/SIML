@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>5.3 Review questions | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="5.3 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="5.3 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="4.8-regression-regularization.html"/>
-<link rel="next" href="4.10-an-application-i.html"/>
+<link rel="prev" href="5.2-an-application-ii-1.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -239,28 +239,30 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-selection" class="section level2" number="4.9">
-<h2><span class="header-section-number">4.9</span> Model selection</h2>
-<p>We have seen that in statistical learning a model that is too flexible will lead to overfitting and a model that is not flexible enough will lead to underfitting. We can control the flexibility of our model by either choosing the model class, e.g. the degree of a polynomial, or by introducing regularization. In either case this introduces a new parameter that we can not learn from the in-sample error. In this section we discuss how choose this parameter.</p>
-<p>One approach is to use a <em>validation set</em>. We would take the available observations and divide them (randomly) into a training set and a validation set. The training set is used only for fitting the model(s) and the validation set is used for estimating the out-of-sample error. We could then choose the model that achieves the smallest error on the validation set. However note that the error of the chosen model is not a good estimate of the out-of-sample error, since again we have used the validation set for choosing a model. The drawback of this method is that the division into training and validation set is random and so if we are unlucky, the division does not represent the underlying distribution well.</p>
-<p>An approach that tries to address this drawback is <em>leave-one-out cross-validation</em> (LOOCV). Here we again divide the observations into a training set and a validation set. The difference is that the validation set will only contain one observation, call this <span class="math inline">\((x_1,y_1)\)</span>. We fit the model on the <span class="math inline">\(n-1\)</span> observations in the training set and predict the observation in the validation set. We then calculate the prediction error and call this (in the regression case) <span class="math inline">\(MSE_1\)</span>. We now repeat this, instead keeping <span class="math inline">\((x_2,y_2)\)</span> in the validation set and all other in the training set. The LOOCV estimate of the out-of-sample error is then
-<span class="math display">\[
-CV_{(n)}= \frac{1}{n}\sum_{i=1}^n MSE_i.
-\]</span></p>
-<p>The advantage compared to the validation set approach is that it always yields the same results and that there is less bias. This is because the size of the training set, <span class="math inline">\(n-1\)</span>, is almost the same as the full data set, <span class="math inline">\(n\)</span>. Therefore the fit should be almost as good as using the full data set.</p>
-<p>The main drawback of LOOCV is that if <span class="math inline">\(n\)</span> is large, it could be expensive to implement. An alternative is therefore <em>k-fold cross-calidation</em>. Here the data is divided randomly into <span class="math inline">\(k\)</span> groups. We take the first group as validation set and the others as training set. This gives an out-of-sample error, call it <span class="math inline">\(MSE_1\)</span>. We continue by treating the second group as validation set, giving <span class="math inline">\(MSE_2\)</span>, and so on. The k-fold CV estimate of the out-of-sample error is then
-<span class="math display">\[
-CV_{(k)} = \frac{1}{k}\sum_{i=1}^k MSE_i.
-\]</span>
-In practice usually <span class="math inline">\(k=5\)</span> or <span class="math inline">\(k=10\)</span> is used.</p>
+<div id="review-questions-4" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Review questions</h2>
+<ol start="4" style="list-style-type: decimal">
+<li>What is an activation function?</li>
+<li>What is an ReLU?</li>
+<li>What is the softmax function?</li>
+<li>What is a layer?</li>
+<li>What is gradient descent?</li>
+<li>What is the trade-off in choosing the learning rate?</li>
+<li>What is a mini-batch?</li>
+<li>What is an epoch?</li>
+<li>What is backpropagation?</li>
+<li>How are NNs usually regularized?</li>
+</ol>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="4.8-regression-regularization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4.10-an-application-i.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.2-an-application-ii-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

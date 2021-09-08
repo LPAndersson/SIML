@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>5.1 An application I | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="5.1 An application I | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="5.1 An application I | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="4.8-regression-regularization.html"/>
-<link rel="next" href="4.10-an-application-i.html"/>
+<link rel="prev" href="5-beyond-linearity-draft.html"/>
+<link rel="next" href="5.2-an-application-ii-1.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -239,28 +239,82 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-selection" class="section level2" number="4.9">
-<h2><span class="header-section-number">4.9</span> Model selection</h2>
-<p>We have seen that in statistical learning a model that is too flexible will lead to overfitting and a model that is not flexible enough will lead to underfitting. We can control the flexibility of our model by either choosing the model class, e.g. the degree of a polynomial, or by introducing regularization. In either case this introduces a new parameter that we can not learn from the in-sample error. In this section we discuss how choose this parameter.</p>
-<p>One approach is to use a <em>validation set</em>. We would take the available observations and divide them (randomly) into a training set and a validation set. The training set is used only for fitting the model(s) and the validation set is used for estimating the out-of-sample error. We could then choose the model that achieves the smallest error on the validation set. However note that the error of the chosen model is not a good estimate of the out-of-sample error, since again we have used the validation set for choosing a model. The drawback of this method is that the division into training and validation set is random and so if we are unlucky, the division does not represent the underlying distribution well.</p>
-<p>An approach that tries to address this drawback is <em>leave-one-out cross-validation</em> (LOOCV). Here we again divide the observations into a training set and a validation set. The difference is that the validation set will only contain one observation, call this <span class="math inline">\((x_1,y_1)\)</span>. We fit the model on the <span class="math inline">\(n-1\)</span> observations in the training set and predict the observation in the validation set. We then calculate the prediction error and call this (in the regression case) <span class="math inline">\(MSE_1\)</span>. We now repeat this, instead keeping <span class="math inline">\((x_2,y_2)\)</span> in the validation set and all other in the training set. The LOOCV estimate of the out-of-sample error is then
-<span class="math display">\[
-CV_{(n)}= \frac{1}{n}\sum_{i=1}^n MSE_i.
-\]</span></p>
-<p>The advantage compared to the validation set approach is that it always yields the same results and that there is less bias. This is because the size of the training set, <span class="math inline">\(n-1\)</span>, is almost the same as the full data set, <span class="math inline">\(n\)</span>. Therefore the fit should be almost as good as using the full data set.</p>
-<p>The main drawback of LOOCV is that if <span class="math inline">\(n\)</span> is large, it could be expensive to implement. An alternative is therefore <em>k-fold cross-calidation</em>. Here the data is divided randomly into <span class="math inline">\(k\)</span> groups. We take the first group as validation set and the others as training set. This gives an out-of-sample error, call it <span class="math inline">\(MSE_1\)</span>. We continue by treating the second group as validation set, giving <span class="math inline">\(MSE_2\)</span>, and so on. The k-fold CV estimate of the out-of-sample error is then
-<span class="math display">\[
-CV_{(k)} = \frac{1}{k}\sum_{i=1}^k MSE_i.
-\]</span>
-In practice usually <span class="math inline">\(k=5\)</span> or <span class="math inline">\(k=10\)</span> is used.</p>
+<div id="an-application-i-1" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> An application I</h2>
+<p>Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library <em>Tensorflow</em>. You may find the <a href="https://keras.rstudio.com">documentation</a> useful</p>
+<p>Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras. The first time you install Keras, you do.</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="5.1-an-application-i-1.html#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;keras&quot;</span>)</span>
+<span id="cb161-2"><a href="5.1-an-application-i-1.html#cb161-2" aria-hidden="true" tabindex="-1"></a>keras<span class="sc">::</span><span class="fu">install_keras</span>()</span></code></pre></div>
+<p>If you get a prompt asking to install miniconda, you should choose “Yes.”</p>
+<p>If this installation fails another option is to follow the instructions at the <a href="https://web.stanford.edu/~hastie/ISLR2/keras-instructions.html">ISLR webpage</a></p>
+<p>After that, it should be enough to</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="5.1-an-application-i-1.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras)</span></code></pre></div>
+<p>The MNIST database is already divided in a training and a test set</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="5.1-an-application-i-1.html#cb163-1" aria-hidden="true" tabindex="-1"></a>mnist <span class="ot">&lt;-</span> <span class="fu">dataset_mnist</span>()</span>
+<span id="cb163-2"><a href="5.1-an-application-i-1.html#cb163-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb163-3"><a href="5.1-an-application-i-1.html#cb163-3" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>x</span>
+<span id="cb163-4"><a href="5.1-an-application-i-1.html#cb163-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> mnist<span class="sc">$</span>train<span class="sc">$</span>y</span>
+<span id="cb163-5"><a href="5.1-an-application-i-1.html#cb163-5" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>x</span>
+<span id="cb163-6"><a href="5.1-an-application-i-1.html#cb163-6" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> mnist<span class="sc">$</span>test<span class="sc">$</span>y</span></code></pre></div>
+Let us see what the pictures look like.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mnist1"></span>
+<img src="05-beyondLinearity_files/figure-html/mnist1-1.png" alt="Examples from MNIST" width="80%" />
+<p class="caption">
+Figure 5.1: Examples from MNIST
+</p>
+</div>
+<p>Each image is represented as a 28x28 matrix of pixel values between 0 and 255. We reshape each matrix in to a vector and scale the pixel value so that it is between 0 and 1.</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="5.1-an-application-i-1.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(x_train) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">nrow</span>(x_train), <span class="dv">784</span>)</span>
+<span id="cb164-2"><a href="5.1-an-application-i-1.html#cb164-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(x_test) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">nrow</span>(x_test), <span class="dv">784</span>)</span>
+<span id="cb164-3"><a href="5.1-an-application-i-1.html#cb164-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-4"><a href="5.1-an-application-i-1.html#cb164-4" aria-hidden="true" tabindex="-1"></a>x_train <span class="ot">&lt;-</span> x_train <span class="sc">/</span> <span class="dv">255</span></span>
+<span id="cb164-5"><a href="5.1-an-application-i-1.html#cb164-5" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">&lt;-</span> x_test <span class="sc">/</span> <span class="dv">255</span></span></code></pre></div>
+<p>The <span class="math inline">\(y\)</span> variables are given as an integer between 0 and 9. We transform it to a vector of dummy variables.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="5.1-an-application-i-1.html#cb165-1" aria-hidden="true" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_train, <span class="dv">10</span>)</span>
+<span id="cb165-2"><a href="5.1-an-application-i-1.html#cb165-2" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> <span class="fu">to_categorical</span>(y_test, <span class="dv">10</span>)</span></code></pre></div>
+<p>Now we specify a 2-layer NN with Relu activation in the hidden layer and softmax in the last layer.</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="5.1-an-application-i-1.html#cb166-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>()</span>
+<span id="cb166-2"><a href="5.1-an-application-i-1.html#cb166-2" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span></span>
+<span id="cb166-3"><a href="5.1-an-application-i-1.html#cb166-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">50</span>, <span class="at">activation =</span> <span class="st">&quot;relu&quot;</span>, <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb166-4"><a href="5.1-an-application-i-1.html#cb166-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">10</span>, <span class="at">activation =</span> <span class="st">&quot;softmax&quot;</span>)</span></code></pre></div>
+<p>We compile the model by specifying the loss and the optimization method.</p>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="5.1-an-application-i-1.html#cb167-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">compile</span>(</span>
+<span id="cb167-2"><a href="5.1-an-application-i-1.html#cb167-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> <span class="st">&quot;categorical_crossentropy&quot;</span>,</span>
+<span id="cb167-3"><a href="5.1-an-application-i-1.html#cb167-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="fu">optimizer_rmsprop</span>(),</span>
+<span id="cb167-4"><a href="5.1-an-application-i-1.html#cb167-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">c</span>(<span class="st">&quot;accuracy&quot;</span>)</span>
+<span id="cb167-5"><a href="5.1-an-application-i-1.html#cb167-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Here, cross entropy loss is just the negative of a multinomial log likelihood. The optimizer, RMSprop, is a way of choosing the learning rate adaptively. Now we train the NN.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="5.1-an-application-i-1.html#cb168-1" aria-hidden="true" tabindex="-1"></a>history <span class="ot">&lt;-</span> model <span class="sc">%&gt;%</span> <span class="fu">fit</span>(</span>
+<span id="cb168-2"><a href="5.1-an-application-i-1.html#cb168-2" aria-hidden="true" tabindex="-1"></a>  x_train, y_train,</span>
+<span id="cb168-3"><a href="5.1-an-application-i-1.html#cb168-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">epochs =</span> <span class="dv">10</span>, <span class="at">batch_size =</span> <span class="dv">128</span>,</span>
+<span id="cb168-4"><a href="5.1-an-application-i-1.html#cb168-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_split =</span> <span class="fl">0.2</span></span>
+<span id="cb168-5"><a href="5.1-an-application-i-1.html#cb168-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+Here we use 20‰ as a validation set. Usually NN does not include a regularization term and so there is a risk of overfitting. Instead one usually restricts the number of epochs and the optimization algorithm is not run until convergence. This is called <em>early stopping</em>.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mnistHistory"></span>
+<img src="05-beyondLinearity_files/figure-html/mnistHistory-1.png" alt="Training and validation loss/accuracy for each epoch" width="80%" />
+<p class="caption">
+Figure 5.2: Training and validation loss/accuracy for each epoch
+</p>
+</div>
+<p>We see that the validation accuracy is still increasing, so we could probably run more epochs. Let us evaluate the model on the test set.</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="5.1-an-application-i-1.html#cb169-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> <span class="fu">evaluate</span>(x_test, y_test,<span class="at">verbose =</span> <span class="dv">0</span>)</span></code></pre></div>
+<pre><code>##      loss  accuracy 
+## 0.1103705 0.9698000</code></pre>
+The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mnist2"></span>
+<img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />
+<p class="caption">
+Figure 5.3: Predictions on the test set
+</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="4.8-regression-regularization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4.10-an-application-i.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5-beyond-linearity-draft.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.2-an-application-ii-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -117,11 +117,6 @@ $$
 p(\theta) = \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)},\quad 0\leq \theta\leq 1,
 $$
 <p>where $\alpha>0$ and $\beta>0$ are parameters. Also, $B(\alpha,\beta)$ is the beta function, defined simply such that the density integrates to one. We plot the density for a few choices of $\alpha$ and $\beta$.</p>
-
-```
-## Warning: package 'ggplot2' was built under R version 4.1.1
-```
-
 <div class="figure" style="text-align: center">
 <img src="02-bayesian_files/figure-html/betaDist-1.png" alt="Density of the beta distribution" width="80%" />
 <p class="caption">(\#fig:betaDist)Density of the beta distribution</p>

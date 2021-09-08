@@ -10,7 +10,7 @@ ISLR 8
 
 ISLR 10.1-3 and 10.6-7
 
-## An application
+## An application I
 
 Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library *Tensorflow*. You may find the [documentation](https://keras.rstudio.com) useful
 
@@ -105,6 +105,107 @@ The accuracy is 97%, which is not too bad. Let us make predictions on the test s
 <img src="05-beyondLinearity_files/figure-html/mnist2-1.png" alt="Predictions on the test set" width="80%" />
 <p class="caption">(\#fig:mnist2)Predictions on the test set</p>
 </div>
+
+## An application II
+
+In this section we demonstrate how to use boosting to predict the salary of baseball players using the Hitters dataset.
+
+We start by loading the required packages and splitting the data into a training and test set
+
+
+```r
+library(caret)
+library(ISLR2)
+library(tidyverse)
+library(gbm)
+
+Hitters <- na.omit(Hitters)
+
+set.seed(3)
+training.samples <- caret::createDataPartition(Hitters$Salary, 
+                                               p = 0.7, 
+                                               list = FALSE)
+train.data  <- Hitters[training.samples, ]
+test.data <- Hitters[-training.samples, ]
+```
+
+Boosting has a number of different parameters and we use a grid search and cross-validation to find the best choice.
+
+```r
+gbmGrid <- expand.grid(interaction.depth = c(1, 2, 3),
+                       n.trees = (1:20)*2000,
+                       shrinkage = 0.001,
+                       n.minobsinnode = 5)
+
+fitControl <- trainControl(
+  method = "repeatedcv",
+  number = 5,
+  repeats = 5
+  )
+```
+
+The performance of the model is usually better the smaller the shrinkage parameter, or learning rate, is chosen. But with a small shrinkage we need many iterations, i.e. trees. So there is a tradeof between performance and the time it takes to train the model and the amount of storage required.
+
+To speed up the training we use parallel processes.
+
+```r
+library(doParallel)
+cl <- makePSOCKcluster(4)
+registerDoParallel(cl)
+```
+Now we fit the model
+
+```r
+gbmFit <- train(
+  Salary ~ ., 
+  data = train.data, 
+  method = "gbm", 
+  trControl = fitControl,
+  verbose = FALSE,
+  distribution = "gaussian",
+  tuneGrid = gbmGrid
+  )
+```
+Here, gaussian means that we are doing regression that minimizes the square error.
+
+We may know predict the observations in the test set and calculate the out-of-sample error.
+
+
+```r
+predictions <- predict(gbmFit, test.data)
+sqrt(mean((predictions - test.data$Salary)^2))
+```
+
+```
+## [1] 251.9191
+```
+This is an improvement over the regularized linear regression we did previously.
+
+We can also see the importance of each variable.
+
+```r
+vip::vip(gbmFit) +
+  theme_minimal()
+```
+
+<img src="05-beyondLinearity_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+
+By making a partial dependence plot we can illustrate how each variable affect the prediction on average.
+
+```r
+gbmFit$finalModel %>%
+  pdp::partial(
+    pred.var = "CHmRun", 
+    n.trees = gbmFit$finalModel$n.trees, 
+    grid.resolution = 100,
+    train = train.data,
+    plot = TRUE,
+    rug = TRUE,
+    plot.engine = "ggplot2") +
+  theme_minimal()
+```
+
+<img src="05-beyondLinearity_files/figure-html/unnamed-chunk-16-1.png" width="672" />
 
 ## Review questions
 

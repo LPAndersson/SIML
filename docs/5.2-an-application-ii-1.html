@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>5.2 An application II | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="5.2 An application II | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.9 Model selection | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="5.2 An application II | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="4.8-regression-regularization.html"/>
-<link rel="next" href="4.10-an-application-i.html"/>
+<link rel="prev" href="5.1-an-application-i-1.html"/>
+<link rel="next" href="5.3-review-questions-4.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -239,28 +239,79 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-selection" class="section level2" number="4.9">
-<h2><span class="header-section-number">4.9</span> Model selection</h2>
-<p>We have seen that in statistical learning a model that is too flexible will lead to overfitting and a model that is not flexible enough will lead to underfitting. We can control the flexibility of our model by either choosing the model class, e.g. the degree of a polynomial, or by introducing regularization. In either case this introduces a new parameter that we can not learn from the in-sample error. In this section we discuss how choose this parameter.</p>
-<p>One approach is to use a <em>validation set</em>. We would take the available observations and divide them (randomly) into a training set and a validation set. The training set is used only for fitting the model(s) and the validation set is used for estimating the out-of-sample error. We could then choose the model that achieves the smallest error on the validation set. However note that the error of the chosen model is not a good estimate of the out-of-sample error, since again we have used the validation set for choosing a model. The drawback of this method is that the division into training and validation set is random and so if we are unlucky, the division does not represent the underlying distribution well.</p>
-<p>An approach that tries to address this drawback is <em>leave-one-out cross-validation</em> (LOOCV). Here we again divide the observations into a training set and a validation set. The difference is that the validation set will only contain one observation, call this <span class="math inline">\((x_1,y_1)\)</span>. We fit the model on the <span class="math inline">\(n-1\)</span> observations in the training set and predict the observation in the validation set. We then calculate the prediction error and call this (in the regression case) <span class="math inline">\(MSE_1\)</span>. We now repeat this, instead keeping <span class="math inline">\((x_2,y_2)\)</span> in the validation set and all other in the training set. The LOOCV estimate of the out-of-sample error is then
-<span class="math display">\[
-CV_{(n)}= \frac{1}{n}\sum_{i=1}^n MSE_i.
-\]</span></p>
-<p>The advantage compared to the validation set approach is that it always yields the same results and that there is less bias. This is because the size of the training set, <span class="math inline">\(n-1\)</span>, is almost the same as the full data set, <span class="math inline">\(n\)</span>. Therefore the fit should be almost as good as using the full data set.</p>
-<p>The main drawback of LOOCV is that if <span class="math inline">\(n\)</span> is large, it could be expensive to implement. An alternative is therefore <em>k-fold cross-calidation</em>. Here the data is divided randomly into <span class="math inline">\(k\)</span> groups. We take the first group as validation set and the others as training set. This gives an out-of-sample error, call it <span class="math inline">\(MSE_1\)</span>. We continue by treating the second group as validation set, giving <span class="math inline">\(MSE_2\)</span>, and so on. The k-fold CV estimate of the out-of-sample error is then
-<span class="math display">\[
-CV_{(k)} = \frac{1}{k}\sum_{i=1}^k MSE_i.
-\]</span>
-In practice usually <span class="math inline">\(k=5\)</span> or <span class="math inline">\(k=10\)</span> is used.</p>
+<div id="an-application-ii-1" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> An application II</h2>
+<p>In this section we demonstrate how to use boosting to predict the salary of baseball players using the Hitters dataset.</p>
+<p>We start by loading the required packages and splitting the data into a training and test set</p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="5.2-an-application-ii-1.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb171-2"><a href="5.2-an-application-ii-1.html#cb171-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span>
+<span id="cb171-3"><a href="5.2-an-application-ii-1.html#cb171-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb171-4"><a href="5.2-an-application-ii-1.html#cb171-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
+<span id="cb171-5"><a href="5.2-an-application-ii-1.html#cb171-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-6"><a href="5.2-an-application-ii-1.html#cb171-6" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
+<span id="cb171-7"><a href="5.2-an-application-ii-1.html#cb171-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-8"><a href="5.2-an-application-ii-1.html#cb171-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb171-9"><a href="5.2-an-application-ii-1.html#cb171-9" aria-hidden="true" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">createDataPartition</span>(Hitters<span class="sc">$</span>Salary, </span>
+<span id="cb171-10"><a href="5.2-an-application-ii-1.html#cb171-10" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">p =</span> <span class="fl">0.7</span>, </span>
+<span id="cb171-11"><a href="5.2-an-application-ii-1.html#cb171-11" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb171-12"><a href="5.2-an-application-ii-1.html#cb171-12" aria-hidden="true" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> Hitters[training.samples, ]</span>
+<span id="cb171-13"><a href="5.2-an-application-ii-1.html#cb171-13" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> Hitters[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
+<p>Boosting has a number of different parameters and we use a grid search and cross-validation to find the best choice.</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="5.2-an-application-ii-1.html#cb172-1" aria-hidden="true" tabindex="-1"></a>gbmGrid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">interaction.depth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb172-2"><a href="5.2-an-application-ii-1.html#cb172-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.trees =</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)<span class="sc">*</span><span class="dv">2000</span>,</span>
+<span id="cb172-3"><a href="5.2-an-application-ii-1.html#cb172-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">shrinkage =</span> <span class="fl">0.001</span>,</span>
+<span id="cb172-4"><a href="5.2-an-application-ii-1.html#cb172-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.minobsinnode =</span> <span class="dv">5</span>)</span>
+<span id="cb172-5"><a href="5.2-an-application-ii-1.html#cb172-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb172-6"><a href="5.2-an-application-ii-1.html#cb172-6" aria-hidden="true" tabindex="-1"></a>fitControl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb172-7"><a href="5.2-an-application-ii-1.html#cb172-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;repeatedcv&quot;</span>,</span>
+<span id="cb172-8"><a href="5.2-an-application-ii-1.html#cb172-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">5</span>,</span>
+<span id="cb172-9"><a href="5.2-an-application-ii-1.html#cb172-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">repeats =</span> <span class="dv">5</span></span>
+<span id="cb172-10"><a href="5.2-an-application-ii-1.html#cb172-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p>The performance of the model is usually better the smaller the shrinkage parameter, or learning rate, is chosen. But with a small shrinkage we need many iterations, i.e. trees. So there is a tradeof between performance and the time it takes to train the model and the amount of storage required.</p>
+<p>To speed up the training we use parallel processes.</p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="5.2-an-application-ii-1.html#cb173-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb173-2"><a href="5.2-an-application-ii-1.html#cb173-2" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makePSOCKcluster</span>(<span class="dv">4</span>)</span>
+<span id="cb173-3"><a href="5.2-an-application-ii-1.html#cb173-3" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span></code></pre></div>
+<p>Now we fit the model</p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="5.2-an-application-ii-1.html#cb174-1" aria-hidden="true" tabindex="-1"></a>gbmFit <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb174-2"><a href="5.2-an-application-ii-1.html#cb174-2" aria-hidden="true" tabindex="-1"></a>  Salary <span class="sc">~</span> ., </span>
+<span id="cb174-3"><a href="5.2-an-application-ii-1.html#cb174-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train.data, </span>
+<span id="cb174-4"><a href="5.2-an-application-ii-1.html#cb174-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;gbm&quot;</span>, </span>
+<span id="cb174-5"><a href="5.2-an-application-ii-1.html#cb174-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> fitControl,</span>
+<span id="cb174-6"><a href="5.2-an-application-ii-1.html#cb174-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb174-7"><a href="5.2-an-application-ii-1.html#cb174-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb174-8"><a href="5.2-an-application-ii-1.html#cb174-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneGrid =</span> gbmGrid</span>
+<span id="cb174-9"><a href="5.2-an-application-ii-1.html#cb174-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Here, gaussian means that we are doing regression that minimizes the square error.</p>
+<p>We may know predict the observations in the test set and calculate the out-of-sample error.</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="5.2-an-application-ii-1.html#cb175-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(gbmFit, test.data)</span>
+<span id="cb175-2"><a href="5.2-an-application-ii-1.html#cb175-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">mean</span>((predictions <span class="sc">-</span> test.data<span class="sc">$</span>Salary)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## [1] 251.9191</code></pre>
+<p>This is an improvement over the regularized linear regression we did previously.</p>
+<p>We can also see the importance of each variable.</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="5.2-an-application-ii-1.html#cb177-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(gbmFit) <span class="sc">+</span></span>
+<span id="cb177-2"><a href="5.2-an-application-ii-1.html#cb177-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="05-beyondLinearity_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>By making a partial dependence plot we can illustrate how each variable affect the prediction on average.</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="5.2-an-application-ii-1.html#cb178-1" aria-hidden="true" tabindex="-1"></a>gbmFit<span class="sc">$</span>finalModel <span class="sc">%&gt;%</span></span>
+<span id="cb178-2"><a href="5.2-an-application-ii-1.html#cb178-2" aria-hidden="true" tabindex="-1"></a>  pdp<span class="sc">::</span><span class="fu">partial</span>(</span>
+<span id="cb178-3"><a href="5.2-an-application-ii-1.html#cb178-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred.var =</span> <span class="st">&quot;CHmRun&quot;</span>, </span>
+<span id="cb178-4"><a href="5.2-an-application-ii-1.html#cb178-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.trees =</span> gbmFit<span class="sc">$</span>finalModel<span class="sc">$</span>n.trees, </span>
+<span id="cb178-5"><a href="5.2-an-application-ii-1.html#cb178-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid.resolution =</span> <span class="dv">100</span>,</span>
+<span id="cb178-6"><a href="5.2-an-application-ii-1.html#cb178-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">train =</span> train.data,</span>
+<span id="cb178-7"><a href="5.2-an-application-ii-1.html#cb178-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb178-8"><a href="5.2-an-application-ii-1.html#cb178-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">rug =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb178-9"><a href="5.2-an-application-ii-1.html#cb178-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.engine =</span> <span class="st">&quot;ggplot2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb178-10"><a href="5.2-an-application-ii-1.html#cb178-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="05-beyondLinearity_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="4.8-regression-regularization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4.10-an-application-i.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.1-an-application-i-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.3-review-questions-4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

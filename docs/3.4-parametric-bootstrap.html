@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-08-23" />
+<meta name="date" content="2021-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -215,8 +215,9 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="5.1-an-application-3.html"><a href="5.1-an-application-3.html"><i class="fa fa-check"></i><b>5.1</b> An application</a></li>
-<li class="chapter" data-level="5.2" data-path="5.2-review-questions-4.html"><a href="5.2-review-questions-4.html"><i class="fa fa-check"></i><b>5.2</b> Review questions</a></li>
+<li class="chapter" data-level="5.1" data-path="5.1-an-application-i-1.html"><a href="5.1-an-application-i-1.html"><i class="fa fa-check"></i><b>5.1</b> An application I</a></li>
+<li class="chapter" data-level="5.2" data-path="5.2-an-application-ii-1.html"><a href="5.2-an-application-ii-1.html"><i class="fa fa-check"></i><b>5.2</b> An application II</a></li>
+<li class="chapter" data-level="5.3" data-path="5.3-review-questions-4.html"><a href="5.3-review-questions-4.html"><i class="fa fa-check"></i><b>5.3</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -245,19 +246,19 @@ div.csl-indent {
 <p>Then we proceed as before. We may now sample from <span class="math inline">\(\hat F = F_{\hat\theta}\)</span> and estimate variances and construct confidence intervals as before.</p>
 <p>As an example, let us say that we have a random sample from <span class="math inline">\(\mathsf N(\mu,\sigma^2)\)</span> and wish to estimate the variance of the median of the sample. We then estimate <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma^2\)</span> with the ML-estimates and let <span class="math inline">\(\hat F = \mathsf N(\hat \mu,\hat \sigma^2)\)</span>.</p>
 <p>Implementing this is not complicated.</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="3.4-parametric-bootstrap.html#cb108-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
-<span id="cb108-2"><a href="3.4-parametric-bootstrap.html#cb108-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
-<span id="cb108-3"><a href="3.4-parametric-bootstrap.html#cb108-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb108-4"><a href="3.4-parametric-bootstrap.html#cb108-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-5"><a href="3.4-parametric-bootstrap.html#cb108-5" aria-hidden="true" tabindex="-1"></a>mu.hat <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>x)</span>
-<span id="cb108-6"><a href="3.4-parametric-bootstrap.html#cb108-6" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">sd</span>(data.df<span class="sc">$</span>x)</span>
-<span id="cb108-7"><a href="3.4-parametric-bootstrap.html#cb108-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-8"><a href="3.4-parametric-bootstrap.html#cb108-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
-<span id="cb108-9"><a href="3.4-parametric-bootstrap.html#cb108-9" aria-hidden="true" tabindex="-1"></a>  bootstrap.sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu.hat, <span class="at">sd =</span> sigma.hat)</span>
-<span id="cb108-10"><a href="3.4-parametric-bootstrap.html#cb108-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(bootstrap.sample)</span>
-<span id="cb108-11"><a href="3.4-parametric-bootstrap.html#cb108-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb108-12"><a href="3.4-parametric-bootstrap.html#cb108-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-13"><a href="3.4-parametric-bootstrap.html#cb108-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="3.4-parametric-bootstrap.html#cb107-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb107-2"><a href="3.4-parametric-bootstrap.html#cb107-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb107-3"><a href="3.4-parametric-bootstrap.html#cb107-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb107-4"><a href="3.4-parametric-bootstrap.html#cb107-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-5"><a href="3.4-parametric-bootstrap.html#cb107-5" aria-hidden="true" tabindex="-1"></a>mu.hat <span class="ot">&lt;-</span> <span class="fu">mean</span>(data.df<span class="sc">$</span>x)</span>
+<span id="cb107-6"><a href="3.4-parametric-bootstrap.html#cb107-6" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">sd</span>(data.df<span class="sc">$</span>x)</span>
+<span id="cb107-7"><a href="3.4-parametric-bootstrap.html#cb107-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-8"><a href="3.4-parametric-bootstrap.html#cb107-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb107-9"><a href="3.4-parametric-bootstrap.html#cb107-9" aria-hidden="true" tabindex="-1"></a>  bootstrap.sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> mu.hat, <span class="at">sd =</span> sigma.hat)</span>
+<span id="cb107-10"><a href="3.4-parametric-bootstrap.html#cb107-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(bootstrap.sample)</span>
+<span id="cb107-11"><a href="3.4-parametric-bootstrap.html#cb107-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb107-12"><a href="3.4-parametric-bootstrap.html#cb107-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-13"><a href="3.4-parametric-bootstrap.html#cb107-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
 <pre><code>## [1] 0.1272958</code></pre>
 </div>
             </section>
