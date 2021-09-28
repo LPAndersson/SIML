@@ -242,14 +242,14 @@ div.csl-indent {
 <div id="an-application-ii" class="section level2" number="4.11">
 <h2><span class="header-section-number">4.11</span> An application II</h2>
 <p>Here we show an application using a dataset on whether or not a patient has diabetes, based on certain diagnostic measurements. First load the data and print some observations</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="4.11-an-application-ii.html#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb152-2"><a href="4.11-an-application-ii.html#cb152-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
-<span id="cb152-3"><a href="4.11-an-application-ii.html#cb152-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
-<span id="cb152-4"><a href="4.11-an-application-ii.html#cb152-4" aria-hidden="true" tabindex="-1"></a>PimaIndiansDiabetes2 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(PimaIndiansDiabetes2)</span>
-<span id="cb152-5"><a href="4.11-an-application-ii.html#cb152-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb152-6"><a href="4.11-an-application-ii.html#cb152-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb152-7"><a href="4.11-an-application-ii.html#cb152-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(PimaIndiansDiabetes2), <span class="at">booktabs =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb152-8"><a href="4.11-an-application-ii.html#cb152-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&#39;Diabetes data&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="4.11-an-application-ii.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb37-2"><a href="4.11-an-application-ii.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb37-3"><a href="4.11-an-application-ii.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;PimaIndiansDiabetes2&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
+<span id="cb37-4"><a href="4.11-an-application-ii.html#cb37-4" aria-hidden="true" tabindex="-1"></a>PimaIndiansDiabetes2 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(PimaIndiansDiabetes2)</span>
+<span id="cb37-5"><a href="4.11-an-application-ii.html#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="4.11-an-application-ii.html#cb37-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb37-7"><a href="4.11-an-application-ii.html#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(PimaIndiansDiabetes2), <span class="at">booktabs =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb37-8"><a href="4.11-an-application-ii.html#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&#39;Diabetes data&#39;</span>)</span></code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-36">Table 4.1: </span>Diabetes data</caption>
 <thead>
@@ -342,25 +342,25 @@ div.csl-indent {
 </tbody>
 </table>
 <p>Divide the data into a train and a test set.</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="4.11-an-application-ii.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb153-2"><a href="4.11-an-application-ii.html#cb153-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb153-3"><a href="4.11-an-application-ii.html#cb153-3" aria-hidden="true" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(PimaIndiansDiabetes2<span class="sc">$</span>diabetes, </span>
-<span id="cb153-4"><a href="4.11-an-application-ii.html#cb153-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">p =</span> <span class="fl">0.7</span>, </span>
-<span id="cb153-5"><a href="4.11-an-application-ii.html#cb153-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb153-6"><a href="4.11-an-application-ii.html#cb153-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb153-7"><a href="4.11-an-application-ii.html#cb153-7" aria-hidden="true" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> PimaIndiansDiabetes2[training.samples, ]</span>
-<span id="cb153-8"><a href="4.11-an-application-ii.html#cb153-8" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> PimaIndiansDiabetes2[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="4.11-an-application-ii.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb38-2"><a href="4.11-an-application-ii.html#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="4.11-an-application-ii.html#cb38-3" aria-hidden="true" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(PimaIndiansDiabetes2<span class="sc">$</span>diabetes, </span>
+<span id="cb38-4"><a href="4.11-an-application-ii.html#cb38-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">p =</span> <span class="fl">0.7</span>, </span>
+<span id="cb38-5"><a href="4.11-an-application-ii.html#cb38-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb38-6"><a href="4.11-an-application-ii.html#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="4.11-an-application-ii.html#cb38-7" aria-hidden="true" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> PimaIndiansDiabetes2[training.samples, ]</span>
+<span id="cb38-8"><a href="4.11-an-application-ii.html#cb38-8" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> PimaIndiansDiabetes2[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
 <p>Then use a SVM, where the parameter is estimated by 10-fold CV. If you have a computer with multiple cores, there may be a speed-up by using the library doMC.</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="4.11-an-application-ii.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doMC)</span>
-<span id="cb154-2"><a href="4.11-an-application-ii.html#cb154-2" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoMC</span>(<span class="at">cores=</span><span class="dv">8</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="4.11-an-application-ii.html#cb155-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb155-2"><a href="4.11-an-application-ii.html#cb155-2" aria-hidden="true" tabindex="-1"></a>  diabetes <span class="sc">~</span>., <span class="at">data =</span> train.data, <span class="at">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</span>
-<span id="cb155-3"><a href="4.11-an-application-ii.html#cb155-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>),</span>
-<span id="cb155-4"><a href="4.11-an-application-ii.html#cb155-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneLength =</span> <span class="dv">10</span>,</span>
-<span id="cb155-5"><a href="4.11-an-application-ii.html#cb155-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</span>
-<span id="cb155-6"><a href="4.11-an-application-ii.html#cb155-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="4.11-an-application-ii.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doMC)</span>
+<span id="cb39-2"><a href="4.11-an-application-ii.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoMC</span>(<span class="at">cores=</span><span class="dv">8</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="4.11-an-application-ii.html#cb40-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb40-2"><a href="4.11-an-application-ii.html#cb40-2" aria-hidden="true" tabindex="-1"></a>  diabetes <span class="sc">~</span>., <span class="at">data =</span> train.data, <span class="at">method =</span> <span class="st">&quot;svmRadial&quot;</span>,</span>
+<span id="cb40-3"><a href="4.11-an-application-ii.html#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>),</span>
+<span id="cb40-4"><a href="4.11-an-application-ii.html#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneLength =</span> <span class="dv">10</span>,</span>
+<span id="cb40-5"><a href="4.11-an-application-ii.html#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>,<span class="st">&quot;scale&quot;</span>)</span>
+<span id="cb40-6"><a href="4.11-an-application-ii.html#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>We may print a summary of the training of the model</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="4.11-an-application-ii.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="4.11-an-application-ii.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model)</span></code></pre></div>
 <pre><code>## Support Vector Machines with Radial Basis Function Kernel 
 ## 
 ## 275 samples
@@ -388,7 +388,7 @@ div.csl-indent {
 ## Accuracy was used to select the optimal model using the largest value.
 ## The final values used for the model were sigma = 0.114713 and C = 1.</code></pre>
 <p>We can also plot the cross-validated accuracy as a function of the regularization parameter</p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="4.11-an-application-ii.html#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="4.11-an-application-ii.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:SVMApplicationPlot"></span>
 <img src="04-statisticalLearning_files/figure-html/SVMApplicationPlot-1.png" alt="Cross-validated accuracy against the regularization parameter for the SVM" width="80%" />
 <p class="caption">
@@ -398,8 +398,8 @@ Figure 4.24: Cross-validated accuracy against the regularization parameter for t
 <p>
 The final results are
 </p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="4.11-an-application-ii.html#cb159-1" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, test.data)</span>
-<span id="cb159-2"><a href="4.11-an-application-ii.html#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(predicted <span class="sc">==</span> test.data<span class="sc">$</span>diabetes)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="4.11-an-application-ii.html#cb44-1" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, test.data)</span>
+<span id="cb44-2"><a href="4.11-an-application-ii.html#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(predicted <span class="sc">==</span> test.data<span class="sc">$</span>diabetes)</span></code></pre></div>
 <pre><code>## [1] 0.7606838</code></pre>
 </div>
             </section>

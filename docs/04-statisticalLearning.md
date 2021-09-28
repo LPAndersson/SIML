@@ -59,7 +59,7 @@ Then the out-of-sample error is
 $$
 E_{out}(h) = E_{X,Y}\left[ l(h(X),Y) \right] = P(h(X)\neq Y).
 $$
-That is, it is the probability of classifying a random observation $X$ incorrectly, when using the classifier $h$.
+That is, it is the probability of classifying a random observation $X$ incorrectly, when using the classifier $h.$
 
 To simplify notation we also define the *conditional class probability*,
 $$

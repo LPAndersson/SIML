@@ -61,7 +61,7 @@ Then the out-of-sample error is
 $$
 E_{out}(h) = E_{X,Y}\left[ l(h(X),Y) \right] = P(h(X)\neq Y).
 $$
-That is, it is the probability of classifying a random observation $X$ incorrectly, when using the classifier $h$.
+That is, it is the probability of classifying a random observation $X$ incorrectly, when using the classifier $h.$
 
 To simplify notation we also define the *conditional class probability*,
 $$
@@ -1002,7 +1002,7 @@ ggplot() +
   xlim(1, 15) +
   scale_colour_manual(name = "",
                       values = c("in" = cbp1[2], "gen" = cbp1[3], "out" = cbp1[4]),
-                      labels = c("generalization", "in-sample", "out-of-sample")) +
+                      labels = c("in-sample","generalization", "out-of-sample")) +
   labs(x = "model complexity", y = "error") +
   theme_minimal()
 
