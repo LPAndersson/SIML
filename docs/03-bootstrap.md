@@ -74,13 +74,6 @@ set.seed(42)
 data.df <- data.frame( x = rnorm(100) )
 
 library(ggplot2)
-```
-
-```
-## Warning: package 'ggplot2' was built under R version 4.1.1
-```
-
-```r
 cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
           "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 

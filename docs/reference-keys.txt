@@ -96,8 +96,7 @@ model-selection
 an-application-i
 an-application-ii
 review-questions-3
-beyond-linearity-draft
+beyond-linearity
 an-application-i-1
 an-application-ii-1
 review-questions-4
-beyond-linearity

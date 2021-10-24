@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.3 Bootstrap | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.3 Bootstrap | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2021-09-08" />
+<meta name="date" content="2021-10-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +33,9 @@
   
 <link rel="prev" href="3.2-non-parametric-estimation.html"/>
 <link rel="next" href="3.4-parametric-bootstrap.html"/>
-<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +43,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -203,7 +203,6 @@ div.csl-indent {
 <li class="chapter" data-level="4.1" data-path="4.1-classification.html"><a href="4.1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4.2-support-vector-machines-i.html"><a href="4.2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4.3-hoeffdings-inequality.html"><a href="4.3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
-<li class="chapter" data-level="4.4" data-path="4.4-generalization-error.html"><a href="4.4-generalization-error.html"><i class="fa fa-check"></i><b>4.4</b> Generalization error</a></li>
 <li class="chapter" data-level="4.5" data-path="4.5-vc-dimension.html"><a href="4.5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
 <li class="chapter" data-level="4.6" data-path="4.6-support-vector-machines-ii.html"><a href="4.6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
 <li class="chapter" data-level="4.7" data-path="4.7-bias-variance-decomposition.html"><a href="4.7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
@@ -213,7 +212,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.11" data-path="4.11-an-application-ii.html"><a href="4.11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4.12-review-questions-3.html"><a href="4.12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="5.1-an-application-i-1.html"><a href="5.1-an-application-i-1.html"><i class="fa fa-check"></i><b>5.1</b> An application I</a></li>
 <li class="chapter" data-level="5.2" data-path="5.2-an-application-ii-1.html"><a href="5.2-an-application-ii-1.html"><i class="fa fa-check"></i><b>5.2</b> An application II</a></li>
@@ -256,21 +255,21 @@ So that in practice, we would approximate the right hand side with the left hand
 Var\left( T_n \right) = E\left[T_n^2\right] - E\left[T_n\right]^2 \approx \frac{1}{B}\sum_{i=1}^B (t_i^\star)^2 - \left( \frac{1}{B}\sum_{i=1}^B t_i^\star \right)^2 = \frac{1}{B}\sum_{i=1}^B \left( t_i^\star - \bar{t^\star} \right)^2
 \]</span></p>
 <p>As an example, let us consider <span class="math inline">\(X_1,\ldots, X_{n}\overset{iid}\sim \mathsf{Exp}(1)\)</span>. We would like to know the distribution of the sample median and in particular the expected value and variance.</p>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="3.3-bootstrap.html#cb89-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb89-2"><a href="3.3-bootstrap.html#cb89-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb89-3"><a href="3.3-bootstrap.html#cb89-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-4"><a href="3.3-bootstrap.html#cb89-4" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
-<span id="cb89-5"><a href="3.3-bootstrap.html#cb89-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-6"><a href="3.3-bootstrap.html#cb89-6" aria-hidden="true" tabindex="-1"></a>tstar <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
-<span id="cb89-7"><a href="3.3-bootstrap.html#cb89-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-8"><a href="3.3-bootstrap.html#cb89-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(B)) {</span>
-<span id="cb89-9"><a href="3.3-bootstrap.html#cb89-9" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="dv">1</span>)</span>
-<span id="cb89-10"><a href="3.3-bootstrap.html#cb89-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(x)</span>
-<span id="cb89-11"><a href="3.3-bootstrap.html#cb89-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb89-12"><a href="3.3-bootstrap.html#cb89-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-13"><a href="3.3-bootstrap.html#cb89-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(tstar)</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="3.3-bootstrap.html#cb87-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb87-2"><a href="3.3-bootstrap.html#cb87-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb87-3"><a href="3.3-bootstrap.html#cb87-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-4"><a href="3.3-bootstrap.html#cb87-4" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb87-5"><a href="3.3-bootstrap.html#cb87-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-6"><a href="3.3-bootstrap.html#cb87-6" aria-hidden="true" tabindex="-1"></a>tstar <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
+<span id="cb87-7"><a href="3.3-bootstrap.html#cb87-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-8"><a href="3.3-bootstrap.html#cb87-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(B)) {</span>
+<span id="cb87-9"><a href="3.3-bootstrap.html#cb87-9" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="dv">1</span>)</span>
+<span id="cb87-10"><a href="3.3-bootstrap.html#cb87-10" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(x)</span>
+<span id="cb87-11"><a href="3.3-bootstrap.html#cb87-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb87-12"><a href="3.3-bootstrap.html#cb87-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-13"><a href="3.3-bootstrap.html#cb87-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(tstar)</span></code></pre></div>
 <pre><code>## [1] 0.6964009</code></pre>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="3.3-bootstrap.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(tstar)</span></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="3.3-bootstrap.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(tstar)</span></code></pre></div>
 <pre><code>## [1] 0.01063886</code></pre>
 <p>In practice this is not helpful since we rarely know <span class="math inline">\(F\)</span>. What we have is <span class="math inline">\(\hat F_n\)</span>, so let us approximate <span class="math inline">\(F\approx \hat F_n\)</span> and therefore also <span class="math inline">\(Var_F(T_n) \approx Var_{\hat F_n}(T_n)\)</span>. The right hand side here is then the variance of <span class="math inline">\(T(X_1,\ldots , X_n)\)</span>, where <span class="math inline">\(X_i\)</span> is iid and distributed as <span class="math inline">\(\hat F_n\)</span>. Then we proceed as above: Draw <span class="math inline">\(n\)</span> iid copies of the random variable <span class="math inline">\(X^\star_1,\ldots X^\star_n \sim \hat F_n\)</span> using a computer. Then calculate <span class="math inline">\(t^\star = T(X_1^\star,\ldots X^\star_n)\)</span>. Repeat this <span class="math inline">\(B\)</span> times to obtain <span class="math inline">\(t_1^\star,\ldots, t_B^\star\)</span>. Here, since <span class="math inline">\(\hat F_n\)</span> is the empirical distribution, drawing from <span class="math inline">\(\hat F_n\)</span> means simply to draw an observation at random from the original data set. In contrast to the above, this method can be summarized as:
 <span class="math display">\[
@@ -294,22 +293,22 @@ To be clear, step 1 above, draw <span class="math inline">\(X_1^\star,\ldots, X_
 </p></li>
 </ol>
 <p>Let us implement this method to calculate the standard error of the median using the normally distributed data set from the previous section:</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="3.3-bootstrap.html#cb93-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
-<span id="cb93-2"><a href="3.3-bootstrap.html#cb93-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
-<span id="cb93-3"><a href="3.3-bootstrap.html#cb93-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb93-4"><a href="3.3-bootstrap.html#cb93-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb93-5"><a href="3.3-bootstrap.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
-<span id="cb93-6"><a href="3.3-bootstrap.html#cb93-6" aria-hidden="true" tabindex="-1"></a>  indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(n), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb93-7"><a href="3.3-bootstrap.html#cb93-7" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(data.df<span class="sc">$</span>x[indices])</span>
-<span id="cb93-8"><a href="3.3-bootstrap.html#cb93-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb93-9"><a href="3.3-bootstrap.html#cb93-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb93-10"><a href="3.3-bootstrap.html#cb93-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="3.3-bootstrap.html#cb91-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb91-2"><a href="3.3-bootstrap.html#cb91-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb91-3"><a href="3.3-bootstrap.html#cb91-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb91-4"><a href="3.3-bootstrap.html#cb91-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-5"><a href="3.3-bootstrap.html#cb91-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb91-6"><a href="3.3-bootstrap.html#cb91-6" aria-hidden="true" tabindex="-1"></a>  indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(n), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb91-7"><a href="3.3-bootstrap.html#cb91-7" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(data.df<span class="sc">$</span>x[indices])</span>
+<span id="cb91-8"><a href="3.3-bootstrap.html#cb91-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb91-9"><a href="3.3-bootstrap.html#cb91-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-10"><a href="3.3-bootstrap.html#cb91-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(tstar)</span></code></pre></div>
 <pre><code>## [1] 0.1564483</code></pre>
 <p>In practice we would rather use the boot library.</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="3.3-bootstrap.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
-<span id="cb95-2"><a href="3.3-bootstrap.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
-<span id="cb95-3"><a href="3.3-bootstrap.html#cb95-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">statistic =</span> <span class="cf">function</span>(data, index){ <span class="fu">T</span>(data<span class="sc">$</span>x[index]) }, </span>
-<span id="cb95-4"><a href="3.3-bootstrap.html#cb95-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">R =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="3.3-bootstrap.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb93-2"><a href="3.3-bootstrap.html#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
+<span id="cb93-3"><a href="3.3-bootstrap.html#cb93-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">statistic =</span> <span class="cf">function</span>(data, index){ <span class="fu">T</span>(data<span class="sc">$</span>x[index]) }, </span>
+<span id="cb93-4"><a href="3.3-bootstrap.html#cb93-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">R =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## 
 ## ORDINARY NONPARAMETRIC BOOTSTRAP
 ## 
@@ -325,16 +324,16 @@ To be clear, step 1 above, draw <span class="math inline">\(X_1^\star,\ldots, X_
 ## t1* 0.08979677 0.03632407   0.1475442</code></pre>
 <p>Note that the two bootstrap functions do not give exactly the same result. This is because of the Monte Carlo error, i.e. the error in approximating the sample mean with the expected value as in Equation <a href="3.3-bootstrap.html#eq:MCapproximation">(3.1)</a>.</p>
 <p>Since here we know <span class="math inline">\(F\)</span> we can calculate the standard deviation by simulating from <span class="math inline">\(F\)</span>, an alternative not available in practice.</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="3.3-bootstrap.html#cb97-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
-<span id="cb97-2"><a href="3.3-bootstrap.html#cb97-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb97-3"><a href="3.3-bootstrap.html#cb97-3" aria-hidden="true" tabindex="-1"></a>Tsim <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
-<span id="cb97-4"><a href="3.3-bootstrap.html#cb97-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb97-5"><a href="3.3-bootstrap.html#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
-<span id="cb97-6"><a href="3.3-bootstrap.html#cb97-6" aria-hidden="true" tabindex="-1"></a>  simData.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">x =</span> <span class="fu">rnorm</span>(n) )</span>
-<span id="cb97-7"><a href="3.3-bootstrap.html#cb97-7" aria-hidden="true" tabindex="-1"></a>  Tsim[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(simData.df<span class="sc">$</span>x)</span>
-<span id="cb97-8"><a href="3.3-bootstrap.html#cb97-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb97-9"><a href="3.3-bootstrap.html#cb97-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb97-10"><a href="3.3-bootstrap.html#cb97-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(Tsim) <span class="co">#Standard error of median</span></span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="3.3-bootstrap.html#cb95-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb95-2"><a href="3.3-bootstrap.html#cb95-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb95-3"><a href="3.3-bootstrap.html#cb95-3" aria-hidden="true" tabindex="-1"></a>Tsim <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
+<span id="cb95-4"><a href="3.3-bootstrap.html#cb95-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-5"><a href="3.3-bootstrap.html#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb95-6"><a href="3.3-bootstrap.html#cb95-6" aria-hidden="true" tabindex="-1"></a>  simData.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">x =</span> <span class="fu">rnorm</span>(n) )</span>
+<span id="cb95-7"><a href="3.3-bootstrap.html#cb95-7" aria-hidden="true" tabindex="-1"></a>  Tsim[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(simData.df<span class="sc">$</span>x)</span>
+<span id="cb95-8"><a href="3.3-bootstrap.html#cb95-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb95-9"><a href="3.3-bootstrap.html#cb95-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-10"><a href="3.3-bootstrap.html#cb95-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(Tsim) <span class="co">#Standard error of median</span></span></code></pre></div>
 <pre><code>## [1] 0.1253581</code></pre>
 <p>It is also possible to construct confidence intervals using bootstrap. Here we present bootstrap pivotal confidence intervals, sometimes known as basic bootstrap intervals.</p>
 <p>Let us call <span class="math inline">\(T(F) = \theta\)</span> and <span class="math inline">\(T(\hat F_n )=\hat\theta_n\)</span> and define the pivot <span class="math inline">\(R_n = \hat\theta_n - \theta\)</span>. Write the distribution function of <span class="math inline">\(R_n\)</span> as:
@@ -364,32 +363,32 @@ The quantity <span class="math inline">\(H^{-1}(\alpha)\)</span> is the <span cl
 C_n = \left[ \hat\theta_n - (\theta^\star_{1-\alpha/2} - \hat\theta_n) , \hat\theta_n - (\theta^\star_{\alpha/2} - \hat\theta_n) \right] = \left[ 2\hat\theta_n - \theta^\star_{1-\alpha/2} , 2\hat\theta_n -\theta^\star_{\alpha/2}  \right]
 \]</span>
 Let us implement this on the same data set as above.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="3.3-bootstrap.html#cb99-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb99-2"><a href="3.3-bootstrap.html#cb99-2" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
-<span id="cb99-3"><a href="3.3-bootstrap.html#cb99-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
-<span id="cb99-4"><a href="3.3-bootstrap.html#cb99-4" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb99-5"><a href="3.3-bootstrap.html#cb99-5" aria-hidden="true" tabindex="-1"></a>tstar <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
-<span id="cb99-6"><a href="3.3-bootstrap.html#cb99-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-7"><a href="3.3-bootstrap.html#cb99-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(B)) {</span>
-<span id="cb99-8"><a href="3.3-bootstrap.html#cb99-8" aria-hidden="true" tabindex="-1"></a>  indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span>n), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb99-9"><a href="3.3-bootstrap.html#cb99-9" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(data.df<span class="sc">$</span>x[indices])</span>
-<span id="cb99-10"><a href="3.3-bootstrap.html#cb99-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb99-11"><a href="3.3-bootstrap.html#cb99-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-12"><a href="3.3-bootstrap.html#cb99-12" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">unname</span>( <span class="fu">quantile</span>(tstar, <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, alpha<span class="sc">/</span><span class="dv">2</span>)) )</span>
-<span id="cb99-13"><a href="3.3-bootstrap.html#cb99-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-14"><a href="3.3-bootstrap.html#cb99-14" aria-hidden="true" tabindex="-1"></a>lowerCI <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">T</span>(data.df<span class="sc">$</span>x) <span class="sc">-</span> q[<span class="dv">1</span>]</span>
-<span id="cb99-15"><a href="3.3-bootstrap.html#cb99-15" aria-hidden="true" tabindex="-1"></a>lowerCI</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="3.3-bootstrap.html#cb97-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb97-2"><a href="3.3-bootstrap.html#cb97-2" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> median</span>
+<span id="cb97-3"><a href="3.3-bootstrap.html#cb97-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data.df)</span>
+<span id="cb97-4"><a href="3.3-bootstrap.html#cb97-4" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb97-5"><a href="3.3-bootstrap.html#cb97-5" aria-hidden="true" tabindex="-1"></a>tstar <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> B)</span>
+<span id="cb97-6"><a href="3.3-bootstrap.html#cb97-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-7"><a href="3.3-bootstrap.html#cb97-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(B)) {</span>
+<span id="cb97-8"><a href="3.3-bootstrap.html#cb97-8" aria-hidden="true" tabindex="-1"></a>  indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span>n), <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb97-9"><a href="3.3-bootstrap.html#cb97-9" aria-hidden="true" tabindex="-1"></a>  tstar[i] <span class="ot">&lt;-</span> <span class="fu">T</span>(data.df<span class="sc">$</span>x[indices])</span>
+<span id="cb97-10"><a href="3.3-bootstrap.html#cb97-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb97-11"><a href="3.3-bootstrap.html#cb97-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-12"><a href="3.3-bootstrap.html#cb97-12" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">unname</span>( <span class="fu">quantile</span>(tstar, <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>, alpha<span class="sc">/</span><span class="dv">2</span>)) )</span>
+<span id="cb97-13"><a href="3.3-bootstrap.html#cb97-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-14"><a href="3.3-bootstrap.html#cb97-14" aria-hidden="true" tabindex="-1"></a>lowerCI <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">T</span>(data.df<span class="sc">$</span>x) <span class="sc">-</span> q[<span class="dv">1</span>]</span>
+<span id="cb97-15"><a href="3.3-bootstrap.html#cb97-15" aria-hidden="true" tabindex="-1"></a>lowerCI</span></code></pre></div>
 <pre><code>## [1] -0.2250317</code></pre>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="3.3-bootstrap.html#cb101-1" aria-hidden="true" tabindex="-1"></a>upperCI <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">T</span>(data.df<span class="sc">$</span>x) <span class="sc">-</span> q[<span class="dv">2</span>]</span>
-<span id="cb101-2"><a href="3.3-bootstrap.html#cb101-2" aria-hidden="true" tabindex="-1"></a>upperCI</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="3.3-bootstrap.html#cb99-1" aria-hidden="true" tabindex="-1"></a>upperCI <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">T</span>(data.df<span class="sc">$</span>x) <span class="sc">-</span> q[<span class="dv">2</span>]</span>
+<span id="cb99-2"><a href="3.3-bootstrap.html#cb99-2" aria-hidden="true" tabindex="-1"></a>upperCI</span></code></pre></div>
 <pre><code>## [1] 0.3515109</code></pre>
 <p>Even simpler is to use the boot library.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="3.3-bootstrap.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
-<span id="cb103-2"><a href="3.3-bootstrap.html#cb103-2" aria-hidden="true" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
-<span id="cb103-3"><a href="3.3-bootstrap.html#cb103-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">statistic =</span> <span class="cf">function</span>(data, index) <span class="fu">T</span>(data<span class="sc">$</span>x[index]), </span>
-<span id="cb103-4"><a href="3.3-bootstrap.html#cb103-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">R =</span> <span class="dv">1000</span>)</span>
-<span id="cb103-5"><a href="3.3-bootstrap.html#cb103-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-6"><a href="3.3-bootstrap.html#cb103-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;basic&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="3.3-bootstrap.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb101-2"><a href="3.3-bootstrap.html#cb101-2" aria-hidden="true" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
+<span id="cb101-3"><a href="3.3-bootstrap.html#cb101-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">statistic =</span> <span class="cf">function</span>(data, index) <span class="fu">T</span>(data<span class="sc">$</span>x[index]), </span>
+<span id="cb101-4"><a href="3.3-bootstrap.html#cb101-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">R =</span> <span class="dv">1000</span>)</span>
+<span id="cb101-5"><a href="3.3-bootstrap.html#cb101-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-6"><a href="3.3-bootstrap.html#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;basic&quot;</span>)</span></code></pre></div>
 <pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 ## Based on 1000 bootstrap replicates
 ## 
@@ -401,12 +400,12 @@ Let us implement this on the same data set as above.</p>
 ## 95%   (-0.2389,  0.3129 )  
 ## Calculations and Intervals on Original Scale</code></pre>
 <p>A better alternative which we do not cover in this course is the bias-corrected CI. It is however just as easy to use.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="3.3-bootstrap.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
-<span id="cb105-2"><a href="3.3-bootstrap.html#cb105-2" aria-hidden="true" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
-<span id="cb105-3"><a href="3.3-bootstrap.html#cb105-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">statistic =</span> <span class="cf">function</span>(data, index) <span class="fu">T</span>(data<span class="sc">$</span>x[index]), </span>
-<span id="cb105-4"><a href="3.3-bootstrap.html#cb105-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">R =</span> <span class="dv">1000</span>)</span>
-<span id="cb105-5"><a href="3.3-bootstrap.html#cb105-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb105-6"><a href="3.3-bootstrap.html#cb105-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="3.3-bootstrap.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb103-2"><a href="3.3-bootstrap.html#cb103-2" aria-hidden="true" tabindex="-1"></a>boot.result<span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> data.df, </span>
+<span id="cb103-3"><a href="3.3-bootstrap.html#cb103-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">statistic =</span> <span class="cf">function</span>(data, index) <span class="fu">T</span>(data<span class="sc">$</span>x[index]), </span>
+<span id="cb103-4"><a href="3.3-bootstrap.html#cb103-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">R =</span> <span class="dv">1000</span>)</span>
+<span id="cb103-5"><a href="3.3-bootstrap.html#cb103-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-6"><a href="3.3-bootstrap.html#cb103-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boot.ci</span>(boot.result, <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>)</span></code></pre></div>
 <pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 ## Based on 1000 bootstrap replicates
 ## 
@@ -428,7 +427,6 @@ Let us implement this on the same data set as above.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -469,7 +467,7 @@ gitbook.start({
 },
 "download": null,
 "search": {
-"engine": "lunr",
+"engine": "fuse",
 "options": null
 },
 "toc": {
