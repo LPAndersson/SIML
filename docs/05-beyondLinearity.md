@@ -1,4 +1,4 @@
-# Beyond linearity (draft)
+# Beyond linearity
 
 In this module we cover some state-of-the-art non-linear models. Decision trees, bagging, random forest and boosting is covered well in ISLR, so we will no repeat it here. But it is part of the course.
 
@@ -98,7 +98,7 @@ model %>% evaluate(x_test, y_test,verbose = 0)
 
 ```
 ##      loss  accuracy 
-## 0.1103705 0.9698000
+## 0.1046593 0.9707000
 ```
 The accuracy is 97%, which is not too bad. Let us make predictions on the test set and plot some of them.
 <div class="figure" style="text-align: center">
@@ -177,7 +177,7 @@ sqrt(mean((predictions - test.data$Salary)^2))
 ```
 
 ```
-## [1] 251.9191
+## [1] 308.2421
 ```
 This is an improvement over the regularized linear regression we did previously.
 
@@ -209,15 +209,26 @@ gbmFit$finalModel %>%
 
 ## Review questions
 
-4. What is an activation function?
-5. What is an ReLU?
-6. What is the softmax function?
-7. What is a layer?
-8. What is gradient descent?
-9. What is the trade-off in choosing the learning rate?
-10. What is a mini-batch?
-11. What is an epoch?
-12. What is backpropagation?
-13. How are NNs usually regularized?
-
+- What parts does a decision tree consist of?
+- What types of decision trees are there?
+- How does recursive binary splitting work?
+- What is tree pruning?
+- What are the steps in bagging?
+- How do random forests improve on bagged decision trees?
+- What is the basic idea behind boosting?
+- What are the pros and cons of tree-based models vs linear models?
+- What are the pros and cons of plain decision trees vs ensemble methods in decision trees?
+- What parts does a neuron consist of?
+- What is an activation function?
+- What is a ReLU?
+- What is the softmax function?
+- What is a layer?
+- What is gradient descent?
+- What is a mini-batch?
+- What is an epoch?
+- What is backpropagation?
+- How are NNs usually regularized?
+- What are some popular neural network architectures?
+- How can transfer learning be used in neural networks?
+- How does early stopping work?
 

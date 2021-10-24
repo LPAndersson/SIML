@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Page not found | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Page not found | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -33,8 +33,9 @@
   
 
 
-<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -42,7 +43,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -120,28 +120,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -213,7 +191,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.11" data-path="4.11-an-application-ii.html"><a href="4.11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
 <li class="chapter" data-level="4.12" data-path="4.12-review-questions-3.html"><a href="4.12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-beyond-linearity-draft.html"><a href="5-beyond-linearity-draft.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity (draft)</a>
+<li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="5.1-an-application-i-1.html"><a href="5.1-an-application-i-1.html"><i class="fa fa-check"></i><b>5.1</b> An application I</a></li>
 <li class="chapter" data-level="5.2" data-path="5.2-an-application-ii-1.html"><a href="5.2-an-application-ii-1.html"><i class="fa fa-check"></i><b>5.2</b> An application II</a></li>
@@ -255,7 +233,6 @@ the table of contents to find the page you are looking for.</p>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -296,7 +273,7 @@ gitbook.start({
 },
 "download": null,
 "search": {
-"engine": "lunr",
+"engine": "fuse",
 "options": null
 },
 "toc": {
