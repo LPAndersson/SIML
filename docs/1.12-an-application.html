@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>1.12 An application | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
 
   <meta property="og:title" content="1.12 An application | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -33,7 +32,6 @@
   
 <link rel="prev" href="1.11-confidence-intervals.html"/>
 <link rel="next" href="1.13-summary.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,8 +49,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -93,7 +92,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -106,7 +105,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -120,28 +119,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -202,15 +179,74 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="4.1-classification.html"><a href="4.1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4.2-support-vector-machines-i.html"><a href="4.2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
-<li class="chapter" data-level="4.3" data-path="4.3-hoeffdings-inequality.html"><a href="4.3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
-<li class="chapter" data-level="4.5" data-path="4.5-vc-dimension.html"><a href="4.5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
-<li class="chapter" data-level="4.6" data-path="4.6-support-vector-machines-ii.html"><a href="4.6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
-<li class="chapter" data-level="4.7" data-path="4.7-bias-variance-decomposition.html"><a href="4.7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
-<li class="chapter" data-level="4.8" data-path="4.8-regression-regularization.html"><a href="4.8-regression-regularization.html"><i class="fa fa-check"></i><b>4.8</b> Regression regularization</a></li>
-<li class="chapter" data-level="4.9" data-path="4.9-model-selection.html"><a href="4.9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
-<li class="chapter" data-level="4.10" data-path="4.10-an-application-i.html"><a href="4.10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
-<li class="chapter" data-level="4.11" data-path="4.11-an-application-ii.html"><a href="4.11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
-<li class="chapter" data-level="4.12" data-path="4.12-review-questions-3.html"><a href="4.12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
+<li class="chapter" data-level="4.3" data-path="4.3-section.html"><a href="4.3-section.html"><i class="fa fa-check"></i><b>4.3</b> [1] 0.285</a></li>
+<li class="chapter" data-level="4.4" data-path="4.4-section-1.html"><a href="4.4-section-1.html"><i class="fa fa-check"></i><b>4.4</b> [1] 0.275</a></li>
+<li class="chapter" data-level="4.5" data-path="4.5-section-2.html"><a href="4.5-section-2.html"><i class="fa fa-check"></i><b>4.5</b> [1] 0.03</a></li>
+<li class="chapter" data-level="4.6" data-path="4.6-hoeffdings-inequality.html"><a href="4.6-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.6</b> Hoeffding’s inequality</a></li>
+<li class="chapter" data-level="4.7" data-path="4.7-generalization-error.html"><a href="4.7-generalization-error.html"><i class="fa fa-check"></i><b>4.7</b> Generalization error</a></li>
+<li class="chapter" data-level="4.8" data-path="4.8-section-3.html"><a href="4.8-section-3.html"><i class="fa fa-check"></i><b>4.8</b> [1] 0.32</a></li>
+<li class="chapter" data-level="4.9" data-path="4.9-section-4.html"><a href="4.9-section-4.html"><i class="fa fa-check"></i><b>4.9</b> [1] 0.3548</a></li>
+<li class="chapter" data-level="4.10" data-path="4.10-section-5.html"><a href="4.10-section-5.html"><i class="fa fa-check"></i><b>4.10</b> [1] 0.5120646</a></li>
+<li class="chapter" data-level="4.11" data-path="4.11-vc-dimension.html"><a href="4.11-vc-dimension.html"><i class="fa fa-check"></i><b>4.11</b> VC-dimension</a></li>
+<li class="chapter" data-level="4.12" data-path="4.12-support-vector-machines-ii.html"><a href="4.12-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.12</b> Support vector machines II</a></li>
+<li class="chapter" data-level="4.13" data-path="4.13-bias-variance-decomposition.html"><a href="4.13-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.13</b> Bias-Variance decomposition</a></li>
+<li class="chapter" data-level="4.14" data-path="4.14-regression-regularization.html"><a href="4.14-regression-regularization.html"><i class="fa fa-check"></i><b>4.14</b> Regression regularization</a></li>
+<li class="chapter" data-level="4.15" data-path="4.15-model-selection.html"><a href="4.15-model-selection.html"><i class="fa fa-check"></i><b>4.15</b> Model selection</a></li>
+<li class="chapter" data-level="4.16" data-path="4.16-an-application-i.html"><a href="4.16-an-application-i.html"><i class="fa fa-check"></i><b>4.16</b> An application I</a></li>
+<li class="chapter" data-level="4.17" data-path="4.17-section-6.html"><a href="4.17-section-6.html"><i class="fa fa-check"></i><b>4.17</b> [1] 367.6942</a></li>
+<li class="chapter" data-level="4.18" data-path="4.18-x-1-sparse-matrix-of-class-dgcmatrix.html"><a href="4.18-x-1-sparse-matrix-of-class-dgcmatrix.html"><i class="fa fa-check"></i><b>4.18</b> 20 x 1 sparse Matrix of class “dgCMatrix”</a></li>
+<li class="chapter" data-level="4.19" data-path="4.19-s1.html"><a href="4.19-s1.html"><i class="fa fa-check"></i><b>4.19</b> s1</a></li>
+<li class="chapter" data-level="4.20" data-path="4.20-intercept--66.html"><a href="4.20-intercept--66.html"><i class="fa fa-check"></i><b>4.20</b> (Intercept) -66.88333624</a></li>
+<li class="chapter" data-level="4.21" data-path="4.21-atbat-..html"><a href="4.21-atbat-..html"><i class="fa fa-check"></i><b>4.21</b> AtBat .</a></li>
+<li class="chapter" data-level="4.22" data-path="4.22-hits-2.html"><a href="4.22-hits-2.html"><i class="fa fa-check"></i><b>4.22</b> Hits 2.00894789</a></li>
+<li class="chapter" data-level="4.23" data-path="4.23-hmrun-..html"><a href="4.23-hmrun-..html"><i class="fa fa-check"></i><b>4.23</b> HmRun .</a></li>
+<li class="chapter" data-level="4.24" data-path="4.24-runs-..html"><a href="4.24-runs-..html"><i class="fa fa-check"></i><b>4.24</b> Runs .</a></li>
+<li class="chapter" data-level="4.25" data-path="4.25-rbi-0.html"><a href="4.25-rbi-0.html"><i class="fa fa-check"></i><b>4.25</b> RBI 0.63610478</a></li>
+<li class="chapter" data-level="4.26" data-path="4.26-walks-3.html"><a href="4.26-walks-3.html"><i class="fa fa-check"></i><b>4.26</b> Walks 3.46312810</a></li>
+<li class="chapter" data-level="4.27" data-path="4.27-years-..html"><a href="4.27-years-..html"><i class="fa fa-check"></i><b>4.27</b> Years .</a></li>
+<li class="chapter" data-level="4.28" data-path="4.28-catbat-..html"><a href="4.28-catbat-..html"><i class="fa fa-check"></i><b>4.28</b> CAtBat .</a></li>
+<li class="chapter" data-level="4.29" data-path="4.29-chits-..html"><a href="4.29-chits-..html"><i class="fa fa-check"></i><b>4.29</b> CHits .</a></li>
+<li class="chapter" data-level="4.30" data-path="4.30-chmrun-0.html"><a href="4.30-chmrun-0.html"><i class="fa fa-check"></i><b>4.30</b> CHmRun 0.01178261</a></li>
+<li class="chapter" data-level="4.31" data-path="4.31-cruns-0.html"><a href="4.31-cruns-0.html"><i class="fa fa-check"></i><b>4.31</b> CRuns 0.08620313</a></li>
+<li class="chapter" data-level="4.32" data-path="4.32-crbi-0.html"><a href="4.32-crbi-0.html"><i class="fa fa-check"></i><b>4.32</b> CRBI 0.51517895</a></li>
+<li class="chapter" data-level="4.33" data-path="4.33-cwalks-..html"><a href="4.33-cwalks-..html"><i class="fa fa-check"></i><b>4.33</b> CWalks .</a></li>
+<li class="chapter" data-level="4.34" data-path="4.34-leaguen-29.html"><a href="4.34-leaguen-29.html"><i class="fa fa-check"></i><b>4.34</b> LeagueN 29.48507342</a></li>
+<li class="chapter" data-level="4.35" data-path="4.35-divisionw--100.html"><a href="4.35-divisionw--100.html"><i class="fa fa-check"></i><b>4.35</b> DivisionW -100.72607403</a></li>
+<li class="chapter" data-level="4.36" data-path="4.36-putouts-0.html"><a href="4.36-putouts-0.html"><i class="fa fa-check"></i><b>4.36</b> PutOuts 0.17109758</a></li>
+<li class="chapter" data-level="4.37" data-path="4.37-assists--0.html"><a href="4.37-assists--0.html"><i class="fa fa-check"></i><b>4.37</b> Assists -0.06283794</a></li>
+<li class="chapter" data-level="4.38" data-path="4.38-errors-..html"><a href="4.38-errors-..html"><i class="fa fa-check"></i><b>4.38</b> Errors .</a></li>
+<li class="chapter" data-level="4.39" data-path="4.39-newleaguen-..html"><a href="4.39-newleaguen-..html"><i class="fa fa-check"></i><b>4.39</b> NewLeagueN .</a></li>
+<li class="chapter" data-level="4.40" data-path="4.40-section-7.html"><a href="4.40-section-7.html"><i class="fa fa-check"></i><b>4.40</b> [1] 358.6614</a></li>
+<li class="chapter" data-level="4.41" data-path="4.41-section-8.html"><a href="4.41-section-8.html"><i class="fa fa-check"></i><b>4.41</b> [1] 361.3435</a></li>
+<li class="chapter" data-level="4.42" data-path="4.42-an-application-ii.html"><a href="4.42-an-application-ii.html"><i class="fa fa-check"></i><b>4.42</b> An application II</a></li>
+<li class="chapter" data-level="4.43" data-path="4.43-support-vector-machines-with-radial-basis-function-kernel.html"><a href="4.43-support-vector-machines-with-radial-basis-function-kernel.html"><i class="fa fa-check"></i><b>4.43</b> Support Vector Machines with Radial Basis Function Kernel</a></li>
+<li class="chapter" data-level="4.44" data-path="4.44-section-9.html"><a href="4.44-section-9.html"><i class="fa fa-check"></i><b>4.44</b> </a></li>
+<li class="chapter" data-level="4.45" data-path="4.45-samples.html"><a href="4.45-samples.html"><i class="fa fa-check"></i><b>4.45</b> 275 samples</a></li>
+<li class="chapter" data-level="4.46" data-path="4.46-predictor.html"><a href="4.46-predictor.html"><i class="fa fa-check"></i><b>4.46</b> 8 predictor</a></li>
+<li class="chapter" data-level="4.47" data-path="4.47-classes-neg-pos.html"><a href="4.47-classes-neg-pos.html"><i class="fa fa-check"></i><b>4.47</b> 2 classes: ‘neg’, ‘pos’</a></li>
+<li class="chapter" data-level="4.48" data-path="4.48-section-10.html"><a href="4.48-section-10.html"><i class="fa fa-check"></i><b>4.48</b> </a></li>
+<li class="chapter" data-level="4.49" data-path="4.49-pre-processing-centered-8-scaled-8.html"><a href="4.49-pre-processing-centered-8-scaled-8.html"><i class="fa fa-check"></i><b>4.49</b> Pre-processing: centered (8), scaled (8)</a></li>
+<li class="chapter" data-level="4.50" data-path="4.50-resampling-cross-validated-10-fold.html"><a href="4.50-resampling-cross-validated-10-fold.html"><i class="fa fa-check"></i><b>4.50</b> Resampling: Cross-Validated (10 fold)</a></li>
+<li class="chapter" data-level="4.51" data-path="4.51-summary-of-sample-sizes-248-247-248-248-247-246.html"><a href="4.51-summary-of-sample-sizes-248-247-248-248-247-246.html"><i class="fa fa-check"></i><b>4.51</b> Summary of sample sizes: 248, 247, 248, 248, 247, 246, …</a></li>
+<li class="chapter" data-level="4.52" data-path="4.52-resampling-results-across-tuning-parameters.html"><a href="4.52-resampling-results-across-tuning-parameters.html"><i class="fa fa-check"></i><b>4.52</b> Resampling results across tuning parameters:</a></li>
+<li class="chapter" data-level="4.53" data-path="4.53-section-11.html"><a href="4.53-section-11.html"><i class="fa fa-check"></i><b>4.53</b> </a></li>
+<li class="chapter" data-level="4.54" data-path="4.54-c-accuracy-kappa.html"><a href="4.54-c-accuracy-kappa.html"><i class="fa fa-check"></i><b>4.54</b> C Accuracy Kappa</a></li>
+<li class="chapter" data-level="4.55" data-path="4.55-section-12.html"><a href="4.55-section-12.html"><i class="fa fa-check"></i><b>4.55</b> 0.25 0.7602354 0.4003850</a></li>
+<li class="chapter" data-level="4.56" data-path="4.56-section-13.html"><a href="4.56-section-13.html"><i class="fa fa-check"></i><b>4.56</b> 0.50 0.7635605 0.4129658</a></li>
+<li class="chapter" data-level="4.57" data-path="4.57-section-14.html"><a href="4.57-section-14.html"><i class="fa fa-check"></i><b>4.57</b> 1.00 0.7671319 0.4258676</a></li>
+<li class="chapter" data-level="4.58" data-path="4.58-section-15.html"><a href="4.58-section-15.html"><i class="fa fa-check"></i><b>4.58</b> 2.00 0.7484902 0.3867206</a></li>
+<li class="chapter" data-level="4.59" data-path="4.59-section-16.html"><a href="4.59-section-16.html"><i class="fa fa-check"></i><b>4.59</b> 4.00 0.7561440 0.4115484</a></li>
+<li class="chapter" data-level="4.60" data-path="4.60-section-17.html"><a href="4.60-section-17.html"><i class="fa fa-check"></i><b>4.60</b> 8.00 0.7340540 0.3687010</a></li>
+<li class="chapter" data-level="4.61" data-path="4.61-section-18.html"><a href="4.61-section-18.html"><i class="fa fa-check"></i><b>4.61</b> 16.00 0.7230660 0.3528600</a></li>
+<li class="chapter" data-level="4.62" data-path="4.62-section-19.html"><a href="4.62-section-19.html"><i class="fa fa-check"></i><b>4.62</b> 32.00 0.7082604 0.3172943</a></li>
+<li class="chapter" data-level="4.63" data-path="4.63-section-20.html"><a href="4.63-section-20.html"><i class="fa fa-check"></i><b>4.63</b> 64.00 0.6942209 0.3047575</a></li>
+<li class="chapter" data-level="4.64" data-path="4.64-section-21.html"><a href="4.64-section-21.html"><i class="fa fa-check"></i><b>4.64</b> 128.00 0.7087803 0.3466723</a></li>
+<li class="chapter" data-level="4.65" data-path="4.65-section-22.html"><a href="4.65-section-22.html"><i class="fa fa-check"></i><b>4.65</b> </a></li>
+<li class="chapter" data-level="4.66" data-path="4.66-tuning-parameter-sigma-was-held-constant-at-a-value-of-0.html"><a href="4.66-tuning-parameter-sigma-was-held-constant-at-a-value-of-0.html"><i class="fa fa-check"></i><b>4.66</b> Tuning parameter ‘sigma’ was held constant at a value of 0.114713</a></li>
+<li class="chapter" data-level="4.67" data-path="4.67-accuracy-was-used-to-select-the-optimal-model-using-the-largest-value..html"><a href="4.67-accuracy-was-used-to-select-the-optimal-model-using-the-largest-value..html"><i class="fa fa-check"></i><b>4.67</b> Accuracy was used to select the optimal model using the largest value.</a></li>
+<li class="chapter" data-level="4.68" data-path="4.68-the-final-values-used-for-the-model-were-sigma-0.114713-and-c-1..html"><a href="4.68-the-final-values-used-for-the-model-were-sigma-0.114713-and-c-1..html"><i class="fa fa-check"></i><b>4.68</b> The final values used for the model were sigma = 0.114713 and C = 1.</a></li>
+<li class="chapter" data-level="4.69" data-path="4.69-section-23.html"><a href="4.69-section-23.html"><i class="fa fa-check"></i><b>4.69</b> [1] 0.7606838</a></li>
+<li class="chapter" data-level="4.70" data-path="4.70-review-questions-3.html"><a href="4.70-review-questions-3.html"><i class="fa fa-check"></i><b>4.70</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
@@ -238,8 +274,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="an-application" class="section level2" number="1.12">
-<h2><span class="header-section-number">1.12</span> An application</h2>
+<div id="an-application" class="section level2 hasAnchor" number="1.12">
+<h2><span class="header-section-number">1.12</span> An application<a href="1.12-an-application.html#an-application" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Here we present an application of what we have learned in this chapter.</p>
 <p>Consider the binary regression model, where we observe random variables <span class="math inline">\(Y_i\)</span> that take on the values 0 or 1. The distribution of <span class="math inline">\(Y_i\)</span> depends on the value of a covariate <span class="math inline">\(X_i\)</span>,
 <span class="math display">\[
@@ -270,34 +306,34 @@ Since we assume that our observations are iid, the total log-likelihood is then
 l(\beta) = \sum_{i=1}^n l_i(\beta).
 \]</span>
 Let us implement what we have so far.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="1.12-an-application.html#cb35-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb35-2"><a href="1.12-an-application.html#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>(x) <span class="sc">/</span> (<span class="fu">exp</span>(x) <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb35-3"><a href="1.12-an-application.html#cb35-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb35-4"><a href="1.12-an-application.html#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-5"><a href="1.12-an-application.html#cb35-5" aria-hidden="true" tabindex="-1"></a>logLn <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
-<span id="cb35-6"><a href="1.12-an-application.html#cb35-6" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> data.df<span class="sc">$</span>x</span>
-<span id="cb35-7"><a href="1.12-an-application.html#cb35-7" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> data.df<span class="sc">$</span>y</span>
-<span id="cb35-8"><a href="1.12-an-application.html#cb35-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb35-9"><a href="1.12-an-application.html#cb35-9" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">s</span>(x <span class="sc">*</span> beta)</span>
-<span id="cb35-10"><a href="1.12-an-application.html#cb35-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb35-11"><a href="1.12-an-application.html#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(y <span class="sc">*</span> <span class="fu">log</span>(s) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> y) <span class="sc">*</span> <span class="fu">log</span>(<span class="dv">1</span> <span class="sc">-</span> s))</span>
-<span id="cb35-12"><a href="1.12-an-application.html#cb35-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="1.12-an-application.html#cb36-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb36-2"><a href="1.12-an-application.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">exp</span>(x) <span class="sc">/</span> (<span class="fu">exp</span>(x) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb36-3"><a href="1.12-an-application.html#cb36-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-4"><a href="1.12-an-application.html#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="1.12-an-application.html#cb36-5" aria-hidden="true" tabindex="-1"></a>logLn <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb36-6"><a href="1.12-an-application.html#cb36-6" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> data.df<span class="sc">$</span>x</span>
+<span id="cb36-7"><a href="1.12-an-application.html#cb36-7" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> data.df<span class="sc">$</span>y</span>
+<span id="cb36-8"><a href="1.12-an-application.html#cb36-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb36-9"><a href="1.12-an-application.html#cb36-9" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">s</span>(x <span class="sc">*</span> beta)</span>
+<span id="cb36-10"><a href="1.12-an-application.html#cb36-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb36-11"><a href="1.12-an-application.html#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(y <span class="sc">*</span> <span class="fu">log</span>(s) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> y) <span class="sc">*</span> <span class="fu">log</span>(<span class="dv">1</span> <span class="sc">-</span> s))</span>
+<span id="cb36-12"><a href="1.12-an-application.html#cb36-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>To maximize the likelihood there are now two options. Either we ask the computer to solve
 <span class="math display">\[
 \underset{\beta}{\text{argma}x}~ l(\beta),
 \]</span>
 or we calculate and solve <span class="math inline">\(l&#39;(\beta)=0\)</span>. For practice we do both ways here.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="1.12-an-application.html#cb36-1" aria-hidden="true" tabindex="-1"></a>optimResult <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
-<span id="cb36-2"><a href="1.12-an-application.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fl">1.0</span>, </span>
-<span id="cb36-3"><a href="1.12-an-application.html#cb36-3" aria-hidden="true" tabindex="-1"></a>  logLn,</span>
-<span id="cb36-4"><a href="1.12-an-application.html#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;Brent&quot;</span>, </span>
-<span id="cb36-5"><a href="1.12-an-application.html#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fl">0.0</span>, </span>
-<span id="cb36-6"><a href="1.12-an-application.html#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fl">3.0</span>,</span>
-<span id="cb36-7"><a href="1.12-an-application.html#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="fl">1.0</span>)</span>
-<span id="cb36-8"><a href="1.12-an-application.html#cb36-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb36-9"><a href="1.12-an-application.html#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-10"><a href="1.12-an-application.html#cb36-10" aria-hidden="true" tabindex="-1"></a>betahat <span class="ot">&lt;-</span> optimResult<span class="sc">$</span>par</span>
-<span id="cb36-11"><a href="1.12-an-application.html#cb36-11" aria-hidden="true" tabindex="-1"></a>betahat</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="1.12-an-application.html#cb37-1" aria-hidden="true" tabindex="-1"></a>optimResult <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb37-2"><a href="1.12-an-application.html#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fl">1.0</span>, </span>
+<span id="cb37-3"><a href="1.12-an-application.html#cb37-3" aria-hidden="true" tabindex="-1"></a>  logLn,</span>
+<span id="cb37-4"><a href="1.12-an-application.html#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;Brent&quot;</span>, </span>
+<span id="cb37-5"><a href="1.12-an-application.html#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fl">0.0</span>, </span>
+<span id="cb37-6"><a href="1.12-an-application.html#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fl">3.0</span>,</span>
+<span id="cb37-7"><a href="1.12-an-application.html#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="fl">1.0</span>)</span>
+<span id="cb37-8"><a href="1.12-an-application.html#cb37-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-9"><a href="1.12-an-application.html#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="1.12-an-application.html#cb37-10" aria-hidden="true" tabindex="-1"></a>betahat <span class="ot">&lt;-</span> optimResult<span class="sc">$</span>par</span>
+<span id="cb37-11"><a href="1.12-an-application.html#cb37-11" aria-hidden="true" tabindex="-1"></a>betahat</span></code></pre></div>
 <pre><code>## [1] 1.79158</code></pre>
 <p>For the second way we need
 <span class="math display">\[\begin{align}
@@ -305,23 +341,23 @@ s&#39;(x) &amp;= \frac{e^x}{\left(1+e^x\right)^2},\\
 l&#39;(\beta) &amp;= \frac{x y s&#39;(x \beta )}{s(x \beta )}-\frac{x (1-y) s&#39;(x \beta )}{1-s(x \beta )}.
 \end{align}\]</span>
 In R:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="1.12-an-application.html#cb38-1" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="cf">function</span>(x){ <span class="fu">exp</span>(x)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(x))<span class="sc">^</span><span class="dv">2</span> }</span>
-<span id="cb38-2"><a href="1.12-an-application.html#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="1.12-an-application.html#cb38-3" aria-hidden="true" tabindex="-1"></a>logLp <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
-<span id="cb38-4"><a href="1.12-an-application.html#cb38-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> data.df<span class="sc">$</span>x</span>
-<span id="cb38-5"><a href="1.12-an-application.html#cb38-5" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> data.df<span class="sc">$</span>y</span>
-<span id="cb38-6"><a href="1.12-an-application.html#cb38-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-7"><a href="1.12-an-application.html#cb38-7" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">s</span>(x <span class="sc">*</span> beta)</span>
-<span id="cb38-8"><a href="1.12-an-application.html#cb38-8" aria-hidden="true" tabindex="-1"></a>  sp <span class="ot">&lt;-</span> <span class="fu">sp</span>(x <span class="sc">*</span> beta)</span>
-<span id="cb38-9"><a href="1.12-an-application.html#cb38-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-10"><a href="1.12-an-application.html#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>( <span class="sc">-</span>x <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>y) <span class="sc">*</span> sp <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span>s) <span class="sc">+</span> x <span class="sc">*</span> y <span class="sc">*</span> sp <span class="sc">/</span> s )</span>
-<span id="cb38-11"><a href="1.12-an-application.html#cb38-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb38-12"><a href="1.12-an-application.html#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-13"><a href="1.12-an-application.html#cb38-13" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(</span>
-<span id="cb38-14"><a href="1.12-an-application.html#cb38-14" aria-hidden="true" tabindex="-1"></a>  logLp,</span>
-<span id="cb38-15"><a href="1.12-an-application.html#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3</span>)</span>
-<span id="cb38-16"><a href="1.12-an-application.html#cb38-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-17"><a href="1.12-an-application.html#cb38-17" aria-hidden="true" tabindex="-1"></a>rootResults<span class="sc">$</span>root</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="1.12-an-application.html#cb39-1" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="cf">function</span>(x){ <span class="fu">exp</span>(x)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(x))<span class="sc">^</span><span class="dv">2</span> }</span>
+<span id="cb39-2"><a href="1.12-an-application.html#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="1.12-an-application.html#cb39-3" aria-hidden="true" tabindex="-1"></a>logLp <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb39-4"><a href="1.12-an-application.html#cb39-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> data.df<span class="sc">$</span>x</span>
+<span id="cb39-5"><a href="1.12-an-application.html#cb39-5" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> data.df<span class="sc">$</span>y</span>
+<span id="cb39-6"><a href="1.12-an-application.html#cb39-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-7"><a href="1.12-an-application.html#cb39-7" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">s</span>(x <span class="sc">*</span> beta)</span>
+<span id="cb39-8"><a href="1.12-an-application.html#cb39-8" aria-hidden="true" tabindex="-1"></a>  sp <span class="ot">&lt;-</span> <span class="fu">sp</span>(x <span class="sc">*</span> beta)</span>
+<span id="cb39-9"><a href="1.12-an-application.html#cb39-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-10"><a href="1.12-an-application.html#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>( <span class="sc">-</span>x <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>y) <span class="sc">*</span> sp <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span>s) <span class="sc">+</span> x <span class="sc">*</span> y <span class="sc">*</span> sp <span class="sc">/</span> s )</span>
+<span id="cb39-11"><a href="1.12-an-application.html#cb39-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-12"><a href="1.12-an-application.html#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="1.12-an-application.html#cb39-13" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(</span>
+<span id="cb39-14"><a href="1.12-an-application.html#cb39-14" aria-hidden="true" tabindex="-1"></a>  logLp,</span>
+<span id="cb39-15"><a href="1.12-an-application.html#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">interval =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3</span>)</span>
+<span id="cb39-16"><a href="1.12-an-application.html#cb39-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-17"><a href="1.12-an-application.html#cb39-17" aria-hidden="true" tabindex="-1"></a>rootResults<span class="sc">$</span>root</span></code></pre></div>
 <pre><code>## [1] 1.791589</code></pre>
 <p>Both methods giving the same result.</p>
 To confirm that we indeed found the MLE we plot the log-likelihood.
@@ -338,64 +374,64 @@ Figure 1.10: Observed sample and fitted model
 </p>
 </div>
 <p>Now we turn to hypothesis testing. Let us say we want to test <span class="math inline">\(H_0: \beta = 2\)</span> against <span class="math inline">\(H_1:\beta \neq 2\)</span>. First we do the asymptotic likelihood ratio test. So we need to calculate <span class="math inline">\(\lambda_{\text{LR}}\)</span>:</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="1.12-an-application.html#cb40-1" aria-hidden="true" tabindex="-1"></a>lr <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
-<span id="cb40-2"><a href="1.12-an-application.html#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLn</span>(betahat) <span class="sc">-</span> <span class="fu">logLn</span>(beta0))</span>
-<span id="cb40-3"><a href="1.12-an-application.html#cb40-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb40-4"><a href="1.12-an-application.html#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lr</span>(<span class="fl">2.0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="1.12-an-application.html#cb41-1" aria-hidden="true" tabindex="-1"></a>lr <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
+<span id="cb41-2"><a href="1.12-an-application.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLn</span>(betahat) <span class="sc">-</span> <span class="fu">logLn</span>(beta0))</span>
+<span id="cb41-3"><a href="1.12-an-application.html#cb41-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-4"><a href="1.12-an-application.html#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lr</span>(<span class="fl">2.0</span>)</span></code></pre></div>
 <pre><code>## [1] 2.97212</code></pre>
 <p>If <span class="math inline">\(H_0\)</span> is true, this is an observation of a <span class="math inline">\(\chi_1^2\)</span>-distributed random variable. Therefore the p-value is</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="1.12-an-application.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(<span class="fu">lr</span>(<span class="fl">2.0</span>), <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="1.12-an-application.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(<span class="fu">lr</span>(<span class="fl">2.0</span>), <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 0.0847108</code></pre>
 <p>Next we do a Wald’s test. For this we need an estimate of the standard deviation of the MLE. Perhaps the easiest way is to calculate the Fisher information, that is <span class="math inline">\(-l&#39;&#39;(\beta)\)</span>. Here there are again two options, we can do it numerically or exactly. First we calculate it numerically:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="1.12-an-application.html#cb44-1" aria-hidden="true" tabindex="-1"></a>observedFisherInfo <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
-<span id="cb44-2"><a href="1.12-an-application.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop</span>(<span class="sc">-</span>pracma<span class="sc">::</span><span class="fu">hessian</span>(logLn, beta))</span>
-<span id="cb44-3"><a href="1.12-an-application.html#cb44-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb44-4"><a href="1.12-an-application.html#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">observedFisherInfo</span>(betahat)</span></code></pre></div>
-<pre><code>## [1] 72.64601</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="1.12-an-application.html#cb45-1" aria-hidden="true" tabindex="-1"></a>observedFisherInfo <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb45-2"><a href="1.12-an-application.html#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop</span>(<span class="sc">-</span>pracma<span class="sc">::</span><span class="fu">hessian</span>(logLn, beta))</span>
+<span id="cb45-3"><a href="1.12-an-application.html#cb45-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb45-4"><a href="1.12-an-application.html#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">observedFisherInfo</span>(betahat)</span></code></pre></div>
+<pre><code>## [1] 72.64589</code></pre>
 <p>Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
 <span class="math display">\[
 l&#39;&#39;(\beta)=(1-y) \left(-\frac{x^2 \sigma &#39;(x \beta )^2}{(1-\sigma (x \beta )^2}-\frac{x^2 \sigma &#39;&#39;(x \beta )}{1-\sigma (x \beta )}\right)+y \left(-\frac{x^2 \sigma &#39;(x \beta )^2}{\sigma (x \beta )^2}+\frac{x^2 \sigma &#39;&#39;(x \beta )}{\sigma (x \beta )}\right)
 \]</span>
 Implemented in R:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="1.12-an-application.html#cb46-1" aria-hidden="true" tabindex="-1"></a>spp <span class="ot">&lt;-</span> <span class="cf">function</span>(x){ <span class="sc">-</span><span class="fu">exp</span>(x)<span class="sc">*</span>(<span class="fu">exp</span>(x)<span class="sc">-</span><span class="dv">1</span>)<span class="sc">/</span>(<span class="fu">exp</span>(x)<span class="sc">+</span><span class="dv">1</span>)<span class="sc">^</span><span class="dv">3</span> }</span>
-<span id="cb46-2"><a href="1.12-an-application.html#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-3"><a href="1.12-an-application.html#cb46-3" aria-hidden="true" tabindex="-1"></a>logLpp <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
-<span id="cb46-4"><a href="1.12-an-application.html#cb46-4" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> data.df<span class="sc">$</span>x</span>
-<span id="cb46-5"><a href="1.12-an-application.html#cb46-5" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> data.df<span class="sc">$</span>y</span>
-<span id="cb46-6"><a href="1.12-an-application.html#cb46-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb46-7"><a href="1.12-an-application.html#cb46-7" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> <span class="fu">s</span>(x<span class="sc">*</span>beta)</span>
-<span id="cb46-8"><a href="1.12-an-application.html#cb46-8" aria-hidden="true" tabindex="-1"></a>    sp <span class="ot">&lt;-</span> <span class="fu">sp</span>(x<span class="sc">*</span>beta)</span>
-<span id="cb46-9"><a href="1.12-an-application.html#cb46-9" aria-hidden="true" tabindex="-1"></a>    spp <span class="ot">&lt;-</span> <span class="fu">spp</span>(x<span class="sc">*</span>beta)</span>
-<span id="cb46-10"><a href="1.12-an-application.html#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-11"><a href="1.12-an-application.html#cb46-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>( (<span class="dv">1</span><span class="sc">-</span>y)<span class="sc">*</span>(<span class="sc">-</span>x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>sp<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>s)<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>spp<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>s))<span class="sc">+</span>y<span class="sc">*</span>(<span class="sc">-</span>x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>sp<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>s<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>spp<span class="sc">/</span>s) )</span>
-<span id="cb46-12"><a href="1.12-an-application.html#cb46-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb46-13"><a href="1.12-an-application.html#cb46-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-14"><a href="1.12-an-application.html#cb46-14" aria-hidden="true" tabindex="-1"></a>observedFisherInfo <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
-<span id="cb46-15"><a href="1.12-an-application.html#cb46-15" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span><span class="fu">logLpp</span>(beta)</span>
-<span id="cb46-16"><a href="1.12-an-application.html#cb46-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb46-17"><a href="1.12-an-application.html#cb46-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-18"><a href="1.12-an-application.html#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="fu">observedFisherInfo</span>(betahat)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="1.12-an-application.html#cb47-1" aria-hidden="true" tabindex="-1"></a>spp <span class="ot">&lt;-</span> <span class="cf">function</span>(x){ <span class="sc">-</span><span class="fu">exp</span>(x)<span class="sc">*</span>(<span class="fu">exp</span>(x)<span class="sc">-</span><span class="dv">1</span>)<span class="sc">/</span>(<span class="fu">exp</span>(x)<span class="sc">+</span><span class="dv">1</span>)<span class="sc">^</span><span class="dv">3</span> }</span>
+<span id="cb47-2"><a href="1.12-an-application.html#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="1.12-an-application.html#cb47-3" aria-hidden="true" tabindex="-1"></a>logLpp <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb47-4"><a href="1.12-an-application.html#cb47-4" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> data.df<span class="sc">$</span>x</span>
+<span id="cb47-5"><a href="1.12-an-application.html#cb47-5" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> data.df<span class="sc">$</span>y</span>
+<span id="cb47-6"><a href="1.12-an-application.html#cb47-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb47-7"><a href="1.12-an-application.html#cb47-7" aria-hidden="true" tabindex="-1"></a>    s <span class="ot">&lt;-</span> <span class="fu">s</span>(x<span class="sc">*</span>beta)</span>
+<span id="cb47-8"><a href="1.12-an-application.html#cb47-8" aria-hidden="true" tabindex="-1"></a>    sp <span class="ot">&lt;-</span> <span class="fu">sp</span>(x<span class="sc">*</span>beta)</span>
+<span id="cb47-9"><a href="1.12-an-application.html#cb47-9" aria-hidden="true" tabindex="-1"></a>    spp <span class="ot">&lt;-</span> <span class="fu">spp</span>(x<span class="sc">*</span>beta)</span>
+<span id="cb47-10"><a href="1.12-an-application.html#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-11"><a href="1.12-an-application.html#cb47-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>( (<span class="dv">1</span><span class="sc">-</span>y)<span class="sc">*</span>(<span class="sc">-</span>x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>sp<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>s)<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>spp<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>s))<span class="sc">+</span>y<span class="sc">*</span>(<span class="sc">-</span>x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>sp<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>s<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>spp<span class="sc">/</span>s) )</span>
+<span id="cb47-12"><a href="1.12-an-application.html#cb47-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-13"><a href="1.12-an-application.html#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-14"><a href="1.12-an-application.html#cb47-14" aria-hidden="true" tabindex="-1"></a>observedFisherInfo <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb47-15"><a href="1.12-an-application.html#cb47-15" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span><span class="fu">logLpp</span>(beta)</span>
+<span id="cb47-16"><a href="1.12-an-application.html#cb47-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-17"><a href="1.12-an-application.html#cb47-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-18"><a href="1.12-an-application.html#cb47-18" aria-hidden="true" tabindex="-1"></a><span class="fu">observedFisherInfo</span>(betahat)</span></code></pre></div>
 <pre><code>## [1] 72.64589</code></pre>
 <p>Recall that Wald’s test statistic is standard normal under <span class="math inline">\(H_0\)</span>. So we may calculate the p-value:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="1.12-an-application.html#cb48-1" aria-hidden="true" tabindex="-1"></a>zWald <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
-<span id="cb48-2"><a href="1.12-an-application.html#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(betahat<span class="sc">-</span> beta0)<span class="sc">*</span><span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
-<span id="cb48-3"><a href="1.12-an-application.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb48-4"><a href="1.12-an-application.html#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> ( <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>( <span class="fu">zWald</span>(<span class="fl">2.0</span>) ) )</span></code></pre></div>
-<pre><code>## [1] 0.07566359</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="1.12-an-application.html#cb49-1" aria-hidden="true" tabindex="-1"></a>zWald <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
+<span id="cb49-2"><a href="1.12-an-application.html#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(betahat<span class="sc">-</span> beta0)<span class="sc">*</span><span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
+<span id="cb49-3"><a href="1.12-an-application.html#cb49-3" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb49-4"><a href="1.12-an-application.html#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> ( <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>( <span class="fu">zWald</span>(<span class="fl">2.0</span>) ) )</span></code></pre></div>
+<pre><code>## [1] 0.07566354</code></pre>
 <p>We might also do a Score test. Here, all we need is <span class="math inline">\(l&#39;\)</span> and <span class="math inline">\(l&#39;&#39;\)</span>, which we have already calculated. The score statistic is again standard normal under <span class="math inline">\(H_0\)</span>.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="1.12-an-application.html#cb50-1" aria-hidden="true" tabindex="-1"></a>zScore <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
-<span id="cb50-2"><a href="1.12-an-application.html#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(pracma<span class="sc">::</span><span class="fu">grad</span>(logLn,beta0)<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(beta0)))</span>
-<span id="cb50-3"><a href="1.12-an-application.html#cb50-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb50-4"><a href="1.12-an-application.html#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> ( <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="fu">zScore</span>(<span class="fl">2.0</span>) ) )</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="1.12-an-application.html#cb51-1" aria-hidden="true" tabindex="-1"></a>zScore <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
+<span id="cb51-2"><a href="1.12-an-application.html#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(pracma<span class="sc">::</span><span class="fu">grad</span>(logLn,beta0)<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(beta0)))</span>
+<span id="cb51-3"><a href="1.12-an-application.html#cb51-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb51-4"><a href="1.12-an-application.html#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> ( <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="fu">zScore</span>(<span class="fl">2.0</span>) ) )</span></code></pre></div>
 <pre><code>## [1] 0.0754018</code></pre>
 <p>Lastly, we might calculate a CI on <span class="math inline">\(\beta\)</span>. Using the Wald’s statistic, this would be:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="1.12-an-application.html#cb52-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb52-2"><a href="1.12-an-application.html#cb52-2" aria-hidden="true" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> betahat <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
-<span id="cb52-3"><a href="1.12-an-application.html#cb52-3" aria-hidden="true" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> betahat <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
-<span id="cb52-4"><a href="1.12-an-application.html#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-5"><a href="1.12-an-application.html#cb52-5" aria-hidden="true" tabindex="-1"></a>leftCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="1.12-an-application.html#cb53-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb53-2"><a href="1.12-an-application.html#cb53-2" aria-hidden="true" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> betahat <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
+<span id="cb53-3"><a href="1.12-an-application.html#cb53-3" aria-hidden="true" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> betahat <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
+<span id="cb53-4"><a href="1.12-an-application.html#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="1.12-an-application.html#cb53-5" aria-hidden="true" tabindex="-1"></a>leftCILimit</span></code></pre></div>
 <pre><code>## [1] 1.561625</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="1.12-an-application.html#cb54-1" aria-hidden="true" tabindex="-1"></a>rightCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="1.12-an-application.html#cb55-1" aria-hidden="true" tabindex="-1"></a>rightCILimit</span></code></pre></div>
 <pre><code>## [1] 2.021534</code></pre>
 For a score based CI we first plot the score statistic.
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:applicationScoreCI"></span>
@@ -405,21 +441,21 @@ Figure 1.11: Observed sample and fitted model
 </p>
 </div>
 <p>We need to find the points where the score statistic is <span class="math inline">\(z_{\alpha/2}\)</span>, which are the limits of the CI.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="1.12-an-application.html#cb56-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
-<span id="cb56-2"><a href="1.12-an-application.html#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-3"><a href="1.12-an-application.html#cb56-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
-<span id="cb56-4"><a href="1.12-an-application.html#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zScore</span>(beta) <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
-<span id="cb56-5"><a href="1.12-an-application.html#cb56-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb56-6"><a href="1.12-an-application.html#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-7"><a href="1.12-an-application.html#cb56-7" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(betahat<span class="dv">-1</span>,betahat))</span>
-<span id="cb56-8"><a href="1.12-an-application.html#cb56-8" aria-hidden="true" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
-<span id="cb56-9"><a href="1.12-an-application.html#cb56-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-10"><a href="1.12-an-application.html#cb56-10" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(betahat<span class="sc">+</span><span class="dv">1</span>,betahat))</span>
-<span id="cb56-11"><a href="1.12-an-application.html#cb56-11" aria-hidden="true" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
-<span id="cb56-12"><a href="1.12-an-application.html#cb56-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-13"><a href="1.12-an-application.html#cb56-13" aria-hidden="true" tabindex="-1"></a>leftCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="1.12-an-application.html#cb57-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb57-2"><a href="1.12-an-application.html#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="1.12-an-application.html#cb57-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(beta){</span>
+<span id="cb57-4"><a href="1.12-an-application.html#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zScore</span>(beta) <span class="sc">-</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb57-5"><a href="1.12-an-application.html#cb57-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb57-6"><a href="1.12-an-application.html#cb57-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-7"><a href="1.12-an-application.html#cb57-7" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(betahat<span class="dv">-1</span>,betahat))</span>
+<span id="cb57-8"><a href="1.12-an-application.html#cb57-8" aria-hidden="true" tabindex="-1"></a>leftCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
+<span id="cb57-9"><a href="1.12-an-application.html#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-10"><a href="1.12-an-application.html#cb57-10" aria-hidden="true" tabindex="-1"></a>rootResults <span class="ot">&lt;-</span> <span class="fu">uniroot</span>(f, <span class="at">interval =</span> <span class="fu">c</span>(betahat<span class="sc">+</span><span class="dv">1</span>,betahat))</span>
+<span id="cb57-11"><a href="1.12-an-application.html#cb57-11" aria-hidden="true" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> rootResults<span class="sc">$</span>root</span>
+<span id="cb57-12"><a href="1.12-an-application.html#cb57-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-13"><a href="1.12-an-application.html#cb57-13" aria-hidden="true" tabindex="-1"></a>leftCILimit</span></code></pre></div>
 <pre><code>## [1] 1.561916</code></pre>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="1.12-an-application.html#cb58-1" aria-hidden="true" tabindex="-1"></a>rightCILimit</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="1.12-an-application.html#cb59-1" aria-hidden="true" tabindex="-1"></a>rightCILimit</span></code></pre></div>
 <pre><code>## [1] 2.021279</code></pre>
 </div>
             </section>
@@ -488,7 +524,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');
