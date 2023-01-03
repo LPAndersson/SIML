@@ -301,11 +301,11 @@ In other words, for a large sample,
 </div>
 <p>Which is Wilks’ theorem.</p>
 <p>Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="1.8-wilks-test.html#cb16-1" aria-hidden="true" tabindex="-1"></a>lrStatistic <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLn</span>(optimResult<span class="sc">$</span>maximum, t) <span class="sc">-</span> <span class="fu">logLn</span>(<span class="fl">0.1</span>, t))</span>
-<span id="cb16-2"><a href="1.8-wilks-test.html#cb16-2" aria-hidden="true" tabindex="-1"></a>lrStatistic</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="1.8-wilks-test.html#cb15-1" aria-hidden="true" tabindex="-1"></a>lrStatistic <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLn</span>(optimResult<span class="sc">$</span>maximum, t) <span class="sc">-</span> <span class="fu">logLn</span>(<span class="fl">0.1</span>, t))</span>
+<span id="cb15-2"><a href="1.8-wilks-test.html#cb15-2" aria-hidden="true" tabindex="-1"></a>lrStatistic</span></code></pre></div>
 <pre><code>## [1] 2.200652</code></pre>
 <p>Recall that we reject <span class="math inline">\(H_0\)</span> if <span class="math inline">\(\lambda_{LR}\)</span> is large. Therefore the p-value is</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="1.8-wilks-test.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(lrStatistic, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="1.8-wilks-test.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(lrStatistic, <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 0.1379523</code></pre>
 </div>
             </section>

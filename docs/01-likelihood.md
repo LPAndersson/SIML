@@ -45,12 +45,6 @@ The principle that we will follow to estimate parameters is that since $p=0.4$ g
 $$
 L(p) := p^3(1-p)^7.
 $$
-
-```
-## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-```
-
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/likelihood-1.png" alt="Likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:likelihood)Likelihood of the sample</p>

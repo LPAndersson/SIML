@@ -302,14 +302,14 @@ Figure 1.2: Histogram of the sample
 </p>
 </div>
 <p>We define a function in R that calculates the log-likelihood</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="1.2-maximum-likelihood-estimation.html#cb3-1" aria-hidden="true" tabindex="-1"></a>logLn <span class="ot">&lt;-</span> <span class="cf">function</span>(param, sample){</span>
-<span id="cb3-2"><a href="1.2-maximum-likelihood-estimation.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(sample)</span>
-<span id="cb3-3"><a href="1.2-maximum-likelihood-estimation.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  tbar <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample)</span>
-<span id="cb3-4"><a href="1.2-maximum-likelihood-estimation.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-5"><a href="1.2-maximum-likelihood-estimation.html#cb3-5" aria-hidden="true" tabindex="-1"></a>  n<span class="sc">*</span>(<span class="fu">log</span>(param) <span class="sc">-</span> param<span class="sc">*</span>tbar)</span>
-<span id="cb3-6"><a href="1.2-maximum-likelihood-estimation.html#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="1.2-maximum-likelihood-estimation.html#cb2-1" aria-hidden="true" tabindex="-1"></a>logLn <span class="ot">&lt;-</span> <span class="cf">function</span>(param, sample){</span>
+<span id="cb2-2"><a href="1.2-maximum-likelihood-estimation.html#cb2-2" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(sample)</span>
+<span id="cb2-3"><a href="1.2-maximum-likelihood-estimation.html#cb2-3" aria-hidden="true" tabindex="-1"></a>  tbar <span class="ot">&lt;-</span> <span class="fu">mean</span>(sample)</span>
+<span id="cb2-4"><a href="1.2-maximum-likelihood-estimation.html#cb2-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-5"><a href="1.2-maximum-likelihood-estimation.html#cb2-5" aria-hidden="true" tabindex="-1"></a>  n<span class="sc">*</span>(<span class="fu">log</span>(param) <span class="sc">-</span> param<span class="sc">*</span>tbar)</span>
+<span id="cb2-6"><a href="1.2-maximum-likelihood-estimation.html#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Then we may calculate the log-likelihood of, for example, <span class="math inline">\(\lambda = 0.1\)</span>,</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="1.2-maximum-likelihood-estimation.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLn</span>(<span class="fl">0.1</span>, t)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="1.2-maximum-likelihood-estimation.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLn</span>(<span class="fl">0.1</span>, t)</span></code></pre></div>
 <pre><code>## [1] -316.1482</code></pre>
 <p>Here the variable <code>t</code> is a vector that contains the observations.</p>
 <p>
@@ -335,16 +335,16 @@ We can find the maximum likelihood estimate as the <span class="math inline">\(\
 \partial_\lambda l_n(\lambda)\Big|_{\lambda = \hat\lambda} = n\left(\frac{1}{\hat \lambda} - \bar t\right) = 0.
 \]</span>
 With solution <span class="math inline">\(\hat\lambda =1/ \bar t\)</span>. For this sample:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="1.2-maximum-likelihood-estimation.html#cb6-1" aria-hidden="true" tabindex="-1"></a>lambdaHat <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">mean</span>(t)</span>
-<span id="cb6-2"><a href="1.2-maximum-likelihood-estimation.html#cb6-2" aria-hidden="true" tabindex="-1"></a>lambdaHat</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="1.2-maximum-likelihood-estimation.html#cb5-1" aria-hidden="true" tabindex="-1"></a>lambdaHat <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">mean</span>(t)</span>
+<span id="cb5-2"><a href="1.2-maximum-likelihood-estimation.html#cb5-2" aria-hidden="true" tabindex="-1"></a>lambdaHat</span></code></pre></div>
 <pre><code>## [1] 0.1164284</code></pre>
 <p>We may also find the estimate using numerical optimization.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="1.2-maximum-likelihood-estimation.html#cb8-1" aria-hidden="true" tabindex="-1"></a>optimResult <span class="ot">&lt;-</span> <span class="fu">optimise</span>( </span>
-<span id="cb8-2"><a href="1.2-maximum-likelihood-estimation.html#cb8-2" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(lambda){ <span class="fu">logLn</span>(lambda,t)},</span>
-<span id="cb8-3"><a href="1.2-maximum-likelihood-estimation.html#cb8-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">lower =</span> <span class="fl">0.01</span>, </span>
-<span id="cb8-4"><a href="1.2-maximum-likelihood-estimation.html#cb8-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper =</span> <span class="fl">10.0</span>,</span>
-<span id="cb8-5"><a href="1.2-maximum-likelihood-estimation.html#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-6"><a href="1.2-maximum-likelihood-estimation.html#cb8-6" aria-hidden="true" tabindex="-1"></a>optimResult<span class="sc">$</span>maximum</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="1.2-maximum-likelihood-estimation.html#cb7-1" aria-hidden="true" tabindex="-1"></a>optimResult <span class="ot">&lt;-</span> <span class="fu">optimise</span>( </span>
+<span id="cb7-2"><a href="1.2-maximum-likelihood-estimation.html#cb7-2" aria-hidden="true" tabindex="-1"></a>            <span class="cf">function</span>(lambda){ <span class="fu">logLn</span>(lambda,t)},</span>
+<span id="cb7-3"><a href="1.2-maximum-likelihood-estimation.html#cb7-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">lower =</span> <span class="fl">0.01</span>, </span>
+<span id="cb7-4"><a href="1.2-maximum-likelihood-estimation.html#cb7-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper =</span> <span class="fl">10.0</span>,</span>
+<span id="cb7-5"><a href="1.2-maximum-likelihood-estimation.html#cb7-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">maximum =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-6"><a href="1.2-maximum-likelihood-estimation.html#cb7-6" aria-hidden="true" tabindex="-1"></a>optimResult<span class="sc">$</span>maximum</span></code></pre></div>
 <pre><code>## [1] 0.1164178</code></pre>
 </div>
             </section>

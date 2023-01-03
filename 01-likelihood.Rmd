@@ -62,7 +62,7 @@ $$
 library(ggplot2)
 
 ggplot(data.frame(x = c(0.0, 1.0)), aes(x = x)) +
-stat_function(fun = function(p) p^3*(1-p)^7, size = 1) +
+stat_function(fun = function(p) p^3*(1-p)^7, linewidth = 1) +
   theme_minimal() +
   xlab("p") + 
   ylab("likelihood")
