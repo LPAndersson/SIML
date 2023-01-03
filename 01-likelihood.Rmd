@@ -173,13 +173,12 @@ lambdaHat
 ```
 We may also find the estimate using numerical optimization.
 ```{r cache = TRUE}
-optimResult <- optim(1.0, 
+optimResult <- optimise( 
             function(lambda){ logLn(lambda,t)},
-            method = "Brent", 
             lower = 0.01, 
             upper = 10.0,
-            control = list(fnscale = -1.0))
-optimResult$par
+            maximum = TRUE)
+optimResult$maximum
 ```
 
 ## Hypothesis testing
@@ -609,7 +608,7 @@ Which is Wilks' theorem.
 
 Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:
 ```{r}
-lrStatistic <- 2*(logLn(optimResult$par, t) - logLn(0.1, t))
+lrStatistic <- 2*(logLn(optimResult$maximum, t) - logLn(0.1, t))
 lrStatistic
 ```
 Recall that we reject $H_0$ if $\lambda_{LR}$ is large. Therefore the p-value is

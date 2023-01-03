@@ -45,6 +45,12 @@ The principle that we will follow to estimate parameters is that since $p=0.4$ g
 $$
 L(p) := p^3(1-p)^7.
 $$
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+```
+
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/likelihood-1.png" alt="Likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:likelihood)Likelihood of the sample</p>
@@ -148,17 +154,16 @@ lambdaHat
 We may also find the estimate using numerical optimization.
 
 ```r
-optimResult <- optim(1.0, 
+optimResult <- optimise( 
             function(lambda){ logLn(lambda,t)},
-            method = "Brent", 
             lower = 0.01, 
             upper = 10.0,
-            control = list(fnscale = -1.0))
-optimResult$par
+            maximum = TRUE)
+optimResult$maximum
 ```
 
 ```
-## [1] 0.1164284
+## [1] 0.1164178
 ```
 
 ## Hypothesis testing
@@ -537,12 +542,12 @@ Which is Wilks' theorem.
 Let us again apply this to the exponential distribution. Of course, we have already found the exact likelihood ratio test, so we would in reality not use an asymptotic test in this case. Nonetheless, we can calculate it as:
 
 ```r
-lrStatistic <- 2*(logLn(optimResult$par, t) - logLn(0.1, t))
+lrStatistic <- 2*(logLn(optimResult$maximum, t) - logLn(0.1, t))
 lrStatistic
 ```
 
 ```
-## [1] 2.200653
+## [1] 2.200652
 ```
 Recall that we reject $H_0$ if $\lambda_{LR}$ is large. Therefore the p-value is
 
@@ -897,7 +902,7 @@ observedFisherInfo(betahat)
 ```
 
 ```
-## [1] 72.64601
+## [1] 72.64589
 ```
 Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
 $$
@@ -939,7 +944,7 @@ zWald <- function(beta0){
 ```
 
 ```
-## [1] 0.07566359
+## [1] 0.07566354
 ```
 
 We might also do a Score test. Here, all we need is $l'$ and $l''$, which we have already calculated. The score statistic is again standard normal under $H_0$.
