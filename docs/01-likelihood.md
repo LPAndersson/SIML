@@ -1097,17 +1097,6 @@ wald <- (p.hats - p0)/sqrt(p.hats*(1-p.hats)/n)
 ```
 
 
-
-```
-## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-```
-
-```
-## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
-## ℹ Please use `after_stat(density)` instead.
-```
-
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/waldStatisticExampleFigure-1.png" alt="Simulated density of the Wald statistic and the standard normal density" width="80%" />
 <p class="caption">(\#fig:waldStatisticExampleFigure)Simulated density of the Wald statistic and the standard normal density</p>

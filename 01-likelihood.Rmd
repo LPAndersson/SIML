@@ -1126,13 +1126,11 @@ wald <- (p.hats - p0)/sqrt(p.hats*(1-p.hats)/n)
 
 
 ```{r waldStatisticExampleFigure, cache=TRUE, echo = FALSE, fig.cap='Simulated density of the Wald statistic and the standard normal density', out.width='80%', fig.asp=.75, fig.align='center'}
-
-
 library(ggplot2)
 
 ggplot(data.frame(wald), aes(x = wald)) +
-  geom_histogram(aes(y=..density..), binwidth = 0.2) +
-  stat_function(fun = dnorm, size = 1.0, color = palette.colors(2)[2]) +
+  geom_histogram(aes(y=after_stat(density)), binwidth = 0.2) +
+  stat_function(fun = dnorm, linewidth = 1.0, color = palette.colors(2)[2]) +
   theme_minimal() + 
   xlab("Wald statistic")
 ```
