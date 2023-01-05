@@ -805,21 +805,19 @@ $$
 or we calculate and solve $l'(\beta)=0$. For practice we do both ways here.
 
 ```r
-optimResult <- optim(
-  1.0, 
+optimResult <- optimize(
   logLn,
-  method = "Brent", 
   lower = 0.0, 
   upper = 3.0,
-  control = list(fnscale = -1.0)
+  maximum = TRUE
 )
 
-betahat <- optimResult$par
+betahat <- optimResult$maximum
 betahat
 ```
 
 ```
-## [1] 1.79158
+## [1] 1.791579
 ```
 For the second way we need
 \begin{align}
@@ -896,7 +894,7 @@ observedFisherInfo(betahat)
 ```
 
 ```
-## [1] 72.64589
+## [1] 72.6459
 ```
 Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
 $$
@@ -926,7 +924,7 @@ observedFisherInfo(betahat)
 ```
 
 ```
-## [1] 72.64589
+## [1] 72.64591
 ```
 Recall that Wald's test statistic is standard normal under $H_0$. So we may calculate the p-value:
 
@@ -938,7 +936,7 @@ zWald <- function(beta0){
 ```
 
 ```
-## [1] 0.07566354
+## [1] 0.07566311
 ```
 
 We might also do a Score test. Here, all we need is $l'$ and $l''$, which we have already calculated. The score statistic is again standard normal under $H_0$.
@@ -965,7 +963,7 @@ leftCILimit
 ```
 
 ```
-## [1] 1.561625
+## [1] 1.561624
 ```
 
 ```r
@@ -1098,6 +1096,17 @@ for (i in seq_len(replications)) {
 wald <- (p.hats - p0)/sqrt(p.hats*(1-p.hats)/n)
 ```
 
+
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+```
+
+```
+## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+## ℹ Please use `after_stat(density)` instead.
+```
 
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/waldStatisticExampleFigure-1.png" alt="Simulated density of the Wald statistic and the standard normal density" width="80%" />

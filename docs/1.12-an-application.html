@@ -323,18 +323,16 @@ Let us implement what we have so far.</p>
 \underset{\beta}{\text{argma}x}~ l(\beta),
 \]</span>
 or we calculate and solve <span class="math inline">\(l&#39;(\beta)=0\)</span>. For practice we do both ways here.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="1.12-an-application.html#cb36-1" aria-hidden="true" tabindex="-1"></a>optimResult <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
-<span id="cb36-2"><a href="1.12-an-application.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fl">1.0</span>, </span>
-<span id="cb36-3"><a href="1.12-an-application.html#cb36-3" aria-hidden="true" tabindex="-1"></a>  logLn,</span>
-<span id="cb36-4"><a href="1.12-an-application.html#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;Brent&quot;</span>, </span>
-<span id="cb36-5"><a href="1.12-an-application.html#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fl">0.0</span>, </span>
-<span id="cb36-6"><a href="1.12-an-application.html#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fl">3.0</span>,</span>
-<span id="cb36-7"><a href="1.12-an-application.html#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="fl">1.0</span>)</span>
-<span id="cb36-8"><a href="1.12-an-application.html#cb36-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb36-9"><a href="1.12-an-application.html#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-10"><a href="1.12-an-application.html#cb36-10" aria-hidden="true" tabindex="-1"></a>betahat <span class="ot">&lt;-</span> optimResult<span class="sc">$</span>par</span>
-<span id="cb36-11"><a href="1.12-an-application.html#cb36-11" aria-hidden="true" tabindex="-1"></a>betahat</span></code></pre></div>
-<pre><code>## [1] 1.79158</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="1.12-an-application.html#cb36-1" aria-hidden="true" tabindex="-1"></a>optimResult <span class="ot">&lt;-</span> <span class="fu">optimize</span>(</span>
+<span id="cb36-2"><a href="1.12-an-application.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  logLn,</span>
+<span id="cb36-3"><a href="1.12-an-application.html#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fl">0.0</span>, </span>
+<span id="cb36-4"><a href="1.12-an-application.html#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fl">3.0</span>,</span>
+<span id="cb36-5"><a href="1.12-an-application.html#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">maximum =</span> <span class="cn">TRUE</span></span>
+<span id="cb36-6"><a href="1.12-an-application.html#cb36-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-7"><a href="1.12-an-application.html#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="1.12-an-application.html#cb36-8" aria-hidden="true" tabindex="-1"></a>betahat <span class="ot">&lt;-</span> optimResult<span class="sc">$</span>maximum</span>
+<span id="cb36-9"><a href="1.12-an-application.html#cb36-9" aria-hidden="true" tabindex="-1"></a>betahat</span></code></pre></div>
+<pre><code>## [1] 1.791579</code></pre>
 <p>For the second way we need
 <span class="math display">\[\begin{align}
 s&#39;(x) &amp;= \frac{e^x}{\left(1+e^x\right)^2},\\
@@ -387,7 +385,7 @@ Figure 1.10: Observed sample and fitted model
 <span id="cb44-2"><a href="1.12-an-application.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop</span>(<span class="sc">-</span>pracma<span class="sc">::</span><span class="fu">hessian</span>(logLn, beta))</span>
 <span id="cb44-3"><a href="1.12-an-application.html#cb44-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb44-4"><a href="1.12-an-application.html#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">observedFisherInfo</span>(betahat)</span></code></pre></div>
-<pre><code>## [1] 72.64589</code></pre>
+<pre><code>## [1] 72.6459</code></pre>
 <p>Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
 <span class="math display">\[
 l&#39;&#39;(\beta)=(1-y) \left(-\frac{x^2 \sigma &#39;(x \beta )^2}{(1-\sigma (x \beta )^2}-\frac{x^2 \sigma &#39;&#39;(x \beta )}{1-\sigma (x \beta )}\right)+y \left(-\frac{x^2 \sigma &#39;(x \beta )^2}{\sigma (x \beta )^2}+\frac{x^2 \sigma &#39;&#39;(x \beta )}{\sigma (x \beta )}\right)
@@ -411,13 +409,13 @@ Implemented in R:</p>
 <span id="cb46-16"><a href="1.12-an-application.html#cb46-16" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb46-17"><a href="1.12-an-application.html#cb46-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-18"><a href="1.12-an-application.html#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="fu">observedFisherInfo</span>(betahat)</span></code></pre></div>
-<pre><code>## [1] 72.64589</code></pre>
+<pre><code>## [1] 72.64591</code></pre>
 <p>Recall that Wald’s test statistic is standard normal under <span class="math inline">\(H_0\)</span>. So we may calculate the p-value:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="1.12-an-application.html#cb48-1" aria-hidden="true" tabindex="-1"></a>zWald <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
 <span id="cb48-2"><a href="1.12-an-application.html#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(betahat<span class="sc">-</span> beta0)<span class="sc">*</span><span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
 <span id="cb48-3"><a href="1.12-an-application.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb48-4"><a href="1.12-an-application.html#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> ( <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>( <span class="fu">zWald</span>(<span class="fl">2.0</span>) ) )</span></code></pre></div>
-<pre><code>## [1] 0.07566354</code></pre>
+<pre><code>## [1] 0.07566311</code></pre>
 <p>We might also do a Score test. Here, all we need is <span class="math inline">\(l&#39;\)</span> and <span class="math inline">\(l&#39;&#39;\)</span>, which we have already calculated. The score statistic is again standard normal under <span class="math inline">\(H_0\)</span>.</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="1.12-an-application.html#cb50-1" aria-hidden="true" tabindex="-1"></a>zScore <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0){</span>
 <span id="cb50-2"><a href="1.12-an-application.html#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(pracma<span class="sc">::</span><span class="fu">grad</span>(logLn,beta0)<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(beta0)))</span>
@@ -430,7 +428,7 @@ Implemented in R:</p>
 <span id="cb52-3"><a href="1.12-an-application.html#cb52-3" aria-hidden="true" tabindex="-1"></a>rightCILimit <span class="ot">&lt;-</span> betahat <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(betahat))</span>
 <span id="cb52-4"><a href="1.12-an-application.html#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-5"><a href="1.12-an-application.html#cb52-5" aria-hidden="true" tabindex="-1"></a>leftCILimit</span></code></pre></div>
-<pre><code>## [1] 1.561625</code></pre>
+<pre><code>## [1] 1.561624</code></pre>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="1.12-an-application.html#cb54-1" aria-hidden="true" tabindex="-1"></a>rightCILimit</span></code></pre></div>
 <pre><code>## [1] 2.021534</code></pre>
 For a score based CI we first plot the score statistic.
