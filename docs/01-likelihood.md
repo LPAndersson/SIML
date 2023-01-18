@@ -894,11 +894,11 @@ observedFisherInfo(betahat)
 ```
 
 ```
-## [1] 72.6459
+## [1] 72.64594
 ```
 Calculating the second derivative exactly involves more work but is preferable whenever possible. We get,
 $$
-l''(\beta)=(1-y) \left(-\frac{x^2 \sigma '(x \beta )^2}{(1-\sigma (x \beta )^2}-\frac{x^2 \sigma ''(x \beta )}{1-\sigma (x \beta )}\right)+y \left(-\frac{x^2 \sigma '(x \beta )^2}{\sigma (x \beta )^2}+\frac{x^2 \sigma ''(x \beta )}{\sigma (x \beta )}\right)
+l''(\beta)=(1-y) \left(-\frac{x^2 s '(x \beta )^2}{(1-s (x \beta )^2}-\frac{x^2 s ''(x \beta )}{1-s (x \beta )}\right)+y \left(-\frac{x^2 s '(x \beta )^2}{s (x \beta )^2}+\frac{x^2 s ''(x \beta )}{s (x \beta )}\right)
 $$
 Implemented in R:
 
