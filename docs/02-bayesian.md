@@ -496,7 +496,7 @@ From this we can get point estimates, the mean of the posterior distribution, an
 
 ```r
 #Point estimates
-apply(beta.mcmc$sample, 2, mean)
+colMeans(beta.mcmc$sample)
 ```
 
 ```
@@ -516,7 +516,7 @@ apply(beta.mcmc$sample, 2, quantile, probs = c(0.05,0.95))
 As a final check, let us verify that our estimates makes sense by comparing our data to our predictions.
 
 ```r
-beta.fit <- apply(beta.mcmc$sample, 2, mean)
+beta.fit <- colMeans(beta.mcmc$sample)
 p <- pnorm(as.matrix(data.df[3:6])%*%beta.fit)
 y.pred <- data.df$n*p
 y.pred
