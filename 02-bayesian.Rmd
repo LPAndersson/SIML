@@ -475,21 +475,13 @@ data.df <- data.df[, col_order]
 Then implement the likelihood function and prior density. We do this on a log-scale.
 ```{r, cache=TRUE, echo = TRUE, warning = FALSE}
 logL <- function(beta){
-
-  y <- data.df$y
-  n <- data.df$n
-  z0 <-data.df[3]
-  z1 <-data.df[4]
-  z2 <-data.df[5]
-  z3 <-data.df[6]
-
-  p <- pnorm(as.matrix(z0 * beta[1] + z1 * beta[2] + z2 * beta[3] + z3 * beta[4]))
-  
-  sum <- 0
-  for (i in seq_len(nrow(data.df))) {
-    sum <- sum + y[i]*log(p[i]) + (n[i]-y[i])*log(1-p[i])
-  }
-  sum
+  p <- pnorm(
+    as.matrix(
+      data.df['z0'] * beta[1] + data.df['z1'] * beta[2] + 
+      data.df['z2'] * beta[3] + data.df['z3'] * beta[4]
+      )
+    )
+ sum( data.df['y']*log(p) + (data.df['n']-data.df['y'])*log(1-p) )
 }
 
 lambda <- 10
