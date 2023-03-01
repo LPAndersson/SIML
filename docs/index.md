@@ -1,7 +1,7 @@
 --- 
 title: "Lecture notes for Statistical Inference and Machine Learning"
 author: "Patrik Andersson"
-date: "2021-10-24"
+date: "2023-03-01"
 site: bookdown::bookdown_site
 output: 
   bookdown::gitbook:
