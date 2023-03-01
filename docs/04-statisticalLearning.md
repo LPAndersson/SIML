@@ -443,8 +443,7 @@ $$
 Stated another way, with probability at least $1-\delta$,
 $$
 \left| \bar Y_n - p \right|\leq \sqrt{\frac{1}{2n}\ln \frac{2}{\delta}}.
-$$
-````
+$$</div>\EndKnitrBlock{note}
 
 ## Generalization error
 
@@ -459,7 +458,7 @@ h(x_1,x_2)=\begin{cases}
 -1 \text{ otherwise}.
 \end{cases}
 $$
-Now we generate some data:</div>\EndKnitrBlock{note}
+Now we generate some data:
 <div class="figure" style="text-align: center">
 <img src="04-statisticalLearning_files/figure-html/genError-1.png" alt="Training data and classification rule" width="80%" />
 <p class="caption">(\#fig:genError)Training data and classification rule</p>

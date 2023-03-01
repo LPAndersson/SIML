@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.7 Bias-Variance decomposition | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.7 Bias-Variance decomposition | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -33,7 +32,6 @@
   
 <link rel="prev" href="4.6-support-vector-machines-ii.html"/>
 <link rel="next" href="4.8-regression-regularization.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,8 +49,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -93,7 +92,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -106,7 +105,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -203,6 +202,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.1" data-path="4.1-classification.html"><a href="4.1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4.2-support-vector-machines-i.html"><a href="4.2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
 <li class="chapter" data-level="4.3" data-path="4.3-hoeffdings-inequality.html"><a href="4.3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
+<li class="chapter" data-level="4.4" data-path="4.4-generalization-error.html"><a href="4.4-generalization-error.html"><i class="fa fa-check"></i><b>4.4</b> Generalization error</a></li>
 <li class="chapter" data-level="4.5" data-path="4.5-vc-dimension.html"><a href="4.5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
 <li class="chapter" data-level="4.6" data-path="4.6-support-vector-machines-ii.html"><a href="4.6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
 <li class="chapter" data-level="4.7" data-path="4.7-bias-variance-decomposition.html"><a href="4.7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
@@ -238,8 +238,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bias-variance-decomposition" class="section level2" number="4.7">
-<h2><span class="header-section-number">4.7</span> Bias-Variance decomposition</h2>
+<div id="bias-variance-decomposition" class="section level2 hasAnchor" number="4.7">
+<h2><span class="header-section-number">4.7</span> Bias-Variance decomposition<a href="4.7-bias-variance-decomposition.html#bias-variance-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In this section we will see another approach for understanding how model complexity affects statistical learning. Instead of bounding the difference between <span class="math inline">\(E_{out}\)</span> and <span class="math inline">\(E_{in}\)</span> we will decompose <span class="math inline">\(E_{out}\)</span> into two different error terms.</p>
 <p>We consider the regression problem and therefore we assume a quadratic loss function,
 <span class="math display">\[
@@ -270,9 +270,9 @@ The first part does not depend on <span class="math inline">\(h\)</span> and the
 <span class="math display">\[\begin{align}
 &amp;E\left[ (h^{\mathcal D}(x) - f(x))^2\right]  = E\left[ (h^{\mathcal D}(x) - \bar h(x) + \bar h(x) - f(x) )^2\right] \\
 =&amp;  E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
- E\left[ (\bar h(x) - f(x) )^2\right] +2(\bar h(x) - f(x)) E\left[ (h^{\mathcal D}(x) - \bar h(x) )\right]\\
+E\left[ (\bar h(x) - f(x) )^2\right] +2(\bar h(x) - f(x)) E\left[ (h^{\mathcal D}(x) - \bar h(x) )\right]\\
 =&amp; E\left[ (h^{\mathcal D}(x) - \bar h(x) )^2\right] +
- (\bar h(x) - f(x) )^2
+(\bar h(x) - f(x) )^2
 \end{align}\]</span>
 The first term is the variance of <span class="math inline">\(h^\mathcal D\)</span> thinking of the data set <span class="math inline">\(\mathcal D\)</span> as random. The second term is the difference between the average function <span class="math inline">\(\bar h\)</span> and the true regression function <span class="math inline">\(f(x)\)</span> and is called the bias. This is the <em>Bias-variance decomposition</em>.</p>
 <p>If we choose a large class of functions <span class="math inline">\(\mathcal H\)</span> from which we choose <span class="math inline">\(h^\mathcal D\)</span>, it will be possible to closely approximate <span class="math inline">\(f\)</span>, on average. In this case the bias will be small. However, many times if <span class="math inline">\(\mathcal H\)</span> is large, <span class="math inline">\(h^\mathcal D\)</span> will be sensitive to data, that is we will overfit, and then the variance term is large. This is known as the trade-off between bias and variance. However it is important to understand that this trade-off is an empirical observation and not an theoretical fact. We can illustrate this with a picture similar to what we saw in the discussion of generalization error.</p>
@@ -349,7 +349,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

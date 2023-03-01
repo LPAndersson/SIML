@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5.2 An application II | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5.2 An application II | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -33,7 +32,6 @@
   
 <link rel="prev" href="5.1-an-application-i-1.html"/>
 <link rel="next" href="5.3-review-questions-4.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,8 +49,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -93,7 +92,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -106,7 +105,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -120,28 +119,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -202,15 +179,74 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="4.1-classification.html"><a href="4.1-classification.html"><i class="fa fa-check"></i><b>4.1</b> Classification</a></li>
 <li class="chapter" data-level="4.2" data-path="4.2-support-vector-machines-i.html"><a href="4.2-support-vector-machines-i.html"><i class="fa fa-check"></i><b>4.2</b> Support vector machines I</a></li>
-<li class="chapter" data-level="4.3" data-path="4.3-hoeffdings-inequality.html"><a href="4.3-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.3</b> Hoeffding’s inequality</a></li>
-<li class="chapter" data-level="4.5" data-path="4.5-vc-dimension.html"><a href="4.5-vc-dimension.html"><i class="fa fa-check"></i><b>4.5</b> VC-dimension</a></li>
-<li class="chapter" data-level="4.6" data-path="4.6-support-vector-machines-ii.html"><a href="4.6-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.6</b> Support vector machines II</a></li>
-<li class="chapter" data-level="4.7" data-path="4.7-bias-variance-decomposition.html"><a href="4.7-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.7</b> Bias-Variance decomposition</a></li>
-<li class="chapter" data-level="4.8" data-path="4.8-regression-regularization.html"><a href="4.8-regression-regularization.html"><i class="fa fa-check"></i><b>4.8</b> Regression regularization</a></li>
-<li class="chapter" data-level="4.9" data-path="4.9-model-selection.html"><a href="4.9-model-selection.html"><i class="fa fa-check"></i><b>4.9</b> Model selection</a></li>
-<li class="chapter" data-level="4.10" data-path="4.10-an-application-i.html"><a href="4.10-an-application-i.html"><i class="fa fa-check"></i><b>4.10</b> An application I</a></li>
-<li class="chapter" data-level="4.11" data-path="4.11-an-application-ii.html"><a href="4.11-an-application-ii.html"><i class="fa fa-check"></i><b>4.11</b> An application II</a></li>
-<li class="chapter" data-level="4.12" data-path="4.12-review-questions-3.html"><a href="4.12-review-questions-3.html"><i class="fa fa-check"></i><b>4.12</b> Review questions</a></li>
+<li class="chapter" data-level="4.3" data-path="4.3-section.html"><a href="4.3-section.html"><i class="fa fa-check"></i><b>4.3</b> [1] 0.285</a></li>
+<li class="chapter" data-level="4.4" data-path="4.4-section-1.html"><a href="4.4-section-1.html"><i class="fa fa-check"></i><b>4.4</b> [1] 0.275</a></li>
+<li class="chapter" data-level="4.5" data-path="4.5-section-2.html"><a href="4.5-section-2.html"><i class="fa fa-check"></i><b>4.5</b> [1] 0.03</a></li>
+<li class="chapter" data-level="4.6" data-path="4.6-hoeffdings-inequality.html"><a href="4.6-hoeffdings-inequality.html"><i class="fa fa-check"></i><b>4.6</b> Hoeffding’s inequality</a></li>
+<li class="chapter" data-level="4.7" data-path="4.7-generalization-error.html"><a href="4.7-generalization-error.html"><i class="fa fa-check"></i><b>4.7</b> Generalization error</a></li>
+<li class="chapter" data-level="4.8" data-path="4.8-section-3.html"><a href="4.8-section-3.html"><i class="fa fa-check"></i><b>4.8</b> [1] 0.32</a></li>
+<li class="chapter" data-level="4.9" data-path="4.9-section-4.html"><a href="4.9-section-4.html"><i class="fa fa-check"></i><b>4.9</b> [1] 0.3548</a></li>
+<li class="chapter" data-level="4.10" data-path="4.10-section-5.html"><a href="4.10-section-5.html"><i class="fa fa-check"></i><b>4.10</b> [1] 0.5120646</a></li>
+<li class="chapter" data-level="4.11" data-path="4.11-vc-dimension.html"><a href="4.11-vc-dimension.html"><i class="fa fa-check"></i><b>4.11</b> VC-dimension</a></li>
+<li class="chapter" data-level="4.12" data-path="4.12-support-vector-machines-ii.html"><a href="4.12-support-vector-machines-ii.html"><i class="fa fa-check"></i><b>4.12</b> Support vector machines II</a></li>
+<li class="chapter" data-level="4.13" data-path="4.13-bias-variance-decomposition.html"><a href="4.13-bias-variance-decomposition.html"><i class="fa fa-check"></i><b>4.13</b> Bias-Variance decomposition</a></li>
+<li class="chapter" data-level="4.14" data-path="4.14-regression-regularization.html"><a href="4.14-regression-regularization.html"><i class="fa fa-check"></i><b>4.14</b> Regression regularization</a></li>
+<li class="chapter" data-level="4.15" data-path="4.15-model-selection.html"><a href="4.15-model-selection.html"><i class="fa fa-check"></i><b>4.15</b> Model selection</a></li>
+<li class="chapter" data-level="4.16" data-path="4.16-an-application-i.html"><a href="4.16-an-application-i.html"><i class="fa fa-check"></i><b>4.16</b> An application I</a></li>
+<li class="chapter" data-level="4.17" data-path="4.17-section-6.html"><a href="4.17-section-6.html"><i class="fa fa-check"></i><b>4.17</b> [1] 367.6942</a></li>
+<li class="chapter" data-level="4.18" data-path="4.18-x-1-sparse-matrix-of-class-dgcmatrix.html"><a href="4.18-x-1-sparse-matrix-of-class-dgcmatrix.html"><i class="fa fa-check"></i><b>4.18</b> 20 x 1 sparse Matrix of class “dgCMatrix”</a></li>
+<li class="chapter" data-level="4.19" data-path="4.19-s1.html"><a href="4.19-s1.html"><i class="fa fa-check"></i><b>4.19</b> s1</a></li>
+<li class="chapter" data-level="4.20" data-path="4.20-intercept--66.html"><a href="4.20-intercept--66.html"><i class="fa fa-check"></i><b>4.20</b> (Intercept) -66.88333624</a></li>
+<li class="chapter" data-level="4.21" data-path="4.21-atbat-..html"><a href="4.21-atbat-..html"><i class="fa fa-check"></i><b>4.21</b> AtBat .</a></li>
+<li class="chapter" data-level="4.22" data-path="4.22-hits-2.html"><a href="4.22-hits-2.html"><i class="fa fa-check"></i><b>4.22</b> Hits 2.00894789</a></li>
+<li class="chapter" data-level="4.23" data-path="4.23-hmrun-..html"><a href="4.23-hmrun-..html"><i class="fa fa-check"></i><b>4.23</b> HmRun .</a></li>
+<li class="chapter" data-level="4.24" data-path="4.24-runs-..html"><a href="4.24-runs-..html"><i class="fa fa-check"></i><b>4.24</b> Runs .</a></li>
+<li class="chapter" data-level="4.25" data-path="4.25-rbi-0.html"><a href="4.25-rbi-0.html"><i class="fa fa-check"></i><b>4.25</b> RBI 0.63610478</a></li>
+<li class="chapter" data-level="4.26" data-path="4.26-walks-3.html"><a href="4.26-walks-3.html"><i class="fa fa-check"></i><b>4.26</b> Walks 3.46312810</a></li>
+<li class="chapter" data-level="4.27" data-path="4.27-years-..html"><a href="4.27-years-..html"><i class="fa fa-check"></i><b>4.27</b> Years .</a></li>
+<li class="chapter" data-level="4.28" data-path="4.28-catbat-..html"><a href="4.28-catbat-..html"><i class="fa fa-check"></i><b>4.28</b> CAtBat .</a></li>
+<li class="chapter" data-level="4.29" data-path="4.29-chits-..html"><a href="4.29-chits-..html"><i class="fa fa-check"></i><b>4.29</b> CHits .</a></li>
+<li class="chapter" data-level="4.30" data-path="4.30-chmrun-0.html"><a href="4.30-chmrun-0.html"><i class="fa fa-check"></i><b>4.30</b> CHmRun 0.01178261</a></li>
+<li class="chapter" data-level="4.31" data-path="4.31-cruns-0.html"><a href="4.31-cruns-0.html"><i class="fa fa-check"></i><b>4.31</b> CRuns 0.08620313</a></li>
+<li class="chapter" data-level="4.32" data-path="4.32-crbi-0.html"><a href="4.32-crbi-0.html"><i class="fa fa-check"></i><b>4.32</b> CRBI 0.51517895</a></li>
+<li class="chapter" data-level="4.33" data-path="4.33-cwalks-..html"><a href="4.33-cwalks-..html"><i class="fa fa-check"></i><b>4.33</b> CWalks .</a></li>
+<li class="chapter" data-level="4.34" data-path="4.34-leaguen-29.html"><a href="4.34-leaguen-29.html"><i class="fa fa-check"></i><b>4.34</b> LeagueN 29.48507342</a></li>
+<li class="chapter" data-level="4.35" data-path="4.35-divisionw--100.html"><a href="4.35-divisionw--100.html"><i class="fa fa-check"></i><b>4.35</b> DivisionW -100.72607403</a></li>
+<li class="chapter" data-level="4.36" data-path="4.36-putouts-0.html"><a href="4.36-putouts-0.html"><i class="fa fa-check"></i><b>4.36</b> PutOuts 0.17109758</a></li>
+<li class="chapter" data-level="4.37" data-path="4.37-assists--0.html"><a href="4.37-assists--0.html"><i class="fa fa-check"></i><b>4.37</b> Assists -0.06283794</a></li>
+<li class="chapter" data-level="4.38" data-path="4.38-errors-..html"><a href="4.38-errors-..html"><i class="fa fa-check"></i><b>4.38</b> Errors .</a></li>
+<li class="chapter" data-level="4.39" data-path="4.39-newleaguen-..html"><a href="4.39-newleaguen-..html"><i class="fa fa-check"></i><b>4.39</b> NewLeagueN .</a></li>
+<li class="chapter" data-level="4.40" data-path="4.40-section-7.html"><a href="4.40-section-7.html"><i class="fa fa-check"></i><b>4.40</b> [1] 358.6614</a></li>
+<li class="chapter" data-level="4.41" data-path="4.41-section-8.html"><a href="4.41-section-8.html"><i class="fa fa-check"></i><b>4.41</b> [1] 361.3435</a></li>
+<li class="chapter" data-level="4.42" data-path="4.42-an-application-ii.html"><a href="4.42-an-application-ii.html"><i class="fa fa-check"></i><b>4.42</b> An application II</a></li>
+<li class="chapter" data-level="4.43" data-path="4.43-support-vector-machines-with-radial-basis-function-kernel.html"><a href="4.43-support-vector-machines-with-radial-basis-function-kernel.html"><i class="fa fa-check"></i><b>4.43</b> Support Vector Machines with Radial Basis Function Kernel</a></li>
+<li class="chapter" data-level="4.44" data-path="4.44-section-9.html"><a href="4.44-section-9.html"><i class="fa fa-check"></i><b>4.44</b> </a></li>
+<li class="chapter" data-level="4.45" data-path="4.45-samples.html"><a href="4.45-samples.html"><i class="fa fa-check"></i><b>4.45</b> 275 samples</a></li>
+<li class="chapter" data-level="4.46" data-path="4.46-predictor.html"><a href="4.46-predictor.html"><i class="fa fa-check"></i><b>4.46</b> 8 predictor</a></li>
+<li class="chapter" data-level="4.47" data-path="4.47-classes-neg-pos.html"><a href="4.47-classes-neg-pos.html"><i class="fa fa-check"></i><b>4.47</b> 2 classes: ‘neg’, ‘pos’</a></li>
+<li class="chapter" data-level="4.48" data-path="4.48-section-10.html"><a href="4.48-section-10.html"><i class="fa fa-check"></i><b>4.48</b> </a></li>
+<li class="chapter" data-level="4.49" data-path="4.49-pre-processing-centered-8-scaled-8.html"><a href="4.49-pre-processing-centered-8-scaled-8.html"><i class="fa fa-check"></i><b>4.49</b> Pre-processing: centered (8), scaled (8)</a></li>
+<li class="chapter" data-level="4.50" data-path="4.50-resampling-cross-validated-10-fold.html"><a href="4.50-resampling-cross-validated-10-fold.html"><i class="fa fa-check"></i><b>4.50</b> Resampling: Cross-Validated (10 fold)</a></li>
+<li class="chapter" data-level="4.51" data-path="4.51-summary-of-sample-sizes-248-247-248-248-247-246.html"><a href="4.51-summary-of-sample-sizes-248-247-248-248-247-246.html"><i class="fa fa-check"></i><b>4.51</b> Summary of sample sizes: 248, 247, 248, 248, 247, 246, …</a></li>
+<li class="chapter" data-level="4.52" data-path="4.52-resampling-results-across-tuning-parameters.html"><a href="4.52-resampling-results-across-tuning-parameters.html"><i class="fa fa-check"></i><b>4.52</b> Resampling results across tuning parameters:</a></li>
+<li class="chapter" data-level="4.53" data-path="4.53-section-11.html"><a href="4.53-section-11.html"><i class="fa fa-check"></i><b>4.53</b> </a></li>
+<li class="chapter" data-level="4.54" data-path="4.54-c-accuracy-kappa.html"><a href="4.54-c-accuracy-kappa.html"><i class="fa fa-check"></i><b>4.54</b> C Accuracy Kappa</a></li>
+<li class="chapter" data-level="4.55" data-path="4.55-section-12.html"><a href="4.55-section-12.html"><i class="fa fa-check"></i><b>4.55</b> 0.25 0.7602354 0.4003850</a></li>
+<li class="chapter" data-level="4.56" data-path="4.56-section-13.html"><a href="4.56-section-13.html"><i class="fa fa-check"></i><b>4.56</b> 0.50 0.7635605 0.4129658</a></li>
+<li class="chapter" data-level="4.57" data-path="4.57-section-14.html"><a href="4.57-section-14.html"><i class="fa fa-check"></i><b>4.57</b> 1.00 0.7671319 0.4258676</a></li>
+<li class="chapter" data-level="4.58" data-path="4.58-section-15.html"><a href="4.58-section-15.html"><i class="fa fa-check"></i><b>4.58</b> 2.00 0.7484902 0.3867206</a></li>
+<li class="chapter" data-level="4.59" data-path="4.59-section-16.html"><a href="4.59-section-16.html"><i class="fa fa-check"></i><b>4.59</b> 4.00 0.7561440 0.4115484</a></li>
+<li class="chapter" data-level="4.60" data-path="4.60-section-17.html"><a href="4.60-section-17.html"><i class="fa fa-check"></i><b>4.60</b> 8.00 0.7340540 0.3687010</a></li>
+<li class="chapter" data-level="4.61" data-path="4.61-section-18.html"><a href="4.61-section-18.html"><i class="fa fa-check"></i><b>4.61</b> 16.00 0.7230660 0.3528600</a></li>
+<li class="chapter" data-level="4.62" data-path="4.62-section-19.html"><a href="4.62-section-19.html"><i class="fa fa-check"></i><b>4.62</b> 32.00 0.7082604 0.3172943</a></li>
+<li class="chapter" data-level="4.63" data-path="4.63-section-20.html"><a href="4.63-section-20.html"><i class="fa fa-check"></i><b>4.63</b> 64.00 0.6942209 0.3047575</a></li>
+<li class="chapter" data-level="4.64" data-path="4.64-section-21.html"><a href="4.64-section-21.html"><i class="fa fa-check"></i><b>4.64</b> 128.00 0.7087803 0.3466723</a></li>
+<li class="chapter" data-level="4.65" data-path="4.65-section-22.html"><a href="4.65-section-22.html"><i class="fa fa-check"></i><b>4.65</b> </a></li>
+<li class="chapter" data-level="4.66" data-path="4.66-tuning-parameter-sigma-was-held-constant-at-a-value-of-0.html"><a href="4.66-tuning-parameter-sigma-was-held-constant-at-a-value-of-0.html"><i class="fa fa-check"></i><b>4.66</b> Tuning parameter ‘sigma’ was held constant at a value of 0.114713</a></li>
+<li class="chapter" data-level="4.67" data-path="4.67-accuracy-was-used-to-select-the-optimal-model-using-the-largest-value..html"><a href="4.67-accuracy-was-used-to-select-the-optimal-model-using-the-largest-value..html"><i class="fa fa-check"></i><b>4.67</b> Accuracy was used to select the optimal model using the largest value.</a></li>
+<li class="chapter" data-level="4.68" data-path="4.68-the-final-values-used-for-the-model-were-sigma-0.114713-and-c-1..html"><a href="4.68-the-final-values-used-for-the-model-were-sigma-0.114713-and-c-1..html"><i class="fa fa-check"></i><b>4.68</b> The final values used for the model were sigma = 0.114713 and C = 1.</a></li>
+<li class="chapter" data-level="4.69" data-path="4.69-section-23.html"><a href="4.69-section-23.html"><i class="fa fa-check"></i><b>4.69</b> [1] 0.7606838</a></li>
+<li class="chapter" data-level="4.70" data-path="4.70-review-questions-3.html"><a href="4.70-review-questions-3.html"><i class="fa fa-check"></i><b>4.70</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-beyond-linearity.html"><a href="5-beyond-linearity.html"><i class="fa fa-check"></i><b>5</b> Beyond linearity</a>
 <ul>
@@ -238,70 +274,70 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="an-application-ii-1" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> An application II</h2>
+<div id="an-application-ii-1" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> An application II<a href="5.2-an-application-ii-1.html#an-application-ii-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In this section we demonstrate how to use boosting to predict the salary of baseball players using the Hitters dataset.</p>
 <p>We start by loading the required packages and splitting the data into a training and test set</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="5.2-an-application-ii-1.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb169-2"><a href="5.2-an-application-ii-1.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span>
-<span id="cb169-3"><a href="5.2-an-application-ii-1.html#cb169-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb169-4"><a href="5.2-an-application-ii-1.html#cb169-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
-<span id="cb169-5"><a href="5.2-an-application-ii-1.html#cb169-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-6"><a href="5.2-an-application-ii-1.html#cb169-6" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
-<span id="cb169-7"><a href="5.2-an-application-ii-1.html#cb169-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-8"><a href="5.2-an-application-ii-1.html#cb169-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
-<span id="cb169-9"><a href="5.2-an-application-ii-1.html#cb169-9" aria-hidden="true" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">createDataPartition</span>(Hitters<span class="sc">$</span>Salary, </span>
-<span id="cb169-10"><a href="5.2-an-application-ii-1.html#cb169-10" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">p =</span> <span class="fl">0.7</span>, </span>
-<span id="cb169-11"><a href="5.2-an-application-ii-1.html#cb169-11" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb169-12"><a href="5.2-an-application-ii-1.html#cb169-12" aria-hidden="true" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> Hitters[training.samples, ]</span>
-<span id="cb169-13"><a href="5.2-an-application-ii-1.html#cb169-13" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> Hitters[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="5.2-an-application-ii-1.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb11-2"><a href="5.2-an-application-ii-1.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span>
+<span id="cb11-3"><a href="5.2-an-application-ii-1.html#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb11-4"><a href="5.2-an-application-ii-1.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
+<span id="cb11-5"><a href="5.2-an-application-ii-1.html#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="5.2-an-application-ii-1.html#cb11-6" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
+<span id="cb11-7"><a href="5.2-an-application-ii-1.html#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="5.2-an-application-ii-1.html#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb11-9"><a href="5.2-an-application-ii-1.html#cb11-9" aria-hidden="true" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">createDataPartition</span>(Hitters<span class="sc">$</span>Salary, </span>
+<span id="cb11-10"><a href="5.2-an-application-ii-1.html#cb11-10" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">p =</span> <span class="fl">0.7</span>, </span>
+<span id="cb11-11"><a href="5.2-an-application-ii-1.html#cb11-11" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-12"><a href="5.2-an-application-ii-1.html#cb11-12" aria-hidden="true" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> Hitters[training.samples, ]</span>
+<span id="cb11-13"><a href="5.2-an-application-ii-1.html#cb11-13" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> Hitters[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
 <p>Boosting has a number of different parameters and we use a grid search and cross-validation to find the best choice.</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="5.2-an-application-ii-1.html#cb170-1" aria-hidden="true" tabindex="-1"></a>gbmGrid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">interaction.depth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb170-2"><a href="5.2-an-application-ii-1.html#cb170-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.trees =</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)<span class="sc">*</span><span class="dv">2000</span>,</span>
-<span id="cb170-3"><a href="5.2-an-application-ii-1.html#cb170-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">shrinkage =</span> <span class="fl">0.001</span>,</span>
-<span id="cb170-4"><a href="5.2-an-application-ii-1.html#cb170-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.minobsinnode =</span> <span class="dv">5</span>)</span>
-<span id="cb170-5"><a href="5.2-an-application-ii-1.html#cb170-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb170-6"><a href="5.2-an-application-ii-1.html#cb170-6" aria-hidden="true" tabindex="-1"></a>fitControl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
-<span id="cb170-7"><a href="5.2-an-application-ii-1.html#cb170-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;repeatedcv&quot;</span>,</span>
-<span id="cb170-8"><a href="5.2-an-application-ii-1.html#cb170-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">5</span>,</span>
-<span id="cb170-9"><a href="5.2-an-application-ii-1.html#cb170-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">repeats =</span> <span class="dv">5</span></span>
-<span id="cb170-10"><a href="5.2-an-application-ii-1.html#cb170-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="5.2-an-application-ii-1.html#cb12-1" aria-hidden="true" tabindex="-1"></a>gbmGrid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">interaction.depth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb12-2"><a href="5.2-an-application-ii-1.html#cb12-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.trees =</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)<span class="sc">*</span><span class="dv">2000</span>,</span>
+<span id="cb12-3"><a href="5.2-an-application-ii-1.html#cb12-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">shrinkage =</span> <span class="fl">0.001</span>,</span>
+<span id="cb12-4"><a href="5.2-an-application-ii-1.html#cb12-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.minobsinnode =</span> <span class="dv">5</span>)</span>
+<span id="cb12-5"><a href="5.2-an-application-ii-1.html#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="5.2-an-application-ii-1.html#cb12-6" aria-hidden="true" tabindex="-1"></a>fitControl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb12-7"><a href="5.2-an-application-ii-1.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;repeatedcv&quot;</span>,</span>
+<span id="cb12-8"><a href="5.2-an-application-ii-1.html#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">5</span>,</span>
+<span id="cb12-9"><a href="5.2-an-application-ii-1.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">repeats =</span> <span class="dv">5</span></span>
+<span id="cb12-10"><a href="5.2-an-application-ii-1.html#cb12-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p>The performance of the model is usually better the smaller the shrinkage parameter, or learning rate, is chosen. But with a small shrinkage we need many iterations, i.e. trees. So there is a tradeof between performance and the time it takes to train the model and the amount of storage required.</p>
 <p>To speed up the training we use parallel processes.</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="5.2-an-application-ii-1.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
-<span id="cb171-2"><a href="5.2-an-application-ii-1.html#cb171-2" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makePSOCKcluster</span>(<span class="dv">4</span>)</span>
-<span id="cb171-3"><a href="5.2-an-application-ii-1.html#cb171-3" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="5.2-an-application-ii-1.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb13-2"><a href="5.2-an-application-ii-1.html#cb13-2" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makePSOCKcluster</span>(<span class="dv">4</span>)</span>
+<span id="cb13-3"><a href="5.2-an-application-ii-1.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span></code></pre></div>
 <p>Now we fit the model</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="5.2-an-application-ii-1.html#cb172-1" aria-hidden="true" tabindex="-1"></a>gbmFit <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb172-2"><a href="5.2-an-application-ii-1.html#cb172-2" aria-hidden="true" tabindex="-1"></a>  Salary <span class="sc">~</span> ., </span>
-<span id="cb172-3"><a href="5.2-an-application-ii-1.html#cb172-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train.data, </span>
-<span id="cb172-4"><a href="5.2-an-application-ii-1.html#cb172-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;gbm&quot;</span>, </span>
-<span id="cb172-5"><a href="5.2-an-application-ii-1.html#cb172-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> fitControl,</span>
-<span id="cb172-6"><a href="5.2-an-application-ii-1.html#cb172-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb172-7"><a href="5.2-an-application-ii-1.html#cb172-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
-<span id="cb172-8"><a href="5.2-an-application-ii-1.html#cb172-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneGrid =</span> gbmGrid</span>
-<span id="cb172-9"><a href="5.2-an-application-ii-1.html#cb172-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="5.2-an-application-ii-1.html#cb14-1" aria-hidden="true" tabindex="-1"></a>gbmFit <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb14-2"><a href="5.2-an-application-ii-1.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  Salary <span class="sc">~</span> ., </span>
+<span id="cb14-3"><a href="5.2-an-application-ii-1.html#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train.data, </span>
+<span id="cb14-4"><a href="5.2-an-application-ii-1.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;gbm&quot;</span>, </span>
+<span id="cb14-5"><a href="5.2-an-application-ii-1.html#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> fitControl,</span>
+<span id="cb14-6"><a href="5.2-an-application-ii-1.html#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb14-7"><a href="5.2-an-application-ii-1.html#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb14-8"><a href="5.2-an-application-ii-1.html#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneGrid =</span> gbmGrid</span>
+<span id="cb14-9"><a href="5.2-an-application-ii-1.html#cb14-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Here, gaussian means that we are doing regression that minimizes the square error.</p>
 <p>We may know predict the observations in the test set and calculate the out-of-sample error.</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="5.2-an-application-ii-1.html#cb173-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(gbmFit, test.data)</span>
-<span id="cb173-2"><a href="5.2-an-application-ii-1.html#cb173-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">mean</span>((predictions <span class="sc">-</span> test.data<span class="sc">$</span>Salary)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="5.2-an-application-ii-1.html#cb15-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(gbmFit, test.data)</span>
+<span id="cb15-2"><a href="5.2-an-application-ii-1.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">mean</span>((predictions <span class="sc">-</span> test.data<span class="sc">$</span>Salary)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## [1] 308.2421</code></pre>
 <p>This is an improvement over the regularized linear regression we did previously.</p>
 <p>We can also see the importance of each variable.</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="5.2-an-application-ii-1.html#cb175-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(gbmFit) <span class="sc">+</span></span>
-<span id="cb175-2"><a href="5.2-an-application-ii-1.html#cb175-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="5.2-an-application-ii-1.html#cb17-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(gbmFit) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="5.2-an-application-ii-1.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="05-beyondLinearity_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>By making a partial dependence plot we can illustrate how each variable affect the prediction on average.</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="5.2-an-application-ii-1.html#cb176-1" aria-hidden="true" tabindex="-1"></a>gbmFit<span class="sc">$</span>finalModel <span class="sc">%&gt;%</span></span>
-<span id="cb176-2"><a href="5.2-an-application-ii-1.html#cb176-2" aria-hidden="true" tabindex="-1"></a>  pdp<span class="sc">::</span><span class="fu">partial</span>(</span>
-<span id="cb176-3"><a href="5.2-an-application-ii-1.html#cb176-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred.var =</span> <span class="st">&quot;CHmRun&quot;</span>, </span>
-<span id="cb176-4"><a href="5.2-an-application-ii-1.html#cb176-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.trees =</span> gbmFit<span class="sc">$</span>finalModel<span class="sc">$</span>n.trees, </span>
-<span id="cb176-5"><a href="5.2-an-application-ii-1.html#cb176-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid.resolution =</span> <span class="dv">100</span>,</span>
-<span id="cb176-6"><a href="5.2-an-application-ii-1.html#cb176-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">train =</span> train.data,</span>
-<span id="cb176-7"><a href="5.2-an-application-ii-1.html#cb176-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb176-8"><a href="5.2-an-application-ii-1.html#cb176-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">rug =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb176-9"><a href="5.2-an-application-ii-1.html#cb176-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.engine =</span> <span class="st">&quot;ggplot2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb176-10"><a href="5.2-an-application-ii-1.html#cb176-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="5.2-an-application-ii-1.html#cb18-1" aria-hidden="true" tabindex="-1"></a>gbmFit<span class="sc">$</span>finalModel <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="5.2-an-application-ii-1.html#cb18-2" aria-hidden="true" tabindex="-1"></a>  pdp<span class="sc">::</span><span class="fu">partial</span>(</span>
+<span id="cb18-3"><a href="5.2-an-application-ii-1.html#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred.var =</span> <span class="st">&quot;CHmRun&quot;</span>, </span>
+<span id="cb18-4"><a href="5.2-an-application-ii-1.html#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.trees =</span> gbmFit<span class="sc">$</span>finalModel<span class="sc">$</span>n.trees, </span>
+<span id="cb18-5"><a href="5.2-an-application-ii-1.html#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid.resolution =</span> <span class="dv">100</span>,</span>
+<span id="cb18-6"><a href="5.2-an-application-ii-1.html#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">train =</span> train.data,</span>
+<span id="cb18-7"><a href="5.2-an-application-ii-1.html#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-8"><a href="5.2-an-application-ii-1.html#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">rug =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-9"><a href="5.2-an-application-ii-1.html#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.engine =</span> <span class="st">&quot;ggplot2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb18-10"><a href="5.2-an-application-ii-1.html#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="05-beyondLinearity_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
             </section>
@@ -370,7 +406,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');
