@@ -12,12 +12,13 @@ ISLR 10.1-3 and 10.6-7
 
 ## An application I
 
-Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library *Tensorflow*. You may find the [documentation](https://keras.rstudio.com) useful
+Let us see an example of how to implement a neural network classifier. We will use Keras, which is just a wrapper for the machine learning library *Tensorflow*. You may find the [documentation](https://tensorflow.rstudio.com) useful
 
 Our goal is to classify hand-written digits from the MNIST database, which is conveniently included in Keras. The first time you install Keras, you do.
 ```{r eval=FALSE, cache = TRUE}
 install.packages("keras")
-keras::install_keras()
+library(keras)
+install_keras(envname = "r-reticulate")
 ```
 If you get a prompt asking to install miniconda, you should choose "Yes".
 
