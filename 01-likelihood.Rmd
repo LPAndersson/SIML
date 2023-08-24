@@ -912,7 +912,7 @@ To confirm that we indeed found the MLE we plot the log-likelihood.
 library(ggplot2)
 
 ggplot(data.frame(x = c(0, 4)), aes(x = x)) +
-  stat_function(fun = function(beta) logLn(beta, data.df), 
+  stat_function(fun = Vectorize(function(beta) logLn(beta, data.df)), 
                 linewidth = 1) +
   geom_point(aes(x=betahat, y=logLn(betahat, data.df)), colour = palette.colors(2), size = 3) +
   theme_minimal() +

@@ -855,12 +855,6 @@ rootResults$root
 Both methods giving the same result.
 
 To confirm that we indeed found the MLE we plot the log-likelihood.
-
-```
-## Warning in x * beta: longer object length is not a multiple of shorter object
-## length
-```
-
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/BinReglog-likelihood-1.png" alt="Log likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:BinReglog-likelihood)Log likelihood of the sample</p>
