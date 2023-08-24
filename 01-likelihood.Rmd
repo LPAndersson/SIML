@@ -944,7 +944,7 @@ If $H_0$ is true, this is an observation of a $\chi_1^2$-distributed random vari
 Next we do a Wald's test. For this we need an estimate of the standard deviation of the MLE. Perhaps the easiest way is to calculate the Fisher information, that is $-l''(\beta)$. Here there are again two options, we can do it numerically or exactly. First we calculate it numerically:
 ```{r }
 observedFisherInfo <- function(beta, data){
-  drop(-pracma::hessian(function(beta) logLn(beta, data), beta))
+  drop(-pracma::hessian(logLn, beta, data = data))
 }
 observedFisherInfo(betahat, data.df)
 ```
@@ -984,7 +984,7 @@ zWald <- function(beta0, data){
 We might also do a Score test. Here, all we need is $l'$ and $l''$, which we have already calculated. The score statistic is again standard normal under $H_0$.
 ```{r }
 zScore <- function(beta0, data){
-  abs(pracma::grad(function(beta) logLn(beta, data),beta0)/sqrt(observedFisherInfo(beta0, data)))
+  abs(pracma::grad(logLn, beta0, data = data) / sqrt(observedFisherInfo(beta0, data)))
 }
 2 * ( 1 - pnorm(zScore(2.0, data.df) ) )
 ```

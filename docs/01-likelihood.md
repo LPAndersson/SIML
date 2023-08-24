@@ -891,7 +891,7 @@ Next we do a Wald's test. For this we need an estimate of the standard deviation
 
 ```r
 observedFisherInfo <- function(beta, data){
-  drop(-pracma::hessian(function(beta) logLn(beta, data), beta))
+  drop(-pracma::hessian(logLn, beta, data = data))
 }
 observedFisherInfo(betahat, data.df)
 ```
@@ -946,7 +946,7 @@ We might also do a Score test. Here, all we need is $l'$ and $l''$, which we hav
 
 ```r
 zScore <- function(beta0, data){
-  abs(pracma::grad(function(beta) logLn(beta, data),beta0)/sqrt(observedFisherInfo(beta0, data)))
+  abs(pracma::grad(logLn, beta0, data = data) / sqrt(observedFisherInfo(beta0, data)))
 }
 2 * ( 1 - pnorm(zScore(2.0, data.df) ) )
 ```

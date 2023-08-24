@@ -329,7 +329,7 @@ Figure 1.10: Observed sample and fitted model
 <pre><code>## [1] 0.0847108</code></pre>
 <p>Next we do a Wald’s test. For this we need an estimate of the standard deviation of the MLE. Perhaps the easiest way is to calculate the Fisher information, that is <span class="math inline">\(-l&#39;&#39;(\beta)\)</span>. Here there are again two options, we can do it numerically or exactly. First we calculate it numerically:</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="1.12-an-application.html#cb44-1" tabindex="-1"></a>observedFisherInfo <span class="ot">&lt;-</span> <span class="cf">function</span>(beta, data){</span>
-<span id="cb44-2"><a href="1.12-an-application.html#cb44-2" tabindex="-1"></a>  <span class="fu">drop</span>(<span class="sc">-</span>pracma<span class="sc">::</span><span class="fu">hessian</span>(<span class="cf">function</span>(beta) <span class="fu">logLn</span>(beta, data), beta))</span>
+<span id="cb44-2"><a href="1.12-an-application.html#cb44-2" tabindex="-1"></a>  <span class="fu">drop</span>(<span class="sc">-</span>pracma<span class="sc">::</span><span class="fu">hessian</span>(logLn, beta, <span class="at">data =</span> data))</span>
 <span id="cb44-3"><a href="1.12-an-application.html#cb44-3" tabindex="-1"></a>}</span>
 <span id="cb44-4"><a href="1.12-an-application.html#cb44-4" tabindex="-1"></a><span class="fu">observedFisherInfo</span>(betahat, data.df)</span></code></pre></div>
 <pre><code>## [1] 72.64594</code></pre>
@@ -365,7 +365,7 @@ Implemented in R:</p>
 <pre><code>## [1] 0.07566311</code></pre>
 <p>We might also do a Score test. Here, all we need is <span class="math inline">\(l&#39;\)</span> and <span class="math inline">\(l&#39;&#39;\)</span>, which we have already calculated. The score statistic is again standard normal under <span class="math inline">\(H_0\)</span>.</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="1.12-an-application.html#cb50-1" tabindex="-1"></a>zScore <span class="ot">&lt;-</span> <span class="cf">function</span>(beta0, data){</span>
-<span id="cb50-2"><a href="1.12-an-application.html#cb50-2" tabindex="-1"></a>  <span class="fu">abs</span>(pracma<span class="sc">::</span><span class="fu">grad</span>(<span class="cf">function</span>(beta) <span class="fu">logLn</span>(beta, data),beta0)<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(beta0, data)))</span>
+<span id="cb50-2"><a href="1.12-an-application.html#cb50-2" tabindex="-1"></a>  <span class="fu">abs</span>(pracma<span class="sc">::</span><span class="fu">grad</span>(logLn, beta0, <span class="at">data =</span> data) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">observedFisherInfo</span>(beta0, data)))</span>
 <span id="cb50-3"><a href="1.12-an-application.html#cb50-3" tabindex="-1"></a>}</span>
 <span id="cb50-4"><a href="1.12-an-application.html#cb50-4" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> ( <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="fu">zScore</span>(<span class="fl">2.0</span>, data.df) ) )</span></code></pre></div>
 <pre><code>## [1] 0.0754018</code></pre>
