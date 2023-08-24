@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>2.3 Multiparameter problems | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="2.3 Multiparameter problems | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="2.3 Multiparameter problems | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.2-maximum-likelihood-estimation.html"/>
-<link rel="next" href="1.4-likelihood-ratio-test.html"/>
+<link rel="prev" href="2.2-choosing-prior.html"/>
+<link rel="next" href="2.4-markov-chain-monte-carlo.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -241,39 +241,59 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="hypothesis-testing" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Hypothesis testing<a href="1.3-hypothesis-testing.html#hypothesis-testing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure <a href="1.3-hypothesis-testing.html#fig:hypTestIllustration">1.4</a>.
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hypTestIllustration"></span>
-<img src="01-likelihood_files/figure-html/hypTestIllustration-1.png" alt="Log likelihood of the sample" width="80%" />
+<div id="multiparameter-problems" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Multiparameter problems<a href="2.3-multiparameter-problems.html#multiparameter-problems" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If there is more than one parameter, the previous discussion applies without any major changes. What might complicate things is if we wish to do inference on just one of the parameters. Then we need to calculate the marginal posterior distribution of the parameter, which may not be practical. One remedy is to simply draw samples from the joint posterior distribution and from the samples pick the parameters that are of interest.</p>
+<p>Let us consider the example of comparing two binomials. The data generating model is
+<span class="math display">\[\begin{align}
+X_1 &amp;\sim \mathsf{Bin}(n_1,\theta_1),\\
+X_2 &amp;\sim \mathsf{Bin}(n_2,\theta_2).
+\end{align}\]</span>
+The parameter that we are interested in is <span class="math inline">\(\tau:=\theta_2-\theta_1\)</span>. If we assume a flat prior on <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span> the posterior becomes,
+<span class="math display">\[
+p(\theta_1,\theta_2\mid x) \propto L(\theta_1,\theta_2) \propto \theta_1^{x_1}(1-\theta_1)^{n_1-x_1}\theta_2^{x_2}(1-\theta_2)^{n_2-x_2}.
+\]</span>
+Note that <span class="math inline">\(\theta_1\mid x_1\sim \mathsf{Beta}(x_1+1,n_1-x_1+1)\)</span> is independent of <span class="math inline">\(\theta_2\mid x_2\sim \mathsf{Beta}(x_2+1,n_2-x_2+1).\)</span> Therefore we can simulate from <span class="math inline">\(\tau\mid x\)</span> by drawing <span class="math inline">\(\theta_1^\star\)</span> and <span class="math inline">\(\theta_2^\star\)</span> from the respective distribution and setting <span class="math inline">\(\tau^\star = \theta_2^\star - \theta_1^\star\)</span>.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="2.3-multiparameter-problems.html#cb61-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb61-2"><a href="2.3-multiparameter-problems.html#cb61-2" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
+<span id="cb61-3"><a href="2.3-multiparameter-problems.html#cb61-3" tabindex="-1"></a></span>
+<span id="cb61-4"><a href="2.3-multiparameter-problems.html#cb61-4" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb61-5"><a href="2.3-multiparameter-problems.html#cb61-5" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb61-6"><a href="2.3-multiparameter-problems.html#cb61-6" tabindex="-1"></a>theta1 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb61-7"><a href="2.3-multiparameter-problems.html#cb61-7" tabindex="-1"></a>theta2 <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb61-8"><a href="2.3-multiparameter-problems.html#cb61-8" tabindex="-1"></a>nPost <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb61-9"><a href="2.3-multiparameter-problems.html#cb61-9" tabindex="-1"></a></span>
+<span id="cb61-10"><a href="2.3-multiparameter-problems.html#cb61-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb61-11"><a href="2.3-multiparameter-problems.html#cb61-11" tabindex="-1"></a></span>
+<span id="cb61-12"><a href="2.3-multiparameter-problems.html#cb61-12" tabindex="-1"></a><span class="co">#Generate data</span></span>
+<span id="cb61-13"><a href="2.3-multiparameter-problems.html#cb61-13" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">size =</span> n1, <span class="at">prob =</span> theta1)</span>
+<span id="cb61-14"><a href="2.3-multiparameter-problems.html#cb61-14" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">size =</span> n2, <span class="at">prob =</span> theta2)</span>
+<span id="cb61-15"><a href="2.3-multiparameter-problems.html#cb61-15" tabindex="-1"></a></span>
+<span id="cb61-16"><a href="2.3-multiparameter-problems.html#cb61-16" tabindex="-1"></a><span class="co">#Posterior for theta</span></span>
+<span id="cb61-17"><a href="2.3-multiparameter-problems.html#cb61-17" tabindex="-1"></a>theta1.post <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="at">n =</span> nPost, <span class="at">shape1 =</span> x1<span class="sc">+</span><span class="dv">1</span>, <span class="at">shape2 =</span> n1<span class="sc">-</span>x1<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb61-18"><a href="2.3-multiparameter-problems.html#cb61-18" tabindex="-1"></a>theta2.post <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="at">n =</span> nPost, <span class="at">shape1 =</span> x2<span class="sc">+</span><span class="dv">1</span>, <span class="at">shape2 =</span> n2<span class="sc">-</span>x2<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb61-19"><a href="2.3-multiparameter-problems.html#cb61-19" tabindex="-1"></a></span>
+<span id="cb61-20"><a href="2.3-multiparameter-problems.html#cb61-20" tabindex="-1"></a>tau.post <span class="ot">&lt;-</span> theta2.post <span class="sc">-</span> theta1.post</span>
+<span id="cb61-21"><a href="2.3-multiparameter-problems.html#cb61-21" tabindex="-1"></a></span>
+<span id="cb61-22"><a href="2.3-multiparameter-problems.html#cb61-22" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(tau.post), <span class="fu">aes</span>(<span class="at">x=</span>tau.post)) <span class="sc">+</span> </span>
+<span id="cb61-23"><a href="2.3-multiparameter-problems.html#cb61-23" tabindex="-1"></a> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..), <span class="at">colour=</span><span class="st">&quot;black&quot;</span>, <span class="at">fill=</span><span class="st">&quot;white&quot;</span>)<span class="sc">+</span></span>
+<span id="cb61-24"><a href="2.3-multiparameter-problems.html#cb61-24" tabindex="-1"></a> <span class="fu">geom_density</span>(<span class="at">alpha=</span>.<span class="dv">2</span>, <span class="at">fill=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
+<span id="cb61-25"><a href="2.3-multiparameter-problems.html#cb61-25" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb61-26"><a href="2.3-multiparameter-problems.html#cb61-26" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">TeX</span>(<span class="st">&quot;$</span><span class="sc">\\</span><span class="st">tau$&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:multiParameterExample"></span>
+<img src="02-bayesian_files/figure-html/multiParameterExample-1.png" alt="Posterior distribution" width="80%" />
 <p class="caption">
-Figure 1.4: Log likelihood of the sample
+Figure 2.3: Posterior distribution
 </p>
 </div>
-<p>There we have an estimate of <span class="math inline">\(\theta\)</span> which is <span class="math inline">\(\hat\theta = 0.9\)</span>. We would like to test <span class="math inline">\(H_0: \theta=\theta_0 = 1\)</span> against <span class="math inline">\(\theta \neq \theta_0\)</span>.</p>
-<p>This should be based on how far away, in some sense, the maximum likelihood estimate is from <span class="math inline">\(\theta_0\)</span>. Looking at the figure, we can see three different ways of measuring how far away <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span> are from each other. One way would be to measure the vertical distance between the log-likelihood function in <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. we would calculate:
-<span class="math display">\[
-l(\hat\theta) - l(\theta_0).
-\]</span>
-This is know as the <em>likelihood ratio test</em>.</p>
-<p>Another option is to calculate the horizontal distance between <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. to calculate the distance
-<span class="math display">\[
-|\hat\theta - \theta_0|.
-\]</span>
-This is known as the <em>Wald test</em>.</p>
-<p>Lastly we know that <span class="math inline">\(\partial_\theta l(\theta)|_{\theta=\hat\theta} = 0\)</span>. So we could calculate
-<span class="math display">\[
-|\partial_\theta l(\theta)|_{\theta=\theta_0}|,
-\]</span>
-and see how close it is to 0. This is known as the <em>Score test</em>. In the following sections we examine each test in detail.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.2-maximum-likelihood-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.4-likelihood-ratio-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.2-choosing-prior.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.4-markov-chain-monte-carlo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

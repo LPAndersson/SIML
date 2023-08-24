@@ -12,11 +12,11 @@ Finally we will see how this can be applied to the binary regression model.
 
 Readings for this chapter is:
 
-AOS 6
+ASI 2.1, 2.2, 2.4
 
-AOS 9.1, 9.3, 9.4, 9.6, 9.7, 9.9
+ASI 3.2, 3.2 (not 3.2.5), 3.3
 
-AOS 10.0-3, 10.6
+ASI 4.1, 4.2 (not 4.2.1), 4.4
 
 ## The likelihood function
 

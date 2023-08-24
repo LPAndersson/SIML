@@ -1,7 +1,7 @@
 --- 
 title: "Lecture notes for Statistical Inference and Machine Learning"
 author: "Patrik Andersson"
-date: "2023-03-01"
+date: "2023-08-24"
 site: bookdown::bookdown_site
 output: 
   bookdown::gitbook:
@@ -19,7 +19,7 @@ description: "These are the lecture notes for the course Statistical Inference a
 
 These lecture notes are for the course 2ST126 at Uppsala University.
 
-The course litterature is All of Statistics (AOS) by Wasserman and Introduction to Statistical Learning (ISLR) by James et al. These lecture notes complement those books. That is, there are many things that are similar in the books and these notes. Some things are only in the books and some things are only in these notes. Some things are in both of the books and in these lectures notes, but presented differently. The course is therefore defined as the union of all three.
+The course litterature is Applied Statistical Inference (ASI) by Held & Bové and Introduction to Statistical Learning (ISLR) by James et al. These lecture notes complement those books. That is, there are many things that are similar in the books and these notes. Some things are only in the books and some things are only in these notes. Some things are in both of the books and in these lectures notes, but presented differently. The course is therefore defined as the union of all three.
 
 At the beginning of each chapter, the readings from the books that are relevant for the chapter is given.
 

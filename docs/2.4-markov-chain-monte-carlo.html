@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>2.4 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="2.4 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="2.4 Markov chain Monte Carlo | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.2-maximum-likelihood-estimation.html"/>
-<link rel="next" href="1.4-likelihood-ratio-test.html"/>
+<link rel="prev" href="2.3-multiparameter-problems.html"/>
+<link rel="next" href="2.5-an-application-1.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -241,39 +241,121 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="hypothesis-testing" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Hypothesis testing<a href="1.3-hypothesis-testing.html#hypothesis-testing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure <a href="1.3-hypothesis-testing.html#fig:hypTestIllustration">1.4</a>.
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hypTestIllustration"></span>
-<img src="01-likelihood_files/figure-html/hypTestIllustration-1.png" alt="Log likelihood of the sample" width="80%" />
-<p class="caption">
-Figure 1.4: Log likelihood of the sample
-</p>
-</div>
-<p>There we have an estimate of <span class="math inline">\(\theta\)</span> which is <span class="math inline">\(\hat\theta = 0.9\)</span>. We would like to test <span class="math inline">\(H_0: \theta=\theta_0 = 1\)</span> against <span class="math inline">\(\theta \neq \theta_0\)</span>.</p>
-<p>This should be based on how far away, in some sense, the maximum likelihood estimate is from <span class="math inline">\(\theta_0\)</span>. Looking at the figure, we can see three different ways of measuring how far away <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span> are from each other. One way would be to measure the vertical distance between the log-likelihood function in <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. we would calculate:
+<div id="markov-chain-monte-carlo" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Markov chain Monte Carlo<a href="2.4-markov-chain-monte-carlo.html#markov-chain-monte-carlo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far we have been using that the posterior distribution is proportional to the likelihood times the prior distribution. We were also careful to choose the prior as the conjugate distribution so that we could recognize the posterior distribution. In general we have to calculate the normalizing constant:
 <span class="math display">\[
-l(\hat\theta) - l(\theta_0).
+\int p(x\mid \theta)p(\theta)d\theta.
 \]</span>
-This is know as the <em>likelihood ratio test</em>.</p>
-<p>Another option is to calculate the horizontal distance between <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. to calculate the distance
+Many times, and in particular if <span class="math inline">\(\theta\)</span> is high dimensional, it is not possible to calculate this integral.</p>
+<p>In this section we will see how we can, instead of calculating it, generate samples from the posterior distribution. This is the method that is used in modern Bayesian statistics. Here we are only able to scratch the surface. Both in terms of theory, since explaining why the method works would require first learning about Markov chains, and in terms of complexity of the methods, since the methods that are used in practice are usually more advanced version of what we present here.</p>
+<p>We assume that we are able to write down the likelihood of our data generating model and the prior on our parameters. Therefore we are also able to write down the posterior distribution up to a multiplying constant.</p>
+<p>The method we will discuss is called the <em>Metropolis-Hastings algorithm</em> and it is an example of a <em>Markov chain Monte Carlo</em> (MCMC) method. Markov chain here means that we will obtain a sequence of samples from the posterior distributions and that the distribution of each sample only depends on the previous sample, and not on samples before that. Monte Carlo means that is is an algorithm that uses on random sampling.</p>
+<p>The Metropolis-Hastings algorithm is as follows: Suppose we want to sample from the posterior <span class="math inline">\(p(\theta\mid x).\)</span> Suppose also that this is not possible directly, but that we are able to generate samples from some other distribution <span class="math inline">\(q(\theta^\star \mid \theta).\)</span> Then do the following:</p>
+<p>Choose <span class="math inline">\(\theta_0\)</span> arbitrarily. For <span class="math inline">\(i\geq 1\)</span> do:</p>
+<ol style="list-style-type: decimal">
+<li>Generate a proposal <span class="math inline">\(\theta^\star\sim q(\theta^\star\mid \theta_{i-1})\)</span></li>
+<li>Calculate
 <span class="math display">\[
-|\hat\theta - \theta_0|.
-\]</span>
-This is known as the <em>Wald test</em>.</p>
-<p>Lastly we know that <span class="math inline">\(\partial_\theta l(\theta)|_{\theta=\hat\theta} = 0\)</span>. So we could calculate
+r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1}\mid \theta^\star)}{q(\theta^\star\mid\theta_{i-1})}, 1 \right\}.
+\]</span></li>
+<li>Set
 <span class="math display">\[
-|\partial_\theta l(\theta)|_{\theta=\theta_0}|,
+\theta_i = \begin{cases}
+\theta^\star\quad \text{with probability } r\\
+\theta_{i-1}\quad  \text{with probability } 1-r.
+\end{cases}
+\]</span></li>
+</ol>
+<p>Theory then tells us that as <span class="math inline">\(i\)</span> becomes large, the distribution of <span class="math inline">\(\theta_i\)</span> will be approximately that of <span class="math inline">\(p(\theta\mid x).\)</span></p>
+<p>Note that here the normalizing constant in <span class="math inline">\(p(\theta\mid x)\)</span> is cancelled since it appears both in the numerator and denominator.</p>
+<p>It remains to choose <span class="math inline">\(q(\theta^\star\mid x)\)</span>. One common choice is called <em>random walk Metropolis Hastings</em> and consists of letting
+<span class="math display">\[
+\theta^\star = \theta_{i-1} + \varepsilon_{i-1},
 \]</span>
-and see how close it is to 0. This is known as the <em>Score test</em>. In the following sections we examine each test in detail.</p>
+where <span class="math inline">\(\varepsilon_{i-1}\)</span> is and independent random variable. For example <span class="math inline">\(\varepsilon_{i-1}\overset{iid}{\sim} \mathsf N(0,b^2)\)</span> for some variance <span class="math inline">\(b^2\)</span>. In this case <span class="math inline">\(q(\theta_{i-1}\mid \theta^\star)=q(\theta^\star\mid \theta_{i-1})\)</span> and so the acceptance probability becomes
+<span class="math display">\[
+r=\min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)} ,1\right\}
+\]</span>
+Here it is important to choose <span class="math inline">\(b\)</span> such that the correlation between <span class="math inline">\(\theta_i\)</span> and <span class="math inline">\(\theta_{i-1}\)</span> is small. If <span class="math inline">\(b\)</span> is small, almost all proposals will be accepted, but since <span class="math inline">\(\varepsilon_i\)</span> also tends to be small, <span class="math inline">\(\theta_{i+1}\)</span> will be highly correlated with <span class="math inline">\(\theta_{i}\)</span>. On the other hand, if <span class="math inline">\(b\)</span> is large, the proposal will rarely be accepted, and <span class="math inline">\(\theta_i=\theta_{i-1}\)</span>. As a rule of thumb, <span class="math inline">\(b\)</span> should be set such that about <span class="math inline">\(50\%\)</span> of the proposals are accepted.</p>
+<p>Another class of proposal distributions is <span class="math inline">\(q(\theta^\star\mid \theta_{i-1})\equiv q(\theta^\star)\)</span>, that is <span class="math inline">\(\theta^\star\)</span> is independent of <span class="math inline">\(\theta_{i-1}\)</span>. The acceptance probability is then
+<span class="math display">\[
+r = \min\left\{ \frac{p(\theta^\star\mid x)}{p(\theta_{i-1}\mid x)}\frac{q(\theta_{i-1})}{q(\theta^\star)}, 1 \right\}.
+\]</span>
+This is known as <em>independence Metropolis Hastings</em>. Here, since each time the proposal is accepted <span class="math inline">\(\theta_i\)</span> will change, we aim for as high an acceptance probability as possible.</p>
+<p>As an example let us see how one can generate samples from the exponential distribution using Metropolis Hastings. To be clear, this is not the best way to generate exponentially distributed random numbers, it is just an example.</p>
+<p>The density is
+<span class="math display">\[
+p(x) = \lambda e^{-\lambda x}\propto e^{-\lambda x}.
+\]</span>
+Here we know that the normalizing constant is <span class="math inline">\(\lambda\)</span>, but the idea of MCMC is that we do not need to know it, so let us proceed as if we did not know it. Also note that here we see <span class="math inline">\(x\)</span> as random, in the typical Bayesian setting we would think of <span class="math inline">\(\lambda\)</span> as random, but is is just a matter of notation.</p>
+<p>First we implement the density. We do it on a log-scale. This is because we need to divide two densities in the algorithm. On a log-scale this becomes subtraction, which is numerically more stable.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="2.4-markov-chain-monte-carlo.html#cb62-1" tabindex="-1"></a>logDensity <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb62-2"><a href="2.4-markov-chain-monte-carlo.html#cb62-2" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb62-3"><a href="2.4-markov-chain-monte-carlo.html#cb62-3" tabindex="-1"></a>  </span>
+<span id="cb62-4"><a href="2.4-markov-chain-monte-carlo.html#cb62-4" tabindex="-1"></a>  <span class="cf">if</span> (x <span class="sc">&gt;=</span> <span class="dv">0</span>) {</span>
+<span id="cb62-5"><a href="2.4-markov-chain-monte-carlo.html#cb62-5" tabindex="-1"></a>    <span class="sc">-</span>lambda <span class="sc">*</span> x</span>
+<span id="cb62-6"><a href="2.4-markov-chain-monte-carlo.html#cb62-6" tabindex="-1"></a>  }</span>
+<span id="cb62-7"><a href="2.4-markov-chain-monte-carlo.html#cb62-7" tabindex="-1"></a>  <span class="cf">else</span>{</span>
+<span id="cb62-8"><a href="2.4-markov-chain-monte-carlo.html#cb62-8" tabindex="-1"></a>    <span class="sc">-</span><span class="cn">Inf</span></span>
+<span id="cb62-9"><a href="2.4-markov-chain-monte-carlo.html#cb62-9" tabindex="-1"></a>  }</span>
+<span id="cb62-10"><a href="2.4-markov-chain-monte-carlo.html#cb62-10" tabindex="-1"></a>}</span></code></pre></div>
+<p>Next implement the random-walk Metropolis-Hastings algorithm with normally distributed steps.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="2.4-markov-chain-monte-carlo.html#cb63-1" tabindex="-1"></a>mcmc.iter <span class="ot">&lt;-</span> <span class="cf">function</span>(x, logDensity, sigma, n.iter){</span>
+<span id="cb63-2"><a href="2.4-markov-chain-monte-carlo.html#cb63-2" tabindex="-1"></a>  <span class="co">#Random walk Metropolis Hastings MCMC</span></span>
+<span id="cb63-3"><a href="2.4-markov-chain-monte-carlo.html#cb63-3" tabindex="-1"></a>  </span>
+<span id="cb63-4"><a href="2.4-markov-chain-monte-carlo.html#cb63-4" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, n.iter<span class="sc">+</span><span class="dv">1</span>, <span class="fu">length</span>(x)) <span class="co">#Create empty matrix</span></span>
+<span id="cb63-5"><a href="2.4-markov-chain-monte-carlo.html#cb63-5" tabindex="-1"></a>  res[<span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
+<span id="cb63-6"><a href="2.4-markov-chain-monte-carlo.html#cb63-6" tabindex="-1"></a>  logD <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(x)</span>
+<span id="cb63-7"><a href="2.4-markov-chain-monte-carlo.html#cb63-7" tabindex="-1"></a>  </span>
+<span id="cb63-8"><a href="2.4-markov-chain-monte-carlo.html#cb63-8" tabindex="-1"></a>  accProb <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#keep track of the proportion of proposals that are accepted</span></span>
+<span id="cb63-9"><a href="2.4-markov-chain-monte-carlo.html#cb63-9" tabindex="-1"></a>  </span>
+<span id="cb63-10"><a href="2.4-markov-chain-monte-carlo.html#cb63-10" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n.iter)){</span>
+<span id="cb63-11"><a href="2.4-markov-chain-monte-carlo.html#cb63-11" tabindex="-1"></a>    <span class="co">#New proposal</span></span>
+<span id="cb63-12"><a href="2.4-markov-chain-monte-carlo.html#cb63-12" tabindex="-1"></a>    xProp <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), <span class="dv">0</span>, sigma)</span>
+<span id="cb63-13"><a href="2.4-markov-chain-monte-carlo.html#cb63-13" tabindex="-1"></a>    <span class="co">#Log density of proposal</span></span>
+<span id="cb63-14"><a href="2.4-markov-chain-monte-carlo.html#cb63-14" tabindex="-1"></a>    logDProp <span class="ot">&lt;-</span> <span class="fu">logDensity</span>(xProp)</span>
+<span id="cb63-15"><a href="2.4-markov-chain-monte-carlo.html#cb63-15" tabindex="-1"></a>    <span class="co">#Acceptance probability</span></span>
+<span id="cb63-16"><a href="2.4-markov-chain-monte-carlo.html#cb63-16" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">min</span>( <span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">exp</span>(logDProp <span class="sc">-</span> logD) ) )</span>
+<span id="cb63-17"><a href="2.4-markov-chain-monte-carlo.html#cb63-17" tabindex="-1"></a>    </span>
+<span id="cb63-18"><a href="2.4-markov-chain-monte-carlo.html#cb63-18" tabindex="-1"></a>    <span class="cf">if</span>(r<span class="sc">&gt;</span><span class="fu">runif</span>(<span class="dv">1</span>)){ <span class="co">#Accept with probability r, else keep old x</span></span>
+<span id="cb63-19"><a href="2.4-markov-chain-monte-carlo.html#cb63-19" tabindex="-1"></a>      x <span class="ot">&lt;-</span> xProp</span>
+<span id="cb63-20"><a href="2.4-markov-chain-monte-carlo.html#cb63-20" tabindex="-1"></a>      logD <span class="ot">&lt;-</span> logDProp</span>
+<span id="cb63-21"><a href="2.4-markov-chain-monte-carlo.html#cb63-21" tabindex="-1"></a>      accProb <span class="ot">&lt;-</span> accProb <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb63-22"><a href="2.4-markov-chain-monte-carlo.html#cb63-22" tabindex="-1"></a>    }</span>
+<span id="cb63-23"><a href="2.4-markov-chain-monte-carlo.html#cb63-23" tabindex="-1"></a>    res[i<span class="sc">+</span><span class="dv">1</span>,] <span class="ot">&lt;-</span> x</span>
+<span id="cb63-24"><a href="2.4-markov-chain-monte-carlo.html#cb63-24" tabindex="-1"></a>  }</span>
+<span id="cb63-25"><a href="2.4-markov-chain-monte-carlo.html#cb63-25" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">sample =</span> res, <span class="at">accProb =</span> accProb<span class="sc">/</span>n.iter)</span>
+<span id="cb63-26"><a href="2.4-markov-chain-monte-carlo.html#cb63-26" tabindex="-1"></a>}</span></code></pre></div>
+<p>Now we can run the algorithm. First for 1000 step that we throw away. This is since the distribution of the samples are correct only when the number of steps are large. Then we run it for as many steps as we need samples.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="2.4-markov-chain-monte-carlo.html#cb64-1" tabindex="-1"></a>x.init <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co">#Initial value</span></span>
+<span id="cb64-2"><a href="2.4-markov-chain-monte-carlo.html#cb64-2" tabindex="-1"></a>nIter <span class="ot">&lt;-</span> <span class="dv">100000</span> <span class="co">#Number of MC steps</span></span>
+<span id="cb64-3"><a href="2.4-markov-chain-monte-carlo.html#cb64-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb64-4"><a href="2.4-markov-chain-monte-carlo.html#cb64-4" tabindex="-1"></a></span>
+<span id="cb64-5"><a href="2.4-markov-chain-monte-carlo.html#cb64-5" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(x.init,</span>
+<span id="cb64-6"><a href="2.4-markov-chain-monte-carlo.html#cb64-6" tabindex="-1"></a>                       logDensity,</span>
+<span id="cb64-7"><a href="2.4-markov-chain-monte-carlo.html#cb64-7" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
+<span id="cb64-8"><a href="2.4-markov-chain-monte-carlo.html#cb64-8" tabindex="-1"></a>                       <span class="dv">1000</span>)</span>
+<span id="cb64-9"><a href="2.4-markov-chain-monte-carlo.html#cb64-9" tabindex="-1"></a></span>
+<span id="cb64-10"><a href="2.4-markov-chain-monte-carlo.html#cb64-10" tabindex="-1"></a>exp.mcmc <span class="ot">&lt;-</span> <span class="fu">mcmc.iter</span>(exp.mcmc<span class="sc">$</span>sample[<span class="fu">nrow</span>(exp.mcmc<span class="sc">$</span>sample),],</span>
+<span id="cb64-11"><a href="2.4-markov-chain-monte-carlo.html#cb64-11" tabindex="-1"></a>                       logDensity,</span>
+<span id="cb64-12"><a href="2.4-markov-chain-monte-carlo.html#cb64-12" tabindex="-1"></a>                       <span class="fl">0.2</span>,</span>
+<span id="cb64-13"><a href="2.4-markov-chain-monte-carlo.html#cb64-13" tabindex="-1"></a>                       nIter)</span></code></pre></div>
+<p>We can check for example that the mean and standard deviation of the samples are as expected, i.e. in our case 1.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="2.4-markov-chain-monte-carlo.html#cb65-1" tabindex="-1"></a><span class="fu">mean</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
+<pre><code>## [1] 1.072045</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="2.4-markov-chain-monte-carlo.html#cb67-1" tabindex="-1"></a><span class="fu">sd</span>(exp.mcmc<span class="sc">$</span>sample)</span></code></pre></div>
+<pre><code>## [1] 1.114397</code></pre>
+<p>We can plot the histogram of the samples against the density.</p>
+<p><img src="02-bayesian_files/figure-html/mcmcExample-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.2-maximum-likelihood-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.4-likelihood-ratio-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.3-multiparameter-problems.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.5-an-application-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

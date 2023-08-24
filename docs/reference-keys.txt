@@ -67,7 +67,6 @@ an-application
 summary
 review-questions
 bayesian-statistics
-some-basic-decision-theory
 bayesian-statistics-1
 choosing-prior
 multiparameter-problems

@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>2.7 Review questions | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="2.7 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="2.7 Review questions | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.2-maximum-likelihood-estimation.html"/>
-<link rel="next" href="1.4-likelihood-ratio-test.html"/>
+<link rel="prev" href="2.6-summary-1.html"/>
+<link rel="next" href="3-ch-bootstrap.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -241,39 +241,35 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="hypothesis-testing" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Hypothesis testing<a href="1.3-hypothesis-testing.html#hypothesis-testing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure <a href="1.3-hypothesis-testing.html#fig:hypTestIllustration">1.4</a>.
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hypTestIllustration"></span>
-<img src="01-likelihood_files/figure-html/hypTestIllustration-1.png" alt="Log likelihood of the sample" width="80%" />
-<p class="caption">
-Figure 1.4: Log likelihood of the sample
-</p>
+<div id="review-questions-1" class="section level2 hasAnchor" number="2.7">
+<h2><span class="header-section-number">2.7</span> Review questions<a href="2.7-review-questions-1.html#review-questions-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>What is the main difference between frequentist and Bayesian inference?</li>
+<li>What is the risk associated with a decision?</li>
+<li>What is the posterior risk?</li>
+<li>What is the Bayes action?</li>
+<li>What is the Bayes rule?</li>
+<li>What is the relationship between the prior, the likelihood and the posterior?</li>
+<li>What is a point estimate in Bayesian statistics?</li>
+<li>What is a posterior interval?</li>
+<li>When is the Beta distribution a good choice as a prior distribution?</li>
+<li>What is a subjective prior?</li>
+<li>What is a flat prior?</li>
+<li>What is a possible critisism of flat priors?</li>
+<li>What is Jeffreys prior?</li>
+<li>What is the computational problem that Markov chain Monte Carlo solves?</li>
+<li>What is the difference between random walk Metropolis Hastings and independence Metropolis Hastings?</li>
+</ol>
+
 </div>
-<p>There we have an estimate of <span class="math inline">\(\theta\)</span> which is <span class="math inline">\(\hat\theta = 0.9\)</span>. We would like to test <span class="math inline">\(H_0: \theta=\theta_0 = 1\)</span> against <span class="math inline">\(\theta \neq \theta_0\)</span>.</p>
-<p>This should be based on how far away, in some sense, the maximum likelihood estimate is from <span class="math inline">\(\theta_0\)</span>. Looking at the figure, we can see three different ways of measuring how far away <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span> are from each other. One way would be to measure the vertical distance between the log-likelihood function in <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. we would calculate:
-<span class="math display">\[
-l(\hat\theta) - l(\theta_0).
-\]</span>
-This is know as the <em>likelihood ratio test</em>.</p>
-<p>Another option is to calculate the horizontal distance between <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. to calculate the distance
-<span class="math display">\[
-|\hat\theta - \theta_0|.
-\]</span>
-This is known as the <em>Wald test</em>.</p>
-<p>Lastly we know that <span class="math inline">\(\partial_\theta l(\theta)|_{\theta=\hat\theta} = 0\)</span>. So we could calculate
-<span class="math display">\[
-|\partial_\theta l(\theta)|_{\theta=\theta_0}|,
-\]</span>
-and see how close it is to 0. This is known as the <em>Score test</em>. In the following sections we examine each test in detail.</p>
-</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.2-maximum-likelihood-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.4-likelihood-ratio-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.6-summary-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3-ch-bootstrap.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

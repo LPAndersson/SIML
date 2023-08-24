@@ -10,76 +10,72 @@ The aim of the chapter is to explain the basics, learn how to do Bayesian infere
 
 Readings for this chapter is:
 
-AOS 11.1, 2, 4, 6, 7, 9.
+ASI 6.1, 6.2, 6.3, 8.4
 
-AOS 12.1-3.
+<!-- ## Some basic decision theory -->
 
-AOS 24.1, 2, 4, 5 (not Gibbs).
+<!-- In this section we introduce *statistical decision theory*, a different way of thinking about what the task of the statistician is, compared to what we have seen so far. -->
 
-## Some basic decision theory
+<!-- <p>Consider a statistical model with a parameter $\theta\in\Theta$. Based on data $x$, we are going to make a *decision* $\delta(x)$. For example, the decision might be a point estimate $\delta(x)=\bar x$ or some interval estimator. To evaluate if our decision is good we have a loss function $l(\theta,\delta(x))$. It is the penalty of making decision $\delta(x)$ when the true parameter is $\theta$. If $\theta$ is a real-valued parameter we might take squared loss</p> -->
+<!-- $$ -->
+<!-- l(\theta,\delta(x)) = (\theta-\delta(x))^2, -->
+<!-- $$ -->
+<!-- and in the discrete case, a 0-1 loss -->
+<!-- $$ -->
+<!-- l(\theta,\delta(x)) =\begin{cases} -->
+<!-- 0\text{ if } \theta=\delta(x)\\ -->
+<!-- 1\text{ if } \theta\neq \delta(x). -->
+<!-- \end{cases} -->
+<!-- $$ -->
+<!-- <p>We would like to choose $\delta$ such that the loss is as small as possible. However, the loss depends on both the data $x$ and the parameter $\theta$ and thus a comparison between different decisions becomes complicated. Instead we calculate the *risk* associated with a particular decision.</p> -->
+<!-- ```{block2, type='note'} -->
+<!-- The risk is defined as -->
+<!-- $$ -->
+<!-- R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right]. -->
+<!-- $$ -->
+<!-- ``` -->
+<!-- Here the expectation is taken of a random sample $X$, while $\theta$ is held fixed. Still the comparison of different $\delta$ is not trivial. It may be that for $\delta_1$ the risk is lower than the risk of $\delta_2$ for some values of $\theta$, while for some other $\theta$, the risk is higher. As a trivial example, say that we have the squared loss and $\delta(x) \equiv 0$. Then, if the the true $\theta$ is 0, clearly this is a good decision. But if the true $\theta$ is something else, it is a bad decision. -->
 
-In this section we introduce *statistical decision theory*, a different way of thinking about what the task of the statistician is, compared to what we have seen so far.
+<!-- Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample $X$. This is known as *frequentist statistics*. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e.\ for most data $x$. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue that, it does not make sense to consider any other data set. -->
 
-<p>Consider a statistical model with a parameter $\theta\in\Theta$. Based on data $x$, we are going to make a *decision* $\delta(x)$. For example, the decision might be a point estimate $\delta(x)=\bar x$ or some interval estimator. To evaluate if our decision is good we have a loss function $l(\theta,\delta(x))$. It is the penalty of making decision $\delta(x)$ when the true parameter is $\theta$. If $\theta$ is a real-valued parameter we might take squared loss</p>
-$$
-l(\theta,\delta(x)) = (\theta-\delta(x))^2,
-$$
-and in the discrete case, a 0-1 loss
-$$
-l(\theta,\delta(x)) =\begin{cases}
-0\text{ if } \theta=\delta(x)\\
-1\text{ if } \theta\neq \delta(x).
-\end{cases}
-$$
-<p>We would like to choose $\delta$ such that the loss is as small as possible. However, the loss depends on both the data $x$ and the parameter $\theta$ and thus a comparison between different decisions becomes complicated. Instead we calculate the *risk* associated with a particular decision.</p>
-```{block2, type='note'}
-The risk is defined as
-$$
-R(\theta,\delta) = E_\theta\left[ l(\theta,\delta(X)) \right].
-$$
-```
-Here the expectation is taken of a random sample $X$, while $\theta$ is held fixed. Still the comparison of different $\delta$ is not trivial. It may be that for $\delta_1$ the risk is lower than the risk of $\delta_2$ for some values of $\theta$, while for some other $\theta$, the risk is higher. As a trivial example, say that we have the squared loss and $\delta(x) \equiv 0$. Then, if the the true $\theta$ is 0, clearly this is a good decision. But if the true $\theta$ is something else, it is a bad decision.
+<!-- The Bayesian way is to instead consider $\theta$ as random, with a distribution $p(\theta)$. Even if we consider $\theta$ to have a fixed unknown value it could make sense to consider it having a distribution. For example, if we let $\theta$ be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, clearly this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative. -->
 
-Note that the distinguishing feature of the above risk function is that the expectation is taken over a random sample $X$. This is known as *frequentist statistics*. This makes sense in some situations, for example if you have some software that should work well in most situations, i.e.\ for most data $x$. However in many situations the statistician is given one data set and the task is to make valid inference for that particular data set. In that situation, one might argue that, it does not make sense to consider any other data set.
+<!-- <p>The Bayesian statistician would call $p(\theta)$ the *prior distribution* on $\theta$. Then, after observing the data $x$, calculate the *posterior distribution*, using Bayes' formula,</p> -->
+<!-- $$ -->
+<!-- p(\theta \mid x) = \frac{p(x\mid \theta)p(\theta)}{p(x)}. -->
+<!-- $$ -->
+<!-- <p>Here $p(x\mid \theta)$ is the model of how data is generated. That is, the probability or density of obtaining a particular sample, conditioned on knowing $\theta$. Also, $p(x)$ is the marginal density of the observed data. We can write it formally as</p> -->
+<!-- $$ -->
+<!-- p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta. -->
+<!-- $$ -->
+<!-- ```{block2, type='note'} -->
+<!-- The *posterior risk* is then defined as -->
+<!-- $$ -->
+<!-- \rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x)) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta. -->
+<!-- $$ -->
+<!-- ``` -->
+<!-- Here the random quantity is $\theta$ while the data $x$ is held constant. The *Bayes action* $\delta^\star$ is the decision $\delta$ that minimizes the posterior risk. For example, if the decision is a point estimate of $\theta$ and $l(\theta,\delta) = (\theta - \delta)^2$. Then -->
+<!-- \begin{align} -->
+<!-- \rho(p(\theta),\delta) &= \int (\theta - \delta)^2 p(\theta\mid x)d\theta\\ -->
+<!-- &= \delta^2 - 2\delta \int \theta p(\theta\mid x)d\theta + \int \theta^2p(\theta\mid x)d\theta,\\ -->
+<!-- \implies \partial_\delta \rho(p(\theta),\delta) &= 2\delta -2\int \theta p(\theta\mid x)d\theta = 0\\ -->
+<!-- \implies \delta^\star &=\int \theta p(\theta\mid x)d\theta. -->
+<!-- \end{align} -->
+<!-- That is, the Bayes action is to choose the mean of the posterior distribution. -->
 
-The Bayesian way is to instead consider $\theta$ as random, with a distribution $p(\theta)$. Even if we consider $\theta$ to have a fixed unknown value it could make sense to consider it having a distribution. For example, if we let $\theta$ be 1 if it rained in Uppsala exactly 10 years ago, and 0 otherwise, clearly this is not random. Either it rained or it did not. However, for us, since we do not know which is true, it seems natural to assign probabilities to each alternative.
-
-<p>The Bayesian statistician would call $p(\theta)$ the *prior distribution* on $\theta$. Then, after observing the data $x$, calculate the *posterior distribution*, using Bayes' formula,</p>
-$$
-p(\theta \mid x) = \frac{p(x\mid \theta)p(\theta)}{p(x)}.
-$$
-<p>Here $p(x\mid \theta)$ is the model of how data is generated. That is, the probability or density of obtaining a particular sample, conditioned on knowing $\theta$. Also, $p(x)$ is the marginal density of the observed data. We can write it formally as</p>
-$$
-p(x) = \int p(x,\theta)d\theta = \int p(x\mid \theta)p(\theta)d\theta.
-$$
-```{block2, type='note'}
-The *posterior risk* is then defined as
-$$
-\rho(p(\theta),\delta(x)) = E\left[  l(\theta,\delta(x)) \right] := \int l(\theta,\delta(x))p(\theta\mid x)d\theta.
-$$
-```
-Here the random quantity is $\theta$ while the data $x$ is held constant. The *Bayes action* $\delta^\star$ is the decision $\delta$ that minimizes the posterior risk. For example, if the decision is a point estimate of $\theta$ and $l(\theta,\delta) = (\theta - \delta)^2$. Then
-\begin{align}
-\rho(p(\theta),\delta) &= \int (\theta - \delta)^2 p(\theta\mid x)d\theta\\
-&= \delta^2 - 2\delta \int \theta p(\theta\mid x)d\theta + \int \theta^2p(\theta\mid x)d\theta,\\
-\implies \partial_\delta \rho(p(\theta),\delta) &= 2\delta -2\int \theta p(\theta\mid x)d\theta = 0\\
-\implies \delta^\star &=\int \theta p(\theta\mid x)d\theta.
-\end{align}
-That is, the Bayes action is to choose the mean of the posterior distribution.
-
-A hybrid between the frequentist and the Bayesian approach is the *average risk* (with respect to $p(\theta)$):
-```{block2, type='note'}
-$$
-r(p(\theta),\delta) = \int R(\theta,\delta)p(\theta)d\theta.
-$$
-```
-The *Bayes risk* is the minimum of the average risk, taken over all $\delta$ and the decision $\delta(x)$ that achieves the minimum is called the *Bayes rule*. Since the risk here is the frequentist risk, this is fundamentally a frequentist quantity. However, we can write
-\begin{align}
-r(p(\theta),\delta) &= \int \int l(\theta,\delta(x))p(x\mid\theta)dxp(\theta)d\theta\\
-& = \int\int l(\theta,\delta(x)) p(\theta\mid x)d\theta p(x)dx\\
-& = \int \rho(p(\theta),\delta(x)) p(x)dx.
-\end{align}
-This is minimized by minimizing $\rho(p(\theta),\delta(x))$ for each $x$. That is, we can find the Bayes rule by taking the Bayes action for each $x$.
+<!-- A hybrid between the frequentist and the Bayesian approach is the *average risk* (with respect to $p(\theta)$): -->
+<!-- ```{block2, type='note'} -->
+<!-- $$ -->
+<!-- r(p(\theta),\delta) = \int R(\theta,\delta)p(\theta)d\theta. -->
+<!-- $$ -->
+<!-- ``` -->
+<!-- The *Bayes risk* is the minimum of the average risk, taken over all $\delta$ and the decision $\delta(x)$ that achieves the minimum is called the *Bayes rule*. Since the risk here is the frequentist risk, this is fundamentally a frequentist quantity. However, we can write -->
+<!-- \begin{align} -->
+<!-- r(p(\theta),\delta) &= \int \int l(\theta,\delta(x))p(x\mid\theta)dxp(\theta)d\theta\\ -->
+<!-- & = \int\int l(\theta,\delta(x)) p(\theta\mid x)d\theta p(x)dx\\ -->
+<!-- & = \int \rho(p(\theta),\delta(x)) p(x)dx. -->
+<!-- \end{align} -->
+<!-- This is minimized by minimizing $\rho(p(\theta),\delta(x))$ for each $x$. That is, we can find the Bayes rule by taking the Bayes action for each $x$. -->
 
 ## Bayesian statistics
 

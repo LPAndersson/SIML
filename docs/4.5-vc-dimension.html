@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.5 VC-dimension | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.5 VC-dimension | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2023-03-01" />
+<meta name="date" content="2023-08-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -120,6 +120,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 <style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
 div.csl-entry {
@@ -178,14 +182,13 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="2.1-some-basic-decision-theory.html"><a href="2.1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="2.2" data-path="2.2-bayesian-statistics-1.html"><a href="2.2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
-<li class="chapter" data-level="2.3" data-path="2.3-choosing-prior.html"><a href="2.3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
-<li class="chapter" data-level="2.4" data-path="2.4-multiparameter-problems.html"><a href="2.4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="2.5" data-path="2.5-markov-chain-monte-carlo.html"><a href="2.5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
-<li class="chapter" data-level="2.6" data-path="2.6-an-application-1.html"><a href="2.6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
-<li class="chapter" data-level="2.7" data-path="2.7-summary-1.html"><a href="2.7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
-<li class="chapter" data-level="2.8" data-path="2.8-review-questions-1.html"><a href="2.8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
+<li class="chapter" data-level="2.1" data-path="2.1-bayesian-statistics-1.html"><a href="2.1-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.1</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="2.2" data-path="2.2-choosing-prior.html"><a href="2.2-choosing-prior.html"><i class="fa fa-check"></i><b>2.2</b> Choosing prior</a></li>
+<li class="chapter" data-level="2.3" data-path="2.3-multiparameter-problems.html"><a href="2.3-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.3</b> Multiparameter problems</a></li>
+<li class="chapter" data-level="2.4" data-path="2.4-markov-chain-monte-carlo.html"><a href="2.4-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.4</b> Markov chain Monte Carlo</a></li>
+<li class="chapter" data-level="2.5" data-path="2.5-an-application-1.html"><a href="2.5-an-application-1.html"><i class="fa fa-check"></i><b>2.5</b> An application</a></li>
+<li class="chapter" data-level="2.6" data-path="2.6-summary-1.html"><a href="2.6-summary-1.html"><i class="fa fa-check"></i><b>2.6</b> Summary</a></li>
+<li class="chapter" data-level="2.7" data-path="2.7-review-questions-1.html"><a href="2.7-review-questions-1.html"><i class="fa fa-check"></i><b>2.7</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
 <ul>
@@ -274,7 +277,7 @@ Figure 4.12: A one parameter function can shatter any number of points
 The usefulness of the VC-dimension comes from the following result.
 
 <div class="note">
-Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span>. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span> <span class="citation">(<a href="#ref-mohri2018foundations" role="doc-biblioref">Mohri, Rostamizadeh, and Talwalkar 2018</a>)</span>:
+Let <span class="math inline">\(\mathcal H\)</span> have VC-dimension <span class="math inline">\(d_{VC}\)</span>. Then for any <span class="math inline">\(\delta&gt;0\)</span>, with probability at least <span class="math inline">\(1-\delta\)</span>, the following holds for all <span class="math inline">\(h\in \mathcal H\)</span> <span class="citation">(<a href="#ref-mohri2018foundations">Mohri, Rostamizadeh, and Talwalkar 2018</a>)</span>:
 <span class="math display">\[
   E_{out}(h) \leq E_{in}(h) +\sqrt{\frac{2d_{VC}\ln \frac{en}{d_{VC}}}{n}} + \sqrt{\frac{\ln \frac{1}{\delta}}{2n}   }
 \]</span>

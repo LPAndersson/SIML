@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning</title>
+  <title>2.2 Choosing prior | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta property="og:title" content="2.2 Choosing prior | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.3 Hypothesis testing | Lecture notes for Statistical Inference and Machine Learning" />
+  <meta name="twitter:title" content="2.2 Choosing prior | Lecture notes for Statistical Inference and Machine Learning" />
   
   <meta name="twitter:description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.2-maximum-likelihood-estimation.html"/>
-<link rel="next" href="1.4-likelihood-ratio-test.html"/>
+<link rel="prev" href="2.1-bayesian-statistics-1.html"/>
+<link rel="next" href="2.3-multiparameter-problems.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -241,39 +241,47 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="hypothesis-testing" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Hypothesis testing<a href="1.3-hypothesis-testing.html#hypothesis-testing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-In the previous section we saw how to estimate unknown parameters using maximum likelihood. While this is all well and good, we would like to also be able to test hypotheses regarding parameters. Consider Figure <a href="1.3-hypothesis-testing.html#fig:hypTestIllustration">1.4</a>.
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:hypTestIllustration"></span>
-<img src="01-likelihood_files/figure-html/hypTestIllustration-1.png" alt="Log likelihood of the sample" width="80%" />
-<p class="caption">
-Figure 1.4: Log likelihood of the sample
-</p>
-</div>
-<p>There we have an estimate of <span class="math inline">\(\theta\)</span> which is <span class="math inline">\(\hat\theta = 0.9\)</span>. We would like to test <span class="math inline">\(H_0: \theta=\theta_0 = 1\)</span> against <span class="math inline">\(\theta \neq \theta_0\)</span>.</p>
-<p>This should be based on how far away, in some sense, the maximum likelihood estimate is from <span class="math inline">\(\theta_0\)</span>. Looking at the figure, we can see three different ways of measuring how far away <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span> are from each other. One way would be to measure the vertical distance between the log-likelihood function in <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. we would calculate:
+<div id="choosing-prior" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Choosing prior<a href="2.2-choosing-prior.html#choosing-prior" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>It is clear that the choice of prior will influence the inference and so the choice of prior distribution becomes important.</p>
+<p>If we have a subjective belief about what values the parameter is likely to take we can choose a prior that reflects this belief. For example we might know from experience that coins have a probability close to 0.5 of landing on heads and so we would choose a prior with most of the probability around 0.5.</p>
+<p>However if the goal is to make scientific inference, for example convince the government that a particular drug is safe, choosing a subjective prior could face criticism. In such cases an alternative is to choose a <em>non-informative prior</em>. One way is to use a <em>flat prior</em>, <span class="math inline">\(p(\theta)\propto \text{constant}\)</span>. For example in the Bernoulli example choosing <span class="math inline">\(p(\theta)=1\)</span> for <span class="math inline">\(0\leq \theta \leq 1\)</span> seems reasonable.</p>
+<p>Consider the model <span class="math inline">\(X\sim \mathsf N(\theta,\sigma^2)\)</span>, <span class="math inline">\(\sigma^2\)</span> known. Here the flat prior would be <span class="math inline">\(p(\theta)=c&gt;0\)</span>. Note however that <span class="math inline">\(p\)</span> can never be a proper density since
 <span class="math display">\[
-l(\hat\theta) - l(\theta_0).
+\int_{-\infty}^\infty p(\theta)d\theta = \infty,
 \]</span>
-This is know as the <em>likelihood ratio test</em>.</p>
-<p>Another option is to calculate the horizontal distance between <span class="math inline">\(\hat\theta\)</span> and <span class="math inline">\(\theta_0\)</span>. I.e. to calculate the distance
+for every choice of <span class="math inline">\(c\)</span>. Then <span class="math inline">\(p\)</span> is said to be an <em>improper prior</em>. Although a little curious, we can still perform the Bayesian inference program. The posterior distribution is
 <span class="math display">\[
-|\hat\theta - \theta_0|.
+p(\theta \mid x) \propto L(\theta)p(\theta) \propto L(\theta).
 \]</span>
-This is known as the <em>Wald test</em>.</p>
-<p>Lastly we know that <span class="math inline">\(\partial_\theta l(\theta)|_{\theta=\hat\theta} = 0\)</span>. So we could calculate
+So that with this choice the posterior distribution is just the likelihood. Continuing the example, let us say that we have a sample of size <span class="math inline">\(n\)</span> with sample mean <span class="math inline">\(\bar x\)</span>. Then the likelihood is
 <span class="math display">\[
-|\partial_\theta l(\theta)|_{\theta=\theta_0}|,
+L(\theta) \propto \prod_{i=1}^n e^{-\frac{1}{2\sigma^2}(x_i-\theta)^2} = e^{-\frac{1}{2\sigma^2}\sum_{i=1}^n(x_i-\theta)^2} \propto e^{-\frac{n}{2\sigma^2}(\theta-\bar x)^2},
 \]</span>
-and see how close it is to 0. This is known as the <em>Score test</em>. In the following sections we examine each test in detail.</p>
+which is the density of <span class="math inline">\(\mathsf N(\bar x, \sigma^2/n)\)</span>. Therefore the point estimates and interval estimators will be the same as in likelihood based inference.</p>
+<p>A problem with flat priors is however that they are only non-informative in a particular parameterisation. Take again the Bernoulli example. If we say that we do not have any information about <span class="math inline">\(\theta\)</span>, then it would be reasonable to say that we also do not have any information about some function of <span class="math inline">\(\theta\)</span>. Take for example <span class="math inline">\(\Psi = \ln (\theta/(1-\theta))\)</span>. If <span class="math inline">\(p(\theta)=1\)</span> for <span class="math inline">\(0\leq\theta\leq 1\)</span>, then the density of <span class="math inline">\(\Psi\)</span> is
+<span class="math display">\[\begin{align}
+p(\psi) &amp; = \partial_\psi P(\Psi \leq \psi) = \partial_\psi P\left( \ln (\theta/(1-\theta)) \leq \psi \right)\\
+&amp;= \partial_\psi P\left( \theta \leq \frac{e^\psi}{1+e^\psi} \right) = \partial_\psi \frac{e^\psi}{1+e^\psi} = \frac{e^\psi}{(1+e^\psi)^2},
+\end{align}\]</span>
+which is clearly no longer non-informative. We say that flat priors are not transformation invariant.</p>
+<p>One way to construct a prior that does not change under a change of parameterisation is Jeffreys’ prior:
+<span class="math display">\[
+p(\theta)\propto \sqrt{I(\theta)},
+\]</span>
+where <span class="math inline">\(I\)</span> is the Fisher information. Recall that in the <span class="math inline">\(\mathsf{Bernoulli}(\theta)\)</span> case <span class="math inline">\(I(\theta)=(\theta(1-\theta))^{-1}\)</span> and so the Jeffreys prior is
+<span class="math display">\[
+p(\theta) \propto \theta^{-1/2}(1-\theta)^{-1/2},
+\]</span>
+which is a <span class="math inline">\(\mathsf{Beta}(1/2,1/2)\)</span>.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.2-maximum-likelihood-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.4-likelihood-ratio-test.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.1-bayesian-statistics-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.3-multiparameter-problems.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

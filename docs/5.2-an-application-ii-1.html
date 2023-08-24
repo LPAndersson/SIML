@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5.2 An application II | Lecture notes for Statistical Inference and Machine Learning</title>
   <meta name="description" content="These are the lecture notes for the course Statistical Inference and Machine Learning at the Department of statistics, Uppsala University." />
-  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5.2 An application II | Lecture notes for Statistical Inference and Machine Learning" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Patrik Andersson" />
 
 
-<meta name="date" content="2023-03-01" />
+<meta name="date" content="2023-08-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -120,6 +120,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 <style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
 /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
 div.csl-bib-body { }
 div.csl-entry {
@@ -178,14 +182,13 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-bayesian-statistics.html"><a href="2-bayesian-statistics.html"><i class="fa fa-check"></i><b>2</b> Bayesian statistics</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="2.1-some-basic-decision-theory.html"><a href="2.1-some-basic-decision-theory.html"><i class="fa fa-check"></i><b>2.1</b> Some basic decision theory</a></li>
-<li class="chapter" data-level="2.2" data-path="2.2-bayesian-statistics-1.html"><a href="2.2-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.2</b> Bayesian statistics</a></li>
-<li class="chapter" data-level="2.3" data-path="2.3-choosing-prior.html"><a href="2.3-choosing-prior.html"><i class="fa fa-check"></i><b>2.3</b> Choosing prior</a></li>
-<li class="chapter" data-level="2.4" data-path="2.4-multiparameter-problems.html"><a href="2.4-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.4</b> Multiparameter problems</a></li>
-<li class="chapter" data-level="2.5" data-path="2.5-markov-chain-monte-carlo.html"><a href="2.5-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.5</b> Markov chain Monte Carlo</a></li>
-<li class="chapter" data-level="2.6" data-path="2.6-an-application-1.html"><a href="2.6-an-application-1.html"><i class="fa fa-check"></i><b>2.6</b> An application</a></li>
-<li class="chapter" data-level="2.7" data-path="2.7-summary-1.html"><a href="2.7-summary-1.html"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
-<li class="chapter" data-level="2.8" data-path="2.8-review-questions-1.html"><a href="2.8-review-questions-1.html"><i class="fa fa-check"></i><b>2.8</b> Review questions</a></li>
+<li class="chapter" data-level="2.1" data-path="2.1-bayesian-statistics-1.html"><a href="2.1-bayesian-statistics-1.html"><i class="fa fa-check"></i><b>2.1</b> Bayesian statistics</a></li>
+<li class="chapter" data-level="2.2" data-path="2.2-choosing-prior.html"><a href="2.2-choosing-prior.html"><i class="fa fa-check"></i><b>2.2</b> Choosing prior</a></li>
+<li class="chapter" data-level="2.3" data-path="2.3-multiparameter-problems.html"><a href="2.3-multiparameter-problems.html"><i class="fa fa-check"></i><b>2.3</b> Multiparameter problems</a></li>
+<li class="chapter" data-level="2.4" data-path="2.4-markov-chain-monte-carlo.html"><a href="2.4-markov-chain-monte-carlo.html"><i class="fa fa-check"></i><b>2.4</b> Markov chain Monte Carlo</a></li>
+<li class="chapter" data-level="2.5" data-path="2.5-an-application-1.html"><a href="2.5-an-application-1.html"><i class="fa fa-check"></i><b>2.5</b> An application</a></li>
+<li class="chapter" data-level="2.6" data-path="2.6-summary-1.html"><a href="2.6-summary-1.html"><i class="fa fa-check"></i><b>2.6</b> Summary</a></li>
+<li class="chapter" data-level="2.7" data-path="2.7-review-questions-1.html"><a href="2.7-review-questions-1.html"><i class="fa fa-check"></i><b>2.7</b> Review questions</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="3-ch-bootstrap.html"><a href="3-ch-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Bootstrap</a>
 <ul>
@@ -242,66 +245,66 @@ div.csl-indent {
 <h2><span class="header-section-number">5.2</span> An application II<a href="5.2-an-application-ii-1.html#an-application-ii-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In this section we demonstrate how to use boosting to predict the salary of baseball players using the Hitters dataset.</p>
 <p>We start by loading the required packages and splitting the data into a training and test set</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="5.2-an-application-ii-1.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb169-2"><a href="5.2-an-application-ii-1.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span>
-<span id="cb169-3"><a href="5.2-an-application-ii-1.html#cb169-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb169-4"><a href="5.2-an-application-ii-1.html#cb169-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
-<span id="cb169-5"><a href="5.2-an-application-ii-1.html#cb169-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-6"><a href="5.2-an-application-ii-1.html#cb169-6" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
-<span id="cb169-7"><a href="5.2-an-application-ii-1.html#cb169-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb169-8"><a href="5.2-an-application-ii-1.html#cb169-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
-<span id="cb169-9"><a href="5.2-an-application-ii-1.html#cb169-9" aria-hidden="true" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">createDataPartition</span>(Hitters<span class="sc">$</span>Salary, </span>
-<span id="cb169-10"><a href="5.2-an-application-ii-1.html#cb169-10" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">p =</span> <span class="fl">0.7</span>, </span>
-<span id="cb169-11"><a href="5.2-an-application-ii-1.html#cb169-11" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb169-12"><a href="5.2-an-application-ii-1.html#cb169-12" aria-hidden="true" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> Hitters[training.samples, ]</span>
-<span id="cb169-13"><a href="5.2-an-application-ii-1.html#cb169-13" aria-hidden="true" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> Hitters[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="5.2-an-application-ii-1.html#cb169-1" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb169-2"><a href="5.2-an-application-ii-1.html#cb169-2" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span>
+<span id="cb169-3"><a href="5.2-an-application-ii-1.html#cb169-3" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb169-4"><a href="5.2-an-application-ii-1.html#cb169-4" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
+<span id="cb169-5"><a href="5.2-an-application-ii-1.html#cb169-5" tabindex="-1"></a></span>
+<span id="cb169-6"><a href="5.2-an-application-ii-1.html#cb169-6" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
+<span id="cb169-7"><a href="5.2-an-application-ii-1.html#cb169-7" tabindex="-1"></a></span>
+<span id="cb169-8"><a href="5.2-an-application-ii-1.html#cb169-8" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb169-9"><a href="5.2-an-application-ii-1.html#cb169-9" tabindex="-1"></a>training.samples <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">createDataPartition</span>(Hitters<span class="sc">$</span>Salary, </span>
+<span id="cb169-10"><a href="5.2-an-application-ii-1.html#cb169-10" tabindex="-1"></a>                                               <span class="at">p =</span> <span class="fl">0.7</span>, </span>
+<span id="cb169-11"><a href="5.2-an-application-ii-1.html#cb169-11" tabindex="-1"></a>                                               <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb169-12"><a href="5.2-an-application-ii-1.html#cb169-12" tabindex="-1"></a>train.data  <span class="ot">&lt;-</span> Hitters[training.samples, ]</span>
+<span id="cb169-13"><a href="5.2-an-application-ii-1.html#cb169-13" tabindex="-1"></a>test.data <span class="ot">&lt;-</span> Hitters[<span class="sc">-</span>training.samples, ]</span></code></pre></div>
 <p>Boosting has a number of different parameters and we use a grid search and cross-validation to find the best choice.</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="5.2-an-application-ii-1.html#cb170-1" aria-hidden="true" tabindex="-1"></a>gbmGrid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">interaction.depth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb170-2"><a href="5.2-an-application-ii-1.html#cb170-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.trees =</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)<span class="sc">*</span><span class="dv">2000</span>,</span>
-<span id="cb170-3"><a href="5.2-an-application-ii-1.html#cb170-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">shrinkage =</span> <span class="fl">0.001</span>,</span>
-<span id="cb170-4"><a href="5.2-an-application-ii-1.html#cb170-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.minobsinnode =</span> <span class="dv">5</span>)</span>
-<span id="cb170-5"><a href="5.2-an-application-ii-1.html#cb170-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb170-6"><a href="5.2-an-application-ii-1.html#cb170-6" aria-hidden="true" tabindex="-1"></a>fitControl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
-<span id="cb170-7"><a href="5.2-an-application-ii-1.html#cb170-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;repeatedcv&quot;</span>,</span>
-<span id="cb170-8"><a href="5.2-an-application-ii-1.html#cb170-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">5</span>,</span>
-<span id="cb170-9"><a href="5.2-an-application-ii-1.html#cb170-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">repeats =</span> <span class="dv">5</span></span>
-<span id="cb170-10"><a href="5.2-an-application-ii-1.html#cb170-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="5.2-an-application-ii-1.html#cb170-1" tabindex="-1"></a>gbmGrid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">interaction.depth =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb170-2"><a href="5.2-an-application-ii-1.html#cb170-2" tabindex="-1"></a>                       <span class="at">n.trees =</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)<span class="sc">*</span><span class="dv">2000</span>,</span>
+<span id="cb170-3"><a href="5.2-an-application-ii-1.html#cb170-3" tabindex="-1"></a>                       <span class="at">shrinkage =</span> <span class="fl">0.001</span>,</span>
+<span id="cb170-4"><a href="5.2-an-application-ii-1.html#cb170-4" tabindex="-1"></a>                       <span class="at">n.minobsinnode =</span> <span class="dv">5</span>)</span>
+<span id="cb170-5"><a href="5.2-an-application-ii-1.html#cb170-5" tabindex="-1"></a></span>
+<span id="cb170-6"><a href="5.2-an-application-ii-1.html#cb170-6" tabindex="-1"></a>fitControl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb170-7"><a href="5.2-an-application-ii-1.html#cb170-7" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;repeatedcv&quot;</span>,</span>
+<span id="cb170-8"><a href="5.2-an-application-ii-1.html#cb170-8" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">5</span>,</span>
+<span id="cb170-9"><a href="5.2-an-application-ii-1.html#cb170-9" tabindex="-1"></a>  <span class="at">repeats =</span> <span class="dv">5</span></span>
+<span id="cb170-10"><a href="5.2-an-application-ii-1.html#cb170-10" tabindex="-1"></a>  )</span></code></pre></div>
 <p>The performance of the model is usually better the smaller the shrinkage parameter, or learning rate, is chosen. But with a small shrinkage we need many iterations, i.e. trees. So there is a tradeof between performance and the time it takes to train the model and the amount of storage required.</p>
 <p>To speed up the training we use parallel processes.</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="5.2-an-application-ii-1.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
-<span id="cb171-2"><a href="5.2-an-application-ii-1.html#cb171-2" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makePSOCKcluster</span>(<span class="dv">4</span>)</span>
-<span id="cb171-3"><a href="5.2-an-application-ii-1.html#cb171-3" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="5.2-an-application-ii-1.html#cb171-1" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb171-2"><a href="5.2-an-application-ii-1.html#cb171-2" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makePSOCKcluster</span>(<span class="dv">4</span>)</span>
+<span id="cb171-3"><a href="5.2-an-application-ii-1.html#cb171-3" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span></code></pre></div>
 <p>Now we fit the model</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="5.2-an-application-ii-1.html#cb172-1" aria-hidden="true" tabindex="-1"></a>gbmFit <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb172-2"><a href="5.2-an-application-ii-1.html#cb172-2" aria-hidden="true" tabindex="-1"></a>  Salary <span class="sc">~</span> ., </span>
-<span id="cb172-3"><a href="5.2-an-application-ii-1.html#cb172-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train.data, </span>
-<span id="cb172-4"><a href="5.2-an-application-ii-1.html#cb172-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;gbm&quot;</span>, </span>
-<span id="cb172-5"><a href="5.2-an-application-ii-1.html#cb172-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> fitControl,</span>
-<span id="cb172-6"><a href="5.2-an-application-ii-1.html#cb172-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb172-7"><a href="5.2-an-application-ii-1.html#cb172-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
-<span id="cb172-8"><a href="5.2-an-application-ii-1.html#cb172-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneGrid =</span> gbmGrid</span>
-<span id="cb172-9"><a href="5.2-an-application-ii-1.html#cb172-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="5.2-an-application-ii-1.html#cb172-1" tabindex="-1"></a>gbmFit <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb172-2"><a href="5.2-an-application-ii-1.html#cb172-2" tabindex="-1"></a>  Salary <span class="sc">~</span> ., </span>
+<span id="cb172-3"><a href="5.2-an-application-ii-1.html#cb172-3" tabindex="-1"></a>  <span class="at">data =</span> train.data, </span>
+<span id="cb172-4"><a href="5.2-an-application-ii-1.html#cb172-4" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;gbm&quot;</span>, </span>
+<span id="cb172-5"><a href="5.2-an-application-ii-1.html#cb172-5" tabindex="-1"></a>  <span class="at">trControl =</span> fitControl,</span>
+<span id="cb172-6"><a href="5.2-an-application-ii-1.html#cb172-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb172-7"><a href="5.2-an-application-ii-1.html#cb172-7" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb172-8"><a href="5.2-an-application-ii-1.html#cb172-8" tabindex="-1"></a>  <span class="at">tuneGrid =</span> gbmGrid</span>
+<span id="cb172-9"><a href="5.2-an-application-ii-1.html#cb172-9" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Here, gaussian means that we are doing regression that minimizes the square error.</p>
 <p>We may know predict the observations in the test set and calculate the out-of-sample error.</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="5.2-an-application-ii-1.html#cb173-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(gbmFit, test.data)</span>
-<span id="cb173-2"><a href="5.2-an-application-ii-1.html#cb173-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">mean</span>((predictions <span class="sc">-</span> test.data<span class="sc">$</span>Salary)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="5.2-an-application-ii-1.html#cb173-1" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(gbmFit, test.data)</span>
+<span id="cb173-2"><a href="5.2-an-application-ii-1.html#cb173-2" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">mean</span>((predictions <span class="sc">-</span> test.data<span class="sc">$</span>Salary)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## [1] 308.2421</code></pre>
 <p>This is an improvement over the regularized linear regression we did previously.</p>
 <p>We can also see the importance of each variable.</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="5.2-an-application-ii-1.html#cb175-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(gbmFit) <span class="sc">+</span></span>
-<span id="cb175-2"><a href="5.2-an-application-ii-1.html#cb175-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="5.2-an-application-ii-1.html#cb175-1" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(gbmFit) <span class="sc">+</span></span>
+<span id="cb175-2"><a href="5.2-an-application-ii-1.html#cb175-2" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="05-beyondLinearity_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>By making a partial dependence plot we can illustrate how each variable affect the prediction on average.</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="5.2-an-application-ii-1.html#cb176-1" aria-hidden="true" tabindex="-1"></a>gbmFit<span class="sc">$</span>finalModel <span class="sc">%&gt;%</span></span>
-<span id="cb176-2"><a href="5.2-an-application-ii-1.html#cb176-2" aria-hidden="true" tabindex="-1"></a>  pdp<span class="sc">::</span><span class="fu">partial</span>(</span>
-<span id="cb176-3"><a href="5.2-an-application-ii-1.html#cb176-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred.var =</span> <span class="st">&quot;CHmRun&quot;</span>, </span>
-<span id="cb176-4"><a href="5.2-an-application-ii-1.html#cb176-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.trees =</span> gbmFit<span class="sc">$</span>finalModel<span class="sc">$</span>n.trees, </span>
-<span id="cb176-5"><a href="5.2-an-application-ii-1.html#cb176-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid.resolution =</span> <span class="dv">100</span>,</span>
-<span id="cb176-6"><a href="5.2-an-application-ii-1.html#cb176-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">train =</span> train.data,</span>
-<span id="cb176-7"><a href="5.2-an-application-ii-1.html#cb176-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb176-8"><a href="5.2-an-application-ii-1.html#cb176-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">rug =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb176-9"><a href="5.2-an-application-ii-1.html#cb176-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.engine =</span> <span class="st">&quot;ggplot2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb176-10"><a href="5.2-an-application-ii-1.html#cb176-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="5.2-an-application-ii-1.html#cb176-1" tabindex="-1"></a>gbmFit<span class="sc">$</span>finalModel <span class="sc">%&gt;%</span></span>
+<span id="cb176-2"><a href="5.2-an-application-ii-1.html#cb176-2" tabindex="-1"></a>  pdp<span class="sc">::</span><span class="fu">partial</span>(</span>
+<span id="cb176-3"><a href="5.2-an-application-ii-1.html#cb176-3" tabindex="-1"></a>    <span class="at">pred.var =</span> <span class="st">&quot;CHmRun&quot;</span>, </span>
+<span id="cb176-4"><a href="5.2-an-application-ii-1.html#cb176-4" tabindex="-1"></a>    <span class="at">n.trees =</span> gbmFit<span class="sc">$</span>finalModel<span class="sc">$</span>n.trees, </span>
+<span id="cb176-5"><a href="5.2-an-application-ii-1.html#cb176-5" tabindex="-1"></a>    <span class="at">grid.resolution =</span> <span class="dv">100</span>,</span>
+<span id="cb176-6"><a href="5.2-an-application-ii-1.html#cb176-6" tabindex="-1"></a>    <span class="at">train =</span> train.data,</span>
+<span id="cb176-7"><a href="5.2-an-application-ii-1.html#cb176-7" tabindex="-1"></a>    <span class="at">plot =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb176-8"><a href="5.2-an-application-ii-1.html#cb176-8" tabindex="-1"></a>    <span class="at">rug =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb176-9"><a href="5.2-an-application-ii-1.html#cb176-9" tabindex="-1"></a>    <span class="at">plot.engine =</span> <span class="st">&quot;ggplot2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb176-10"><a href="5.2-an-application-ii-1.html#cb176-10" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
 <p><img src="05-beyondLinearity_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
             </section>
