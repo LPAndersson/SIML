@@ -102,11 +102,11 @@ Let us say we observe a sample of size 100.
 We define a function in R that calculates the log-likelihood
 
 ```r
-logLn <- function(param, sample){
-  n <- length(sample)
-  tbar <- mean(sample)
+logLn <- function(lambda, data){
+  n <- length(data)
+  tbar <- mean(data)
   
-  n*(log(param) - param*tbar)
+  n*(log(lambda) - lambda*tbar)
 }
 ```
 
@@ -148,11 +148,12 @@ lambdaHat
 We may also find the estimate using numerical optimization.
 
 ```r
-optimResult <- optimise( 
-            function(lambda){ logLn(lambda,t)},
-            lower = 0.01, 
-            upper = 10.0,
-            maximum = TRUE)
+optimResult <- optimise(
+  logLn,
+  lower = 0.01, 
+  upper = 10.0,
+  data = t,
+  maximum = TRUE)
 optimResult$maximum
 ```
 
@@ -789,9 +790,9 @@ s <- function(x) {
   exp(x) / (exp(x) + 1)
 }
 
-logLn <- function(beta){
-  x <- data.df$x
-  y <- data.df$y
+logLn <- function(beta, data){
+  x <- data$x
+  y <- data$y
   
   s <- s(x * beta)
   
@@ -809,6 +810,7 @@ optimResult <- optimize(
   logLn,
   lower = 0.0, 
   upper = 3.0,
+  data = data.df,
   maximum = TRUE
 )
 
@@ -819,7 +821,7 @@ betahat
 ```
 ## [1] 1.791579
 ```
-For the second way we need
+For the second way, we need
 \begin{align}
 s'(x) &= \frac{e^x}{\left(1+e^x\right)^2},\\
 l'(\beta) &= \frac{x y s'(x \beta )}{s(x \beta )}-\frac{x (1-y) s'(x \beta )}{1-s(x \beta )}.
@@ -829,9 +831,9 @@ In R:
 ```r
 sp <- function(x){ exp(x)/(1+exp(x))^2 }
 
-logLp <- function(beta){
-  x <- data.df$x
-  y <- data.df$y
+logLp <- function(beta, data){
+  x <- data$x
+  y <- data$y
   
   s <- s(x * beta)
   sp <- sp(x * beta)
@@ -841,7 +843,8 @@ logLp <- function(beta){
 
 rootResults <- uniroot(
   logLp,
-  interval = c(0,3)
+  interval = c(0,3),
+  data = data.df
 )
 rootResults$root
 ```
@@ -852,6 +855,12 @@ rootResults$root
 Both methods giving the same result.
 
 To confirm that we indeed found the MLE we plot the log-likelihood.
+
+```
+## Warning in x * beta: longer object length is not a multiple of shorter object
+## length
+```
+
 <div class="figure" style="text-align: center">
 <img src="01-likelihood_files/figure-html/BinReglog-likelihood-1.png" alt="Log likelihood of the sample" width="80%" />
 <p class="caption">(\#fig:BinReglog-likelihood)Log likelihood of the sample</p>
@@ -865,10 +874,10 @@ To confirm that we indeed found the MLE we plot the log-likelihood.
 Now we turn to hypothesis testing. Let us say we want to test $H_0: \beta = 2$ against $H_1:\beta \neq 2$. First we do the asymptotic likelihood ratio test. So we need to calculate $\lambda_{\text{LR}}$:
 
 ```r
-lr <- function(beta0){
-  2*(logLn(betahat) - logLn(beta0))
+lr <- function(beta0, data){
+  2*(logLn(betahat, data) - logLn(beta0, data))
 }
-lr(2.0)
+lr(2.0, data.df)
 ```
 
 ```
@@ -877,7 +886,7 @@ lr(2.0)
 If $H_0$ is true, this is an observation of a $\chi_1^2$-distributed random variable. Therefore the p-value is
 
 ```r
-1 - pchisq(lr(2.0), 1)
+1 - pchisq(lr(2.0, data.df), 1)
 ```
 
 ```
@@ -887,10 +896,10 @@ If $H_0$ is true, this is an observation of a $\chi_1^2$-distributed random vari
 Next we do a Wald's test. For this we need an estimate of the standard deviation of the MLE. Perhaps the easiest way is to calculate the Fisher information, that is $-l''(\beta)$. Here there are again two options, we can do it numerically or exactly. First we calculate it numerically:
 
 ```r
-observedFisherInfo <- function(beta){
-  drop(-pracma::hessian(logLn, beta))
+observedFisherInfo <- function(beta, data){
+  drop(-pracma::hessian(function(beta) logLn(beta, data), beta))
 }
-observedFisherInfo(betahat)
+observedFisherInfo(betahat, data.df)
 ```
 
 ```
@@ -905,9 +914,9 @@ Implemented in R:
 ```r
 spp <- function(x){ -exp(x)*(exp(x)-1)/(exp(x)+1)^3 }
 
-logLpp <- function(beta){
-    x <- data.df$x
-    y <- data.df$y
+logLpp <- function(beta, data){
+    x <- data$x
+    y <- data$y
     
     s <- s(x*beta)
     sp <- sp(x*beta)
@@ -916,11 +925,11 @@ logLpp <- function(beta){
     sum( (1-y)*(-x^2*sp^2/(1-s)^2 - x^2*spp/(1-s))+y*(-x^2*sp^2/s^2 + x^2*spp/s) )
 }
 
-observedFisherInfo <- function(beta){
-  -logLpp(beta)
+observedFisherInfo <- function(beta, data){
+  -logLpp(beta, data)
 }
 
-observedFisherInfo(betahat)
+observedFisherInfo(betahat, data.df)
 ```
 
 ```
@@ -929,10 +938,10 @@ observedFisherInfo(betahat)
 Recall that Wald's test statistic is standard normal under $H_0$. So we may calculate the p-value:
 
 ```r
-zWald <- function(beta0){
-  abs(betahat- beta0)*sqrt(observedFisherInfo(betahat))
+zWald <- function(beta0, data){
+  abs(betahat- beta0)*sqrt(observedFisherInfo(betahat, data))
   }
-2 * ( 1 - pnorm( zWald(2.0) ) )
+2 * ( 1 - pnorm( zWald(2.0, data.df) ) )
 ```
 
 ```
@@ -942,10 +951,10 @@ zWald <- function(beta0){
 We might also do a Score test. Here, all we need is $l'$ and $l''$, which we have already calculated. The score statistic is again standard normal under $H_0$.
 
 ```r
-zScore <- function(beta0){
-  abs(pracma::grad(logLn,beta0)/sqrt(observedFisherInfo(beta0)))
+zScore <- function(beta0, data){
+  abs(pracma::grad(function(beta) logLn(beta, data),beta0)/sqrt(observedFisherInfo(beta0, data)))
 }
-2 * ( 1 - pnorm(zScore(2.0) ) )
+2 * ( 1 - pnorm(zScore(2.0, data.df) ) )
 ```
 
 ```
@@ -956,8 +965,8 @@ Lastly, we might calculate a CI on $\beta$. Using the Wald's statistic, this wou
 
 ```r
 alpha <- 0.05
-leftCILimit <- betahat - qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat))
-rightCILimit <- betahat + qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat))
+leftCILimit <- betahat - qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat, data.df))
+rightCILimit <- betahat + qnorm(1-alpha/2) / sqrt(observedFisherInfo(betahat, data.df))
 
 leftCILimit
 ```
@@ -984,14 +993,14 @@ We need to find the points where the score statistic is $z_{\alpha/2}$, which ar
 ```r
 alpha = 0.05
 
-f <- function(beta){
-  zScore(beta) - qnorm(1-alpha/2)
+f <- function(beta, data){
+  zScore(beta, data) - qnorm(1-alpha/2)
 }
 
-rootResults <- uniroot(f, interval = c(betahat-1,betahat))
+rootResults <- uniroot(f, interval = c(betahat-1,betahat), data = data.df)
 leftCILimit <- rootResults$root
 
-rootResults <- uniroot(f, interval = c(betahat+1,betahat))
+rootResults <- uniroot(f, interval = c(betahat+1,betahat), data = data.df)
 rightCILimit <- rootResults$root
 
 leftCILimit
